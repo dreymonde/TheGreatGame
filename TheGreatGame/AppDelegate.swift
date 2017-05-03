@@ -7,15 +7,27 @@
 //
 
 import UIKit
+import Shallows
+import Avenues
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    var userInterface: UserInterface!
+    
+    let application: Application = Application()
+    
+    override init() {
+        super.init()
+        Avenues.Log.isEnabled = true
+        ShallowsLog.isEnabled = true
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        self.userInterface = UserInterface(window: self.window!, application: self.application)
+        userInterface.start()
         return true
     }
 
