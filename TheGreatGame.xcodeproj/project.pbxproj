@@ -44,6 +44,7 @@
 		7C0EA65D1EBA218000F50EB2 /* TeamsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA65C1EBA218000F50EB2 /* TeamsTableViewController.swift */; };
 		7C0EA6631EBA542E00F50EB2 /* TeamCompactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6611EBA542E00F50EB2 /* TeamCompactTableViewCell.swift */; };
 		7C0EA6641EBA542E00F50EB2 /* TeamCompactTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C0EA6621EBA542E00F50EB2 /* TeamCompactTableViewCell.xib */; };
+		7C0EA6661EBA599D00F50EB2 /* Avenues+Shallows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6651EBA599D00F50EB2 /* Avenues+Shallows.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -130,6 +131,7 @@
 		7C0EA65C1EBA218000F50EB2 /* TeamsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamsTableViewController.swift; sourceTree = "<group>"; };
 		7C0EA6611EBA542E00F50EB2 /* TeamCompactTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamCompactTableViewCell.swift; sourceTree = "<group>"; };
 		7C0EA6621EBA542E00F50EB2 /* TeamCompactTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TeamCompactTableViewCell.xib; sourceTree = "<group>"; };
+		7C0EA6651EBA599D00F50EB2 /* Avenues+Shallows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Avenues+Shallows.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -267,6 +269,7 @@
 		7C0EA62C1EBA1CDD00F50EB2 /* TGK+Shallows */ = {
 			isa = PBXGroup;
 			children = (
+				7C0EA6651EBA599D00F50EB2 /* Avenues+Shallows.swift */,
 				7C0EA62D1EBA1CFC00F50EB2 /* GitHubCache.swift */,
 				7C0EA64E1EBA1D3100F50EB2 /* Shallows+Mapper.swift */,
 			);
@@ -578,6 +581,7 @@
 				7C0EA64B1EBA1D1E00F50EB2 /* Mappable.swift in Sources */,
 				7C0EA6411EBA1D1E00F50EB2 /* InMapper.swift in Sources */,
 				7C0EA64D1EBA1D1E00F50EB2 /* CocoaMapper.swift in Sources */,
+				7C0EA6661EBA599D00F50EB2 /* Avenues+Shallows.swift in Sources */,
 				7C0EA63F1EBA1D1E00F50EB2 /* InMappable.swift in Sources */,
 				7C0EA64F1EBA1D3100F50EB2 /* Shallows+Mapper.swift in Sources */,
 				7C0EA65B1EBA1F0200F50EB2 /* Editioned.swift in Sources */,

@@ -17,11 +17,13 @@ class TeamsTableViewController: UITableViewController {
     
     var provider: ReadOnlyCache<Void, [Team]>!
     let avenue: Avenue<IndexPath, URL, UIImage> = {
+        let imageCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "teams-badges-cache")
+        print(imageCache.directoryURL)
         let lane = URLSessionProcessor(session: URLSession(configuration: .ephemeral))
-            .mapImage()
+            .caching(to: imageCache.mapKeys({ $0.path }))
         let storage: Storage<IndexPath, UIImage> = NSCacheStorage<NSIndexPath, UIImage>()
             .mapKey({ $0 as NSIndexPath })
-        return Avenue(storage: storage, processor: lane)
+        return Avenue(storage: storage, processor: lane.mapImage())
     }()
 
     override func viewDidLoad() {
