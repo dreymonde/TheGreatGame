@@ -13,6 +13,30 @@
 		7C0EA5E21EBA1B3500F50EB2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7C0EA5E11EBA1B3500F50EB2 /* Assets.xcassets */; };
 		7C0EA5E51EBA1B3500F50EB2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7C0EA5E31EBA1B3500F50EB2 /* LaunchScreen.storyboard */; };
 		7C0EA5F01EBA1B3500F50EB2 /* TheGreatGameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA5EF1EBA1B3500F50EB2 /* TheGreatGameTests.swift */; };
+		7C0EA5FF1EBA1C3100F50EB2 /* Alba.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C0EA5FC1EBA1C3100F50EB2 /* Alba.framework */; };
+		7C0EA6001EBA1C3100F50EB2 /* Avenues.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C0EA5FD1EBA1C3100F50EB2 /* Avenues.framework */; };
+		7C0EA6011EBA1C3100F50EB2 /* Shallows.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C0EA5FE1EBA1C3100F50EB2 /* Shallows.framework */; };
+		7C0EA6101EBA1C9000F50EB2 /* TheGreatKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C0EA6071EBA1C9000F50EB2 /* TheGreatKit.framework */; };
+		7C0EA6171EBA1C9000F50EB2 /* TheGreatKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6161EBA1C9000F50EB2 /* TheGreatKitTests.swift */; };
+		7C0EA6191EBA1C9000F50EB2 /* TheGreatKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 7C0EA6091EBA1C9000F50EB2 /* TheGreatKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7C0EA61C1EBA1C9000F50EB2 /* TheGreatKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C0EA6071EBA1C9000F50EB2 /* TheGreatKit.framework */; };
+		7C0EA61D1EBA1C9000F50EB2 /* TheGreatKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7C0EA6071EBA1C9000F50EB2 /* TheGreatKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		7C0EA6271EBA1CB100F50EB2 /* Jubilee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6261EBA1CB100F50EB2 /* Jubilee.swift */; };
+		7C0EA6281EBA1CB100F50EB2 /* Jubilee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6261EBA1CB100F50EB2 /* Jubilee.swift */; };
+		7C0EA6291EBA1CC300F50EB2 /* Alba.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C0EA5FC1EBA1C3100F50EB2 /* Alba.framework */; };
+		7C0EA62A1EBA1CC400F50EB2 /* Avenues.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C0EA5FD1EBA1C3100F50EB2 /* Avenues.framework */; };
+		7C0EA62B1EBA1CC700F50EB2 /* Shallows.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C0EA5FE1EBA1C3100F50EB2 /* Shallows.framework */; };
+		7C0EA62F1EBA1CFC00F50EB2 /* GitHubCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA62D1EBA1CFC00F50EB2 /* GitHubCache.swift */; };
+		7C0EA63D1EBA1D1E00F50EB2 /* InMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6321EBA1D1E00F50EB2 /* InMap.swift */; };
+		7C0EA63F1EBA1D1E00F50EB2 /* InMappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6331EBA1D1E00F50EB2 /* InMappable.swift */; };
+		7C0EA6411EBA1D1E00F50EB2 /* InMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6341EBA1D1E00F50EB2 /* InMapper.swift */; };
+		7C0EA6431EBA1D1E00F50EB2 /* OutMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6361EBA1D1E00F50EB2 /* OutMap.swift */; };
+		7C0EA6451EBA1D1E00F50EB2 /* OutMappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6371EBA1D1E00F50EB2 /* OutMappable.swift */; };
+		7C0EA6471EBA1D1E00F50EB2 /* OutMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6381EBA1D1E00F50EB2 /* OutMapper.swift */; };
+		7C0EA6491EBA1D1E00F50EB2 /* IndexPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6391EBA1D1E00F50EB2 /* IndexPath.swift */; };
+		7C0EA64B1EBA1D1E00F50EB2 /* Mappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA63A1EBA1D1E00F50EB2 /* Mappable.swift */; };
+		7C0EA64D1EBA1D1E00F50EB2 /* CocoaMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA63B1EBA1D1E00F50EB2 /* CocoaMapper.swift */; };
+		7C0EA64F1EBA1D3100F50EB2 /* Shallows+Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA64E1EBA1D3100F50EB2 /* Shallows+Mapper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -23,7 +47,42 @@
 			remoteGlobalIDString = 7C0EA5D61EBA1B3500F50EB2;
 			remoteInfo = TheGreatGame;
 		};
+		7C0EA6111EBA1C9000F50EB2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7C0EA5CF1EBA1B3400F50EB2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7C0EA6061EBA1C9000F50EB2;
+			remoteInfo = TheGreatKit;
+		};
+		7C0EA6131EBA1C9000F50EB2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7C0EA5CF1EBA1B3400F50EB2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7C0EA5D61EBA1B3500F50EB2;
+			remoteInfo = TheGreatGame;
+		};
+		7C0EA61A1EBA1C9000F50EB2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7C0EA5CF1EBA1B3400F50EB2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7C0EA6061EBA1C9000F50EB2;
+			remoteInfo = TheGreatKit;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		7C0EA6211EBA1C9000F50EB2 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				7C0EA61D1EBA1C9000F50EB2 /* TheGreatKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		7C0EA5D71EBA1B3500F50EB2 /* TheGreatGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TheGreatGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -36,6 +95,27 @@
 		7C0EA5EB1EBA1B3500F50EB2 /* TheGreatGameTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TheGreatGameTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C0EA5EF1EBA1B3500F50EB2 /* TheGreatGameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TheGreatGameTests.swift; sourceTree = "<group>"; };
 		7C0EA5F11EBA1B3500F50EB2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7C0EA5FC1EBA1C3100F50EB2 /* Alba.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alba.framework; path = Carthage/Build/iOS/Alba.framework; sourceTree = "<group>"; };
+		7C0EA5FD1EBA1C3100F50EB2 /* Avenues.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Avenues.framework; path = Carthage/Build/iOS/Avenues.framework; sourceTree = "<group>"; };
+		7C0EA5FE1EBA1C3100F50EB2 /* Shallows.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Shallows.framework; path = Carthage/Build/iOS/Shallows.framework; sourceTree = "<group>"; };
+		7C0EA6071EBA1C9000F50EB2 /* TheGreatKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TheGreatKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7C0EA6091EBA1C9000F50EB2 /* TheGreatKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TheGreatKit.h; sourceTree = "<group>"; };
+		7C0EA60A1EBA1C9000F50EB2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7C0EA60F1EBA1C9000F50EB2 /* TheGreatKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TheGreatKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7C0EA6161EBA1C9000F50EB2 /* TheGreatKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TheGreatKitTests.swift; sourceTree = "<group>"; };
+		7C0EA6181EBA1C9000F50EB2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7C0EA6261EBA1CB100F50EB2 /* Jubilee.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Jubilee.swift; sourceTree = "<group>"; };
+		7C0EA62D1EBA1CFC00F50EB2 /* GitHubCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GitHubCache.swift; sourceTree = "<group>"; };
+		7C0EA6321EBA1D1E00F50EB2 /* InMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InMap.swift; sourceTree = "<group>"; };
+		7C0EA6331EBA1D1E00F50EB2 /* InMappable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InMappable.swift; sourceTree = "<group>"; };
+		7C0EA6341EBA1D1E00F50EB2 /* InMapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InMapper.swift; sourceTree = "<group>"; };
+		7C0EA6361EBA1D1E00F50EB2 /* OutMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OutMap.swift; sourceTree = "<group>"; };
+		7C0EA6371EBA1D1E00F50EB2 /* OutMappable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OutMappable.swift; sourceTree = "<group>"; };
+		7C0EA6381EBA1D1E00F50EB2 /* OutMapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OutMapper.swift; sourceTree = "<group>"; };
+		7C0EA6391EBA1D1E00F50EB2 /* IndexPath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IndexPath.swift; sourceTree = "<group>"; };
+		7C0EA63A1EBA1D1E00F50EB2 /* Mappable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mappable.swift; sourceTree = "<group>"; };
+		7C0EA63B1EBA1D1E00F50EB2 /* CocoaMapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaMapper.swift; sourceTree = "<group>"; };
+		7C0EA64E1EBA1D3100F50EB2 /* Shallows+Mapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Shallows+Mapper.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +123,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7C0EA5FF1EBA1C3100F50EB2 /* Alba.framework in Frameworks */,
+				7C0EA61C1EBA1C9000F50EB2 /* TheGreatKit.framework in Frameworks */,
+				7C0EA6001EBA1C3100F50EB2 /* Avenues.framework in Frameworks */,
+				7C0EA6011EBA1C3100F50EB2 /* Shallows.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,15 +137,37 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7C0EA6031EBA1C9000F50EB2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7C0EA6291EBA1CC300F50EB2 /* Alba.framework in Frameworks */,
+				7C0EA62A1EBA1CC400F50EB2 /* Avenues.framework in Frameworks */,
+				7C0EA62B1EBA1CC700F50EB2 /* Shallows.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7C0EA60C1EBA1C9000F50EB2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7C0EA6101EBA1C9000F50EB2 /* TheGreatKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		7C0EA5CE1EBA1B3400F50EB2 = {
 			isa = PBXGroup;
 			children = (
-				7C0EA5D91EBA1B3500F50EB2 /* TheGreatGame */,
-				7C0EA5EE1EBA1B3500F50EB2 /* TheGreatGameTests */,
+				7C0EA6251EBA1CA300F50EB2 /* Shared */,
+				7C0EA5D91EBA1B3500F50EB2 /* iOS App */,
+				7C0EA5EE1EBA1B3500F50EB2 /* iOS Tests */,
+				7C0EA6081EBA1C9000F50EB2 /* Kit */,
+				7C0EA6151EBA1C9000F50EB2 /* Kit Tests */,
 				7C0EA5D81EBA1B3500F50EB2 /* Products */,
+				7C0EA5FB1EBA1C3100F50EB2 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -70,11 +176,13 @@
 			children = (
 				7C0EA5D71EBA1B3500F50EB2 /* TheGreatGame.app */,
 				7C0EA5EB1EBA1B3500F50EB2 /* TheGreatGameTests.xctest */,
+				7C0EA6071EBA1C9000F50EB2 /* TheGreatKit.framework */,
+				7C0EA60F1EBA1C9000F50EB2 /* TheGreatKitTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		7C0EA5D91EBA1B3500F50EB2 /* TheGreatGame */ = {
+		7C0EA5D91EBA1B3500F50EB2 /* iOS App */ = {
 			isa = PBXGroup;
 			children = (
 				7C0EA5DA1EBA1B3500F50EB2 /* AppDelegate.swift */,
@@ -84,19 +192,113 @@
 				7C0EA5E31EBA1B3500F50EB2 /* LaunchScreen.storyboard */,
 				7C0EA5E61EBA1B3500F50EB2 /* Info.plist */,
 			);
+			name = "iOS App";
 			path = TheGreatGame;
 			sourceTree = "<group>";
 		};
-		7C0EA5EE1EBA1B3500F50EB2 /* TheGreatGameTests */ = {
+		7C0EA5EE1EBA1B3500F50EB2 /* iOS Tests */ = {
 			isa = PBXGroup;
 			children = (
 				7C0EA5EF1EBA1B3500F50EB2 /* TheGreatGameTests.swift */,
 				7C0EA5F11EBA1B3500F50EB2 /* Info.plist */,
 			);
+			name = "iOS Tests";
 			path = TheGreatGameTests;
 			sourceTree = "<group>";
 		};
+		7C0EA5FB1EBA1C3100F50EB2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7C0EA5FC1EBA1C3100F50EB2 /* Alba.framework */,
+				7C0EA5FD1EBA1C3100F50EB2 /* Avenues.framework */,
+				7C0EA5FE1EBA1C3100F50EB2 /* Shallows.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7C0EA6081EBA1C9000F50EB2 /* Kit */ = {
+			isa = PBXGroup;
+			children = (
+				7C0EA6301EBA1D0600F50EB2 /* Mapper */,
+				7C0EA62C1EBA1CDD00F50EB2 /* TGK+Shallows */,
+				7C0EA6091EBA1C9000F50EB2 /* TheGreatKit.h */,
+				7C0EA60A1EBA1C9000F50EB2 /* Info.plist */,
+			);
+			name = Kit;
+			path = TheGreatKit;
+			sourceTree = "<group>";
+		};
+		7C0EA6151EBA1C9000F50EB2 /* Kit Tests */ = {
+			isa = PBXGroup;
+			children = (
+				7C0EA6161EBA1C9000F50EB2 /* TheGreatKitTests.swift */,
+				7C0EA6181EBA1C9000F50EB2 /* Info.plist */,
+			);
+			name = "Kit Tests";
+			path = TheGreatKitTests;
+			sourceTree = "<group>";
+		};
+		7C0EA6251EBA1CA300F50EB2 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				7C0EA6261EBA1CB100F50EB2 /* Jubilee.swift */,
+			);
+			name = Shared;
+			sourceTree = "<group>";
+		};
+		7C0EA62C1EBA1CDD00F50EB2 /* TGK+Shallows */ = {
+			isa = PBXGroup;
+			children = (
+				7C0EA62D1EBA1CFC00F50EB2 /* GitHubCache.swift */,
+				7C0EA64E1EBA1D3100F50EB2 /* Shallows+Mapper.swift */,
+			);
+			name = "TGK+Shallows";
+			sourceTree = "<group>";
+		};
+		7C0EA6301EBA1D0600F50EB2 /* Mapper */ = {
+			isa = PBXGroup;
+			children = (
+				7C0EA6311EBA1D1E00F50EB2 /* InMapper */,
+				7C0EA6351EBA1D1E00F50EB2 /* OutMapper */,
+				7C0EA6391EBA1D1E00F50EB2 /* IndexPath.swift */,
+				7C0EA63A1EBA1D1E00F50EB2 /* Mappable.swift */,
+				7C0EA63B1EBA1D1E00F50EB2 /* CocoaMapper.swift */,
+			);
+			name = Mapper;
+			sourceTree = "<group>";
+		};
+		7C0EA6311EBA1D1E00F50EB2 /* InMapper */ = {
+			isa = PBXGroup;
+			children = (
+				7C0EA6321EBA1D1E00F50EB2 /* InMap.swift */,
+				7C0EA6331EBA1D1E00F50EB2 /* InMappable.swift */,
+				7C0EA6341EBA1D1E00F50EB2 /* InMapper.swift */,
+			);
+			path = InMapper;
+			sourceTree = "<group>";
+		};
+		7C0EA6351EBA1D1E00F50EB2 /* OutMapper */ = {
+			isa = PBXGroup;
+			children = (
+				7C0EA6361EBA1D1E00F50EB2 /* OutMap.swift */,
+				7C0EA6371EBA1D1E00F50EB2 /* OutMappable.swift */,
+				7C0EA6381EBA1D1E00F50EB2 /* OutMapper.swift */,
+			);
+			path = OutMapper;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		7C0EA6041EBA1C9000F50EB2 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7C0EA6191EBA1C9000F50EB2 /* TheGreatKit.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		7C0EA5D61EBA1B3500F50EB2 /* TheGreatGame */ = {
@@ -106,10 +308,13 @@
 				7C0EA5D31EBA1B3500F50EB2 /* Sources */,
 				7C0EA5D41EBA1B3500F50EB2 /* Frameworks */,
 				7C0EA5D51EBA1B3500F50EB2 /* Resources */,
+				7C0EA5FA1EBA1BEF00F50EB2 /* Carthage Copy Frameworks */,
+				7C0EA6211EBA1C9000F50EB2 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				7C0EA61B1EBA1C9000F50EB2 /* PBXTargetDependency */,
 			);
 			name = TheGreatGame;
 			productName = TheGreatGame;
@@ -134,6 +339,43 @@
 			productReference = 7C0EA5EB1EBA1B3500F50EB2 /* TheGreatGameTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		7C0EA6061EBA1C9000F50EB2 /* TheGreatKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7C0EA61E1EBA1C9000F50EB2 /* Build configuration list for PBXNativeTarget "TheGreatKit" */;
+			buildPhases = (
+				7C0EA6021EBA1C9000F50EB2 /* Sources */,
+				7C0EA6031EBA1C9000F50EB2 /* Frameworks */,
+				7C0EA6041EBA1C9000F50EB2 /* Headers */,
+				7C0EA6051EBA1C9000F50EB2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TheGreatKit;
+			productName = TheGreatKit;
+			productReference = 7C0EA6071EBA1C9000F50EB2 /* TheGreatKit.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		7C0EA60E1EBA1C9000F50EB2 /* TheGreatKitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7C0EA6221EBA1C9000F50EB2 /* Build configuration list for PBXNativeTarget "TheGreatKitTests" */;
+			buildPhases = (
+				7C0EA60B1EBA1C9000F50EB2 /* Sources */,
+				7C0EA60C1EBA1C9000F50EB2 /* Frameworks */,
+				7C0EA60D1EBA1C9000F50EB2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7C0EA6121EBA1C9000F50EB2 /* PBXTargetDependency */,
+				7C0EA6141EBA1C9000F50EB2 /* PBXTargetDependency */,
+			);
+			name = TheGreatKitTests;
+			productName = TheGreatKitTests;
+			productReference = 7C0EA60F1EBA1C9000F50EB2 /* TheGreatKitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -150,6 +392,18 @@
 						ProvisioningStyle = Automatic;
 					};
 					7C0EA5EA1EBA1B3500F50EB2 = {
+						CreatedOnToolsVersion = 8.3.2;
+						DevelopmentTeam = 8E9Y56P64W;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 7C0EA5D61EBA1B3500F50EB2;
+					};
+					7C0EA6061EBA1C9000F50EB2 = {
+						CreatedOnToolsVersion = 8.3.2;
+						DevelopmentTeam = 8E9Y56P64W;
+						LastSwiftMigration = 0830;
+						ProvisioningStyle = Automatic;
+					};
+					7C0EA60E1EBA1C9000F50EB2 = {
 						CreatedOnToolsVersion = 8.3.2;
 						DevelopmentTeam = 8E9Y56P64W;
 						ProvisioningStyle = Automatic;
@@ -172,6 +426,8 @@
 			targets = (
 				7C0EA5D61EBA1B3500F50EB2 /* TheGreatGame */,
 				7C0EA5EA1EBA1B3500F50EB2 /* TheGreatGameTests */,
+				7C0EA6061EBA1C9000F50EB2 /* TheGreatKit */,
+				7C0EA60E1EBA1C9000F50EB2 /* TheGreatKitTests */,
 			);
 		};
 /* End PBXProject section */
@@ -194,7 +450,41 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7C0EA6051EBA1C9000F50EB2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7C0EA60D1EBA1C9000F50EB2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7C0EA5FA1EBA1BEF00F50EB2 /* Carthage Copy Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Alba.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Shallows.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Avenues.framework",
+			);
+			name = "Carthage Copy Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		7C0EA5D31EBA1B3500F50EB2 /* Sources */ = {
@@ -203,6 +493,7 @@
 			files = (
 				7C0EA5DD1EBA1B3500F50EB2 /* ViewController.swift in Sources */,
 				7C0EA5DB1EBA1B3500F50EB2 /* AppDelegate.swift in Sources */,
+				7C0EA6271EBA1CB100F50EB2 /* Jubilee.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,6 +505,33 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7C0EA6021EBA1C9000F50EB2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7C0EA6451EBA1D1E00F50EB2 /* OutMappable.swift in Sources */,
+				7C0EA64B1EBA1D1E00F50EB2 /* Mappable.swift in Sources */,
+				7C0EA6411EBA1D1E00F50EB2 /* InMapper.swift in Sources */,
+				7C0EA64D1EBA1D1E00F50EB2 /* CocoaMapper.swift in Sources */,
+				7C0EA63F1EBA1D1E00F50EB2 /* InMappable.swift in Sources */,
+				7C0EA64F1EBA1D3100F50EB2 /* Shallows+Mapper.swift in Sources */,
+				7C0EA6281EBA1CB100F50EB2 /* Jubilee.swift in Sources */,
+				7C0EA6491EBA1D1E00F50EB2 /* IndexPath.swift in Sources */,
+				7C0EA62F1EBA1CFC00F50EB2 /* GitHubCache.swift in Sources */,
+				7C0EA63D1EBA1D1E00F50EB2 /* InMap.swift in Sources */,
+				7C0EA6431EBA1D1E00F50EB2 /* OutMap.swift in Sources */,
+				7C0EA6471EBA1D1E00F50EB2 /* OutMapper.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7C0EA60B1EBA1C9000F50EB2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7C0EA6171EBA1C9000F50EB2 /* TheGreatKitTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -221,6 +539,21 @@
 			isa = PBXTargetDependency;
 			target = 7C0EA5D61EBA1B3500F50EB2 /* TheGreatGame */;
 			targetProxy = 7C0EA5EC1EBA1B3500F50EB2 /* PBXContainerItemProxy */;
+		};
+		7C0EA6121EBA1C9000F50EB2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7C0EA6061EBA1C9000F50EB2 /* TheGreatKit */;
+			targetProxy = 7C0EA6111EBA1C9000F50EB2 /* PBXContainerItemProxy */;
+		};
+		7C0EA6141EBA1C9000F50EB2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7C0EA5D61EBA1B3500F50EB2 /* TheGreatGame */;
+			targetProxy = 7C0EA6131EBA1C9000F50EB2 /* PBXContainerItemProxy */;
+		};
+		7C0EA61B1EBA1C9000F50EB2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7C0EA6061EBA1C9000F50EB2 /* TheGreatKit */;
+			targetProxy = 7C0EA61A1EBA1C9000F50EB2 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -340,8 +673,13 @@
 		7C0EA5F51EBA1B3500F50EB2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 8E9Y56P64W;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = TheGreatGame/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatGame";
@@ -353,8 +691,13 @@
 		7C0EA5F61EBA1B3500F50EB2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 8E9Y56P64W;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = TheGreatGame/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatGame";
@@ -393,6 +736,91 @@
 			};
 			name = Release;
 		};
+		7C0EA61F1EBA1C9000F50EB2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 8E9Y56P64W;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = TheGreatKit/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatKit";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		7C0EA6201EBA1C9000F50EB2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 8E9Y56P64W;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = TheGreatKit/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatKit";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		7C0EA6231EBA1C9000F50EB2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				DEVELOPMENT_TEAM = 8E9Y56P64W;
+				INFOPLIST_FILE = TheGreatKitTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatKitTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TheGreatGame.app/TheGreatGame";
+			};
+			name = Debug;
+		};
+		7C0EA6241EBA1C9000F50EB2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				DEVELOPMENT_TEAM = 8E9Y56P64W;
+				INFOPLIST_FILE = TheGreatKitTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatKitTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TheGreatGame.app/TheGreatGame";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -418,6 +846,22 @@
 			buildConfigurations = (
 				7C0EA5F81EBA1B3500F50EB2 /* Debug */,
 				7C0EA5F91EBA1B3500F50EB2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		7C0EA61E1EBA1C9000F50EB2 /* Build configuration list for PBXNativeTarget "TheGreatKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7C0EA61F1EBA1C9000F50EB2 /* Debug */,
+				7C0EA6201EBA1C9000F50EB2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		7C0EA6221EBA1C9000F50EB2 /* Build configuration list for PBXNativeTarget "TheGreatKitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7C0EA6231EBA1C9000F50EB2 /* Debug */,
+				7C0EA6241EBA1C9000F50EB2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};

@@ -1,0 +1,70 @@
+import Foundation
+
+precedencegroup Apply {
+    associativity: left
+    lowerThan: AdditionPrecedence
+}
+
+infix operator <* : Apply
+
+func <* <T, V> (lhs: T, rhs: (T) -> V) -> V {
+    return rhs(lhs)
+}
+
+infix operator <-
+
+func <- <T>(value: T, modify: (inout T) -> Void) -> T {
+    var copy = value
+    modify(&copy)
+    return copy
+}
+
+@discardableResult
+func <- <T : AnyObject>(value: T, modify: (T) -> Void) -> T {
+    modify(value)
+    return value
+}
+
+func printed<T>(_ value: T) -> T {
+    print(value)
+    return value
+}
+
+func fault(_ info: Any) {
+    print("UNEXPECTED : \(info)")
+}
+
+func printWithContext(_ string: String? = nil, file: String = #file, line: UInt = #line, function: StaticString = #function) {
+    #if DEBUG
+        let str = string != nil ? " --> \(string!)" : ""
+        print("\((file as NSString).lastPathComponent): \(function): \(line)\(str)")
+    #endif
+}
+
+func logged<T>(_ value: T, _ message: String) -> T {
+    print(value, message)
+    return value
+}
+
+func jprint<T>(_ value: T) {
+    print(value)
+}
+
+@available(*, deprecated, message: "Unimplemented code")
+var later: Never {
+    fatalError("Unimplemented")
+}
+
+func runtimeInject<In, Out>(_ input: In) -> Out {
+    fatalError("Should inject")
+}
+
+extension Optional {
+    
+    func then(_ apply: (Wrapped) -> ()) {
+        if let value = self {
+            apply(value)
+        }
+    }
+    
+}

@@ -9,6 +9,11 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>TheGreatKit.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
@@ -18,6 +23,16 @@
 			<true/>
 		</dict>
 		<key>7C0EA5EA1EBA1B3500F50EB2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>7C0EA6061EBA1C9000F50EB2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>7C0EA60E1EBA1C9000F50EB2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
