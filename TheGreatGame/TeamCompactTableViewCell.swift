@@ -24,18 +24,5 @@ class TeamCompactTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    
-    func setBadge(_ badgeImage: UIImage?, afterImageDownload: Bool) {
-        let old = badgeImageView.image
-        badgeImageView.image = badgeImage
-        if afterImageDownload && badgeImage != nil && old == nil {
-            let transition = CATransition() <- {
-                $0.duration = 0.2
-                $0.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-                $0.type = kCATransitionFade
-            }
-            badgeImageView.layer.add(transition, forKey: nil)
-        }
-    }
-    
+        
 }

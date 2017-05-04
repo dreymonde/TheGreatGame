@@ -26,7 +26,10 @@ final class UserInterface {
     
     func inject(to teamsList: TeamsTableViewController) {
         teamsList <- {
-            $0.provider = logic.teamsAPI.all.mapValues({ $0.teams })
+            $0.teamsProvider = logic.teamsAPI.all.mapValues({ $0.content.teams })
+                .mainThread()
+                .connectingNetworkActivityIndicator()
+            $0.fullTeamProvider = logic.teamsAPI.fullTeam.mapValues({ $0.content })
                 .mainThread()
                 .connectingNetworkActivityIndicator()
         }

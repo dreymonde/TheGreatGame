@@ -15,15 +15,17 @@ class TeamsTableViewController: UITableViewController {
     
     var teams: [Team] = []
     
-    var provider: ReadOnlyCache<Void, [Team]>!
-    let avenue: Avenue<IndexPath, URL, UIImage> = {
+    var teamsProvider: ReadOnlyCache<Void, [Team]>!
+    var fullTeamProvider: ReadOnlyCache<TeamID, TeamFull>!
+    
+    let avenue: SymmetricalAvenue<URL, UIImage> = {
         let imageCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "teams-badges-cache")
         print(imageCache.directoryURL)
         let lane = URLSessionProcessor(session: URLSession(configuration: .ephemeral))
-            //.caching(to: imageCache.mapKeys({ $0.path }))
+            .caching(to: imageCache.mapKeys({ $0.path }))
             .connectingNetworkActivityIndicator()
-        let storage: Storage<IndexPath, UIImage> = NSCacheStorage<NSIndexPath, UIImage>()
-            .mapKey({ $0 as NSIndexPath })
+        let storage: Storage<URL, UIImage> = NSCacheStorage<NSURL, UIImage>()
+            .mapKey({ $0 as NSURL })
         return Avenue(storage: storage, processor: lane.mapImage())
     }()
     
@@ -43,7 +45,7 @@ class TeamsTableViewController: UITableViewController {
     }
     
     fileprivate func loadTeams(onFinish: @escaping () -> () = { }) {
-        provider.retrieve { (teamsResult) in
+        teamsProvider.retrieve { (teamsResult) in
             assert(Thread.isMainThread)
             onFinish()
             print(teamsResult)
@@ -62,10 +64,10 @@ class TeamsTableViewController: UITableViewController {
         })
     }
     
-    private func configure(_ avenue: Avenue<IndexPath, URL, UIImage>) {
-        avenue.onStateChange = { [weak self] indexPath in
+    private func configure(_ avenue: Avenue<URL, URL, UIImage>) {
+        avenue.onStateChange = { [weak self] url in
             assert(Thread.isMainThread)
-            self?.didFetchImage(at: indexPath)
+            self?.didFetchImage(with: url)
         }
         avenue.onError = {
             print($0)
@@ -90,7 +92,11 @@ class TeamsTableViewController: UITableViewController {
         }
     }
     
-    func didFetchImage(at indexPath: IndexPath) {
+    func didFetchImage(with url: URL) {
+        guard let indexPath = teams.index(where: { $0.badgeURL == url }).map({ IndexPath(row: $0, section: 0) }) else {
+            fault("No team with badge url: \(url)")
+            return
+        }
         if let cell = tableView.cellForRow(at: indexPath) {
             configureCell(cell, forRowAt: indexPath, afterImageDownload: true)
         }
@@ -123,12 +129,21 @@ class TeamsTableViewController: UITableViewController {
     
     func configureTeamCompactCell(_ cell: TeamCompactTableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
         let team = teams[indexPath.row]
+        let badgeURL = team.badgeURL
         if !afterImageDownload {
-            avenue.prepareItem(for: team.badgeURL, storingTo: indexPath)
+            avenue.prepareItem(at: badgeURL)
         }
         cell.nameLabel.text = team.name
         cell.shortNameLabel.text = team.shortName
-        cell.setBadge(avenue.item(at: indexPath), afterImageDownload: afterImageDownload)
+        cell.badgeImageView.setImage(avenue.item(at: badgeURL), afterDownload: true)
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let team = teams[indexPath.row]
+        fullTeamProvider.retrieve(forKey: team.id) { (result) in
+            print(result)
+        }
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 
     /*
