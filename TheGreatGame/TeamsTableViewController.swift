@@ -20,24 +20,21 @@ class TeamsTableViewController: UITableViewController {
         let imageCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "teams-badges-cache")
         print(imageCache.directoryURL)
         let lane = URLSessionProcessor(session: URLSession(configuration: .ephemeral))
-            .caching(to: imageCache.mapKeys({ $0.path }))
+            //.caching(to: imageCache.mapKeys({ $0.path }))
+            .connectingNetworkActivityIndicator()
         let storage: Storage<IndexPath, UIImage> = NSCacheStorage<NSIndexPath, UIImage>()
             .mapKey({ $0 as NSIndexPath })
         return Avenue(storage: storage, processor: lane.mapImage())
     }()
+    
+    var pullToRefreshActivities: NetworkActivity.IndicatorManager!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureTableView()
-        configureAvenue()
-        provider.retrieve { (teamsResult) in
-            assert(Thread.isMainThread)
-            print(teamsResult)
-            if let teams = teamsResult.asOptional {
-                self.teams = teams
-                self.tableView.reloadData()
-            }
-        }
+        configure(tableView)
+        configure(avenue)
+        self.pullToRefreshActivities = make()
+        loadTeams()
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -45,7 +42,27 @@ class TeamsTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
     
-    private func configureAvenue() {
+    fileprivate func loadTeams(onFinish: @escaping () -> () = { }) {
+        provider.retrieve { (teamsResult) in
+            assert(Thread.isMainThread)
+            onFinish()
+            print(teamsResult)
+            if let teams = teamsResult.asOptional {
+                self.teams = teams
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
+    private func make() -> NetworkActivity.IndicatorManager {
+        return NetworkActivity.IndicatorManager(show: { [weak self] in
+            self?.refreshControl?.beginRefreshing()
+        }, hide: { [weak self] in
+            self?.refreshControl?.endRefreshing()
+        })
+    }
+    
+    private func configure(_ avenue: Avenue<IndexPath, URL, UIImage>) {
         avenue.onStateChange = { [weak self] indexPath in
             assert(Thread.isMainThread)
             self?.didFetchImage(at: indexPath)
@@ -55,7 +72,7 @@ class TeamsTableViewController: UITableViewController {
         }
     }
     
-    private func configureTableView() {
+    private func configure(_ tableView: UITableView) {
         tableView.register(UINib.init(nibName: "TeamCompactTableViewCell", bundle: nil),
                            forCellReuseIdentifier: "TeamCompact")
         tableView.rowHeight = 50
@@ -64,6 +81,13 @@ class TeamsTableViewController: UITableViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
+        pullToRefreshActivities.increment()
+        loadTeams {
+            self.pullToRefreshActivities.decrement()
+        }
     }
     
     func didFetchImage(at indexPath: IndexPath) {

@@ -45,6 +45,10 @@
 		7C0EA6631EBA542E00F50EB2 /* TeamCompactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6611EBA542E00F50EB2 /* TeamCompactTableViewCell.swift */; };
 		7C0EA6641EBA542E00F50EB2 /* TeamCompactTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C0EA6621EBA542E00F50EB2 /* TeamCompactTableViewCell.xib */; };
 		7C0EA6661EBA599D00F50EB2 /* Avenues+Shallows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6651EBA599D00F50EB2 /* Avenues+Shallows.swift */; };
+		7C7916DD1EBB10370070E6C5 /* NetworkActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916DC1EBB10370070E6C5 /* NetworkActivity.swift */; };
+		7C7916DF1EBB12250070E6C5 /* NetworkActivityIndicatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916DE1EBB12250070E6C5 /* NetworkActivityIndicatorTests.swift */; };
+		7C7916E11EBB14D50070E6C5 /* ShallowsExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916E01EBB14D40070E6C5 /* ShallowsExtensions.swift */; };
+		7C7916E41EBB15B20070E6C5 /* AvenuesExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916E31EBB15B20070E6C5 /* AvenuesExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,6 +136,10 @@
 		7C0EA6611EBA542E00F50EB2 /* TeamCompactTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamCompactTableViewCell.swift; sourceTree = "<group>"; };
 		7C0EA6621EBA542E00F50EB2 /* TeamCompactTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TeamCompactTableViewCell.xib; sourceTree = "<group>"; };
 		7C0EA6651EBA599D00F50EB2 /* Avenues+Shallows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Avenues+Shallows.swift"; sourceTree = "<group>"; };
+		7C7916DC1EBB10370070E6C5 /* NetworkActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkActivity.swift; sourceTree = "<group>"; };
+		7C7916DE1EBB12250070E6C5 /* NetworkActivityIndicatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkActivityIndicatorTests.swift; sourceTree = "<group>"; };
+		7C7916E01EBB14D40070E6C5 /* ShallowsExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShallowsExtensions.swift; sourceTree = "<group>"; };
+		7C7916E31EBB15B20070E6C5 /* AvenuesExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvenuesExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -237,9 +245,11 @@
 		7C0EA6081EBA1C9000F50EB2 /* Kit */ = {
 			isa = PBXGroup;
 			children = (
+				7C7916DB1EBB101A0070E6C5 /* Services */,
 				7C0EA6571EBA1EDA00F50EB2 /* Models */,
 				7C0EA6541EBA1EBF00F50EB2 /* API */,
 				7C0EA6301EBA1D0600F50EB2 /* Mapper */,
+				7C7916E21EBB15980070E6C5 /* TGK+Avenues */,
 				7C0EA62C1EBA1CDD00F50EB2 /* TGK+Shallows */,
 				7C0EA6091EBA1C9000F50EB2 /* TheGreatKit.h */,
 				7C0EA60A1EBA1C9000F50EB2 /* Info.plist */,
@@ -253,6 +263,7 @@
 			children = (
 				7C0EA6161EBA1C9000F50EB2 /* TheGreatKitTests.swift */,
 				7C0EA6181EBA1C9000F50EB2 /* Info.plist */,
+				7C7916DE1EBB12250070E6C5 /* NetworkActivityIndicatorTests.swift */,
 			);
 			name = "Kit Tests";
 			path = TheGreatKitTests;
@@ -272,6 +283,7 @@
 				7C0EA6651EBA599D00F50EB2 /* Avenues+Shallows.swift */,
 				7C0EA62D1EBA1CFC00F50EB2 /* GitHubCache.swift */,
 				7C0EA64E1EBA1D3100F50EB2 /* Shallows+Mapper.swift */,
+				7C7916E01EBB14D40070E6C5 /* ShallowsExtensions.swift */,
 			);
 			name = "TGK+Shallows";
 			sourceTree = "<group>";
@@ -349,6 +361,22 @@
 				7C0EA6621EBA542E00F50EB2 /* TeamCompactTableViewCell.xib */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		7C7916DB1EBB101A0070E6C5 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				7C7916DC1EBB10370070E6C5 /* NetworkActivity.swift */,
+			);
+			name = Services;
+			sourceTree = "<group>";
+		};
+		7C7916E21EBB15980070E6C5 /* TGK+Avenues */ = {
+			isa = PBXGroup;
+			children = (
+				7C7916E31EBB15B20070E6C5 /* AvenuesExtensions.swift */,
+			);
+			name = "TGK+Avenues";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -577,10 +605,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7C7916DD1EBB10370070E6C5 /* NetworkActivity.swift in Sources */,
+				7C7916E11EBB14D50070E6C5 /* ShallowsExtensions.swift in Sources */,
 				7C0EA6451EBA1D1E00F50EB2 /* OutMappable.swift in Sources */,
 				7C0EA64B1EBA1D1E00F50EB2 /* Mappable.swift in Sources */,
 				7C0EA6411EBA1D1E00F50EB2 /* InMapper.swift in Sources */,
 				7C0EA64D1EBA1D1E00F50EB2 /* CocoaMapper.swift in Sources */,
+				7C7916E41EBB15B20070E6C5 /* AvenuesExtensions.swift in Sources */,
 				7C0EA6661EBA599D00F50EB2 /* Avenues+Shallows.swift in Sources */,
 				7C0EA63F1EBA1D1E00F50EB2 /* InMappable.swift in Sources */,
 				7C0EA64F1EBA1D3100F50EB2 /* Shallows+Mapper.swift in Sources */,
@@ -601,6 +632,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7C0EA6171EBA1C9000F50EB2 /* TheGreatKitTests.swift in Sources */,
+				7C7916DF1EBB12250070E6C5 /* NetworkActivityIndicatorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -912,6 +944,7 @@
 				7C0EA5F61EBA1B3500F50EB2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7C0EA5F71EBA1B3500F50EB2 /* Build configuration list for PBXNativeTarget "TheGreatGameTests" */ = {
 			isa = XCConfigurationList;
@@ -920,6 +953,7 @@
 				7C0EA5F91EBA1B3500F50EB2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7C0EA61E1EBA1C9000F50EB2 /* Build configuration list for PBXNativeTarget "TheGreatKit" */ = {
 			isa = XCConfigurationList;
@@ -928,6 +962,7 @@
 				7C0EA6201EBA1C9000F50EB2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7C0EA6221EBA1C9000F50EB2 /* Build configuration list for PBXNativeTarget "TheGreatKitTests" */ = {
 			isa = XCConfigurationList;
@@ -936,6 +971,7 @@
 				7C0EA6241EBA1C9000F50EB2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

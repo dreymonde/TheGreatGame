@@ -9,6 +9,7 @@
 import UIKit
 import Shallows
 import Avenues
+import TheGreatKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,6 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         super.init()
         Avenues.Log.isEnabled = true
         ShallowsLog.isEnabled = true
+        NetworkActivity.IndicatorManager.isLogEnabled = true
     }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {

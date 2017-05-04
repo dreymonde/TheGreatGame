@@ -23,6 +23,12 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="The Great Game" id="Feb-GV-7aL"/>
+                    <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="tkC-w5-JNR">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <connections>
+                            <action selector="didPullToRefresh:" destination="J9u-Sc-kqY" eventType="valueChanged" id="mqP-cI-YcS"/>
+                        </connections>
+                    </refreshControl>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="t5n-Hb-cDO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
