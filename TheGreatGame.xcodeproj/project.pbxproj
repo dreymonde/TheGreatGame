@@ -248,8 +248,7 @@
 				7C0EA5E31EBA1B3500F50EB2 /* LaunchScreen.storyboard */,
 				7C0EA5E61EBA1B3500F50EB2 /* Info.plist */,
 			);
-			name = "iOS App";
-			path = TheGreatGame;
+			path = "iOS App";
 			sourceTree = "<group>";
 		};
 		7C0EA5EE1EBA1B3500F50EB2 /* iOS Tests */ = {
@@ -258,8 +257,7 @@
 				7C0EA5EF1EBA1B3500F50EB2 /* TheGreatGameTests.swift */,
 				7C0EA5F11EBA1B3500F50EB2 /* Info.plist */,
 			);
-			name = "iOS Tests";
-			path = TheGreatGameTests;
+			path = "iOS Tests";
 			sourceTree = "<group>";
 		};
 		7C0EA5FB1EBA1C3100F50EB2 /* Frameworks */ = {
@@ -284,8 +282,7 @@
 				7C0EA6091EBA1C9000F50EB2 /* TheGreatKit.h */,
 				7C0EA60A1EBA1C9000F50EB2 /* Info.plist */,
 			);
-			name = Kit;
-			path = TheGreatKit;
+			path = Kit;
 			sourceTree = "<group>";
 		};
 		7C0EA6151EBA1C9000F50EB2 /* Kit Tests */ = {
@@ -297,8 +294,7 @@
 				7C7916EA1EBB34E50070E6C5 /* ShallowsExtensionsTests.swift */,
 				7C7916ED1EBB36F70070E6C5 /* TeamsAPITests.swift */,
 			);
-			name = "Kit Tests";
-			path = TheGreatKitTests;
+			path = "Kit Tests";
 			sourceTree = "<group>";
 		};
 		7C0EA6251EBA1CA300F50EB2 /* Shared */ = {
@@ -306,7 +302,7 @@
 			children = (
 				7C0EA6261EBA1CB100F50EB2 /* Jubilee.swift */,
 			);
-			name = Shared;
+			path = Shared;
 			sourceTree = "<group>";
 		};
 		7C0EA62C1EBA1CDD00F50EB2 /* TGK+Shallows */ = {
@@ -318,7 +314,7 @@
 				7C7916E01EBB14D40070E6C5 /* Shallows+ActivityIndicator.swift */,
 				7C7916E81EBB326C0070E6C5 /* Shallows+Zip.swift */,
 			);
-			name = "TGK+Shallows";
+			path = "TGK+Shallows";
 			sourceTree = "<group>";
 		};
 		7C0EA6301EBA1D0600F50EB2 /* Mapper */ = {
@@ -330,7 +326,7 @@
 				7C0EA63A1EBA1D1E00F50EB2 /* Mappable.swift */,
 				7C0EA63B1EBA1D1E00F50EB2 /* CocoaMapper.swift */,
 			);
-			name = Mapper;
+			path = Mapper;
 			sourceTree = "<group>";
 		};
 		7C0EA6311EBA1D1E00F50EB2 /* InMapper */ = {
@@ -358,7 +354,7 @@
 			children = (
 				7C0EA6551EBA1ECB00F50EB2 /* Teams.swift */,
 			);
-			name = API;
+			path = API;
 			sourceTree = "<group>";
 		};
 		7C0EA6571EBA1EDA00F50EB2 /* Models */ = {
@@ -368,7 +364,7 @@
 				7C1E66421EBB5B31003AF505 /* Team */,
 				7C0EA65A1EBA1F0200F50EB2 /* Editioned.swift */,
 			);
-			name = Models;
+			path = Models;
 			sourceTree = "<group>";
 		};
 		7C0EA65E1EBA53F100F50EB2 /* View */ = {
@@ -379,7 +375,7 @@
 				7C0EA65F1EBA53F600F50EB2 /* TeamsList */,
 				7C7916F51EBB3D2D0070E6C5 /* TeamDetail */,
 			);
-			name = View;
+			path = View;
 			sourceTree = "<group>";
 		};
 		7C0EA65F1EBA53F600F50EB2 /* TeamsList */ = {
@@ -388,7 +384,7 @@
 				7C0EA6601EBA541300F50EB2 /* Views */,
 				7C0EA65C1EBA218000F50EB2 /* TeamsTableViewController.swift */,
 			);
-			name = TeamsList;
+			path = TeamsList;
 			sourceTree = "<group>";
 		};
 		7C0EA6601EBA541300F50EB2 /* Views */ = {
@@ -397,7 +393,7 @@
 				7C0EA6611EBA542E00F50EB2 /* TeamCompactTableViewCell.swift */,
 				7C0EA6621EBA542E00F50EB2 /* TeamCompactTableViewCell.xib */,
 			);
-			name = Views;
+			path = Views;
 			sourceTree = "<group>";
 		};
 		7C1E663D1EBB4319003AF505 /* Bases */ = {
@@ -407,7 +403,7 @@
 				7C1E66391EBB42C4003AF505 /* TableViewController.swift */,
 				7C1E663B1EBB42FE003AF505 /* NavigationController.swift */,
 			);
-			name = Bases;
+			path = Bases;
 			sourceTree = "<group>";
 		};
 		7C1E66421EBB5B31003AF505 /* Team */ = {
@@ -416,7 +412,7 @@
 				7C0EA6581EBA1EF200F50EB2 /* Team.swift */,
 				7C7916EF1EBB37910070E6C5 /* TeamFull.swift */,
 			);
-			name = Team;
+			path = Team;
 			sourceTree = "<group>";
 		};
 		7C1E66431EBB66AB003AF505 /* Group */ = {
@@ -424,7 +420,7 @@
 			children = (
 				7C1E66441EBB67CC003AF505 /* Group.swift */,
 			);
-			name = Group;
+			path = Group;
 			sourceTree = "<group>";
 		};
 		7C7916DB1EBB101A0070E6C5 /* Services */ = {
@@ -432,7 +428,7 @@
 			children = (
 				7C7916DC1EBB10370070E6C5 /* NetworkActivity.swift */,
 			);
-			name = Services;
+			path = Services;
 			sourceTree = "<group>";
 		};
 		7C7916E21EBB15980070E6C5 /* TGK+Avenues */ = {
@@ -440,7 +436,7 @@
 			children = (
 				7C7916E31EBB15B20070E6C5 /* AvenuesExtensions.swift */,
 			);
-			name = "TGK+Avenues";
+			path = "TGK+Avenues";
 			sourceTree = "<group>";
 		};
 		7C7916E51EBB24420070E6C5 /* Extensions */ = {
@@ -448,7 +444,7 @@
 			children = (
 				7C7916E61EBB245A0070E6C5 /* UIKit+TGA.swift */,
 			);
-			name = Extensions;
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		7C7916F21EBB3D050070E6C5 /* Generated */ = {
@@ -465,7 +461,7 @@
 			children = (
 				7C1E66351EBB404A003AF505 /* TeamDetailViewController.swift */,
 			);
-			name = TeamDetail;
+			path = TeamDetail;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -680,7 +676,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if which swiftgen >/dev/null; then\nswiftgen storyboards -p \"$PROJECT_DIR/Resources/storyboards-lyft.stencil\" --sceneEnumName Storyboard \"$PROJECT_DIR/TheGreatGame\" > \"$PROJECT_DIR/TheGreatGame/Generated/Storyboards.swift\"\nswiftgen colors -t swift3 \"$PROJECT_DIR/TheGreatGame/Colors.json\" --output \"$PROJECT_DIR/TheGreatGame/Generated/Colors.swift\"\nelse\necho \"warning: SwiftGen not installed, download it from https://github.com/AliSoftware/SwiftGen\"\nfi";
+			shellScript = "if which swiftgen >/dev/null; then\nswiftgen storyboards -p \"$PROJECT_DIR/Resources/storyboards-lyft.stencil\" --sceneEnumName Storyboard \"$PROJECT_DIR/iOS App\" > \"$PROJECT_DIR/iOS App/Generated/Storyboards.swift\"\nswiftgen colors -t swift3 \"$PROJECT_DIR/iOS App/Colors.json\" --output \"$PROJECT_DIR/iOS App/Generated/Colors.swift\"\nelse\necho \"warning: SwiftGen not installed, download it from https://github.com/AliSoftware/SwiftGen\"\nfi";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -785,6 +781,7 @@
 				7C0EA5DF1EBA1B3500F50EB2 /* Base */,
 			);
 			name = Main.storyboard;
+			path = .;
 			sourceTree = "<group>";
 		};
 		7C0EA5E31EBA1B3500F50EB2 /* LaunchScreen.storyboard */ = {
@@ -793,6 +790,7 @@
 				7C0EA5E41EBA1B3500F50EB2 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			path = .;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -901,7 +899,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = TheGreatGame/Info.plist;
+				INFOPLIST_FILE = "iOS App/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatGame";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -919,7 +917,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = TheGreatGame/Info.plist;
+				INFOPLIST_FILE = "iOS App/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatGame";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -933,7 +931,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 8E9Y56P64W;
-				INFOPLIST_FILE = TheGreatGameTests/Info.plist;
+				INFOPLIST_FILE = "iOS Tests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatGameTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -948,7 +946,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 8E9Y56P64W;
-				INFOPLIST_FILE = TheGreatGameTests/Info.plist;
+				INFOPLIST_FILE = "iOS Tests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatGameTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -972,7 +970,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = TheGreatKit/Info.plist;
+				INFOPLIST_FILE = Kit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatKit";
@@ -1001,7 +999,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = TheGreatKit/Info.plist;
+				INFOPLIST_FILE = Kit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatKit";
@@ -1023,7 +1021,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = TheGreatKitTests/Info.plist;
+				INFOPLIST_FILE = "Kit Tests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatKitTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1041,7 +1039,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = TheGreatKitTests/Info.plist;
+				INFOPLIST_FILE = "Kit Tests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatKitTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
