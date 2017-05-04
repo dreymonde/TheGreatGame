@@ -10,10 +10,13 @@ import UIKit
 import TheGreatKit
 import Shallows
 
-class TeamDetailViewController: TheGreatGame.ViewController {
+class TeamDetailViewController: TheGreatGame.TableViewController {
     
     @IBOutlet weak var badgeImageView: UIImageView!
-    @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var rankLabel: UILabel!
+    @IBOutlet weak var codeLabel: UILabel!
+    @IBOutlet weak var flagImageView: UIImageView!
     
     enum State {
         case compact(Team.Compact)
@@ -28,6 +31,7 @@ class TeamDetailViewController: TheGreatGame.ViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .groupTableViewBackground
         setup()
         loadTeam()
         // Do any additional setup after loading the view.
@@ -38,8 +42,12 @@ class TeamDetailViewController: TheGreatGame.ViewController {
         case .compact(let compact):
             self.navigationItem.title = compact.name
             badgeImageView.image = badgeImage
-        case .full(let full):
-            descriptionLabel.text = full.description
+            flagImageView.image = badgeImage
+            nameLabel.text = compact.name
+            codeLabel.text = compact.shortName
+            rankLabel.text = String(compact.rank)
+        case .full:
+            break
         case .undefined:
             fault("State should be initialized")
         }

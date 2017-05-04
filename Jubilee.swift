@@ -50,6 +50,10 @@ func jprint<T>(_ value: T) {
     print(value)
 }
 
+func jdump<T>(_ value: T) {
+    dump(value)
+}
+
 @available(*, deprecated, message: "Unimplemented code")
 var later: Never {
     fatalError("Unimplemented")

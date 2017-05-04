@@ -140,12 +140,13 @@ class TeamsTableViewController: TheGreatGame.TableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let team = teams[indexPath.row]
-        let detail = Storyboard.Main.teamDetailViewController.instantiate() <- {
-            $0.provider = fullTeamProvider.singleKey(team.id)
-            $0.state = .compact(team)
-            $0.badgeImage = avenue.item(at: team.badgeURL)
-        }
-        navigationController?.pushViewController(detail, animated: true)
+//        let detail = Storyboard.Main.teamDetailViewController.instantiate() <- {
+//            $0.provider = fullTeamProvider.singleKey(team.id)
+//            $0.state = .compact(team)
+//            $0.badgeImage = avenue.item(at: team.badgeURL)
+//        }
+//        navigationController?.pushViewController(detail, animated: true)
+        fullTeamProvider.retrieve(forKey: team.id, completion: jdump)
         tableView.deselectRow(at: indexPath, animated: true)
     }
 

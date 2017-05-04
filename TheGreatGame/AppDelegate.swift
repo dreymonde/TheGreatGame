@@ -21,9 +21,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     override init() {
         super.init()
-        Avenues.Log.isEnabled = true
+        //Avenues.Log.isEnabled = true
         ShallowsLog.isEnabled = true
-        NetworkActivity.IndicatorManager.isLogEnabled = true
+        //NetworkActivity.IndicatorManager.isLogEnabled = true
     }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
