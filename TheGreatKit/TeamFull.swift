@@ -6,18 +6,22 @@
 //  Copyright © 2017 The Great Game. All rights reserved.
 //
 
-public struct TeamFull {
-    
-    public let id: TeamID
-    public let name: String
-    public let shortName: String
-    public let rank: Int
-    public let badgeURL: URL
-    public let description: String
+extension Team {
+
+    public struct Full {
+        
+        public let id: ID
+        public let name: String
+        public let shortName: String
+        public let rank: Int
+        public let badgeURL: URL
+        public let description: String
+        
+    }
     
 }
 
-extension TeamFull : Mappable {
+extension Team.Full : Mappable {
     
     public enum MappingKeys : String, IndexPathElement {
         case name

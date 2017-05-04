@@ -6,13 +6,14 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--The Great Game-->
         <scene sceneID="evO-R5-Suk">
             <objects>
-                <tableViewController id="J9u-Sc-kqY" customClass="TeamsTableViewController" customModule="TheGreatGame" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="TeamsTableViewController" id="J9u-Sc-kqY" customClass="TeamsTableViewController" customModule="TheGreatGame" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="X8a-IL-uDg">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -22,22 +23,74 @@
                             <outlet property="delegate" destination="J9u-Sc-kqY" id="Al8-2G-gy6"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="The Great Game" id="Feb-GV-7aL"/>
+                    <navigationItem key="navigationItem" title="The Great Game" id="Feb-GV-7aL">
+                        <barButtonItem key="backBarButtonItem" title=" " id="EQs-L8-8nf"/>
+                    </navigationItem>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="tkC-w5-JNR">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <connections>
                             <action selector="didPullToRefresh:" destination="J9u-Sc-kqY" eventType="valueChanged" id="mqP-cI-YcS"/>
                         </connections>
                     </refreshControl>
+                    <connections>
+                        <segue destination="zAv-mr-z4j" kind="show" identifier="&lt;#unused#&gt;" id="5Xf-7H-hrC"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="t5n-Hb-cDO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1034.4000000000001" y="138.98050974512745"/>
         </scene>
+        <!--Title-->
+        <scene sceneID="s0M-HO-GAJ">
+            <objects>
+                <viewController storyboardIdentifier="TeamDetailViewController" id="zAv-mr-z4j" customClass="TeamDetailViewController" customModule="TheGreatGame" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Xj1-zD-0Gr"/>
+                        <viewControllerLayoutGuide type="bottom" id="W7q-RI-vrE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="QMs-Yq-sMf">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TeE-dL-IrX">
+                                <rect key="frame" x="66" y="185" width="243" height="168"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="168" id="bBM-Hu-n5m"/>
+                                    <constraint firstAttribute="width" constant="243" id="n3a-A4-oEB"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4nM-iI-56h">
+                                <rect key="frame" x="26" y="377" width="323" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="4nM-iI-56h" firstAttribute="top" secondItem="TeE-dL-IrX" secondAttribute="bottom" constant="24" id="KEd-Uv-Vsv"/>
+                            <constraint firstItem="TeE-dL-IrX" firstAttribute="top" secondItem="Xj1-zD-0Gr" secondAttribute="bottom" constant="165" id="V3A-c3-rek"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="4nM-iI-56h" secondAttribute="trailing" constant="10" id="cAw-yW-Hb3"/>
+                            <constraint firstItem="4nM-iI-56h" firstAttribute="leading" secondItem="QMs-Yq-sMf" secondAttribute="leadingMargin" constant="10" id="cMt-OP-B5V"/>
+                            <constraint firstItem="TeE-dL-IrX" firstAttribute="leading" secondItem="QMs-Yq-sMf" secondAttribute="leadingMargin" constant="50" id="fHC-Aa-rLf"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="TeE-dL-IrX" secondAttribute="trailing" constant="50" id="g17-5J-haP"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Title" id="mOr-Wr-wrn"/>
+                    <connections>
+                        <outlet property="badgeImageView" destination="TeE-dL-IrX" id="lI1-4C-oDF"/>
+                        <outlet property="descriptionLabel" destination="4nM-iI-56h" id="vWZ-hy-Vjo"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="66Q-gL-01Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1942" y="139"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="wO6-qi-7Qu">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="tsm-7D-H63" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="tsm-7D-H63" customClass="NavigationController" customModule="TheGreatGame" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Uwo-6M-BqL">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>

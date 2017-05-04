@@ -45,16 +45,23 @@
 		7C0EA6631EBA542E00F50EB2 /* TeamCompactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6611EBA542E00F50EB2 /* TeamCompactTableViewCell.swift */; };
 		7C0EA6641EBA542E00F50EB2 /* TeamCompactTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C0EA6621EBA542E00F50EB2 /* TeamCompactTableViewCell.xib */; };
 		7C0EA6661EBA599D00F50EB2 /* Avenues+Shallows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6651EBA599D00F50EB2 /* Avenues+Shallows.swift */; };
+		7C1E66361EBB404A003AF505 /* TeamDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1E66351EBB404A003AF505 /* TeamDetailViewController.swift */; };
+		7C1E66381EBB4284003AF505 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1E66371EBB4284003AF505 /* ViewController.swift */; };
+		7C1E663A1EBB42C4003AF505 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1E66391EBB42C4003AF505 /* TableViewController.swift */; };
+		7C1E663C1EBB42FE003AF505 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1E663B1EBB42FE003AF505 /* NavigationController.swift */; };
+		7C1E663F1EBB5651003AF505 /* Colors.json in Resources */ = {isa = PBXBuildFile; fileRef = 7C1E663E1EBB5651003AF505 /* Colors.json */; };
+		7C1E66411EBB5740003AF505 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1E66401EBB5740003AF505 /* Colors.swift */; };
 		7C7916DD1EBB10370070E6C5 /* NetworkActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916DC1EBB10370070E6C5 /* NetworkActivity.swift */; };
 		7C7916DF1EBB12250070E6C5 /* NetworkActivityIndicatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916DE1EBB12250070E6C5 /* NetworkActivityIndicatorTests.swift */; };
 		7C7916E11EBB14D50070E6C5 /* Shallows+ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916E01EBB14D40070E6C5 /* Shallows+ActivityIndicator.swift */; };
 		7C7916E41EBB15B20070E6C5 /* AvenuesExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916E31EBB15B20070E6C5 /* AvenuesExtensions.swift */; };
-		7C7916E71EBB245A0070E6C5 /* TGG+UIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916E61EBB245A0070E6C5 /* TGG+UIImageView.swift */; };
+		7C7916E71EBB245A0070E6C5 /* UIKit+TGA.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916E61EBB245A0070E6C5 /* UIKit+TGA.swift */; };
 		7C7916E91EBB326C0070E6C5 /* Shallows+Zip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916E81EBB326C0070E6C5 /* Shallows+Zip.swift */; };
 		7C7916EB1EBB34E50070E6C5 /* ShallowsExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916EA1EBB34E50070E6C5 /* ShallowsExtensionsTests.swift */; };
 		7C7916EC1EBB35AE0070E6C5 /* Shallows.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C0EA5FE1EBA1C3100F50EB2 /* Shallows.framework */; };
 		7C7916EE1EBB36F70070E6C5 /* TeamsAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916ED1EBB36F70070E6C5 /* TeamsAPITests.swift */; };
 		7C7916F01EBB37910070E6C5 /* TeamFull.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916EF1EBB37910070E6C5 /* TeamFull.swift */; };
+		7C7916F41EBB3D050070E6C5 /* Storyboards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916F31EBB3D050070E6C5 /* Storyboards.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -142,15 +149,22 @@
 		7C0EA6611EBA542E00F50EB2 /* TeamCompactTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamCompactTableViewCell.swift; sourceTree = "<group>"; };
 		7C0EA6621EBA542E00F50EB2 /* TeamCompactTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TeamCompactTableViewCell.xib; sourceTree = "<group>"; };
 		7C0EA6651EBA599D00F50EB2 /* Avenues+Shallows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Avenues+Shallows.swift"; sourceTree = "<group>"; };
+		7C1E66351EBB404A003AF505 /* TeamDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailViewController.swift; sourceTree = "<group>"; };
+		7C1E66371EBB4284003AF505 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		7C1E66391EBB42C4003AF505 /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
+		7C1E663B1EBB42FE003AF505 /* NavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
+		7C1E663E1EBB5651003AF505 /* Colors.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Colors.json; sourceTree = "<group>"; };
+		7C1E66401EBB5740003AF505 /* Colors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		7C7916DC1EBB10370070E6C5 /* NetworkActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkActivity.swift; sourceTree = "<group>"; };
 		7C7916DE1EBB12250070E6C5 /* NetworkActivityIndicatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkActivityIndicatorTests.swift; sourceTree = "<group>"; };
 		7C7916E01EBB14D40070E6C5 /* Shallows+ActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Shallows+ActivityIndicator.swift"; sourceTree = "<group>"; };
 		7C7916E31EBB15B20070E6C5 /* AvenuesExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvenuesExtensions.swift; sourceTree = "<group>"; };
-		7C7916E61EBB245A0070E6C5 /* TGG+UIImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TGG+UIImageView.swift"; sourceTree = "<group>"; };
+		7C7916E61EBB245A0070E6C5 /* UIKit+TGA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIKit+TGA.swift"; sourceTree = "<group>"; };
 		7C7916E81EBB326C0070E6C5 /* Shallows+Zip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Shallows+Zip.swift"; sourceTree = "<group>"; };
 		7C7916EA1EBB34E50070E6C5 /* ShallowsExtensionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShallowsExtensionsTests.swift; sourceTree = "<group>"; };
 		7C7916ED1EBB36F70070E6C5 /* TeamsAPITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamsAPITests.swift; sourceTree = "<group>"; };
 		7C7916EF1EBB37910070E6C5 /* TeamFull.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamFull.swift; sourceTree = "<group>"; };
+		7C7916F31EBB3D050070E6C5 /* Storyboards.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Storyboards.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -221,6 +235,8 @@
 		7C0EA5D91EBA1B3500F50EB2 /* iOS App */ = {
 			isa = PBXGroup;
 			children = (
+				7C1E663E1EBB5651003AF505 /* Colors.json */,
+				7C7916F21EBB3D050070E6C5 /* Generated */,
 				7C0EA65E1EBA53F100F50EB2 /* View */,
 				7C0EA6501EBA1E0C00F50EB2 /* Application.swift */,
 				7C0EA6521EBA1E4900F50EB2 /* UserInterface.swift */,
@@ -346,9 +362,8 @@
 		7C0EA6571EBA1EDA00F50EB2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				7C0EA6581EBA1EF200F50EB2 /* Team.swift */,
+				7C1E66421EBB5B31003AF505 /* Team */,
 				7C0EA65A1EBA1F0200F50EB2 /* Editioned.swift */,
-				7C7916EF1EBB37910070E6C5 /* TeamFull.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -356,8 +371,10 @@
 		7C0EA65E1EBA53F100F50EB2 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				7C1E663D1EBB4319003AF505 /* Bases */,
 				7C7916E51EBB24420070E6C5 /* Extensions */,
 				7C0EA65F1EBA53F600F50EB2 /* TeamsList */,
+				7C7916F51EBB3D2D0070E6C5 /* TeamDetail */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -380,6 +397,25 @@
 			name = Views;
 			sourceTree = "<group>";
 		};
+		7C1E663D1EBB4319003AF505 /* Bases */ = {
+			isa = PBXGroup;
+			children = (
+				7C1E66371EBB4284003AF505 /* ViewController.swift */,
+				7C1E66391EBB42C4003AF505 /* TableViewController.swift */,
+				7C1E663B1EBB42FE003AF505 /* NavigationController.swift */,
+			);
+			name = Bases;
+			sourceTree = "<group>";
+		};
+		7C1E66421EBB5B31003AF505 /* Team */ = {
+			isa = PBXGroup;
+			children = (
+				7C0EA6581EBA1EF200F50EB2 /* Team.swift */,
+				7C7916EF1EBB37910070E6C5 /* TeamFull.swift */,
+			);
+			name = Team;
+			sourceTree = "<group>";
+		};
 		7C7916DB1EBB101A0070E6C5 /* Services */ = {
 			isa = PBXGroup;
 			children = (
@@ -399,9 +435,26 @@
 		7C7916E51EBB24420070E6C5 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				7C7916E61EBB245A0070E6C5 /* TGG+UIImageView.swift */,
+				7C7916E61EBB245A0070E6C5 /* UIKit+TGA.swift */,
 			);
 			name = Extensions;
+			sourceTree = "<group>";
+		};
+		7C7916F21EBB3D050070E6C5 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				7C1E66401EBB5740003AF505 /* Colors.swift */,
+				7C7916F31EBB3D050070E6C5 /* Storyboards.swift */,
+			);
+			path = Generated;
+			sourceTree = "<group>";
+		};
+		7C7916F51EBB3D2D0070E6C5 /* TeamDetail */ = {
+			isa = PBXGroup;
+			children = (
+				7C1E66351EBB404A003AF505 /* TeamDetailViewController.swift */,
+			);
+			name = TeamDetail;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -422,6 +475,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7C0EA5F41EBA1B3500F50EB2 /* Build configuration list for PBXNativeTarget "TheGreatGame" */;
 			buildPhases = (
+				7C7916F11EBB3BDA0070E6C5 /* Swift Gen */,
 				7C0EA5D31EBA1B3500F50EB2 /* Sources */,
 				7C0EA5D41EBA1B3500F50EB2 /* Frameworks */,
 				7C0EA5D51EBA1B3500F50EB2 /* Resources */,
@@ -555,6 +609,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7C0EA5E51EBA1B3500F50EB2 /* LaunchScreen.storyboard in Resources */,
+				7C1E663F1EBB5651003AF505 /* Colors.json in Resources */,
 				7C0EA5E21EBA1B3500F50EB2 /* Assets.xcassets in Resources */,
 				7C0EA6641EBA542E00F50EB2 /* TeamCompactTableViewCell.xib in Resources */,
 				7C0EA5E01EBA1B3500F50EB2 /* Main.storyboard in Resources */,
@@ -602,6 +657,20 @@
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks";
 		};
+		7C7916F11EBB3BDA0070E6C5 /* Swift Gen */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Swift Gen";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftgen >/dev/null; then\nswiftgen storyboards -p \"$PROJECT_DIR/Resources/storyboards-lyft.stencil\" --sceneEnumName Storyboard \"$PROJECT_DIR/TheGreatGame\" > \"$PROJECT_DIR/TheGreatGame/Generated/Storyboards.swift\"\nswiftgen colors -t swift3 \"$PROJECT_DIR/TheGreatGame/Colors.json\" --output \"$PROJECT_DIR/TheGreatGame/Generated/Colors.swift\"\nelse\necho \"warning: SwiftGen not installed, download it from https://github.com/AliSoftware/SwiftGen\"\nfi";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -609,12 +678,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7C1E66381EBB4284003AF505 /* ViewController.swift in Sources */,
+				7C1E663C1EBB42FE003AF505 /* NavigationController.swift in Sources */,
+				7C7916F41EBB3D050070E6C5 /* Storyboards.swift in Sources */,
+				7C1E66361EBB404A003AF505 /* TeamDetailViewController.swift in Sources */,
 				7C0EA6511EBA1E0C00F50EB2 /* Application.swift in Sources */,
 				7C0EA5DB1EBA1B3500F50EB2 /* AppDelegate.swift in Sources */,
 				7C0EA65D1EBA218000F50EB2 /* TeamsTableViewController.swift in Sources */,
+				7C1E663A1EBB42C4003AF505 /* TableViewController.swift in Sources */,
+				7C1E66411EBB5740003AF505 /* Colors.swift in Sources */,
 				7C0EA6271EBA1CB100F50EB2 /* Jubilee.swift in Sources */,
 				7C0EA6631EBA542E00F50EB2 /* TeamCompactTableViewCell.swift in Sources */,
-				7C7916E71EBB245A0070E6C5 /* TGG+UIImageView.swift in Sources */,
+				7C7916E71EBB245A0070E6C5 /* UIKit+TGA.swift in Sources */,
 				7C0EA6531EBA1E4900F50EB2 /* UserInterface.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

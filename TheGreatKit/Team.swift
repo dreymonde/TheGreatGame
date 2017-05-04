@@ -6,32 +6,39 @@
 //  Copyright © 2017 The Great Game. All rights reserved.
 //
 
-public struct TeamID : RawRepresentable {
+public enum Team {
     
-    public var rawID: Int
-    
-    public init?(rawValue: Int) {
-        self.rawID = rawValue
-    }
-    
-    public var rawValue: Int {
-        return rawID
+    public struct ID : RawRepresentable {
+        
+        public var rawID: Int
+        
+        public init?(rawValue: Int) {
+            self.rawID = rawValue
+        }
+        
+        public var rawValue: Int {
+            return rawID
+        }
+        
     }
     
 }
 
+extension Team {
 
-public struct Team {
-    
-    public let id: TeamID
-    public let name: String
-    public let shortName: String
-    public let rank: Int
-    public let badgeURL: URL
+    public struct Compact {
+        
+        public let id: ID
+        public let name: String
+        public let shortName: String
+        public let rank: Int
+        public let badgeURL: URL
+        
+    }
     
 }
 
-extension Team : Mappable {
+extension Team.Compact : Mappable {
     
     public enum MappingKeys : String, IndexPathElement {
         case name
@@ -61,7 +68,7 @@ extension Team : Mappable {
 
 public struct Teams {
     
-    public var teams: [Team]
+    public var teams: [Team.Compact]
     
 }
 

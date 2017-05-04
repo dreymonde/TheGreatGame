@@ -18,7 +18,7 @@ public struct TeamsEndpoint {
     }
     
     public static let all = TeamsEndpoint(path: "all.json")
-    public static func fullTeam(withID id: TeamID) -> TeamsEndpoint {
+    public static func fullTeam(withID id: Team.ID) -> TeamsEndpoint {
         return TeamsEndpoint(path: "\(id.rawID).json")
     }
     
@@ -28,7 +28,7 @@ public final class TeamsAPI {
     
     public let provider: ReadOnlyCache<TeamsEndpoint, [String : Any]>
     public let all: ReadOnlyCache<Void, Editioned<Teams>>
-    public let fullTeam: ReadOnlyCache<TeamID, Editioned<TeamFull>>
+    public let fullTeam: ReadOnlyCache<Team.ID, Editioned<Team.Full>>
     
     private let github: GitHubRepoCache
     
@@ -42,7 +42,7 @@ public final class TeamsAPI {
             .singleKey(.all)
             .mapMappable(of: Editioned<Teams>.self)
         self.fullTeam = provider
-            .mapMappable(of: Editioned<TeamFull>.self)
+            .mapMappable(of: Editioned<Team.Full>.self)
             .mapKeys({ .fullTeam(withID: $0) })
     }
     

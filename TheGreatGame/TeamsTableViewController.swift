@@ -11,12 +11,12 @@ import TheGreatKit
 import Shallows
 import Avenues
 
-class TeamsTableViewController: UITableViewController {
+class TeamsTableViewController: TheGreatGame.TableViewController {
     
-    var teams: [Team] = []
+    var teams: [Team.Compact] = []
     
-    var teamsProvider: ReadOnlyCache<Void, [Team]>!
-    var fullTeamProvider: ReadOnlyCache<TeamID, TeamFull>!
+    var teamsProvider: ReadOnlyCache<Void, [Team.Compact]>!
+    var fullTeamProvider: ReadOnlyCache<Team.ID, Team.Full>!
     
     let avenue: SymmetricalAvenue<URL, UIImage> = {
         let imageCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "teams-badges-cache")
@@ -79,7 +79,7 @@ class TeamsTableViewController: UITableViewController {
                            forCellReuseIdentifier: "TeamCompact")
         tableView.rowHeight = 50
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -140,9 +140,12 @@ class TeamsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let team = teams[indexPath.row]
-        fullTeamProvider.retrieve(forKey: team.id) { (result) in
-            print(result)
+        let detail = Storyboard.Main.teamDetailViewController.instantiate() <- {
+            $0.provider = fullTeamProvider.singleKey(team.id)
+            $0.state = .compact(team)
+            $0.badgeImage = avenue.item(at: team.badgeURL)
         }
+        navigationController?.pushViewController(detail, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
 

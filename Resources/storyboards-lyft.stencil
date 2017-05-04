@@ -1,0 +1,131 @@
+// Generated using SwiftGen, by O.Halligon — https://github.com/AliSoftware/SwiftGen
+
+{% macro className scene %}{% if scene.customClass %}{% if scene.customModule %}{{scene.customModule}}.{% endif %}{{scene.customClass}}{% else %}UI{{scene.baseType}}{% endif %}{% endmacro %}
+import Foundation
+import UIKit
+{% for module in modules %}
+{% if module != env.PRODUCT_MODULE_NAME and module != param.module %}
+import {{module}}
+{% endif %}
+{% endfor %}
+
+{% if storyboards %}
+// swiftlint:disable file_length
+// swiftlint:disable line_length
+// swiftlint:disable type_body_length
+
+{# This first part of the code is static, same every time whatever Storyboard you have #}
+protocol StoryboardSceneType {
+  static var storyboardName: String { get }
+}
+
+extension StoryboardSceneType {
+  static func storyboard() -> UIStoryboard {
+    return UIStoryboard(name: self.storyboardName, bundle: Bundle(for: BundleToken.self))
+  }
+
+  static func initialViewController() -> UIViewController {
+    guard let vc = storyboard().instantiateInitialViewController() else {
+      fatalError("Failed to instantiate initialViewController for \(self.storyboardName)")
+    }
+    return vc
+  }
+}
+
+extension StoryboardSceneType where Self: RawRepresentable, Self.RawValue == String {
+  func viewController() -> UIViewController {
+    return Self.storyboard().instantiateViewController(withIdentifier: self.rawValue)
+  }
+  static func viewController(identifier: Self) -> UIViewController {
+    return identifier.viewController()
+  }
+}
+
+protocol StoryboardSegueType: RawRepresentable { }
+
+extension UIViewController {
+  func perform<S: StoryboardSegueType>(segue: S, sender: Any? = nil) where S.RawValue == String {
+    performSegue(withIdentifier: segue.rawValue, sender: sender)
+  }
+}
+
+struct ViewControllerResource<Scene : StoryboardSceneType, ViewController : UIViewController> where Scene : RawRepresentable, Scene.RawValue == String {
+
+    fileprivate let scene: Scene
+
+    func instantiate() -> ViewController {
+        guard let vc = scene.viewController() as? ViewController
+            else {
+                fatalError("ViewController 'AddPointNavigationController' is not of the expected class The_Cleaning_App.NavigationController.")
+        }
+        return vc
+    }
+
+}
+
+{# This is where the generation begins, this code depends on what you have in your Storyboards #}
+enum {{sceneEnumName}} {
+  {% for storyboard in storyboards %}
+  {% set storyboardName %}{{storyboard.name|swiftIdentifier|escapeReservedKeywords}}{% endset %}
+  {% if storyboard.scenes %}
+  enum {{storyboardName}}: String, StoryboardSceneType {
+    static let storyboardName = "{{storyboard.name}}"
+    {% if storyboard.initialScene %}{% if storyboard.initialScene.baseType != "ViewController" %}
+    {% set initialSceneClass %}{% call className storyboard.initialScene %}{% endset %}
+
+    static func initialViewController() -> {{initialSceneClass}} {
+      guard let vc = storyboard().instantiateInitialViewController() as? {{initialSceneClass}} else {
+        fatalError("Failed to instantiate initialViewController for \(self.storyboardName)")
+      }
+      return vc
+    }
+    {% endif %}{% endif %}
+    {% for scene in storyboard.scenes %}
+    {% set sceneID %}{{scene.identifier|swiftIdentifier|snakeToCamelCase|lowerFirstWord}}{% endset %}
+
+    case {{sceneID}}Scene = "{{scene.identifier}}"
+    {% if scene.baseType != "ViewController" %}
+    {% set sceneClass %}{% call className scene %}{% endset %}
+    static var {{sceneID|snakeToCamelCase|lowerFirstWord}}: ViewControllerResource<{{storyboardName}}, {{sceneClass}}> {
+      return ViewControllerResource(scene: .{{sceneID}}Scene)
+    }
+    {% else %}
+    static var {{sceneID|snakeToCamelCase|lowerFirstWord}}: ViewControllerResource<{{storyboardName}}, UIViewController> {
+      return ViewControllerResource(scene: .{{sceneID}}Scene)
+    }
+    {% endif %}
+    {% endfor %}
+  }
+  {% else %}
+  enum {{storyboardName}}: StoryboardSceneType {
+    static let storyboardName = "{{storyboard.name}}"
+    {% if storyboard.initialScene %}{% if storyboard.initialScene.baseType != "ViewController" %}
+    {% set initialSceneClass %}{% call className storyboard.initialScene %}{% endset %}
+
+    static func initialViewController() -> {{initialSceneClass}} {
+      guard let vc = storyboard().instantiateInitialViewController() as? {{initialSceneClass}} else {
+        fatalError("Failed to instantiate initialViewController for \(self.storyboardName)")
+      }
+      return vc
+    }
+    {% endif %}{% endif %}
+  }
+  {% endif %}
+  {% endfor %}
+}
+
+enum {{segueEnumName}} {
+  {% for storyboard in storyboards %}{% if storyboard.segues %}
+  enum {{storyboard.name|swiftIdentifier|escapeReservedKeywords}}: String, StoryboardSegueType {
+    {% for segue in storyboard.segues %}
+    {% set segueID %}{{segue.identifier|swiftIdentifier|snakeToCamelCase|lowerFirstWord}}{% endset %}
+    case {{segueID|escapeReservedKeywords}}{% if segueID != segue.identifier %} = "{{segue.identifier}}"{% endif %}
+    {% endfor %}
+  }
+  {% endif %}{% endfor %}
+}
+
+private final class BundleToken {}
+{% else %}
+// No storyboard found
+{% endif %}
