@@ -16,6 +16,7 @@ extension Team {
         public let rank: Int
         public let badgeURL: URL
         public let group: Group
+        public let matches: [Match.Compact]
         
     }
     
@@ -30,6 +31,7 @@ extension Team.Full : Mappable {
         case rank
         case badge_url
         case group
+        case matches
     }
     
     public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
@@ -39,6 +41,7 @@ extension Team.Full : Mappable {
         self.rank = try mapper.map(from: .rank)
         self.badgeURL = try mapper.map(from: .badge_url)
         self.group = try mapper.map(from: .group)
+        self.matches = try mapper.map(from: .matches)
     }
     
     public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
@@ -48,6 +51,7 @@ extension Team.Full : Mappable {
         try mapper.map(self.rank, to: .rank)
         try mapper.map(self.badgeURL, to: .badge_url)
         try mapper.map(self.group, to: .group)
+        try mapper.map(self.matches, to: .matches)
     }
     
 }

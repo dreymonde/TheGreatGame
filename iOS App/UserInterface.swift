@@ -8,6 +8,7 @@
 
 import UIKit
 import Shallows
+import TheGreatKit
 
 final class UserInterface {
     
@@ -29,9 +30,13 @@ final class UserInterface {
             $0.teamsProvider = logic.teamsAPI.all.mapValues({ $0.content.teams })
                 .mainThread()
                 .connectingNetworkActivityIndicator()
-            $0.fullTeamProvider = logic.teamsAPI.fullTeam.mapValues({ $0.content })
-                .mainThread()
+            $0.fullTeamProvider = logic.teamsAPI.fullTeam
+                .mapValues({ $0.content })
                 .connectingNetworkActivityIndicator()
+                .mainThread()
+//            $0.fullTeamProvider = fullTeamLocalCache.backed(by: logic.teamsAPI.fullTeam.mapValues({ $0.content })
+//                .connectingNetworkActivityIndicator())
+//                .mainThread()
         }
     }
     
