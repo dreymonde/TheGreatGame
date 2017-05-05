@@ -142,7 +142,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController {
         }
         cell.scoreTimeLabel.text = "-:-"
         cell.homeTeamNameLabel.text = match.home.name
-        cell.awayTeamNameLabel.text = match.away.name
+        cell.awayTeamNameLabel.text = match.away.name + " National Football Team"
         cell.homeBadgeImageView.setImage(avenue.item(at: match.home.badgeURL), afterDownload: afterImageDownload)
         cell.awayBadgeImageView.setImage(avenue.item(at: match.away.badgeURL), afterDownload: afterImageDownload)
     }

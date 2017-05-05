@@ -64,11 +64,13 @@ class TeamsTableViewController: TheGreatGame.TableViewController {
         let imageCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "teams-badges-cache")
         print(imageCache.directoryURL)
         let lane = URLSessionProcessor(session: URLSession(configuration: .ephemeral))
-            //            .caching(to: imageCache.mapKeys({ $0.path }))
+            //.caching(to: imageCache.mapKeys({ $0.path }))
             .connectingNetworkActivityIndicator()
+            .mapImage()
+            .mapValue({ $0.resized(toFit: CGSize(width: 30, height: 30)) })
         let storage: Storage<URL, UIImage> = NSCacheStorage<NSURL, UIImage>(cache: self.imageCache)
             .mapKey({ $0 as NSURL })
-        return Avenue(storage: storage, processor: lane.mapImage())
+        return Avenue(storage: storage, processor: lane)
     }
     
     private func make() -> NetworkActivity.IndicatorManager {
@@ -92,7 +94,8 @@ class TeamsTableViewController: TheGreatGame.TableViewController {
     private func configure(_ tableView: UITableView) {
         tableView.register(UINib.init(nibName: "TeamCompactTableViewCell", bundle: nil),
                            forCellReuseIdentifier: "TeamCompact")
-        tableView.rowHeight = 50
+        tableView.estimatedRowHeight = 50
+        tableView.rowHeight = UITableViewAutomaticDimension
     }
     
     override func didReceiveMemoryWarning() {
