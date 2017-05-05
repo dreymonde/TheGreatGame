@@ -12,6 +12,11 @@ import Shallows
 
 class TeamsAPITests: XCTestCase {
     
+    static let testingNetworkCache: ReadOnlyCache<URL, Data> = URLSession(configuration: .ephemeral)
+        .makeReadOnly()
+        .droppingResponse()
+        .usingURLKeys()
+    
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -22,19 +27,21 @@ class TeamsAPITests: XCTestCase {
         super.tearDown()
     }
     
-    func testTeam1() {
-        let access = GitHubRepoCache.init(owner: "dreymonde",
-                                          repo: "TheGreatGameStorage",
-                                          networkCache: URLSession.init(configuration: .ephemeral).makeReadOnly().droppingResponse().usingURLKeys())
-        let expectation = self.expectation(description: "Expecting result")
-        access.makeReadOnly()
-            .mapJSONDictionary()
-            .mapMappable(of: Editioned<TeamFull>.self)
-            .retrieve(forKey: "teams/1.json") { (result) in
-                print(result)
-                expectation.fulfill()
-        }
-        waitForExpectations(timeout: 5.0)
+    func testAllTeams() throws {
+        let api = TeamsAPI(networkCache: TeamsAPITests.testingNetworkCache)
+        let teams = try api.all.mapValues({ $0.content.teams }).makeSyncCache().retrieve()
+        XCTAssertEqual(teams.count, 16)
     }
+    
+    func testTeamID1() throws {
+        let api = TeamsAPI(networkCache: TeamsAPITests.testingNetworkCache)
+        let team1 = try api.fullTeam.mapValues({ $0.content }).makeSyncCache().retrieve(forKey: Team.ID(rawValue: 1)!)
+        print(team1)
+        XCTAssertEqual(team1.name, "Sweden")
+        XCTAssertEqual(team1.shortName, "SWE")
+        XCTAssertEqual(team1.id.rawID, 1)
+        XCTAssertEqual(team1.group.teams.count, 4)
+        XCTAssertEqual(team1.group.title, "Group B")
+    }    
     
 }

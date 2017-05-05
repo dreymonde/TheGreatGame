@@ -77,6 +77,14 @@ public final class GitHubRepoCache : ReadableCacheProtocol {
     
 }
 
+extension GitHubRepoCache {
+    
+    public static func theGreatGameStorage(networkCache: ReadOnlyCache<URL, Data>) -> GitHubRepoCache {
+        return GitHubRepoCache(owner: "dreymonde", repo: "thegreatgame-storage", networkCache: networkCache)
+    }
+    
+}
+
 struct GitHubContentAPIResponse {
     
     enum Encoding : String {

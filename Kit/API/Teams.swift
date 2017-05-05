@@ -33,7 +33,7 @@ public final class TeamsAPI {
     private let github: GitHubRepoCache
     
     public init(networkCache: ReadOnlyCache<URL, Data>) {
-        self.github = GitHubRepoCache(owner: "dreymonde", repo: "TheGreatGameStorage", networkCache: networkCache)
+        self.github = GitHubRepoCache.theGreatGameStorage(networkCache: networkCache)
         self.provider = github
             .makeReadOnly()
             .mapJSONDictionary()
