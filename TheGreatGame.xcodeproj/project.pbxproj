@@ -45,7 +45,7 @@
 		7C0EA6631EBA542E00F50EB2 /* TeamCompactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6611EBA542E00F50EB2 /* TeamCompactTableViewCell.swift */; };
 		7C0EA6641EBA542E00F50EB2 /* TeamCompactTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C0EA6621EBA542E00F50EB2 /* TeamCompactTableViewCell.xib */; };
 		7C0EA6661EBA599D00F50EB2 /* Avenues+Shallows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6651EBA599D00F50EB2 /* Avenues+Shallows.swift */; };
-		7C1E66361EBB404A003AF505 /* TeamDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1E66351EBB404A003AF505 /* TeamDetailViewController.swift */; };
+		7C1E66361EBB404A003AF505 /* TeamDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1E66351EBB404A003AF505 /* TeamDetailTableViewController.swift */; };
 		7C1E66381EBB4284003AF505 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1E66371EBB4284003AF505 /* ViewController.swift */; };
 		7C1E663A1EBB42C4003AF505 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1E66391EBB42C4003AF505 /* TableViewController.swift */; };
 		7C1E663C1EBB42FE003AF505 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1E663B1EBB42FE003AF505 /* NavigationController.swift */; };
@@ -63,6 +63,8 @@
 		7C7916EE1EBB36F70070E6C5 /* TeamsAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916ED1EBB36F70070E6C5 /* TeamsAPITests.swift */; };
 		7C7916F01EBB37910070E6C5 /* TeamFull.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916EF1EBB37910070E6C5 /* TeamFull.swift */; };
 		7C7916F41EBB3D050070E6C5 /* Storyboards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916F31EBB3D050070E6C5 /* Storyboards.swift */; };
+		7CF3D1741EBC838B00E86A91 /* TeamDetailMatchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF3D1721EBC838B00E86A91 /* TeamDetailMatchTableViewCell.swift */; };
+		7CF3D1751EBC838B00E86A91 /* TeamDetailMatchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CF3D1731EBC838B00E86A91 /* TeamDetailMatchTableViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -150,7 +152,7 @@
 		7C0EA6611EBA542E00F50EB2 /* TeamCompactTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamCompactTableViewCell.swift; sourceTree = "<group>"; };
 		7C0EA6621EBA542E00F50EB2 /* TeamCompactTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TeamCompactTableViewCell.xib; sourceTree = "<group>"; };
 		7C0EA6651EBA599D00F50EB2 /* Avenues+Shallows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Avenues+Shallows.swift"; sourceTree = "<group>"; };
-		7C1E66351EBB404A003AF505 /* TeamDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailViewController.swift; sourceTree = "<group>"; };
+		7C1E66351EBB404A003AF505 /* TeamDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailTableViewController.swift; sourceTree = "<group>"; };
 		7C1E66371EBB4284003AF505 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		7C1E66391EBB42C4003AF505 /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		7C1E663B1EBB42FE003AF505 /* NavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
@@ -167,6 +169,8 @@
 		7C7916ED1EBB36F70070E6C5 /* TeamsAPITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamsAPITests.swift; sourceTree = "<group>"; };
 		7C7916EF1EBB37910070E6C5 /* TeamFull.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamFull.swift; sourceTree = "<group>"; };
 		7C7916F31EBB3D050070E6C5 /* Storyboards.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Storyboards.swift; sourceTree = "<group>"; };
+		7CF3D1721EBC838B00E86A91 /* TeamDetailMatchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailMatchTableViewCell.swift; sourceTree = "<group>"; };
+		7CF3D1731EBC838B00E86A91 /* TeamDetailMatchTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TeamDetailMatchTableViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -459,9 +463,19 @@
 		7C7916F51EBB3D2D0070E6C5 /* TeamDetail */ = {
 			isa = PBXGroup;
 			children = (
-				7C1E66351EBB404A003AF505 /* TeamDetailViewController.swift */,
+				7CF3D16D1EBC834A00E86A91 /* Views */,
+				7C1E66351EBB404A003AF505 /* TeamDetailTableViewController.swift */,
 			);
 			path = TeamDetail;
+			sourceTree = "<group>";
+		};
+		7CF3D16D1EBC834A00E86A91 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				7CF3D1721EBC838B00E86A91 /* TeamDetailMatchTableViewCell.swift */,
+				7CF3D1731EBC838B00E86A91 /* TeamDetailMatchTableViewCell.xib */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -619,6 +633,7 @@
 				7C1E663F1EBB5651003AF505 /* Colors.json in Resources */,
 				7C0EA5E21EBA1B3500F50EB2 /* Assets.xcassets in Resources */,
 				7C0EA6641EBA542E00F50EB2 /* TeamCompactTableViewCell.xib in Resources */,
+				7CF3D1751EBC838B00E86A91 /* TeamDetailMatchTableViewCell.xib in Resources */,
 				7C0EA5E01EBA1B3500F50EB2 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -688,8 +703,9 @@
 				7C1E66381EBB4284003AF505 /* ViewController.swift in Sources */,
 				7C1E663C1EBB42FE003AF505 /* NavigationController.swift in Sources */,
 				7C7916F41EBB3D050070E6C5 /* Storyboards.swift in Sources */,
-				7C1E66361EBB404A003AF505 /* TeamDetailViewController.swift in Sources */,
+				7C1E66361EBB404A003AF505 /* TeamDetailTableViewController.swift in Sources */,
 				7C0EA6511EBA1E0C00F50EB2 /* Application.swift in Sources */,
+				7CF3D1741EBC838B00E86A91 /* TeamDetailMatchTableViewCell.swift in Sources */,
 				7C0EA5DB1EBA1B3500F50EB2 /* AppDelegate.swift in Sources */,
 				7C0EA65D1EBA218000F50EB2 /* TeamsTableViewController.swift in Sources */,
 				7C1E663A1EBB42C4003AF505 /* TableViewController.swift in Sources */,

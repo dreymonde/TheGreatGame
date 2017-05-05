@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="45" id="KGk-i7-Jjw" customClass="TeamDetailMatchTableViewCell" customModule="TheGreatGame" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="45"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="44.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="Qvc-Kt-54M">
+                        <rect key="frame" x="15" y="10" width="290" height="24.5"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="10" baselineRelativeArrangement="YES" translatesAutoresizingMaskIntoConstraints="NO" id="riv-HT-4Lk">
+                                <rect key="frame" x="0.0" y="0.0" width="116" height="24.5"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="aar-fq-6su">
+                                        <rect key="frame" x="0.0" y="0.0" width="24.5" height="24.5"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="aar-fq-6su" secondAttribute="height" multiplier="1:1" id="Aon-NU-pur"/>
+                                            <constraint firstAttribute="width" constant="24.5" id="Ssp-Re-AYd"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sweden" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B2o-J5-goJ">
+                                        <rect key="frame" x="34.5" y="0.0" width="81.5" height="24.5"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="20:45" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RdQ-gR-GOe">
+                                <rect key="frame" x="116" y="0.0" width="58" height="24.5"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="jaQ-8A-jQc">
+                                <rect key="frame" x="174" y="0.0" width="116" height="24.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Switzerland" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bff-AQ-nNX">
+                                        <rect key="frame" x="0.0" y="0.0" width="81.5" height="24.5"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="93r-83-7nd">
+                                        <rect key="frame" x="91.5" y="0.0" width="24.5" height="24.5"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="93r-83-7nd" secondAttribute="height" multiplier="1:1" id="hGs-DK-NyN"/>
+                                            <constraint firstAttribute="width" constant="24.5" id="tOP-Yr-QUt"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="riv-HT-4Lk" firstAttribute="width" secondItem="Qvc-Kt-54M" secondAttribute="width" multiplier="0.4" id="eO5-x2-DVJ"/>
+                            <constraint firstItem="jaQ-8A-jQc" firstAttribute="width" secondItem="Qvc-Kt-54M" secondAttribute="width" multiplier="0.4" id="hwr-EJ-UB3"/>
+                        </constraints>
+                    </stackView>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="Qvc-Kt-54M" secondAttribute="bottom" constant="10" id="XJE-lA-oGG"/>
+                    <constraint firstItem="Qvc-Kt-54M" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="oH9-OK-Tyu"/>
+                    <constraint firstAttribute="trailing" secondItem="Qvc-Kt-54M" secondAttribute="trailing" constant="15" id="x1s-7U-RTW"/>
+                    <constraint firstItem="Qvc-Kt-54M" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="15" id="xR1-3t-HFM"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="awayBadgeImageView" destination="93r-83-7nd" id="cYj-jI-Ujh"/>
+                <outlet property="awayTeamNameLabel" destination="Bff-AQ-nNX" id="htd-Mj-ZOH"/>
+                <outlet property="homeBadgeImageView" destination="aar-fq-6su" id="rg0-fT-0DB"/>
+                <outlet property="homeTeamNameLabel" destination="B2o-J5-goJ" id="dFB-8r-qj0"/>
+                <outlet property="scoreTimeLabel" destination="RdQ-gR-GOe" id="Iiv-Aq-9KE"/>
+            </connections>
+            <point key="canvasLocation" x="34" y="69.5"/>
+        </tableViewCell>
+    </objects>
+</document>

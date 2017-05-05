@@ -69,9 +69,9 @@ enum Storyboard {
       return vc
     }
 
-    case teamDetailViewControllerScene = "TeamDetailViewController"
-    static var teamDetailViewController: ViewControllerResource<Main, TheGreatGame.TeamDetailViewController> {
-      return ViewControllerResource(scene: .teamDetailViewControllerScene)
+    case teamDetailTableViewControllerScene = "TeamDetailTableViewController"
+    static var teamDetailTableViewController: ViewControllerResource<Main, TheGreatGame.TeamDetailTableViewController> {
+      return ViewControllerResource(scene: .teamDetailTableViewControllerScene)
     }
 
     case teamsTableViewControllerScene = "TeamsTableViewController"
