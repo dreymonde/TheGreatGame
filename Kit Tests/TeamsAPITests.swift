@@ -42,6 +42,6 @@ class TeamsAPITests: XCTestCase {
         XCTAssertEqual(team1.id.rawID, 1)
         XCTAssertEqual(team1.group.teams.count, 4)
         XCTAssertEqual(team1.group.title, "Group B")
-    }    
+    }
     
 }

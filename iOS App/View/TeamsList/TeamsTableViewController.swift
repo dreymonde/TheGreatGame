@@ -26,6 +26,7 @@ class TeamsTableViewController: TheGreatGame.TableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        registerFor3DTouch()
         configure(tableView)
         self.avenue = make()
         configure(avenue)
@@ -57,6 +58,12 @@ class TeamsTableViewController: TheGreatGame.TableViewController {
         } else {
             self.teams = teams
             tableView.reloadData()
+        }
+    }
+    
+    private func registerFor3DTouch() {
+        if traitCollection.forceTouchCapability == .available {
+            registerForPreviewing(with: self, sourceView: tableView)
         }
     }
     
@@ -177,4 +184,26 @@ class TeamsTableViewController: TheGreatGame.TableViewController {
         }
     }
 
+}
+
+extension TeamsTableViewController : UIViewControllerPreviewingDelegate {
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        guard let indexPath = tableView.indexPathForRow(at: location) else {
+            return nil
+        }
+        let team = teams[indexPath.row]
+        let teamDetail = teamDetailViewController(for: team.id)
+        
+        let cellRect = tableView.rectForRow(at: indexPath)
+        let sourceRect = previewingContext.sourceView.convert(cellRect, from: tableView)
+        previewingContext.sourceRect = sourceRect
+        
+        return teamDetail
+    }
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+        show(viewControllerToCommit, sender: self)
+    }
+    
 }

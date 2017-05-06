@@ -117,3 +117,25 @@ extension Match.Compact : Mappable {
     }
     
 }
+
+public struct Matches {
+    
+    public let matches: [Match.Compact]
+    
+}
+
+extension Matches : Mappable {
+    
+    public enum MappingKeys : String, IndexPathElement {
+        case matches
+    }
+    
+    public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
+        self.matches = try mapper.map(from: .matches)
+    }
+    
+    public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+        try mapper.map(self.matches, to: .matches)
+    }
+    
+}

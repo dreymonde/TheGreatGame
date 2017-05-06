@@ -21,8 +21,11 @@ final class UserInterface {
     }
     
     func start() {
-        let teamsList = (window.rootViewController as? UINavigationController)?.viewControllers.first as! TeamsTableViewController
-        inject(to: teamsList)
+        let viewControllers = (window.rootViewController as? UITabBarController)?.viewControllers?.flatMap({ $0 as? UINavigationController }).flatMap({ $0.viewControllers.first })
+        let matchesList = viewControllers?.flatMap({ $0 as? MatchesTableViewController }).first
+        inject(to: matchesList!)
+        let teamsList = viewControllers?.flatMap({ $0 as? TeamsTableViewController }).first
+        inject(to: teamsList!)
     }
     
     func inject(to teamsList: TeamsTableViewController) {
@@ -34,9 +37,14 @@ final class UserInterface {
                 .mapValues({ $0.content })
                 .connectingNetworkActivityIndicator()
                 .mainThread()
-//            $0.fullTeamProvider = fullTeamLocalCache.backed(by: logic.teamsAPI.fullTeam.mapValues({ $0.content })
-//                .connectingNetworkActivityIndicator())
-//                .mainThread()
+        }
+    }
+    
+    func inject(to matchesList: MatchesTableViewController) {
+        matchesList <- {
+            $0.matchesProvider = logic.matchesAPI.all.mapValues({ $0.content.matches })
+                .connectingNetworkActivityIndicator()
+                .mainThread()
         }
     }
     

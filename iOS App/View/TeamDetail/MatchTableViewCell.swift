@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TeamDetailMatchTableViewCell: UITableViewCell {
+class MatchTableViewCell: UITableViewCell {
     
     @IBOutlet weak var homeBadgeImageView: UIImageView!
     @IBOutlet weak var homeTeamNameLabel: UILabel!

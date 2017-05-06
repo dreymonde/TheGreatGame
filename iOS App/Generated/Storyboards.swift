@@ -62,11 +62,16 @@ enum Storyboard {
   enum Main: String, StoryboardSceneType {
     static let storyboardName = "Main"
 
-    static func initialViewController() -> TheGreatGame.NavigationController {
-      guard let vc = storyboard().instantiateInitialViewController() as? TheGreatGame.NavigationController else {
+    static func initialViewController() -> TheGreatGame.TabBarController {
+      guard let vc = storyboard().instantiateInitialViewController() as? TheGreatGame.TabBarController else {
         fatalError("Failed to instantiate initialViewController for \(self.storyboardName)")
       }
       return vc
+    }
+
+    case matchesTableViewControllerScene = "MatchesTableViewController"
+    static var matchesTableViewController: ViewControllerResource<Main, TheGreatGame.MatchesTableViewController> {
+      return ViewControllerResource(scene: .matchesTableViewControllerScene)
     }
 
     case teamDetailTableViewControllerScene = "TeamDetailTableViewController"

@@ -13,9 +13,15 @@ import Shallows
 final class Application {
     
     let teamsAPI: TeamsAPI
+    let matchesAPI: MatchesAPI
     
     init() {
-        self.teamsAPI = TeamsAPI()
+        let networkCache = URLSession(configuration: .ephemeral)
+            .makeReadOnly()
+            .droppingResponse()
+            .usingURLKeys()
+        self.teamsAPI = TeamsAPI(networkCache: networkCache)
+        self.matchesAPI = MatchesAPI(networkCache: networkCache)
     }
     
 }

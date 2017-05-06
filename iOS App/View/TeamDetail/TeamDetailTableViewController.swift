@@ -21,7 +21,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(UINib.init(nibName: "TeamDetailMatchTableViewCell", bundle: nil), forCellReuseIdentifier: "TeamDetailMatch")
+        tableView.register(UINib.init(nibName: "MatchTableViewCell", bundle: nil), forCellReuseIdentifier: "TeamDetailMatch")
         tableView.estimatedRowHeight = 55
         tableView.rowHeight = UITableViewAutomaticDimension
         self.avenue = make()
@@ -119,7 +119,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController {
     
     func configureCell(_ cell: UITableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool = false) {
         switch cell {
-        case let match as TeamDetailMatchTableViewCell:
+        case let match as MatchTableViewCell:
             configureMatchCell(match, forRowAt: indexPath, afterImageDownload: afterImageDownload)
         default:
             configureTeamDetailsCell(cell, forRowAt: indexPath, afterImageDownload: afterImageDownload)
@@ -131,7 +131,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController {
         cell.detailTextLabel?.text = team?.shortName
     }
     
-    func configureMatchCell(_ cell: TeamDetailMatchTableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
+    func configureMatchCell(_ cell: MatchTableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
         guard let match = team?.matches[indexPath.row] else {
             fault("No team still?")
             return
@@ -142,54 +142,9 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController {
         }
         cell.scoreTimeLabel.text = "-:-"
         cell.homeTeamNameLabel.text = match.home.name
-        cell.awayTeamNameLabel.text = match.away.name + " National Football Team"
+        cell.awayTeamNameLabel.text = match.away.name
         cell.homeBadgeImageView.setImage(avenue.item(at: match.home.badgeURL), afterDownload: afterImageDownload)
         cell.awayBadgeImageView.setImage(avenue.item(at: match.away.badgeURL), afterDownload: afterImageDownload)
     }
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
