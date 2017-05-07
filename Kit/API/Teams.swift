@@ -24,18 +24,17 @@ public struct TeamsEndpoint {
     
 }
 
-public final class TeamsAPI {
+public final class TeamsAPI : APIPoint {
     
     public let provider: ReadOnlyCache<TeamsEndpoint, [String : Any]>
     public let all: ReadOnlyCache<Void, Editioned<Teams>>
     public let fullTeam: ReadOnlyCache<Team.ID, Editioned<Team.Full>>
     
-    private let github: GitHubRepoCache
+    private let dataProvider: ReadOnlyCache<String, Data>
     
-    public init(networkCache: ReadOnlyCache<URL, Data>) {
-        self.github = GitHubRepoCache.theGreatGameStorage(networkCache: networkCache)
-        self.provider = github
-            .makeReadOnly()
+    public init(rawDataProvider: ReadOnlyCache<String, Data>) {
+        self.dataProvider = rawDataProvider
+        self.provider = rawDataProvider
             .mapJSONDictionary()
             .mapKeys({ $0.path })
         self.all = provider
@@ -44,14 +43,7 @@ public final class TeamsAPI {
         self.fullTeam = provider
             .mapMappable(of: Editioned<Team.Full>.self)
             .mapKeys({ .fullTeam(withID: $0) })
+
     }
-    
-    public convenience init() {
-        let urlSessionCache = URLSession(configuration: .default)
-            .makeReadOnly()
-            .droppingResponse()
-            .usingURLKeys()
-        self.init(networkCache: urlSessionCache)
-    }
-    
+        
 }

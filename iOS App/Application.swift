@@ -12,16 +12,11 @@ import Shallows
 
 final class Application {
     
-    let teamsAPI: TeamsAPI
-    let matchesAPI: MatchesAPI
+    let api: API
     
     init() {
-        let networkCache = URLSession(configuration: .ephemeral)
-            .makeReadOnly()
-            .droppingResponse()
-            .usingURLKeys()
-        self.teamsAPI = TeamsAPI(networkCache: networkCache)
-        self.matchesAPI = MatchesAPI(networkCache: networkCache)
+        let urlSession = URLSession(configuration: .ephemeral)
+        self.api = API.gitHub(urlSession: urlSession)
     }
     
 }

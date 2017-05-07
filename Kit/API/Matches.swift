@@ -24,16 +24,16 @@ public struct MatchesEndpoint {
     
 }
 
-public final class MatchesAPI {
+public final class MatchesAPI : APIPoint {
     
     public let provider: ReadOnlyCache<MatchesEndpoint, [String : Any]>
     public let all: ReadOnlyCache<Void, Editioned<Matches>>
     
-    private let github: GitHubRepoCache
+    private let dataProvider: ReadOnlyCache<String, Data>
     
-    public init(networkCache: ReadOnlyCache<URL, Data>) {
-        self.github = GitHubRepoCache.theGreatGameStorage(networkCache: networkCache)
-        self.provider = github
+    public init(rawDataProvider: ReadOnlyCache<String, Data>) {
+        self.dataProvider = rawDataProvider
+        self.provider = rawDataProvider
             .makeReadOnly()
             .mapJSONDictionary()
             .mapKeys({ $0.path })
@@ -41,13 +41,5 @@ public final class MatchesAPI {
             .singleKey(.all)
             .mapMappable(of: Editioned<Matches>.self)
     }
-    
-    public convenience init() {
-        let urlSessionCache = URLSession(configuration: .default)
-            .makeReadOnly()
-            .droppingResponse()
-            .usingURLKeys()
-        self.init(networkCache: urlSessionCache)
-    }
-    
+        
 }

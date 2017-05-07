@@ -30,10 +30,11 @@ final class UserInterface {
     
     func inject(to teamsList: TeamsTableViewController) {
         teamsList <- {
-            $0.teamsProvider = logic.teamsAPI.all.mapValues({ $0.content.teams })
+            $0.teamsProvider = logic.api.teams.all
+                .mapValues({ $0.content.teams })
                 .mainThread()
                 .connectingNetworkActivityIndicator()
-            $0.fullTeamProvider = logic.teamsAPI.fullTeam
+            $0.fullTeamProvider = logic.api.teams.fullTeam
                 .mapValues({ $0.content })
                 .connectingNetworkActivityIndicator()
                 .mainThread()
@@ -42,7 +43,8 @@ final class UserInterface {
     
     func inject(to matchesList: MatchesTableViewController) {
         matchesList <- {
-            $0.matchesProvider = logic.matchesAPI.all.mapValues({ $0.content.matches })
+            $0.matchesProvider = logic.api.matches.all
+                .mapValues({ $0.content.matches })
                 .connectingNetworkActivityIndicator()
                 .mainThread()
         }
