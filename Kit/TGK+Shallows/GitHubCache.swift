@@ -52,7 +52,7 @@ extension URLSession : ReadableCacheProtocol {
     
 }
 
-public final class GitHubRepoCache : ReadableCacheProtocol {
+public final class GitHubRepo : ReadableCacheProtocol {
     
     public typealias Key = String
     public typealias Value = Data
@@ -62,7 +62,7 @@ public final class GitHubRepoCache : ReadableCacheProtocol {
     private let internalCache: ReadOnlyCache<String, Data>
     
     public init(owner: String, repo: String, networkCache: ReadOnlyCache<URL, Data>) {
-        let base = GitHubRepoCache.apiBase.appendingPathComponent("\(owner)/\(repo)/").appendingPathComponent("contents/")
+        let base = GitHubRepo.apiBase.appendingPathComponent("\(owner)/\(repo)/").appendingPathComponent("contents/")
         print(base)
         self.internalCache = networkCache
             .mapJSONDictionary()
@@ -77,10 +77,10 @@ public final class GitHubRepoCache : ReadableCacheProtocol {
     
 }
 
-extension GitHubRepoCache {
+extension GitHubRepo {
     
-    public static func theGreatGameStorage(networkCache: ReadOnlyCache<URL, Data>) -> GitHubRepoCache {
-        return GitHubRepoCache(owner: "dreymonde", repo: "thegreatgame-storage", networkCache: networkCache)
+    public static func theGreatGameStorage(networkCache: ReadOnlyCache<URL, Data>) -> GitHubRepo {
+        return GitHubRepo(owner: "dreymonde", repo: "thegreatgame-storage", networkCache: networkCache)
     }
     
 }

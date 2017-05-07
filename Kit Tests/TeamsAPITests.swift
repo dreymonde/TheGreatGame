@@ -13,7 +13,7 @@ import Shallows
 class TeamsAPITests: XCTestCase {
     
     static let testingNetworkCache: ReadOnlyCache<URL, Data> = URLSession(configuration: .ephemeral)
-        .makeReadOnly()
+        .asReadOnlyCache()
         .droppingResponse()
         .usingURLKeys()
     
@@ -28,13 +28,13 @@ class TeamsAPITests: XCTestCase {
     }
     
     func testAllTeams() throws {
-        let api = TeamsAPI(networkCache: TeamsAPITests.testingNetworkCache)
+        let api = TeamsAPI.gitHub(networkCache: TeamsAPITests.testingNetworkCache)
         let teams = try api.all.mapValues({ $0.content.teams }).makeSyncCache().retrieve()
         XCTAssertEqual(teams.count, 16)
     }
     
     func testTeamID1() throws {
-        let api = TeamsAPI(networkCache: TeamsAPITests.testingNetworkCache)
+        let api = TeamsAPI.gitHub(networkCache: TeamsAPITests.testingNetworkCache)
         let team1 = try api.fullTeam.mapValues({ $0.content }).makeSyncCache().retrieve(forKey: Team.ID(rawValue: 1)!)
         print(team1)
         XCTAssertEqual(team1.name, "Sweden")

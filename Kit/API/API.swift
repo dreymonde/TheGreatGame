@@ -18,13 +18,13 @@ internal protocol APIPoint {
 extension APIPoint {
     
     public static func gitHub(networkCache: ReadOnlyCache<URL, Data> = Self.makeUrlSessionCache()) -> Self {
-        let git = GitHubRepoCache.theGreatGameStorage(networkCache: networkCache)
-        return Self(rawDataProvider: git.makeReadOnly())
+        let gitRepo = GitHubRepo.theGreatGameStorage(networkCache: networkCache)
+        return Self(rawDataProvider: gitRepo.asReadOnlyCache())
     }
     
     internal static func makeUrlSessionCache() -> ReadOnlyCache<URL, Data> {
         return URLSession(configuration: .default)
-            .makeReadOnly()
+            .asReadOnlyCache()
             .droppingResponse()
             .usingURLKeys()
     }
@@ -43,7 +43,7 @@ public final class API {
     
     public static func gitHub(urlSession: URLSession) -> API {
         let sessionCache = urlSession
-            .makeReadOnly()
+            .asReadOnlyCache()
             .droppingResponse()
             .usingURLKeys()
         let teamsAPI = TeamsAPI.gitHub(networkCache: sessionCache)

@@ -12,7 +12,7 @@ import Shallows
 extension ReadOnlyCache {
     
     public func connectingNetworkActivityIndicator(manager: NetworkActivity.IndicatorManager = .application) -> ReadOnlyCache<Key, Value> {
-        return ReadOnlyCache.init(name: self.name, retrieve: { (key, completion) in
+        return ReadOnlyCache.init(cacheName: self.cacheName, retrieve: { (key, completion) in
             self.retrieve(forKey: key, completion: { (result) in
                 manager.decrement()
                 completion(result)
@@ -26,7 +26,7 @@ extension ReadOnlyCache {
 extension CacheProtocol {
     
     public func connectingNetworkActivityIndicator(manager: NetworkActivity.IndicatorManager = .application) -> Cache<Key, Value> {
-        return Cache.init(name: self.name, retrieve: { (key, completion) in
+        return Cache.init(cacheName: self.cacheName, retrieve: { (key, completion) in
             self.retrieve(forKey: key, completion: { (result) in
                 manager.decrement()
                 completion(result)

@@ -61,7 +61,7 @@ public final class CacheProcessor<Key : Hashable, Value> : AutoProcessorProtocol
     let cache: ReadOnlyCache<Key, Value>
     
     init<CacheType : ReadableCacheProtocol>(cache: CacheType) where CacheType.Key == Key, CacheType.Value == Value {
-        self.cache = cache.makeReadOnly()
+        self.cache = cache.asReadOnlyCache()
     }
     
     public func start(key: Key, completion: @escaping (ProcessorResult<Value>) -> ()) {

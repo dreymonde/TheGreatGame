@@ -21,17 +21,5 @@ class ShallowsExtensionsTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
-    
-    func testZip() {
-        let memCache1 = MemoryCache<Int, Int>(storage: [0: 15], name: "left").makeReadOnly()
-        let memCache2 = MemoryCache<Int, String>(storage: [0: "Years"], name: "right").makeReadOnly()
-        let expectation = self.expectation(description: "Waiting for zipped cache to complete")
-        let zipped = zip(memCache1, memCache2).singleKey(0)
-        zipped.retrieve { (result) in
-            print(result)
-            expectation.fulfill()
-        }
-        waitForExpectations(timeout: 5.0)
-    }
-    
+        
 }

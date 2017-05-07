@@ -60,7 +60,6 @@
 		7C7916E11EBB14D50070E6C5 /* Shallows+ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916E01EBB14D40070E6C5 /* Shallows+ActivityIndicator.swift */; };
 		7C7916E41EBB15B20070E6C5 /* AvenuesExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916E31EBB15B20070E6C5 /* AvenuesExtensions.swift */; };
 		7C7916E71EBB245A0070E6C5 /* UIKit+TGA.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916E61EBB245A0070E6C5 /* UIKit+TGA.swift */; };
-		7C7916E91EBB326C0070E6C5 /* Shallows+Zip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916E81EBB326C0070E6C5 /* Shallows+Zip.swift */; };
 		7C7916EB1EBB34E50070E6C5 /* ShallowsExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916EA1EBB34E50070E6C5 /* ShallowsExtensionsTests.swift */; };
 		7C7916EC1EBB35AE0070E6C5 /* Shallows.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C0EA5FE1EBA1C3100F50EB2 /* Shallows.framework */; };
 		7C7916EE1EBB36F70070E6C5 /* TeamsAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916ED1EBB36F70070E6C5 /* TeamsAPITests.swift */; };
@@ -172,7 +171,6 @@
 		7C7916E01EBB14D40070E6C5 /* Shallows+ActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Shallows+ActivityIndicator.swift"; sourceTree = "<group>"; };
 		7C7916E31EBB15B20070E6C5 /* AvenuesExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvenuesExtensions.swift; sourceTree = "<group>"; };
 		7C7916E61EBB245A0070E6C5 /* UIKit+TGA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIKit+TGA.swift"; sourceTree = "<group>"; };
-		7C7916E81EBB326C0070E6C5 /* Shallows+Zip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Shallows+Zip.swift"; sourceTree = "<group>"; };
 		7C7916EA1EBB34E50070E6C5 /* ShallowsExtensionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShallowsExtensionsTests.swift; sourceTree = "<group>"; };
 		7C7916ED1EBB36F70070E6C5 /* TeamsAPITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamsAPITests.swift; sourceTree = "<group>"; };
 		7C7916EF1EBB37910070E6C5 /* TeamFull.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamFull.swift; sourceTree = "<group>"; };
@@ -326,7 +324,6 @@
 				7C0EA62D1EBA1CFC00F50EB2 /* GitHubCache.swift */,
 				7C0EA64E1EBA1D3100F50EB2 /* Shallows+Mapper.swift */,
 				7C7916E01EBB14D40070E6C5 /* Shallows+ActivityIndicator.swift */,
-				7C7916E81EBB326C0070E6C5 /* Shallows+Zip.swift */,
 			);
 			path = "TGK+Shallows";
 			sourceTree = "<group>";
@@ -762,7 +759,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7C7916E91EBB326C0070E6C5 /* Shallows+Zip.swift in Sources */,
 				7C7916DD1EBB10370070E6C5 /* NetworkActivity.swift in Sources */,
 				7C7916E11EBB14D50070E6C5 /* Shallows+ActivityIndicator.swift in Sources */,
 				7C0EA6451EBA1D1E00F50EB2 /* OutMappable.swift in Sources */,

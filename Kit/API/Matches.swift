@@ -34,7 +34,6 @@ public final class MatchesAPI : APIPoint {
     public init(rawDataProvider: ReadOnlyCache<String, Data>) {
         self.dataProvider = rawDataProvider
         self.provider = rawDataProvider
-            .makeReadOnly()
             .mapJSONDictionary()
             .mapKeys({ $0.path })
         self.all = provider
