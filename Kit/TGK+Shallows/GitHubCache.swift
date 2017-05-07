@@ -9,14 +9,12 @@
 import Foundation
 import Shallows
 
-public enum Either<A, B> {
-    case a(A)
-    case b(B)
-}
-
 extension URLSession : ReadableCacheProtocol {
     
-    public typealias Key = Either<URL, URLRequest>
+    public enum Key {
+        case url(URL)
+        case urlRequest(URLRequest)
+    }
     
     public enum CacheError : Error {
         case taskError(Error)
@@ -42,9 +40,9 @@ extension URLSession : ReadableCacheProtocol {
         }
         let task: URLSessionTask
         switch request {
-        case .a(let url):
+        case .url(let url):
             task = self.dataTask(with: url, completionHandler: completion)
-        case .b(let request):
+        case .urlRequest(let request):
             task = self.dataTask(with: request, completionHandler: completion)
         }
         task.resume()
@@ -116,15 +114,14 @@ extension GitHubContentAPIResponse : InMappable {
     
 }
 
-
-extension ReadOnlyCache where Key == Either<URL, URLRequest> {
+extension ReadOnlyCache where Key == URLSession.Key {
     
     public func usingURLKeys() -> ReadOnlyCache<URL, Value> {
-        return mapKeys({ .a($0) })
+        return mapKeys({ .url($0) })
     }
     
     public func usingURLRequestKeys() -> ReadOnlyCache<URLRequest, Value> {
-        return mapKeys({ .b($0) })
+        return mapKeys({ .urlRequest($0) })
     }
     
 }
