@@ -18,7 +18,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
     
     // MARK: - Injections
     var provider: ReadOnlyCache<Void, [Match.Compact]>!
-    var imageCache: Storage<URL, UIImage>!
+    var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
 
     // MARK: - Services
     var avenue: SymmetricalAvenue<URL, UIImage>!
@@ -27,7 +27,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
     override func viewDidLoad() {
         super.viewDidLoad()
         configure(tableView)
-        self.avenue = make()
+        self.avenue = makeAvenue(CGSize(width: 30, height: 30))
         configure(avenue)
         self.pullToRefreshActivities = make()
         loadMatches()
@@ -120,28 +120,14 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let groups = Storyboard.Main.groupsTableViewController.instantiate() <- {
-            $0.provider = GroupsAPI.gitHub().all
-                .mapValues({ $0.content.groups })
-                .mainThread()
-                .connectingNetworkActivityIndicator()
-            $0.imageCache = self.imageCache
-        }
-        show(groups, sender: self)
+        
     }
+    
 }
 
 // MARK: - Configurations
 extension MatchesTableViewController {
-    
-    fileprivate func make() -> SymmetricalAvenue<URL, UIImage> {
-        let lane = URLSessionProcessor(session: URLSession(configuration: .ephemeral))
-            .connectingNetworkActivityIndicator()
-            .mapImage()
-            .mapValue({ $0.resized(toFit: CGSize(width: 30, height: 30)) })
-        return Avenue(storage: imageCache, processor: lane)
-    }
-    
+        
     fileprivate func configure(_ avenue: Avenue<URL, URL, UIImage>) {
         avenue.onStateChange = { [weak self] url in
             assert(Thread.isMainThread)

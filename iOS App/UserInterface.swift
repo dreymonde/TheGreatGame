@@ -9,11 +9,14 @@
 import UIKit
 import Shallows
 import TheGreatKit
+import Avenues
 
 final class UserInterface {
     
     fileprivate let window: UIWindow
     fileprivate let logic: Application
+    
+    fileprivate let avenueSession = URLSession(configuration: .ephemeral)
     
     init(window: UIWindow, application: Application) {
         self.window = window
@@ -36,7 +39,7 @@ final class UserInterface {
                 .mapValues({ $0.content.teams })
                 .mainThread()
                 .connectingNetworkActivityIndicator()
-            $0.imageCache = logic.caches.imageCache30px
+            $0.makeAvenue = { self.makeAvenue(forImageSize: $0, with: self.avenueSession) }
             $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
         }
     }
@@ -47,7 +50,7 @@ final class UserInterface {
                 .mapValues({ $0.content.matches })
                 .connectingNetworkActivityIndicator()
                 .mainThread()
-            $0.imageCache = logic.caches.imageCache30px
+            $0.makeAvenue = { self.makeAvenue(forImageSize: $0, with: self.avenueSession) }
         }
     }
     
@@ -57,7 +60,7 @@ final class UserInterface {
                 .mapValues({ $0.content.groups })
                 .connectingNetworkActivityIndicator()
                 .mainThread()
-            $0.imageCache = logic.caches.imageCache30px
+            $0.makeAvenue = { self.makeAvenue(forImageSize: $0, with: self.avenueSession) }
             $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
         }
     }
@@ -69,10 +72,18 @@ final class UserInterface {
                 .singleKey(teamID)
                 .connectingNetworkActivityIndicator()
                 .mainThread()
-            $0.imageCache = logic.caches.imageCache30px
+            $0.makeAvenue = { self.makeAvenue(forImageSize: $0, with: self.avenueSession) }
             $0.preloadedTeam = preloaded
             $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
         }
+    }
+    
+    func makeAvenue(forImageSize imageSize: CGSize, with session: URLSession) -> Avenue<URL, URL, UIImage> {
+        let lane = URLSessionProcessor(session: session)
+            .mapImage()
+            .mapValue({ $0.resized(toFit: imageSize) })
+        let storage = logic.caches.imageCache(forSize: imageSize.width)
+        return Avenue(storage: storage, processor: lane)
     }
     
 }

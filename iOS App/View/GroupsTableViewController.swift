@@ -18,9 +18,9 @@ class GroupsTableViewController: TheGreatGame.TableViewController, Refreshing {
     
     // MARK: - Injections
     var provider: ReadOnlyCache<Void, [Group.Compact]>!
-    var imageCache: Storage<URL, UIImage>!
     var makeTeamDetailVC: (Group.Team) -> UIViewController = runtimeInject
-    
+    var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
+
     // MARK: - Services
     var avenue: SymmetricalAvenue<URL, UIImage>!
     var pullToRefreshActivities: NetworkActivity.IndicatorManager!
@@ -28,7 +28,7 @@ class GroupsTableViewController: TheGreatGame.TableViewController, Refreshing {
     override func viewDidLoad() {
         super.viewDidLoad()
         configure(tableView)
-        self.avenue = make()
+        self.avenue = makeAvenue(CGSize(width: 30, height: 30))
         configure(avenue)
         self.pullToRefreshActivities = make()
         loadGroups()
@@ -46,19 +46,14 @@ class GroupsTableViewController: TheGreatGame.TableViewController, Refreshing {
     }
     
     fileprivate func reloadData(with groups: [Group.Compact]) {
-//        if self.groups.isEmpty {
-//            self.groups = groups
-//            var paths: [IndexPath] = []
-//            for (group, groupIndex) in zip(groups, groups.indices) {
-//                for (team, teamIndex) in zip(group.teams, group.teams.indices) {
-//                    paths.append(IndexPath.init(row: teamIndex, section: groupIndex))
-//                }
-//            }
+        if self.groups.isEmpty {
+            self.groups = groups
+            tableView.insertSections(IndexSet.init(integersIn: 0 ... groups.count - 1), with: UITableViewRowAnimation.top)
 //            tableView.insertRows(at: paths, with: UITableViewRowAnimation.automatic)
-//        } else {
+        } else {
             self.groups = groups
             tableView.reloadData()
-//        }
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -138,15 +133,7 @@ class GroupsTableViewController: TheGreatGame.TableViewController, Refreshing {
 
 // MARK: - Configurations
 extension GroupsTableViewController {
-    
-    fileprivate func make() -> SymmetricalAvenue<URL, UIImage> {
-        let lane = URLSessionProcessor(session: URLSession(configuration: .ephemeral))
-            .connectingNetworkActivityIndicator()
-            .mapImage()
-            .mapValue({ $0.resized(toFit: CGSize(width: 30, height: 30)) })
-        return Avenue(storage: imageCache, processor: lane)
-    }
-    
+        
     fileprivate func configure(_ avenue: Avenue<URL, URL, UIImage>) {
         avenue.onStateChange = { [weak self] url in
             assert(Thread.isMainThread)

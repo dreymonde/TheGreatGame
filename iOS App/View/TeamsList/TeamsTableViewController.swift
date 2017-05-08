@@ -18,8 +18,8 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
     
     // MARK: - Injections
     var provider: ReadOnlyCache<Void, [Team.Compact]>!
-    var imageCache: Storage<URL, UIImage>!
     var makeTeamDetailVC: (Team.Compact) -> UIViewController = runtimeInject
+    var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
 
     // MARK: - Services
     var avenue: SymmetricalAvenue<URL, UIImage>!
@@ -30,7 +30,7 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
         registerFor3DTouch()
         configure(tableView)
         self.pullToRefreshActivities = make()
-        self.avenue = make()
+        self.avenue = makeAvenue(CGSize(width: 30, height: 30))
         configure(avenue)
         loadTeams()
     }
@@ -135,14 +135,6 @@ extension TeamsTableViewController {
         if traitCollection.forceTouchCapability == .available {
             registerForPreviewing(with: self, sourceView: tableView)
         }
-    }
-    
-    fileprivate func make() -> SymmetricalAvenue<URL, UIImage> {
-        let lane = URLSessionProcessor(session: URLSession(configuration: .ephemeral))
-            .connectingNetworkActivityIndicator()
-            .mapImage()
-            .mapValue({ $0.resized(toFit: CGSize(width: 30, height: 30)) })
-        return Avenue(storage: imageCache, processor: lane)
     }
     
     fileprivate func configure(_ avenue: Avenue<URL, URL, UIImage>) {

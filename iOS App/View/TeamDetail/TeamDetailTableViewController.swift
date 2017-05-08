@@ -42,16 +42,16 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     // MARK: - Injections
     var preloadedTeam: TeamDetailPreLoaded?
     var provider: ReadOnlyCache<Void, Team.Full>!
-    var imageCache: Storage<URL, UIImage>!
     var makeTeamDetailVC: (Group.Team) -> UIViewController = runtimeInject
-    
+    var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
+
     // MARK: - Services
     var avenue: SymmetricalAvenue<URL, UIImage>!
     var pullToRefreshActivities: NetworkActivity.IndicatorManager!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.avenue = make()
+        self.avenue = makeAvenue(CGSize(width: 30, height: 30))
         self.pullToRefreshActivities = make()
         configure(tableView)
         configure(avenue)
@@ -102,6 +102,15 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
             return team?.matches.count ?? 0
         default:
             fatalError("What?!")
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case groupSectionIndex:
+            return team?.group.title
+        default:
+            return nil
         }
     }
         
@@ -214,15 +223,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
 
 // MARK: - Configurations
 extension TeamDetailTableViewController {
-    
-    fileprivate func make() -> SymmetricalAvenue<URL, UIImage> {
-        let lane = URLSessionProcessor(session: URLSession(configuration: .ephemeral))
-            .connectingNetworkActivityIndicator()
-            .mapImage()
-            .mapValue({ $0.resized(toFit: CGSize(width: 30, height: 30)) })
-        return Avenue(storage: imageCache, processor: lane)
-    }
-    
+        
     fileprivate func configure(_ navigationItem: UINavigationItem) {
         navigationItem.title = team?.name ?? preloadedTeam?.name
     }

@@ -24,14 +24,14 @@ extension Color {
 
 // swiftlint:disable type_body_length
 enum ColorName {
-  /// <span style="display:block;width:3em;height:2em;border:1px solid black;background:#870600"></span>
-  /// Alpha: 100% <br/> (0x870600ff)
+  /// <span style="display:block;width:3em;height:2em;border:1px solid black;background:#e15800"></span>
+  /// Alpha: 100% <br/> (0xe15800ff)
   case navigationBackground
 
   var rgbaValue: UInt32 {
     switch self {
     case .navigationBackground:
-      return 0x870600ff
+      return 0xe15800ff
     }
   }
 
