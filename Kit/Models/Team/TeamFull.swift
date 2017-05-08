@@ -15,7 +15,7 @@ extension Team {
         public let shortName: String
         public let rank: Int
         public let badgeURL: URL
-        public let group: Group
+        public let group: Group.Compact
         public let matches: [Match.Compact]
         
     }

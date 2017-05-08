@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Group {
+public enum Group {
     
     public struct Team {
         
@@ -19,8 +19,18 @@ public struct Group {
         
     }
     
-    let title: String
-    let teams: [Team]
+    public struct Compact {
+    
+        public let title: String
+        public let teams: [Team]
+        
+    }
+    
+}
+
+public struct Groups {
+    
+    public let groups: [Group.Compact]
     
 }
 
@@ -46,7 +56,7 @@ extension Group.Team : Mappable {
     
 }
 
-extension Group : Mappable {
+extension Group.Compact : Mappable {
     
     public enum MappingKeys : String, IndexPathElement {
         case title, teams
@@ -57,9 +67,25 @@ extension Group : Mappable {
         self.teams = try mapper.map(from: .teams)
     }
     
-    public func outMap<Destination>(mapper: inout OutMapper<Destination, Group.MappingKeys>) throws where Destination : OutMap {
+    public func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws where Destination : OutMap {
         try mapper.map(self.title, to: .title)
         try mapper.map(self.teams, to: .teams)
+    }
+    
+}
+
+extension Groups : Mappable {
+    
+    public enum MappingKeys : String, IndexPathElement {
+        case groups
+    }
+    
+    public init<Source>(mapper: InMapper<Source, MappingKeys>) throws where Source : InMap {
+        self.groups = try mapper.map(from: .groups)
+    }
+    
+    public func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws where Destination : OutMap {
+        try mapper.map(self.groups, to: .groups)
     }
     
 }

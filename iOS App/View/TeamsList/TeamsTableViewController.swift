@@ -11,36 +11,32 @@ import TheGreatKit
 import Shallows
 import Avenues
 
-class TeamsTableViewController: TheGreatGame.TableViewController {
+class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
     
+    // MARK: - Data source
     var teams: [Team.Compact] = []
     
-    var teamsProvider: ReadOnlyCache<Void, [Team.Compact]>!
-    var fullTeamProvider: ReadOnlyCache<Team.ID, Team.Full>!
-    
-    let imageCache = NSCache<NSURL, UIImage>()
-    
-    var avenue: SymmetricalAvenue<URL, UIImage>!
-    
-    var pullToRefreshActivities: NetworkActivity.IndicatorManager!
+    // MARK: - Injections
+    var provider: ReadOnlyCache<Void, [Team.Compact]>!
+    var imageCache: Storage<URL, UIImage>!
+    var makeTeamDetailVC: (Team.Compact) -> UIViewController = runtimeInject
 
+    // MARK: - Services
+    var avenue: SymmetricalAvenue<URL, UIImage>!
+    var pullToRefreshActivities: NetworkActivity.IndicatorManager!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         registerFor3DTouch()
         configure(tableView)
+        self.pullToRefreshActivities = make()
         self.avenue = make()
         configure(avenue)
-        self.pullToRefreshActivities = make()
         loadTeams()
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
     
     fileprivate func loadTeams(onFinish: @escaping () -> () = { }) {
-        teamsProvider.retrieve { (teamsResult) in
+        provider.retrieve { (teamsResult) in
             assert(Thread.isMainThread)
             onFinish()
             print(teamsResult)
@@ -59,50 +55,6 @@ class TeamsTableViewController: TheGreatGame.TableViewController {
             self.teams = teams
             tableView.reloadData()
         }
-    }
-    
-    private func registerFor3DTouch() {
-        if traitCollection.forceTouchCapability == .available {
-            registerForPreviewing(with: self, sourceView: tableView)
-        }
-    }
-    
-    private func make() -> SymmetricalAvenue<URL, UIImage> {
-        let imageCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "teams-badges-cache")
-        print(imageCache.directoryURL)
-        let lane = URLSessionProcessor(session: URLSession(configuration: .ephemeral))
-            //.caching(to: imageCache.mapKeys({ $0.path }))
-            .connectingNetworkActivityIndicator()
-            .mapImage()
-            .mapValue({ $0.resized(toFit: CGSize(width: 30, height: 30)) })
-        let storage: Storage<URL, UIImage> = NSCacheStorage<NSURL, UIImage>(cache: self.imageCache)
-            .mapKey({ $0 as NSURL })
-        return Avenue(storage: storage, processor: lane)
-    }
-    
-    private func make() -> NetworkActivity.IndicatorManager {
-        return NetworkActivity.IndicatorManager(show: { [weak self] in
-            self?.refreshControl?.beginRefreshing()
-        }, hide: { [weak self] in
-            self?.refreshControl?.endRefreshing()
-        })
-    }
-    
-    private func configure(_ avenue: Avenue<URL, URL, UIImage>) {
-        avenue.onStateChange = { [weak self] url in
-            assert(Thread.isMainThread)
-            self?.didFetchImage(with: url)
-        }
-        avenue.onError = {
-            print($0)
-        }
-    }
-    
-    private func configure(_ tableView: UITableView) {
-        tableView.register(UINib.init(nibName: "TeamCompactTableViewCell", bundle: nil),
-                           forCellReuseIdentifier: "TeamCompact")
-        tableView.estimatedRowHeight = 50
-        tableView.rowHeight = UITableViewAutomaticDimension
     }
     
     override func didReceiveMemoryWarning() {
@@ -165,27 +117,54 @@ class TeamsTableViewController: TheGreatGame.TableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let team = teams[indexPath.row]
-//        let detail = Storyboard.Main.teamDetailViewController.instantiate() <- {
-//            $0.provider = fullTeamProvider.singleKey(team.id)
-//            $0.state = .compact(team)
-//            $0.badgeImage = avenue.item(at: team.badgeURL)
-//        }
-//        navigationController?.pushViewController(detail, animated: true)
-        let detail = teamDetailViewController(for: team.id)
+        let detail = teamDetailViewController(for: team)
         navigationController?.pushViewController(detail, animated: true)
-        fullTeamProvider.retrieve(forKey: team.id, completion: jdump)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    fileprivate func teamDetailViewController(for teamID: Team.ID) -> TeamDetailTableViewController {
-        return Storyboard.Main.teamDetailTableViewController.instantiate() <- {
-            $0.provider = fullTeamProvider.singleKey(teamID)
-            $0.imageCache = self.imageCache
-        }
+    fileprivate func teamDetailViewController(for team: Team.Compact) -> UIViewController {
+        return makeTeamDetailVC(team)
     }
 
 }
 
+// MARK: - Configurations
+extension TeamsTableViewController {
+    
+    fileprivate func registerFor3DTouch() {
+        if traitCollection.forceTouchCapability == .available {
+            registerForPreviewing(with: self, sourceView: tableView)
+        }
+    }
+    
+    fileprivate func make() -> SymmetricalAvenue<URL, UIImage> {
+        let lane = URLSessionProcessor(session: URLSession(configuration: .ephemeral))
+            .connectingNetworkActivityIndicator()
+            .mapImage()
+            .mapValue({ $0.resized(toFit: CGSize(width: 30, height: 30)) })
+        return Avenue(storage: imageCache, processor: lane)
+    }
+    
+    fileprivate func configure(_ avenue: Avenue<URL, URL, UIImage>) {
+        avenue.onStateChange = { [weak self] url in
+            assert(Thread.isMainThread)
+            self?.didFetchImage(with: url)
+        }
+        avenue.onError = {
+            print($0)
+        }
+    }
+    
+    fileprivate func configure(_ tableView: UITableView) {
+        tableView.register(UINib.init(nibName: "TeamCompactTableViewCell", bundle: nil),
+                           forCellReuseIdentifier: "TeamCompact")
+        tableView.estimatedRowHeight = 50
+        tableView.rowHeight = UITableViewAutomaticDimension
+    }
+    
+}
+
+// MARK: - Peek & Pop
 extension TeamsTableViewController : UIViewControllerPreviewingDelegate {
     
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
@@ -193,7 +172,7 @@ extension TeamsTableViewController : UIViewControllerPreviewingDelegate {
             return nil
         }
         let team = teams[indexPath.row]
-        let teamDetail = teamDetailViewController(for: team.id)
+        let teamDetail = teamDetailViewController(for: team)
         
         let cellRect = tableView.rectForRow(at: indexPath)
         let sourceRect = previewingContext.sourceView.convert(cellRect, from: tableView)

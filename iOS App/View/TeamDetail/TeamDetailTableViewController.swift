@@ -11,80 +11,100 @@ import TheGreatKit
 import Shallows
 import Avenues
 
-class TeamDetailTableViewController: TheGreatGame.TableViewController {
+struct TeamDetailPreLoaded {
     
+    let name: String?
+    let shortName: String?
+    
+}
+
+extension Team.Compact {
+    
+    func preLoaded() -> TeamDetailPreLoaded {
+        return TeamDetailPreLoaded(name: self.name, shortName: self.shortName)
+    }
+    
+}
+
+extension Group.Team {
+    
+    func preLoaded() -> TeamDetailPreLoaded {
+        return TeamDetailPreLoaded(name: self.name, shortName: nil)
+    }
+    
+}
+
+class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshing {
+    
+    // MARK: - Data source
     var team: Team.Full?
-    var provider: ReadOnlyCache<Void, Team.Full>!
-    var imageCache: NSCache<NSURL, UIImage>!
     
+    // MARK: - Injections
+    var preloadedTeam: TeamDetailPreLoaded?
+    var provider: ReadOnlyCache<Void, Team.Full>!
+    var imageCache: Storage<URL, UIImage>!
+    var makeTeamDetailVC: (Group.Team) -> UIViewController = runtimeInject
+    
+    // MARK: - Services
     var avenue: SymmetricalAvenue<URL, UIImage>!
+    var pullToRefreshActivities: NetworkActivity.IndicatorManager!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(UINib.init(nibName: "MatchTableViewCell", bundle: nil), forCellReuseIdentifier: "TeamDetailMatch")
-        tableView.estimatedRowHeight = 55
-        tableView.rowHeight = UITableViewAutomaticDimension
         self.avenue = make()
+        self.pullToRefreshActivities = make()
+        configure(tableView)
         configure(avenue)
+        configure(navigationItem)
+        loadFullTeam()
+    }
+    
+    fileprivate func loadFullTeam(onFinish: @escaping () -> () = { }) {
         provider.retrieve { (result) in
             assert(Thread.isMainThread)
+            onFinish()
             if let team = result.asOptional {
                 self.team = team
                 self.tableView.reloadData()
+                self.configure(self.navigationItem)
             }
         }
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-    }
-    
-    private func make() -> SymmetricalAvenue<URL, UIImage> {
-        let imageCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "teams-badges-cache")
-        print(imageCache.directoryURL)
-        let lane = URLSessionProcessor(session: URLSession(configuration: .ephemeral))
-            //            .caching(to: imageCache.mapKeys({ $0.path }))
-            .connectingNetworkActivityIndicator()
-        let storage: Storage<URL, UIImage> = NSCacheStorage<NSURL, UIImage>(cache: self.imageCache)
-            .mapKey({ $0 as NSURL })
-        return Avenue(storage: storage, processor: lane.mapImage())
-    }
-    
-    private func configure(_ avenue: SymmetricalAvenue<URL, UIImage>) {
-        avenue.onStateChange = { [weak self] url in
-            assert(Thread.isMainThread)
-            self?.didFetchImage(with: url)
-        }
-        avenue.onError = jprint
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
+        pullToRefreshActivities.increment()
+        loadFullTeam {
+            self.pullToRefreshActivities.decrement()
+        }
+    }
 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 2
+        return 3
     }
 
     let detailSectionIndex = 0
-    let matchesSectionIndex = 1
+    let groupSectionIndex = 1
+    let matchesSectionIndex = 2
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         switch section {
         case detailSectionIndex:
             return 1
+        case groupSectionIndex:
+            return team?.group.teams.count ?? 0
         case matchesSectionIndex:
             return team?.matches.count ?? 0
         default:
             fatalError("What?!")
         }
     }
-    
+        
     func didFetchImage(with url: URL) {
         guard let team = team else {
             return
@@ -93,6 +113,11 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController {
         for (match, index) in zip(team.matches, team.matches.indices) {
             if match.teams.map({ $0.badgeURL }).contains(url) {
                 paths.append(IndexPath.init(row: index, section: matchesSectionIndex))
+            }
+        }
+        for (team, index) in zip(team.group.teams, team.group.teams.indices) {
+            if team.badgeURL == url {
+                paths.append(IndexPath.init(row: index, section: groupSectionIndex))
             }
         }
         for indexPath in paths {
@@ -108,6 +133,10 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: "TeamDetailTeamDetail", for: indexPath)
             configureCell(cell, forRowAt: indexPath)
             return cell
+        case groupSectionIndex:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "TeamDetailGroupTeam", for: indexPath)
+            configureCell(cell, forRowAt: indexPath)
+            return cell
         case matchesSectionIndex:
             let cell = tableView.dequeueReusableCell(withIdentifier: "TeamDetailMatch", for: indexPath)
             configureCell(cell, forRowAt: indexPath)
@@ -121,14 +150,21 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController {
         switch cell {
         case let match as MatchTableViewCell:
             configureMatchCell(match, forRowAt: indexPath, afterImageDownload: afterImageDownload)
+        case let teamGroup as TeamGroupTableViewCell:
+            configureTeamGroupCell(teamGroup, forRowAt: indexPath, afterImageDownload: afterImageDownload)
         default:
             configureTeamDetailsCell(cell, forRowAt: indexPath, afterImageDownload: afterImageDownload)
         }
     }
     
     func configureTeamDetailsCell(_ cell: UITableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
-        cell.textLabel?.text = team?.name
-        cell.detailTextLabel?.text = team?.shortName
+        if let team = team {
+            cell.textLabel?.text = team.name
+            cell.detailTextLabel?.text = team.shortName
+        } else if let preloaded = preloadedTeam {
+            cell.textLabel?.text = preloaded.name
+            cell.detailTextLabel?.text = preloaded.shortName
+        }
     }
     
     func configureMatchCell(_ cell: MatchTableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
@@ -146,5 +182,66 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController {
         cell.homeBadgeImageView.setImage(avenue.item(at: match.home.badgeURL), afterDownload: afterImageDownload)
         cell.awayBadgeImageView.setImage(avenue.item(at: match.away.badgeURL), afterDownload: afterImageDownload)
     }
+    
+    func configureTeamGroupCell(_ cell: TeamGroupTableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
+        guard let groupTeam = team?.group.teams[indexPath.row] else {
+            fault("No team, really?")
+            return
+        }
+        if !afterImageDownload {
+            avenue.prepareItem(at: groupTeam.badgeURL)
+        }
+        cell.nameLabel.text = groupTeam.name
+        cell.pointsLabel.text = String(groupTeam.points)
+        cell.positionLabel.text = "\(indexPath.row + 1)."
+        cell.badgeImageView.setImage(avenue.item(at: groupTeam.badgeURL), afterDownload: afterImageDownload)
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.section {
+        case groupSectionIndex:
+            guard let team = self.team?.group.teams[indexPath.row] else {
+                return
+            }
+            let anotherTeamVC = makeTeamDetailVC(team)
+            show(anotherTeamVC, sender: self)
+        default:
+            break
+        }
+    }
 
+}
+
+// MARK: - Configurations
+extension TeamDetailTableViewController {
+    
+    fileprivate func make() -> SymmetricalAvenue<URL, UIImage> {
+        let lane = URLSessionProcessor(session: URLSession(configuration: .ephemeral))
+            .connectingNetworkActivityIndicator()
+            .mapImage()
+            .mapValue({ $0.resized(toFit: CGSize(width: 30, height: 30)) })
+        return Avenue(storage: imageCache, processor: lane)
+    }
+    
+    fileprivate func configure(_ navigationItem: UINavigationItem) {
+        navigationItem.title = team?.name ?? preloadedTeam?.name
+    }
+    
+    fileprivate func configure(_ tableView: UITableView) {
+        tableView <- {
+            $0.register(UINib.init(nibName: "MatchTableViewCell", bundle: nil), forCellReuseIdentifier: "TeamDetailMatch")
+            $0.register(UINib.init(nibName: "TeamGroupTableViewCell", bundle: nil), forCellReuseIdentifier: "TeamDetailGroupTeam")
+            $0.estimatedRowHeight = 55
+            $0.rowHeight = UITableViewAutomaticDimension
+        }
+    }
+    
+    fileprivate func configure(_ avenue: SymmetricalAvenue<URL, UIImage>) {
+        avenue.onStateChange = { [weak self] url in
+            assert(Thread.isMainThread)
+            self?.didFetchImage(with: url)
+        }
+        avenue.onError = jprint
+    }
+    
 }

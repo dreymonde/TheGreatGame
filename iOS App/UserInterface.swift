@@ -26,27 +26,52 @@ final class UserInterface {
         inject(to: matchesList!)
         let teamsList = viewControllers?.flatMap({ $0 as? TeamsTableViewController }).first
         inject(to: teamsList!)
+        let groupsList = viewControllers?.flatMap({ $0 as? GroupsTableViewController }).first
+        inject(to: groupsList!)
     }
     
     func inject(to teamsList: TeamsTableViewController) {
         teamsList <- {
-            $0.teamsProvider = logic.api.teams.all
+            $0.provider = logic.api.teams.all
                 .mapValues({ $0.content.teams })
                 .mainThread()
                 .connectingNetworkActivityIndicator()
-            $0.fullTeamProvider = logic.api.teams.fullTeam
-                .mapValues({ $0.content })
-                .connectingNetworkActivityIndicator()
-                .mainThread()
+            $0.imageCache = logic.caches.imageCache30px
+            $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
         }
     }
     
     func inject(to matchesList: MatchesTableViewController) {
         matchesList <- {
-            $0.matchesProvider = logic.api.matches.all
+            $0.provider = logic.api.matches.all
                 .mapValues({ $0.content.matches })
                 .connectingNetworkActivityIndicator()
                 .mainThread()
+            $0.imageCache = logic.caches.imageCache30px
+        }
+    }
+    
+    func inject(to groupsList: GroupsTableViewController) {
+        groupsList <- {
+            $0.provider = logic.api.groups.all
+                .mapValues({ $0.content.groups })
+                .connectingNetworkActivityIndicator()
+                .mainThread()
+            $0.imageCache = logic.caches.imageCache30px
+            $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
+        }
+    }
+    
+    func teamDetailViewController(for teamID: Team.ID, preloaded: TeamDetailPreLoaded) -> TeamDetailTableViewController {
+        return Storyboard.Main.teamDetailTableViewController.instantiate() <- {
+            $0.provider = logic.api.teams.fullTeam
+                .mapValues({ $0.content })
+                .singleKey(teamID)
+                .connectingNetworkActivityIndicator()
+                .mainThread()
+            $0.imageCache = logic.caches.imageCache30px
+            $0.preloadedTeam = preloaded
+            $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
         }
     }
     

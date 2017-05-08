@@ -69,6 +69,11 @@ enum Storyboard {
       return vc
     }
 
+    case groupsTableViewControllerScene = "GroupsTableViewController"
+    static var groupsTableViewController: ViewControllerResource<Main, TheGreatGame.GroupsTableViewController> {
+      return ViewControllerResource(scene: .groupsTableViewControllerScene)
+    }
+
     case matchesTableViewControllerScene = "MatchesTableViewController"
     static var matchesTableViewController: ViewControllerResource<Main, TheGreatGame.MatchesTableViewController> {
       return ViewControllerResource(scene: .matchesTableViewControllerScene)

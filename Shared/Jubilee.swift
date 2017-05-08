@@ -63,12 +63,17 @@ func runtimeInject<In, Out>(_ input: In) -> Out {
     fatalError("Should inject")
 }
 
-extension Optional {
+public extension String {
     
-    func then(_ apply: (Wrapped) -> ()) {
-        if let value = self {
-            apply(value)
-        }
+    #if DEBUG
+    var unlocalized: String {
+        return self
     }
+    #else
+    @available(*, deprecated, message: "You should not use unlocalized strings in release builds")
+    var unlocalized: String {
+        return self
+    }
+    #endif
     
 }

@@ -13,10 +13,12 @@ import Shallows
 final class Application {
     
     let api: API
+    let caches: Caches
     
     init() {
         let urlSession = URLSession(configuration: .ephemeral)
         self.api = API.gitHub(urlSession: urlSession)
+        self.caches = Caches()
     }
     
 }

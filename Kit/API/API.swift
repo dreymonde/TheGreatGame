@@ -35,10 +35,12 @@ public final class API {
     
     public let teams: TeamsAPI
     public let matches: MatchesAPI
+    public let groups: GroupsAPI
     
-    public init(teams: TeamsAPI, matches: MatchesAPI) {
+    public init(teams: TeamsAPI, matches: MatchesAPI, groups: GroupsAPI) {
         self.teams = teams
         self.matches = matches
+        self.groups = groups
     }
     
     public static func gitHub(urlSession: URLSession) -> API {
@@ -48,7 +50,8 @@ public final class API {
             .usingURLKeys()
         let teamsAPI = TeamsAPI.gitHub(networkCache: sessionCache)
         let matchesAPI = MatchesAPI.gitHub(networkCache: sessionCache)
-        return API(teams: teamsAPI, matches: matchesAPI)
+        let groupsAPI = GroupsAPI.gitHub(networkCache: sessionCache)
+        return API(teams: teamsAPI, matches: matchesAPI, groups: groupsAPI)
     }
     
 }
