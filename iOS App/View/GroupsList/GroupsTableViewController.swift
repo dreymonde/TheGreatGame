@@ -31,6 +31,7 @@ class GroupsTableViewController: TheGreatGame.TableViewController, Refreshing {
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
         configure(avenue)
         self.pullToRefreshActivities = make()
+        registerFor3DTouch()
         loadGroups()
     }
     
@@ -133,7 +134,13 @@ class GroupsTableViewController: TheGreatGame.TableViewController, Refreshing {
 
 // MARK: - Configurations
 extension GroupsTableViewController {
-        
+    
+    fileprivate func registerFor3DTouch() {
+        if traitCollection.forceTouchCapability == .available {
+            registerForPreviewing(with: self, sourceView: tableView)
+        }
+    }
+    
     fileprivate func configure(_ avenue: Avenue<URL, URL, UIImage>) {
         avenue.onStateChange = { [weak self] url in
             assert(Thread.isMainThread)
@@ -149,6 +156,28 @@ extension GroupsTableViewController {
                            forCellReuseIdentifier: "GroupsListTeam")
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableViewAutomaticDimension
+    }
+    
+}
+
+extension GroupsTableViewController : UIViewControllerPreviewingDelegate {
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        guard let indexPath = tableView.indexPathForRow(at: location) else {
+            return nil
+        }
+        let team = groups[indexPath.section].teams[indexPath.row]
+        let teamDetailVC = makeTeamDetailVC(team)
+        
+        let cellRect = tableView.rectForRow(at: indexPath)
+        let sourceRect = previewingContext.sourceView.convert(cellRect, from: tableView)
+        previewingContext.sourceRect = sourceRect
+        
+        return teamDetailVC
+    }
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+        show(viewControllerToCommit, sender: self)
     }
     
 }
