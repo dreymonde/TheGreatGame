@@ -53,6 +53,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
         super.viewDidLoad()
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
         self.pullToRefreshActivities = make()
+        registerFor3DTouch()
         configure(tableView)
         configure(avenue)
         configure(navigationItem)
@@ -223,7 +224,13 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
 
 // MARK: - Configurations
 extension TeamDetailTableViewController {
-        
+    
+    fileprivate func registerFor3DTouch() {
+        if traitCollection.forceTouchCapability == .available {
+            registerForPreviewing(with: self, sourceView: tableView)
+        }
+    }
+    
     fileprivate func configure(_ navigationItem: UINavigationItem) {
         navigationItem.title = team?.name ?? preloadedTeam?.name
     }
@@ -243,6 +250,36 @@ extension TeamDetailTableViewController {
             self?.didFetchImage(with: url)
         }
         avenue.onError = jprint
+    }
+    
+}
+
+extension TeamDetailTableViewController : UIViewControllerPreviewingDelegate {
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        guard let indexPath = tableView.indexPathForRow(at: location) else {
+            return nil
+        }
+        var vc: UIViewController?
+        switch indexPath.section {
+        case groupSectionIndex:
+            guard let teamGroup = team?.group.teams[indexPath.row] else {
+                return nil
+            }
+            vc = makeTeamDetailVC(teamGroup)
+        default:
+            return nil
+        }
+        
+        let cellRect = tableView.rectForRow(at: indexPath)
+        let sourceRect = previewingContext.sourceView.convert(cellRect, from: tableView)
+        previewingContext.sourceRect = sourceRect
+        
+        return vc
+    }
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+        show(viewControllerToCommit, sender: self)
     }
     
 }

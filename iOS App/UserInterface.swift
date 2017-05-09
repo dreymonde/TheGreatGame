@@ -39,7 +39,7 @@ final class UserInterface {
                 .mapValues({ $0.content.teams })
                 .mainThread()
                 .connectingNetworkActivityIndicator()
-            $0.makeAvenue = { self.makeAvenue(forImageSize: $0, with: self.avenueSession) }
+            $0.makeAvenue = { self.logic.imageFetching.makeAvenue(forImageSize: $0) }
             $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
         }
     }
@@ -50,7 +50,7 @@ final class UserInterface {
                 .mapValues({ $0.content.matches })
                 .connectingNetworkActivityIndicator()
                 .mainThread()
-            $0.makeAvenue = { self.makeAvenue(forImageSize: $0, with: self.avenueSession) }
+            $0.makeAvenue = { self.logic.imageFetching.makeAvenue(forImageSize: $0) }
         }
     }
     
@@ -60,7 +60,7 @@ final class UserInterface {
                 .mapValues({ $0.content.groups })
                 .connectingNetworkActivityIndicator()
                 .mainThread()
-            $0.makeAvenue = { self.makeAvenue(forImageSize: $0, with: self.avenueSession) }
+            $0.makeAvenue = { self.logic.imageFetching.makeAvenue(forImageSize: $0) }
             $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
         }
     }
@@ -72,18 +72,10 @@ final class UserInterface {
                 .singleKey(teamID)
                 .connectingNetworkActivityIndicator()
                 .mainThread()
-            $0.makeAvenue = { self.makeAvenue(forImageSize: $0, with: self.avenueSession) }
+            $0.makeAvenue = { self.logic.imageFetching.makeAvenue(forImageSize: $0) }
             $0.preloadedTeam = preloaded
             $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
         }
-    }
-    
-    func makeAvenue(forImageSize imageSize: CGSize, with session: URLSession) -> Avenue<URL, URL, UIImage> {
-        let lane = URLSessionProcessor(session: session)
-            .mapImage()
-            .mapValue({ $0.resized(toFit: imageSize) })
-        let storage = logic.caches.imageCache(forSize: imageSize.width)
-        return Avenue(storage: storage, processor: lane)
     }
     
 }
