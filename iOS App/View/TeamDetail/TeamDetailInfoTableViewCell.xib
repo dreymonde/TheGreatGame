@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="70" id="KGk-i7-Jjw" customClass="TeamDetailInfoTableViewCell" customModule="TheGreatGame" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="69.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="35" translatesAutoresizingMaskIntoConstraints="NO" id="pal-NG-sbH">
+                        <rect key="frame" x="80.5" y="10" width="159" height="50"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sweden" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6t2-nG-N9B">
+                                <rect key="frame" x="0.0" y="15" width="64" height="20.5"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Stadium Filled-100" translatesAutoresizingMaskIntoConstraints="NO" id="RtD-a8-eav">
+                                <rect key="frame" x="99" y="0.0" width="60" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="NZ4-4S-nCj"/>
+                                    <constraint firstAttribute="width" constant="60" id="Ocs-pB-iED"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                    </stackView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="pal-NG-sbH" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="5Wh-J8-XX0"/>
+                    <constraint firstAttribute="bottom" secondItem="pal-NG-sbH" secondAttribute="bottom" constant="10" id="RDO-gZ-M4g"/>
+                    <constraint firstItem="pal-NG-sbH" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="30" id="Skb-De-1TH"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="pal-NG-sbH" secondAttribute="trailing" constant="30" id="YoP-4V-aFn"/>
+                    <constraint firstItem="pal-NG-sbH" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="vOL-GF-nWv"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="badgeImageView" destination="RtD-a8-eav" id="Rot-V4-HQl"/>
+                <outlet property="nameLabel" destination="6t2-nG-N9B" id="2WE-gd-WBo"/>
+            </connections>
+            <point key="canvasLocation" x="34" y="67"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="Stadium Filled-100" width="50" height="50"/>
+    </resources>
+</document>
