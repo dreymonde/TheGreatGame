@@ -46,8 +46,8 @@ final class UserInterface {
     
     func inject(to matchesList: MatchesTableViewController) {
         matchesList <- {
-            $0.provider = logic.api.matches.all
-                .mapValues({ $0.content.matches })
+            $0.provider = logic.api.matches.stages
+                .mapValues({ $0.content.stages })
                 .connectingNetworkActivityIndicator()
                 .mainThread()
             $0.makeAvenue = { self.logic.imageFetching.makeAvenue(forImageSize: $0) }

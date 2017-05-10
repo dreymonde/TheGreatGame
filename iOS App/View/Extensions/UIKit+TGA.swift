@@ -32,3 +32,11 @@ extension UIView {
     }
     
 }
+
+extension IndexPath {
+    
+    static func start(ofSection section: Int) -> IndexPath {
+        return IndexPath(row: NSNotFound, section: section)
+    }
+    
+}

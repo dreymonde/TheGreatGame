@@ -14,10 +14,10 @@ import Avenues
 class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
     
     // MARK: - Data source
-    var matches: [Match.Compact] = []
+    var stages: [Stage] = []
     
     // MARK: - Injections
-    var provider: ReadOnlyCache<Void, [Match.Compact]>!
+    var provider: ReadOnlyCache<Void, [Stage]>!
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
 
     // MARK: - Services
@@ -30,27 +30,26 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
         configure(avenue)
         self.pullToRefreshActivities = make()
-        loadMatches()
+        loadStages()
     }
     
-    fileprivate func loadMatches(onFinish: @escaping () -> () = { }) {
-        provider.retrieve { (teamsResult) in
+    fileprivate func loadStages(onFinish: @escaping () -> () = { }) {
+        provider.retrieve { (stagesResult) in
             assert(Thread.isMainThread)
             onFinish()
-            print(teamsResult)
-            if let teams = teamsResult.asOptional {
-                self.reloadData(with: teams)
+            print(stagesResult)
+            if let stages = stagesResult.asOptional {
+                self.reloadData(with: stages)
             }
         }
     }
     
-    fileprivate func reloadData(with matches: [Match.Compact]) {
-        if self.matches.isEmpty {
-            self.matches = matches
-            let ips = matches.indices.map({ IndexPath.init(row: $0, section: 0) })
-            tableView.insertRows(at: ips, with: UITableViewRowAnimation.automatic)
+    fileprivate func reloadData(with stages: [Stage]) {
+        if self.stages.isEmpty {
+            self.stages = stages
+            tableView.insertSections(IndexSet.init(integersIn: 0 ... stages.count - 1), with: UITableViewRowAnimation.top)
         } else {
-            self.matches = matches
+            self.stages = stages
             tableView.reloadData()
         }
     }
@@ -62,16 +61,18 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
     
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
         pullToRefreshActivities.increment()
-        loadMatches {
+        loadStages {
             self.pullToRefreshActivities.decrement()
         }
     }
     
     func didFetchImage(with url: URL) {
         var paths: [IndexPath] = []
-        for (match, index) in zip(matches, matches.indices) {
-            if match.teams.map({ $0.badgeURL }).contains(url) {
-                paths.append(IndexPath.init(row: index, section: 0))
+        for (stage, stageIndex) in zip(stages, stages.indices) {
+            for (match, matchIndex) in zip(stage.matches, stage.matches.indices) {
+                if match.teams.contains(where: { $0.badgeURL == url }) {
+                    paths.append(IndexPath(row: matchIndex, section: stageIndex))
+                }
             }
         }
         for indexPath in paths {
@@ -84,11 +85,15 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return stages.count
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return matches.count
+        return stages[section].matches.count
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return stages[section].title
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -107,7 +112,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
     }
     
     func configureMatchCell(_ cell: MatchTableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
-        let match = matches[indexPath.row]
+        let match = stages[indexPath.section].matches[indexPath.row]
         if !afterImageDownload {
             avenue.prepareItem(at: match.home.badgeURL)
             avenue.prepareItem(at: match.away.badgeURL)
