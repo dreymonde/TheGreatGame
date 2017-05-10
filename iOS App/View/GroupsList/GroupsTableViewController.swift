@@ -39,7 +39,6 @@ class GroupsTableViewController: TheGreatGame.TableViewController, Refreshing {
         provider.retrieve { (groupsResult) in
             assert(Thread.isMainThread)
             onFinish()
-            print(groupsResult)
             if let groups = groupsResult.asOptional {
                 self.reloadData(with: groups)
             }

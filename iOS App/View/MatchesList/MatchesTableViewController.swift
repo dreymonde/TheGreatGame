@@ -37,7 +37,6 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
         provider.retrieve { (stagesResult) in
             assert(Thread.isMainThread)
             onFinish()
-            print(stagesResult)
             if let stages = stagesResult.asOptional {
                 self.reloadData(with: stages)
             }

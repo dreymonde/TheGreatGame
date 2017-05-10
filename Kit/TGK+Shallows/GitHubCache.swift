@@ -64,7 +64,7 @@ public final class GitHubRepo : ReadableCacheProtocol {
         print("GitHub repo base:", base)
         self.internalCache = networkCache
             .mapJSONDictionary()
-            .mapKeys({ printed(base.appendingPathComponent($0)) })
+            .mapKeys({ base.appendingPathComponent($0) })
             .mapMappable(of: GitHubContentAPIResponse.self)
             .mapValues({ try $0.contentData.unwrap() })
     }
