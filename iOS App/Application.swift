@@ -18,7 +18,7 @@ final class Application {
     init() {
         let urlSession = URLSession(configuration: .ephemeral)
         self.api = API.gitHub(urlSession: urlSession)
-        self.imageFetching = ImageFetch(shouldCacheToDisk: false)
+        self.imageFetching = ImageFetch(shouldCacheToDisk: true)
     }
     
 }

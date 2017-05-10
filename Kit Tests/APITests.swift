@@ -10,7 +10,7 @@ import XCTest
 import Shallows
 @testable import TheGreatKit
 
-class TeamsAPITests: XCTestCase {
+class APITests: XCTestCase {
     
     static let testingNetworkCache: ReadOnlyCache<URL, Data> = URLSession(configuration: .ephemeral)
         .asReadOnlyCache()
@@ -28,13 +28,13 @@ class TeamsAPITests: XCTestCase {
     }
     
     func testAllTeams() throws {
-        let api = TeamsAPI.gitHub(networkCache: TeamsAPITests.testingNetworkCache)
+        let api = TeamsAPI.gitHub(networkCache: APITests.testingNetworkCache)
         let teams = try api.all.mapValues({ $0.content.teams }).makeSyncCache().retrieve()
         XCTAssertEqual(teams.count, 16)
     }
     
     func testTeamID1() throws {
-        let api = TeamsAPI.gitHub(networkCache: TeamsAPITests.testingNetworkCache)
+        let api = TeamsAPI.gitHub(networkCache: APITests.testingNetworkCache)
         let team1 = try api.fullTeam.mapValues({ $0.content }).makeSyncCache().retrieve(forKey: Team.ID(rawValue: 1)!)
         print(team1)
         XCTAssertEqual(team1.name, "Sweden")
@@ -42,6 +42,11 @@ class TeamsAPITests: XCTestCase {
         XCTAssertEqual(team1.id.rawID, 1)
         XCTAssertEqual(team1.group.teams.count, 4)
         XCTAssertEqual(team1.group.title, "Group B")
+    }
+    
+    func testStages() throws {
+        let api = MatchesAPI.gitHub(networkCache: APITests.testingNetworkCache)
+        let stages = try api.stages.mapValues({ $0.content }).makeSyncCache().retrieve()
     }
     
 }

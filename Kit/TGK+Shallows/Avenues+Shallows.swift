@@ -25,6 +25,7 @@ extension Avenues.ProcessorProtocol {
                 _ = cacheInFlightLockQueue.sync { cacheInFlight.remove(key) }
                 switch cacheResult {
                 case .success(let cached):
+                    print("Quick access for \(key)")
                     completion(.success(cached))
                 case .failure:
                     self.start(key: key, completion: { (processorResult) in

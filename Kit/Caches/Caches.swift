@@ -24,10 +24,10 @@ public final class ImageFetch {
     internal var caches: [Int : Storage<URL, UIImage>] = [:]
     
     fileprivate let imageFetchingSession = URLSession(configuration: .ephemeral)
-    fileprivate let diskCaching: DiskCaching?
+    fileprivate let diskCache: Cache<URL, UIImage>
     
     public init(shouldCacheToDisk: Bool) {
-        self.diskCaching = shouldCacheToDisk ? DiskCaching() : nil
+        self.diskCache = shouldCacheToDisk ? DiskCaching.inCachesDirectorySharedContainer().cache : .empty()
     }
     
     public func imageCache(forSize side: CGFloat) -> Storage<URL, UIImage> {
@@ -44,17 +44,28 @@ public final class ImageFetch {
     }
     
     public func makeAvenue(forImageSize imageSize: CGSize) -> Avenue<URL, URL, UIImage> {
-        let fullSizedLane: Processor<URL, UIImage> = {
-            let sessionLane = URLSessionProcessor(session: imageFetchingSession)
-                .mapImage()
-            if let diskCaching = diskCaching {
-                return sessionLane.caching(to: diskCaching.imagesDiskCache)
-            }
-            return sessionLane
-        }()
+        let fullSizedLane: Processor<URL, UIImage> = URLSessionProcessor(session: imageFetchingSession)
+            .mapImage()
+            .caching(to: diskCache)
         let lane = fullSizedLane.mapValue({ $0.resized(toFit: imageSize) })
         let storage = imageCache(forSize: imageSize.width)
         return Avenue(storage: storage, processor: lane)
+    }
+    
+}
+
+public enum EmptyCacheError : Error {
+    case cacheIsAlwaysEmpty
+}
+
+extension Cache {
+    
+    fileprivate static func empty() -> Cache<Key, Value> {
+        return Cache(cacheName: "empty", retrieve: { (_, completion) in
+            completion(.failure(EmptyCacheError.cacheIsAlwaysEmpty))
+        }, set: { (_, _, completion) in
+            completion(.failure(EmptyCacheError.cacheIsAlwaysEmpty))
+        })
     }
     
 }
@@ -63,14 +74,23 @@ extension ImageFetch {
     
     internal final class DiskCaching {
         
-        internal let rawImagesDiskCache: FileSystemCache
-        internal let imagesDiskCache: Cache<URL, UIImage>
+        private let rawImagesDiskCache: FileSystemCache
+        internal let cache: Cache<URL, UIImage>
         
-        internal init(rawImagesDiskCache: FileSystemCache = .inDirectory(.cachesDirectory, appending: "badges")) {
+        internal init(rawImagesDiskCache: FileSystemCache) {
             self.rawImagesDiskCache = rawImagesDiskCache
-            self.imagesDiskCache = rawImagesDiskCache
+            self.cache = rawImagesDiskCache
                 .mapImage()
                 .mapKeys({ $0.absoluteString })
+        }
+        
+        internal static func inCachesDirectoryOwnContainer() -> DiskCaching {
+            return DiskCaching(rawImagesDiskCache: .inDirectory(.cachesDirectory, appending: "badges"))
+        }
+        
+        internal static func inCachesDirectorySharedContainer() -> DiskCaching {
+            let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.the-great-game.the-great-group")?.appendingPathComponent("Library/Caches/badges/")
+            return DiskCaching(rawImagesDiskCache: FileSystemCache(directoryURL: url!))
         }
         
     }
