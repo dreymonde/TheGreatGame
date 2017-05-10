@@ -83,11 +83,11 @@
             </objects>
             <point key="canvasLocation" x="-897" y="493"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Schedule-->
         <scene sceneID="ENE-RY-Ndm">
             <objects>
                 <navigationController id="MdV-SG-cjB" customClass="NavigationController" customModule="TheGreatGame" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" systemItem="bookmarks" id="Zou-kb-WYK"/>
+                    <tabBarItem key="tabBarItem" title="Schedule" image="Calendar Filled-50" id="Zou-kb-WYK"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="wgJ-Sc-LjJ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -126,11 +126,11 @@
             </objects>
             <point key="canvasLocation" x="1940" y="139"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Teams-->
         <scene sceneID="wO6-qi-7Qu">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="tsm-7D-H63" customClass="NavigationController" customModule="TheGreatGame" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" systemItem="featured" id="Atq-nM-YEv"/>
+                    <tabBarItem key="tabBarItem" title="Teams" image="Teams Filled-50" id="Atq-nM-YEv"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Uwo-6M-BqL">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -171,11 +171,11 @@
             </objects>
             <point key="canvasLocation" x="1034" y="1674"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Table-->
         <scene sceneID="MnU-ca-S3Q">
             <objects>
                 <navigationController id="2WF-53-hfE" customClass="NavigationController" customModule="TheGreatGame" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" systemItem="downloads" id="xaK-31-m62"/>
+                    <tabBarItem key="tabBarItem" title="Table" image="Numbered List Filled-50" id="xaK-31-m62"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="sM2-EE-Xgy">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -189,4 +189,9 @@
             <point key="canvasLocation" x="92" y="1675"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Calendar Filled-50" width="25" height="25"/>
+        <image name="Numbered List Filled-50" width="25" height="25"/>
+        <image name="Teams Filled-50" width="25" height="25"/>
+    </resources>
 </document>
