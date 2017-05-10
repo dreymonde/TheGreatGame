@@ -44,13 +44,20 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
         }
     }
     
+    fileprivate func indexPathOfMostRelevantMatch(from stages: [Stage]) -> IndexPath {
+        return IndexPath.start(ofSection: 0)
+    }
+    
     fileprivate func reloadData(with stages: [Stage]) {
+        let mostRecent = indexPathOfMostRelevantMatch(from: stages)
         if self.stages.isEmpty {
             self.stages = stages
             tableView.insertSections(IndexSet.init(integersIn: 0 ... stages.count - 1), with: UITableViewRowAnimation.top)
+            tableView.scrollToRow(at: mostRecent, at: .top, animated: false)
         } else {
             self.stages = stages
             tableView.reloadData()
+            tableView.scrollToRow(at: mostRecent, at: .top, animated: false)
         }
     }
     

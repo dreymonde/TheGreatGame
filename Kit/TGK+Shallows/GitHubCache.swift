@@ -61,7 +61,7 @@ public final class GitHubRepo : ReadableCacheProtocol {
     
     public init(owner: String, repo: String, networkCache: ReadOnlyCache<URL, Data>) {
         let base = GitHubRepo.apiBase.appendingPathComponent("\(owner)/\(repo)/").appendingPathComponent("contents/")
-        print(base)
+        print("GitHub repo base:", base)
         self.internalCache = networkCache
             .mapJSONDictionary()
             .mapKeys({ printed(base.appendingPathComponent($0)) })
