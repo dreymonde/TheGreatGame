@@ -32,9 +32,9 @@ public final class TeamsAPI : APIPoint {
     
     private let dataProvider: ReadOnlyCache<String, Data>
     
-    public init(rawDataProvider: ReadOnlyCache<String, Data>) {
-        self.dataProvider = rawDataProvider
-        self.provider = rawDataProvider
+    public init(networkProvider: ReadOnlyCache<String, Data>) {
+        self.dataProvider = networkProvider
+        self.provider = networkProvider
             .mapJSONDictionary()
             .mapKeys({ $0.path })
         self.all = provider

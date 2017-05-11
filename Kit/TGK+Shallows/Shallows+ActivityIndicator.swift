@@ -23,6 +23,22 @@ extension ReadOnlyCache {
     
 }
 
+extension ReadOnlyCache where Value : SourcefulProtocol {
+    
+    public func sourceful_connectingNetworkActivityIndicator(manager: NetworkActivity.IndicatorManager = .application) -> ReadOnlyCache<Key, Value> {
+        return ReadOnlyCache.init(cacheName: self.cacheName, retrieve: { (key, completion) in
+            self.retrieve(forKey: key, completion: { (result) in
+                if result.shouldBeTreatedAsLastResort {
+                    manager.decrement()
+                }
+                completion(result)
+            })
+            manager.increment()
+        })
+    }
+    
+}
+
 extension CacheProtocol {
     
     public func connectingNetworkActivityIndicator(manager: NetworkActivity.IndicatorManager = .application) -> Cache<Key, Value> {

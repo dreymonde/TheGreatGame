@@ -6,7 +6,9 @@
 //  Copyright © 2017 The Great Game. All rights reserved.
 //
 
-public struct Editioned<Content : Mappable> {
+import Shallows
+
+public struct Editioned<Content : Mappable> : EditionedProtocol {
     
     public let edition: Int
     public let content: Content
@@ -43,4 +45,11 @@ extension Editioned : Mappable {
     
 }
 
-
+public protocol EditionedProtocol {
+    
+    associatedtype Content
+    
+    var content: Content { get }
+    var edition: Int { get }
+    
+}

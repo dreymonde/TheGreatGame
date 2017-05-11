@@ -35,10 +35,10 @@ final class UserInterface {
     
     func inject(to teamsList: TeamsTableViewController) {
         teamsList <- {
-            $0.provider = logic.api.teams.all
-                .mapValues({ $0.content.teams })
+            $0.provider = logic.cachier.cachedLocally(logic.api.teams.all, transformKey: { _ in "all-teams" })
+                .mapValues({ $0.map({ $0.map({ $0.content.teams }) }) })
+                .sourceful_connectingNetworkActivityIndicator()
                 .mainThread()
-                .connectingNetworkActivityIndicator()
             $0.makeAvenue = { self.logic.imageFetching.makeAvenue(forImageSize: $0) }
             $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
         }

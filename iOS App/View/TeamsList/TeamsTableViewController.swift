@@ -17,7 +17,7 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
     var teams: [Team.Compact] = []
     
     // MARK: - Injections
-    var provider: ReadOnlyCache<Void, [Team.Compact]>!
+    var provider: ReadOnlyCache<Void, Sourceful<Relevant<[Team.Compact]>>>!
     var makeTeamDetailVC: (Team.Compact) -> UIViewController = runtimeInject
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
 
@@ -35,23 +35,25 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
         loadTeams()
     }
     
-    fileprivate func loadTeams(onFinish: @escaping () -> () = { }) {
+    fileprivate func loadTeams(onFinish: @escaping (Result<Sourceful<Relevant<[Team.Compact]>>>) -> () = { _ in }) {
         provider.retrieve { (teamsResult) in
             assert(Thread.isMainThread)
-            onFinish()
-            if let teams = teamsResult.asOptional {
-                self.reloadData(with: teams)
+            onFinish(teamsResult)
+            if let teamsR = teamsResult.asOptional {
+                if let teams = teamsR.map({ $0.value }) {
+                    self.reloadData(with: teams)
+                }
             }
         }
     }
     
-    fileprivate func reloadData(with teams: [Team.Compact]) {
-        if self.teams.isEmpty {
-            self.teams = teams
-            let ips = teams.indices.map({ IndexPath.init(row: $0, section: 0) })
+    fileprivate func reloadData(with teams: Sourceful<[Team.Compact]>) {
+        if self.teams.isEmpty && teams.source.isAbsoluteTruth {
+            self.teams = teams.value
+            let ips = teams.value.indices.map({ IndexPath.init(row: $0, section: 0) })
             tableView.insertRows(at: ips, with: UITableViewRowAnimation.automatic)
         } else {
-            self.teams = teams
+            self.teams = teams.value
             tableView.reloadData()
         }
     }
@@ -63,8 +65,10 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
     
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
         pullToRefreshActivities.increment()
-        loadTeams {
-            self.pullToRefreshActivities.decrement()
+        loadTeams { res in
+            if res.shouldBeTreatedAsLastResort {
+                self.pullToRefreshActivities.decrement()
+            }
         }
     }
     

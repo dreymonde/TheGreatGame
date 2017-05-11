@@ -60,7 +60,7 @@ public enum EmptyCacheError : Error {
 
 extension Cache {
     
-    fileprivate static func empty() -> Cache<Key, Value> {
+    public static func empty() -> Cache<Key, Value> {
         return Cache(cacheName: "empty", retrieve: { (_, completion) in
             completion(.failure(EmptyCacheError.cacheIsAlwaysEmpty))
         }, set: { (_, _, completion) in

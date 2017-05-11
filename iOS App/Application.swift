@@ -13,12 +13,14 @@ import Shallows
 final class Application {
     
     let api: API
+    let cachier: APICachier
     let imageFetching: ImageFetch
     
     init() {
         let urlSession = URLSession(configuration: .ephemeral)
         self.api = API.gitHub(urlSession: urlSession)
         self.imageFetching = ImageFetch(shouldCacheToDisk: true)
+        self.cachier = APICachier()
     }
     
 }

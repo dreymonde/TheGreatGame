@@ -11,7 +11,7 @@ import Shallows
 
 internal protocol APIPoint {
     
-    init(rawDataProvider: ReadOnlyCache<String, Data>)
+    init(networkProvider: ReadOnlyCache<String, Data>)
     
 }
 
@@ -19,7 +19,7 @@ extension APIPoint {
     
     public static func gitHub(networkCache: ReadOnlyCache<URL, Data> = Self.makeUrlSessionCache()) -> Self {
         let gitRepo = GitHubRepo.theGreatGameStorage(networkCache: networkCache)
-        return Self(rawDataProvider: gitRepo.asReadOnlyCache())
+        return Self(networkProvider: gitRepo.asReadOnlyCache())
     }
     
     internal static func makeUrlSessionCache() -> ReadOnlyCache<URL, Data> {
