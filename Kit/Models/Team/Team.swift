@@ -8,7 +8,7 @@
 
 public enum Team {
     
-    public struct ID : RawRepresentable {
+    public struct ID : RawRepresentable, Hashable {
         
         public var rawID: Int
         
@@ -18,6 +18,10 @@ public enum Team {
         
         public var rawValue: Int {
             return rawID
+        }
+        
+        public var hashValue: Int {
+            return rawValue
         }
         
     }

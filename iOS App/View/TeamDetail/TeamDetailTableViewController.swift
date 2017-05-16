@@ -42,7 +42,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     
     // MARK: - Injections
     var preloadedTeam: TeamDetailPreLoaded?
-    var provider: ReadOnlyCache<Void, Team.Full>!
+    var provider: ReadOnlyCache<Void, Relevant<Team.Full>>!
     var makeTeamDetailVC: (Group.Team) -> UIViewController = runtimeInject
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
 
@@ -64,14 +64,17 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
         loadFullTeam()
     }
     
-    fileprivate func loadFullTeam(onFinish: @escaping () -> () = { }) {
+    fileprivate func loadFullTeam(onFinish: @escaping (Result<Relevant<Team.Full>>) -> () = { _ in }) {
         provider.retrieve { (result) in
             assert(Thread.isMainThread)
-            onFinish()
-            if let team = result.asOptional {
-                self.team = team
-                self.tableView.reloadData()
-                self.configure(self.navigationItem)
+            onFinish(result)
+            if let value = result.asOptional {
+                print("Team source:", value.source)
+                if let team = value.valueIfRelevant {
+                    self.team = team
+                    self.tableView.reloadData()
+                    self.configure(self.navigationItem)
+                }
             }
         }
     }
@@ -83,8 +86,10 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
         pullToRefreshActivities.increment()
-        loadFullTeam {
-            self.pullToRefreshActivities.decrement()
+        loadFullTeam { res in
+            if res.isLastRequest {
+                self.pullToRefreshActivities.decrement()
+            }
         }
     }
 

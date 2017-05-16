@@ -40,6 +40,7 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
             assert(Thread.isMainThread)
             onFinish(teamsResult)
             if let relv = teamsResult.asOptional {
+                print("Teams source:", relv.source)
                 if let teams = relv.valueIfRelevant {
                     self.reloadData(with: teams, source: relv.source)
                 }
