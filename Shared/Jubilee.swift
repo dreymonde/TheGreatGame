@@ -11,6 +11,10 @@ func <* <T, V> (lhs: T, rhs: (T) -> V) -> V {
     return rhs(lhs)
 }
 
+public func apply<T, V>(to value: T, _ function: (T) -> V) -> V {
+    return function(value)
+}
+
 infix operator <-
 
 func <- <T>(value: T, modify: (inout T) -> Void) -> T {

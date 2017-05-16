@@ -20,12 +20,13 @@ public final class APICachier {
     }
     
     public func cachedLocally<Key, Value>(_ remoteCache: ReadOnlyCache<Key, Editioned<Value>>,
-                              transformKey: @escaping (Key) -> String) -> ReadOnlyCache<Key, Sourceful<Relevant<Editioned<Value>>>> {
+                              transformKey: @escaping (Key) -> String) -> ReadOnlyCache<Key, Relevant<Value>> {
         let disk = diskJSONCache
             .mapKeys(transformKey)
             .mapMappable(of: Editioned<Value>.self)
             .withSource(.disk)
         return disk.combinedRefreshing(with: remoteCache.withSource(.server), isMoreRecent: { $0.value.isMoreRecent(than: $1.value) })
+            .mapValues({ $0.map({ $0.content }) })
     }
     
 }

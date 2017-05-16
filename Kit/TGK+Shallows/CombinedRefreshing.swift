@@ -14,36 +14,22 @@ public enum CombinedRefreshingError : Error {
     
 }
 
-public enum Relevant<Value> {
+public struct Relevant<Value> : HasSource {
     
-    case relevant(Value)
-    case notRelevant
+    public var valueIfRelevant: Value?
+    public var source: Source
+    public var lastRelevant: Value
     
-    public var value: Value? {
-        if case .relevant(let val) = self {
-            return val
-        }
-        return nil
-    }
-    
-    public var isRelevant: Bool {
-        if case .relevant = self {
-            return true
-        }
-        return false
-    }
-    
-    public var isNotRelevant: Bool {
-        return !isRelevant
+    public init(valueIfRelevant: Value?, source: Source, lastRelevant: Value) {
+        self.valueIfRelevant = valueIfRelevant
+        self.source = source
+        self.lastRelevant = lastRelevant
     }
     
     public func map<OtherValue>(_ transform: (Value) -> OtherValue) -> Relevant<OtherValue> {
-        switch self {
-        case .relevant(let rel):
-            return .relevant(transform(rel))
-        case .notRelevant:
-            return .notRelevant
-        }
+        return Relevant<OtherValue>(valueIfRelevant: valueIfRelevant.map(transform),
+                                source: source,
+                                lastRelevant: transform(lastRelevant))
     }
     
 }
@@ -72,18 +58,18 @@ extension CacheProtocol {
         })
     }
     
-    func combinedRefreshing<CacheType : ReadableCacheProtocol>(with backCache: CacheType, isMoreRecent: @escaping (Value, Value) -> Bool) -> ReadOnlyCache<Key, Sourceful<Relevant<Value.Value>>> where CacheType.Key == Key, CacheType.Value == Value, Value : SourcefulProtocol {
+    func combinedRefreshing<CacheType : ReadableCacheProtocol>(with backCache: CacheType, isMoreRecent: @escaping (Value, Value) -> Bool) -> ReadOnlyCache<Key, Relevant<Value.Value>> where CacheType.Key == Key, CacheType.Value == Value, Value : SourcefulProtocol {
         let name = "\(self.cacheName)<-~\(backCache.cacheName)"
         func log(_ message: String) {
             let nameInBrackets = "(\(name))"
             print(nameInBrackets, message)
         }
-        return ReadOnlyCache<Key, Sourceful<Relevant<Value.Value>>>(cacheName: name, retrieve: { (key, completion) in
+        return ReadOnlyCache<Key, Relevant<Value.Value>>(cacheName: name, retrieve: { (key, completion) in
             self.retrieve(forKey: key, completion: { (frontResult) in
                 if case .success(let frontValue) = frontResult {
                     log("Front cache not failed, completing first time")
-                    let sourceful = Sourceful(value: Relevant.relevant(frontValue.value), source: frontValue.source)
-                    completion(.success(sourceful))
+                    let relv = Relevant(valueIfRelevant: frontValue.value, source: frontValue.source, lastRelevant: frontValue.value)
+                    completion(.success(relv))
                 } else {
                     log("Front cache failed, \(frontResult), retrieving from back")
                 }
@@ -93,17 +79,17 @@ extension CacheProtocol {
                         if let frontValue = frontResult.asOptional {
                             if isMoreRecent(backValue, frontValue) {
                                 log("Backed value is more recent than existing, setting and completing second time")
-                                let sourceful = Sourceful(value: Relevant.relevant(backValue.value), source: backValue.source)
-                                self.set(backValue, forKey: key, completion: { _ in completion(.success(sourceful)) })
+                                let relv = Relevant(valueIfRelevant: backValue.value, source: backValue.source, lastRelevant: backValue.value)
+                                self.set(backValue, forKey: key, completion: { _ in completion(.success(relv)) })
                             } else {
                                 log("Backed value is not more recent, completing with .notRelevant")
-                                let notRelevant = Sourceful(value: Relevant<Value.Value>.notRelevant, source: backValue.source)
+                                let notRelevant = Relevant(valueIfRelevant: nil, source: backValue.source, lastRelevant: frontValue.value)
                                 completion(.success(notRelevant))
                             }
                         } else {
                             log("There is no existing value, setting and completing")
-                            let sourceful = Sourceful(value: Relevant.relevant(backValue.value), source: backValue.source)
-                            self.set(backValue, forKey: key, completion: { _ in completion(.success(sourceful)) })
+                            let relv = Relevant(valueIfRelevant: backValue.value, source: backValue.source, lastRelevant: backValue.value)
+                            self.set(backValue, forKey: key, completion: { _ in completion(.success(relv)) })
                         }
                     case .failure(let error):
                         log("Retrieving from back cache failed")
@@ -113,5 +99,5 @@ extension CacheProtocol {
             })
         })
     }
-    
+        
 }

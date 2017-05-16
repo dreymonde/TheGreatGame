@@ -17,7 +17,7 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
     var teams: [Team.Compact] = []
     
     // MARK: - Injections
-    var provider: ReadOnlyCache<Void, Sourceful<Relevant<[Team.Compact]>>>!
+    var provider: ReadOnlyCache<Void, Relevant<[Team.Compact]>>!
     var makeTeamDetailVC: (Team.Compact) -> UIViewController = runtimeInject
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
 
@@ -35,25 +35,25 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
         loadTeams()
     }
     
-    fileprivate func loadTeams(onFinish: @escaping (Result<Sourceful<Relevant<[Team.Compact]>>>) -> () = { _ in }) {
+    fileprivate func loadTeams(onFinish: @escaping (Result<Relevant<[Team.Compact]>>) -> () = { _ in }) {
         provider.retrieve { (teamsResult) in
             assert(Thread.isMainThread)
             onFinish(teamsResult)
-            if let teamsR = teamsResult.asOptional {
-                if let teams = teamsR.map({ $0.value }) {
-                    self.reloadData(with: teams)
+            if let relv = teamsResult.asOptional {
+                if let teams = relv.valueIfRelevant {
+                    self.reloadData(with: teams, source: relv.source)
                 }
             }
         }
     }
     
-    fileprivate func reloadData(with teams: Sourceful<[Team.Compact]>) {
-        if self.teams.isEmpty && teams.source.isAbsoluteTruth {
-            self.teams = teams.value
-            let ips = teams.value.indices.map({ IndexPath.init(row: $0, section: 0) })
+    fileprivate func reloadData(with teams: [Team.Compact], source: Source) {
+        if self.teams.isEmpty && source.isAbsoluteTruth {
+            self.teams = teams
+            let ips = teams.indices.map({ IndexPath.init(row: $0, section: 0) })
             tableView.insertRows(at: ips, with: UITableViewRowAnimation.automatic)
         } else {
-            self.teams = teams.value
+            self.teams = teams
             tableView.reloadData()
         }
     }
@@ -66,7 +66,7 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
         pullToRefreshActivities.increment()
         loadTeams { res in
-            if res.shouldBeTreatedAsLastResort {
+            if res.isLastRequest {
                 self.pullToRefreshActivities.decrement()
             }
         }

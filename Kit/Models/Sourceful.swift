@@ -21,7 +21,13 @@ public enum Source {
     
 }
 
-public protocol SourcefulProtocol {
+public protocol HasSource {
+    
+    var source: Source { get }
+    
+}
+
+public protocol SourcefulProtocol : HasSource {
     
     associatedtype Value
     
@@ -53,9 +59,9 @@ public struct Sourceful<Value> : SourcefulProtocol {
     
 }
 
-extension Result where Value : SourcefulProtocol {
+extension Result where Value : HasSource {
     
-    public var shouldBeTreatedAsLastResort: Bool {
+    public var isLastRequest: Bool {
         switch self {
         case .failure:
             return true
