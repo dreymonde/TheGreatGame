@@ -42,7 +42,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     
     // MARK: - Injections
     var preloadedTeam: TeamDetailPreLoaded?
-    var provider: ReadOnlyCache<Void, Relevant<Team.Full>>!
+    var resource: ViewResource<Team.Full>!
     var makeTeamDetailVC: (Group.Team) -> UIViewController = runtimeInject
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
 
@@ -61,22 +61,13 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
         configure(smallBadges: smallBadgesAvenue)
         configure(mainBadge: mainBadgeAvenue)
         configure(navigationItem)
-        loadFullTeam()
+        self.resource.load(completion: completion(self.setup(with:)))
     }
     
-    fileprivate func loadFullTeam(onFinish: @escaping (Result<Relevant<Team.Full>>) -> () = { _ in }) {
-        provider.retrieve { (result) in
-            assert(Thread.isMainThread)
-            onFinish(result)
-            if let value = result.asOptional {
-                print("Team relevance confirmed with:", value.source)
-                if let team = value.valueIfRelevant {
-                    self.team = team
-                    self.tableView.reloadData()
-                    self.configure(self.navigationItem)
-                }
-            }
-        }
+    func setup(with team: Team.Full) {
+        self.team = team
+        self.tableView.reloadData()
+        self.configure(self.navigationItem)
     }
 
     override func didReceiveMemoryWarning() {
@@ -85,12 +76,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     }
     
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
-        pullToRefreshActivities.increment()
-        loadFullTeam { res in
-            if res.isLastRequest {
-                self.pullToRefreshActivities.decrement()
-            }
-        }
+        resource.reload(connectingToIndicator: pullToRefreshActivities, completion: completion(setup(with:)))
     }
 
     // MARK: - Table view data source

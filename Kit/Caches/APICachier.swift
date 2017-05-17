@@ -9,16 +9,26 @@
 import Foundation
 import Shallows
 
+extension APICachier {
+    
+    public static func dev() -> APICachier {
+        return APICachier(diskJSONCache: .empty())
+    }
+    
+}
+
 public final class APICachier {
     
-    fileprivate let diskCache: FileSystemCache
     fileprivate let diskJSONCache: Cache<String, [String : Any]>
     
     public init(diskCache: FileSystemCache = .inDirectory(.cachesDirectory, appending: "storage-cache-msk2")) {
-        self.diskCache = diskCache
         print("File cache location:", diskCache.directoryURL)
         self.diskJSONCache = diskCache
             .mapJSONDictionary()
+    }
+    
+    public init(diskJSONCache: Cache<String, [String : Any]>) {
+        self.diskJSONCache = diskJSONCache
     }
     
     fileprivate var existing: [String : Any] = [:]

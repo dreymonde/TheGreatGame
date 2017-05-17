@@ -78,6 +78,10 @@
 		7CAAEFB91EC36B3900427D7E /* CombinedRefreshing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAAEFB81EC36B3900427D7E /* CombinedRefreshing.swift */; };
 		7CAAEFBB1EC36E1A00427D7E /* Sourceful.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAAEFBA1EC36E1A00427D7E /* Sourceful.swift */; };
 		7CAAEFBD1EC370F400427D7E /* APICachier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAAEFBC1EC370F400427D7E /* APICachier.swift */; };
+		7CE2B7341ECC78DE00C7EC20 /* ViewResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2B7331ECC78DE00C7EC20 /* ViewResource.swift */; };
+		7CE2B7361ECC7CF100C7EC20 /* TCK+UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2B7351ECC7CF100C7EC20 /* TCK+UserDefaults.swift */; };
+		7CE2B7391ECC7D3200C7EC20 /* Vendor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2B7381ECC7D3200C7EC20 /* Vendor.swift */; };
+		7CE2B73B1ECC7D4D00C7EC20 /* LaunchArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2B73A1ECC7D4D00C7EC20 /* LaunchArguments.swift */; };
 		7CEEAA041EC33492005B574B /* Stage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEEAA031EC33492005B574B /* Stage.swift */; };
 		7CF3D1741EBC838B00E86A91 /* MatchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF3D1721EBC838B00E86A91 /* MatchTableViewCell.swift */; };
 		7CF3D1751EBC838B00E86A91 /* MatchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CF3D1731EBC838B00E86A91 /* MatchTableViewCell.xib */; };
@@ -203,6 +207,10 @@
 		7CAAEFB81EC36B3900427D7E /* CombinedRefreshing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CombinedRefreshing.swift; sourceTree = "<group>"; };
 		7CAAEFBA1EC36E1A00427D7E /* Sourceful.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sourceful.swift; sourceTree = "<group>"; };
 		7CAAEFBC1EC370F400427D7E /* APICachier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APICachier.swift; sourceTree = "<group>"; };
+		7CE2B7331ECC78DE00C7EC20 /* ViewResource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewResource.swift; sourceTree = "<group>"; };
+		7CE2B7351ECC7CF100C7EC20 /* TCK+UserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TCK+UserDefaults.swift"; sourceTree = "<group>"; };
+		7CE2B7381ECC7D3200C7EC20 /* Vendor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vendor.swift; sourceTree = "<group>"; };
+		7CE2B73A1ECC7D4D00C7EC20 /* LaunchArguments.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaunchArguments.swift; sourceTree = "<group>"; };
 		7CEEAA031EC33492005B574B /* Stage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stage.swift; sourceTree = "<group>"; };
 		7CF3D1721EBC838B00E86A91 /* MatchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchTableViewCell.swift; sourceTree = "<group>"; };
 		7CF3D1731EBC838B00E86A91 /* MatchTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MatchTableViewCell.xib; sourceTree = "<group>"; };
@@ -282,9 +290,11 @@
 				7C1E663E1EBB5651003AF505 /* Colors.json */,
 				7C7916F21EBB3D050070E6C5 /* Generated */,
 				7C0EA65E1EBA53F100F50EB2 /* View */,
+				7CE2B7371ECC7D2200C7EC20 /* Extensions */,
 				7C0EA6501EBA1E0C00F50EB2 /* Application.swift */,
 				7C0EA6521EBA1E4900F50EB2 /* UserInterface.swift */,
 				7C0EA5DA1EBA1B3500F50EB2 /* AppDelegate.swift */,
+				7CE2B73A1ECC7D4D00C7EC20 /* LaunchArguments.swift */,
 				7C0EA5DE1EBA1B3500F50EB2 /* Main.storyboard */,
 				7C0EA5E11EBA1B3500F50EB2 /* Assets.xcassets */,
 				7C0EA5E31EBA1B3500F50EB2 /* LaunchScreen.storyboard */,
@@ -419,6 +429,7 @@
 		7C0EA65E1EBA53F100F50EB2 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				7CE2B7331ECC78DE00C7EC20 /* ViewResource.swift */,
 				7C1D898D1EC06977006F7841 /* Protocols */,
 				7C1D89871EC0651D006F7841 /* Cells */,
 				7C1E663D1EBB4319003AF505 /* Bases */,
@@ -534,6 +545,7 @@
 		7C7916DB1EBB101A0070E6C5 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				7CE2B7351ECC7CF100C7EC20 /* TCK+UserDefaults.swift */,
 				7C7916DC1EBB10370070E6C5 /* NetworkActivity.swift */,
 			);
 			path = Services;
@@ -571,6 +583,14 @@
 				7CF3D1761EBC870400E86A91 /* TeamDetailTableViewController.swift */,
 			);
 			path = TeamDetail;
+			sourceTree = "<group>";
+		};
+		7CE2B7371ECC7D2200C7EC20 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				7CE2B7381ECC7D3200C7EC20 /* Vendor.swift */,
+			);
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 		7CF3D1781EBC872C00E86A91 /* Match */ = {
@@ -818,8 +838,10 @@
 				7C1E663C1EBB42FE003AF505 /* NavigationController.swift in Sources */,
 				7C1D89961EC07944006F7841 /* GroupsTableViewController.swift in Sources */,
 				7C7916F41EBB3D050070E6C5 /* Storyboards.swift in Sources */,
+				7CE2B7391ECC7D3200C7EC20 /* Vendor.swift in Sources */,
 				7C0EA6511EBA1E0C00F50EB2 /* Application.swift in Sources */,
 				7CF3D1741EBC838B00E86A91 /* MatchTableViewCell.swift in Sources */,
+				7CE2B73B1ECC7D4D00C7EC20 /* LaunchArguments.swift in Sources */,
 				7C0EA5DB1EBA1B3500F50EB2 /* AppDelegate.swift in Sources */,
 				7C0EA65D1EBA218000F50EB2 /* TeamsTableViewController.swift in Sources */,
 				7C1E663A1EBB42C4003AF505 /* TableViewController.swift in Sources */,
@@ -830,6 +852,7 @@
 				7C0EA6531EBA1E4900F50EB2 /* UserInterface.swift in Sources */,
 				7C6B36C11EBCA98100FC17F9 /* MatchesTableViewController.swift in Sources */,
 				7C1D898A1EC0655A006F7841 /* TeamGroupTableViewCell.swift in Sources */,
+				7CE2B7341ECC78DE00C7EC20 /* ViewResource.swift in Sources */,
 				7C109D271EC1D5AB00523376 /* TeamDetailInfoTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -869,6 +892,7 @@
 				7CAAEFBD1EC370F400427D7E /* APICachier.swift in Sources */,
 				7C0EA6591EBA1EF200F50EB2 /* Team.swift in Sources */,
 				7C0EA6561EBA1ECB00F50EB2 /* Teams.swift in Sources */,
+				7CE2B7361ECC7CF100C7EC20 /* TCK+UserDefaults.swift in Sources */,
 				7C1D897F1EBF0D28006F7841 /* API.swift in Sources */,
 				7C0EA6491EBA1D1E00F50EB2 /* IndexPath.swift in Sources */,
 				7C0EA62F1EBA1CFC00F50EB2 /* GitHubCache.swift in Sources */,

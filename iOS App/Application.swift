@@ -17,10 +17,27 @@ final class Application {
     let imageFetching: ImageFetch
     
     init() {
-        let urlSession = URLSession(configuration: .ephemeral)
-        self.api = API.gitHub(urlSession: urlSession)
+        self.api = Application.makeAPI()
         self.imageFetching = ImageFetch(shouldCacheToDisk: true)
-        self.cachier = APICachier()
+        self.cachier = Application.makeCachier()
+    }
+    
+    static func makeAPI() -> API {
+        let server = launchArgument(.server) ?? .github
+        switch server {
+        case .github:
+            let urlSession = URLSession(configuration: .ephemeral)
+            printWithContext("Using github as a server")
+            return API.gitHub(urlSession: urlSession)
+        case .macBookSteve:
+            printWithContext("Using this MacBook as a server")
+            return API.macBookSteve()
+        }
+    }
+    
+    static func makeCachier() -> APICachier {
+        let isCaching = launchArgument(.isCachingOnDisk)
+        return isCaching ? APICachier() : APICachier.dev()
     }
     
 }

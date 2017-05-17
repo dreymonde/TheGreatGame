@@ -45,20 +45,20 @@ final class UserInterface {
     
     func inject(to matchesList: MatchesTableViewController) {
         matchesList <- {
-            $0.provider = logic.api.matches.stages
-                .mapValues({ $0.content.stages })
-                .connectingNetworkActivityIndicator()
-                .mainThread()
+            let provider = logic.api.matches.stages
+            let cached = logic.cachier.cachedLocally(provider, transformKey: { _ in "all-matches" }, token: "all-matches")
+                .mapValues({ $0.map({ $0.stages }) })
+            $0.resource = ViewResource(provider: cached)
             $0.makeAvenue = { self.logic.imageFetching.makeAvenue(forImageSize: $0) }
         }
     }
     
     func inject(to groupsList: GroupsTableViewController) {
         groupsList <- {
-            $0.provider = logic.api.groups.all
-                .mapValues({ $0.content.groups })
-                .connectingNetworkActivityIndicator()
-                .mainThread()
+            let provider = logic.api.groups.all
+            let cached = logic.cachier.cachedLocally(provider, transformKey: { _ in "all-groups" }, token: "all-groups")
+                .mapValues({ $0.map({ $0.groups }) })
+            $0.resource = ViewResource(provider: cached)
             $0.makeAvenue = { self.logic.imageFetching.makeAvenue(forImageSize: $0) }
             $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
         }
@@ -66,11 +66,10 @@ final class UserInterface {
     
     func teamDetailViewController(for teamID: Team.ID, preloaded: TeamDetailPreLoaded) -> TeamDetailTableViewController {
         return Storyboard.Main.teamDetailTableViewController.instantiate() <- {
-            $0.provider = logic.cachier.cachedLocally(logic.api.teams.fullTeam.singleKey(teamID),
-                                                      transformKey: { "\(teamID.rawID)" },
-                                                      token: "\(teamID.rawID)-team")
-                .sourceful_connectingNetworkActivityIndicator()
-                .mainThread()
+            let provider = logic.cachier.cachedLocally(logic.api.teams.fullTeam.singleKey(teamID),
+                                                       transformKey: { "\(teamID.rawID)" },
+                                                       token: "\(teamID.rawID)-team")
+            $0.resource = ViewResource(provider: provider)
             $0.makeAvenue = { self.logic.imageFetching.makeAvenue(forImageSize: $0) }
             $0.preloadedTeam = preloaded
             $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }

@@ -17,7 +17,7 @@ class GroupsTableViewController: TheGreatGame.TableViewController, Refreshing {
     var groups: [Group.Compact] = []
     
     // MARK: - Injections
-    var provider: ReadOnlyCache<Void, [Group.Compact]>!
+    var resource: ViewResource<[Group.Compact]>!
     var makeTeamDetailVC: (Group.Team) -> UIViewController = runtimeInject
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
 
@@ -32,24 +32,13 @@ class GroupsTableViewController: TheGreatGame.TableViewController, Refreshing {
         configure(avenue)
         self.pullToRefreshActivities = make()
         registerFor3DTouch()
-        loadGroups()
+        resource.load(completion: reloadData(with:source:))
     }
     
-    fileprivate func loadGroups(onFinish: @escaping () -> () = { }) {
-        provider.retrieve { (groupsResult) in
-            assert(Thread.isMainThread)
-            onFinish()
-            if let groups = groupsResult.asOptional {
-                self.reloadData(with: groups)
-            }
-        }
-    }
-    
-    fileprivate func reloadData(with groups: [Group.Compact]) {
-        if self.groups.isEmpty {
+    fileprivate func reloadData(with groups: [Group.Compact], source: Source) {
+        if self.groups.isEmpty && source.isAbsoluteTruth {
             self.groups = groups
             tableView.insertSections(IndexSet.init(integersIn: 0 ... groups.count - 1), with: UITableViewRowAnimation.top)
-//            tableView.insertRows(at: paths, with: UITableViewRowAnimation.automatic)
         } else {
             self.groups = groups
             tableView.reloadData()
@@ -62,10 +51,7 @@ class GroupsTableViewController: TheGreatGame.TableViewController, Refreshing {
     }
     
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
-        pullToRefreshActivities.increment()
-        loadGroups {
-            self.pullToRefreshActivities.decrement()
-        }
+        resource.reload(connectingToIndicator: pullToRefreshActivities, completion: reloadData(with:source:))
     }
     
     func didFetchImage(with url: URL) {

@@ -22,6 +22,20 @@ extension APIPoint {
         return Self(networkProvider: gitRepo.asReadOnlyCache())
     }
     
+    public static func macBookSteve() -> Self {
+        let directory = "/Users/oleg/Development/TheGreatGame/Storage" <* URL.init(fileURLWithPath:)
+        let rawFS = RawFileSystemCache(directoryURL: directory)
+            .mapKeys(RawFileSystemCache.FileName.init)
+        let cache = ReadOnlyCache(cacheName: rawFS.cacheName) { (key, completion) in
+            rawFS.retrieve(forKey: key, completion: { (result) in
+                DispatchQueue.global().asyncAfter(deadline: .now() + 1.0, execute: { 
+                    completion(result)
+                })
+            })
+        }
+        return Self(networkProvider: cache)
+    }
+    
     internal static func makeUrlSessionCache() -> ReadOnlyCache<URL, Data> {
         return URLSession(configuration: .default)
             .asReadOnlyCache()
@@ -52,6 +66,12 @@ public final class API {
         let matchesAPI = MatchesAPI.gitHub(networkCache: sessionCache)
         let groupsAPI = GroupsAPI.gitHub(networkCache: sessionCache)
         return API(teams: teamsAPI, matches: matchesAPI, groups: groupsAPI)
+    }
+    
+    public static func macBookSteve() -> API {
+        return API(teams: .macBookSteve(),
+                   matches: .macBookSteve(),
+                   groups: .macBookSteve())
     }
     
 }

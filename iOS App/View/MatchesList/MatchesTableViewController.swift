@@ -17,7 +17,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
     var stages: [Stage] = []
     
     // MARK: - Injections
-    var provider: ReadOnlyCache<Void, [Stage]>!
+    var resource: ViewResource<[Stage]>!
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
 
     // MARK: - Services
@@ -30,26 +30,16 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
         configure(avenue)
         self.pullToRefreshActivities = make()
-        loadStages()
-    }
-    
-    fileprivate func loadStages(onFinish: @escaping () -> () = { }) {
-        provider.retrieve { (stagesResult) in
-            assert(Thread.isMainThread)
-            onFinish()
-            if let stages = stagesResult.asOptional {
-                self.reloadData(with: stages)
-            }
-        }
+        self.resource.load(completion: reloadData(with:source:))
     }
     
     fileprivate func indexPathOfMostRelevantMatch(from stages: [Stage]) -> IndexPath {
         return IndexPath.start(ofSection: 0)
     }
     
-    fileprivate func reloadData(with stages: [Stage]) {
+    fileprivate func reloadData(with stages: [Stage], source: Source) {
         let mostRecent = indexPathOfMostRelevantMatch(from: stages)
-        if self.stages.isEmpty {
+        if self.stages.isEmpty && source.isAbsoluteTruth {
             self.stages = stages
             tableView.insertSections(IndexSet.init(integersIn: 0 ... stages.count - 1), with: UITableViewRowAnimation.top)
             tableView.scrollToRow(at: mostRecent, at: .top, animated: false)
@@ -66,10 +56,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
     }
     
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
-        pullToRefreshActivities.increment()
-        loadStages {
-            self.pullToRefreshActivities.decrement()
-        }
+        resource.reload(connectingToIndicator: pullToRefreshActivities, completion: reloadData(with:source:))
     }
     
     func didFetchImage(with url: URL) {
