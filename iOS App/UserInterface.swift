@@ -35,10 +35,9 @@ final class UserInterface {
     
     func inject(to teamsList: TeamsTableViewController) {
         teamsList <- {
-            $0.provider = logic.cachier.cachedLocally(logic.api.teams.all, transformKey: { _ in "all-teams" }, token: "all-teams")
+            let provider = logic.cachier.cachedLocally(logic.api.teams.all, transformKey: { _ in "all-teams" }, token: "all-teams")
                 .mapValues({ $0.map({ $0.teams }) })
-                .sourceful_connectingNetworkActivityIndicator()
-                .mainThread()
+            $0.resource = ViewResource(provider: provider)
             $0.makeAvenue = { self.logic.imageFetching.makeAvenue(forImageSize: $0) }
             $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
         }
@@ -67,8 +66,9 @@ final class UserInterface {
     
     func teamDetailViewController(for teamID: Team.ID, preloaded: TeamDetailPreLoaded) -> TeamDetailTableViewController {
         return Storyboard.Main.teamDetailTableViewController.instantiate() <- {
-            $0.provider = logic.cachier.cachedLocally(logic.api.teams.fullTeam, transformKey: { "\($0.rawID)" }, token: "\(teamID)-team")
-                .singleKey(teamID)
+            $0.provider = logic.cachier.cachedLocally(logic.api.teams.fullTeam.singleKey(teamID),
+                                                      transformKey: { "\(teamID.rawID)" },
+                                                      token: "\(teamID.rawID)-team")
                 .sourceful_connectingNetworkActivityIndicator()
                 .mainThread()
             $0.makeAvenue = { self.logic.imageFetching.makeAvenue(forImageSize: $0) }

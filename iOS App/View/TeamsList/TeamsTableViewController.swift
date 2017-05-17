@@ -11,13 +11,54 @@ import TheGreatKit
 import Shallows
 import Avenues
 
+final class ViewResource<Value> {
+    
+    private let provider: ReadOnlyCache<Void, Relevant<Value>>
+    
+    init(provider: ReadOnlyCache<Void, Relevant<Value>>) {
+        self.provider = provider
+            .sourceful_connectingNetworkActivityIndicator()
+            .mainThread()
+    }
+    
+    func load(completion: @escaping (Value, Source) -> ()) {
+        provider.retrieve { (result) in
+            self.handle(result, with: completion)
+        }
+    }
+    
+    private func handle(_ result: Result<Relevant<Value>>, with completion: @escaping (Value, Source) -> ()) {
+        assert(Thread.isMainThread)
+        switch result {
+        case .success(let value):
+            print("\(Value.self) relevance confirmed with:", value.source)
+            if let relevant = value.valueIfRelevant {
+                completion(relevant, value.source)
+            }
+        case .failure(let error):
+            print("Error loading \(self):", error)
+        }
+    }
+    
+    func reload(connectingToIndicator indicator: NetworkActivity.IndicatorManager, completion: @escaping (Value, Source) -> ()) {
+        indicator.increment()
+        provider.retrieve { (result) in
+            if result.isLastRequest {
+                indicator.decrement()
+                self.handle(result, with: completion)
+            }
+        }
+    }
+    
+}
+
 class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
     
     // MARK: - Data source
     var teams: [Team.Compact] = []
     
     // MARK: - Injections
-    var provider: ReadOnlyCache<Void, Relevant<[Team.Compact]>>!
+    var resource: ViewResource<[Team.Compact]>!
     var makeTeamDetailVC: (Team.Compact) -> UIViewController = runtimeInject
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
 
@@ -32,20 +73,7 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
         self.pullToRefreshActivities = make()
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
         configure(avenue)
-        loadTeams()
-    }
-    
-    fileprivate func loadTeams(onFinish: @escaping (Result<Relevant<[Team.Compact]>>) -> () = { _ in }) {
-        provider.retrieve { (teamsResult) in
-            assert(Thread.isMainThread)
-            onFinish(teamsResult)
-            if let relv = teamsResult.asOptional {
-                print("Teams source:", relv.source)
-                if let teams = relv.valueIfRelevant {
-                    self.reloadData(with: teams, source: relv.source)
-                }
-            }
-        }
+        self.resource.load(completion: reloadData(with:source:))
     }
     
     fileprivate func reloadData(with teams: [Team.Compact], source: Source) {
@@ -65,12 +93,7 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
     }
     
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
-        pullToRefreshActivities.increment()
-        loadTeams { res in
-            if res.isLastRequest {
-                self.pullToRefreshActivities.decrement()
-            }
-        }
+        resource.reload(connectingToIndicator: pullToRefreshActivities, completion: reloadData(with:source:))
     }
     
     func didFetchImage(with url: URL) {

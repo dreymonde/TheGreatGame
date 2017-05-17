@@ -69,7 +69,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
             assert(Thread.isMainThread)
             onFinish(result)
             if let value = result.asOptional {
-                print("Team source:", value.source)
+                print("Team relevance confirmed with:", value.source)
                 if let team = value.valueIfRelevant {
                     self.team = team
                     self.tableView.reloadData()
