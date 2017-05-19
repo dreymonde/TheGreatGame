@@ -25,5 +25,11 @@ class TeamCompactTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+    
+    @IBAction private func switchValueDidChange(_ sender: UISwitch) {
+        onSwitch(sender.isOn)
+    }
+    
+    var onSwitch: (Bool) -> () = { _ in }
         
 }

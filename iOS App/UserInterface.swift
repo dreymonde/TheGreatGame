@@ -37,7 +37,8 @@ final class UserInterface {
         teamsList <- {
             let provider = logic.cachier.cachedLocally(logic.api.teams.all, transformKey: { _ in "all-teams" }, token: "all-teams")
                 .mapValues({ $0.map({ $0.teams }) })
-            $0.resource = ViewResource(provider: provider)
+            $0.resource = ViewResource(provider: zip(provider, self.logic.favoriteTeams.favoriteTeams).mapValues({ $0.0.zipping($0.1) }))
+            $0.updateFavorite = self.logic.favoriteTeams.updateFavorite(id:isFavorite:)
             $0.makeAvenue = { self.logic.imageFetching.makeAvenue(forImageSize: $0) }
             $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
         }

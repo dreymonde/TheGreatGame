@@ -16,6 +16,20 @@ func completion<Value>(_ completion: @escaping (Value) -> ()) -> (Value, Source)
     }
 }
 
+extension Relevant {
+    
+    func zipping<OtherValue>(_ other: OtherValue) -> Relevant<(Value, OtherValue)> {
+        let vir: (Value, OtherValue)? = {
+            if let selfvir = self.valueIfRelevant {
+                return (selfvir, other)
+            }
+            return nil
+        }()
+        return Relevant<(Value, OtherValue)>(valueIfRelevant: vir, source: source, lastRelevant: (lastRelevant, other))
+    }
+    
+}
+
 final class ViewResource<Value> {
     
     private let provider: ReadOnlyCache<Void, Relevant<Value>>
@@ -32,7 +46,16 @@ final class ViewResource<Value> {
         }
     }
     
-    private func handle(_ result: Result<Relevant<Value>>, with completion: @escaping (Value, Source) -> ()) {
+    func load<AnotherValue>(with anotherCache: ReadOnlyCache<Void, AnotherValue>, completion: @escaping (Value, AnotherValue, Source) -> ()) {
+        zip(provider, anotherCache)
+            .mainThread()
+            .mapValues({ $0.0.zipping($0.1) })
+            .retrieve { (result) in
+            self.handle(result, with: { completion($0.0, $0.1, $1) })
+        }
+    }
+    
+    private func handle<HandlingValue>(_ result: Result<Relevant<HandlingValue>>, with completion: @escaping (HandlingValue, Source) -> ()) {
         assert(Thread.isMainThread)
         switch result {
         case .success(let value):
@@ -51,6 +74,19 @@ final class ViewResource<Value> {
             if result.isLastRequest {
                 indicator.decrement()
                 self.handle(result, with: completion)
+            }
+        }
+    }
+    
+    func reload<AnotherValue>(with anotherCache: ReadOnlyCache<Void, AnotherValue>, connectingToIndicator indicator: NetworkActivity.IndicatorManager, completion: @escaping (Value, AnotherValue, Source) -> ()) {
+        indicator.increment()
+        zip(provider, anotherCache)
+            .mainThread()
+            .mapValues({ $0.0.zipping($0.1) })
+            .retrieve { (result) in
+            if result.isLastRequest {
+                indicator.decrement()
+                self.handle(result, with: { completion($0.0, $0.1, $1) })
             }
         }
     }

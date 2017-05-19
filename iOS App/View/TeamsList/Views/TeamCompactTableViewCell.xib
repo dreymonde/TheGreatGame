@@ -44,6 +44,9 @@
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="l4r-GS-fB6">
                                 <rect key="frame" x="241" y="9.5" width="51" height="31"/>
                                 <color key="onTintColor" red="1" green="0.69019607839999997" blue="0.69019607839999997" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <action selector="switchValueDidChange:" destination="KGk-i7-Jjw" eventType="valueChanged" id="t9q-tJ-9VJ"/>
+                                </connections>
                             </switch>
                         </subviews>
                     </stackView>

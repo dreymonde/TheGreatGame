@@ -15,11 +15,13 @@ final class Application {
     let api: API
     let cachier: APICachier
     let imageFetching: ImageFetch
+    let favoriteTeams: FavoriteTeams
     
     init() {
         self.api = Application.makeAPI()
         self.imageFetching = ImageFetch(shouldCacheToDisk: true)
         self.cachier = Application.makeCachier()
+        self.favoriteTeams = FavoriteTeams.inDocumentsDirectory()
     }
     
     static func makeAPI() -> API {

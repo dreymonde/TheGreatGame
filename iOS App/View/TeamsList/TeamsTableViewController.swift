@@ -15,11 +15,13 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
     
     // MARK: - Data source
     var teams: [Team.Compact] = []
+    var favorites: Set<Team.ID> = []
     
     // MARK: - Injections
-    var resource: ViewResource<[Team.Compact]>!
+    var resource: ViewResource<([Team.Compact], Set<Team.ID>)>!
     var makeTeamDetailVC: (Team.Compact) -> UIViewController = runtimeInject
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
+    var updateFavorite: (Team.ID, Bool) -> () = runtimeInject
 
     // MARK: - Services
     var avenue: SymmetricalAvenue<URL, UIImage>!
@@ -35,13 +37,14 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
         self.resource.load(completion: reloadData(with:source:))
     }
     
-    fileprivate func reloadData(with teams: [Team.Compact], source: Source) {
+    fileprivate func reloadData(with items: (teams: [Team.Compact], favorites: Set<Team.ID>), source: Source) {
+        self.favorites = items.favorites
         if self.teams.isEmpty && source.isAbsoluteTruth {
-            self.teams = teams
-            let ips = teams.indices.map({ IndexPath.init(row: $0, section: 0) })
+            self.teams = items.teams
+            let ips = items.teams.indices.map({ IndexPath.init(row: $0, section: 0) })
             tableView.insertRows(at: ips, with: UITableViewRowAnimation.automatic)
         } else {
-            self.teams = teams
+            self.teams = items.teams
             tableView.reloadData()
         }
     }
@@ -52,7 +55,8 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
     }
     
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
-        resource.reload(connectingToIndicator: pullToRefreshActivities, completion: reloadData(with:source:))
+        resource.reload(connectingToIndicator: pullToRefreshActivities,
+                        completion: self.reloadData(with:source:))
     }
     
     func didFetchImage(with url: URL) {
@@ -96,9 +100,16 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
         if !afterImageDownload {
             avenue.prepareItem(at: badgeURL)
         }
+        cell.favoriteSwitch.isOn = favorites.contains(team.id)
         cell.nameLabel.text = team.name
         cell.shortNameLabel.text = team.shortName
         cell.badgeImageView.setImage(avenue.item(at: badgeURL), afterDownload: true)
+        cell.onSwitch = { isFavorite in
+            if let ipath = self.tableView.indexPath(for: cell) {
+                let team = self.teams[ipath.row]
+                self.updateFavorite(team.id, isFavorite)
+            }
+        }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
