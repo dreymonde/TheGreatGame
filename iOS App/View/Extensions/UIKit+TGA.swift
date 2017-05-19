@@ -40,3 +40,21 @@ extension IndexPath {
     }
     
 }
+
+extension UIFont {
+    
+    func monospacedNumbers() -> UIFont {
+        return UIFont(descriptor: fontDescriptor.monospacedNumbers(), size: 0)
+    }
+    
+}
+
+extension UIFontDescriptor {
+    
+    fileprivate func monospacedNumbers() -> UIFontDescriptor {
+        let featureSettings = [UIFontFeatureTypeIdentifierKey: kNumberSpacingType,
+                               UIFontFeatureSelectorIdentifierKey: kMonospacedNumbersSelector]
+        return self.addingAttributes([UIFontDescriptorFeatureSettingsAttribute: [featureSettings]])
+    }
+    
+}

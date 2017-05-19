@@ -110,7 +110,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
             avenue.prepareItem(at: match.home.badgeURL)
             avenue.prepareItem(at: match.away.badgeURL)
         }
-        cell.scoreTimeLabel.text = "-:-"
+        cell.scoreTimeLabel.text = match.score?.string ?? "-:-"
         cell.homeTeamNameLabel.text = match.home.name
         cell.awayTeamNameLabel.text = match.away.name
         cell.homeBadgeImageView.setImage(avenue.item(at: match.home.badgeURL), afterDownload: afterImageDownload)

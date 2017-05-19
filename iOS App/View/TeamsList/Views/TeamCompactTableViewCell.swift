@@ -13,6 +13,7 @@ class TeamCompactTableViewCell: UITableViewCell {
     @IBOutlet weak var badgeImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var shortNameLabel: UILabel!
+    @IBOutlet weak var favoriteSwitch: UISwitch!
 
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -13,7 +13,11 @@ class MatchTableViewCell: UITableViewCell {
     @IBOutlet weak var homeBadgeImageView: UIImageView!
     @IBOutlet weak var homeTeamNameLabel: UILabel!
     
-    @IBOutlet weak var scoreTimeLabel: UILabel!
+    @IBOutlet weak var scoreTimeLabel: UILabel! {
+        didSet {
+            scoreTimeLabel.font = scoreTimeLabel.font.monospacedNumbers()
+        }
+    }
 
     @IBOutlet weak var awayTeamNameLabel: UILabel!
     @IBOutlet weak var awayBadgeImageView: UIImageView!

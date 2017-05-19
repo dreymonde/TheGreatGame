@@ -75,6 +75,7 @@
 		7C7916EE1EBB36F70070E6C5 /* APITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916ED1EBB36F70070E6C5 /* APITests.swift */; };
 		7C7916F01EBB37910070E6C5 /* TeamFull.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916EF1EBB37910070E6C5 /* TeamFull.swift */; };
 		7C7916F41EBB3D050070E6C5 /* Storyboards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916F31EBB3D050070E6C5 /* Storyboards.swift */; };
+		7CA2136B1ECEF61200F088DD /* ScoreViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA2136A1ECEF61200F088DD /* ScoreViewModel.swift */; };
 		7CAAEFB91EC36B3900427D7E /* CombinedRefreshing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAAEFB81EC36B3900427D7E /* CombinedRefreshing.swift */; };
 		7CAAEFBB1EC36E1A00427D7E /* Sourceful.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAAEFBA1EC36E1A00427D7E /* Sourceful.swift */; };
 		7CAAEFBD1EC370F400427D7E /* APICachier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAAEFBC1EC370F400427D7E /* APICachier.swift */; };
@@ -204,6 +205,7 @@
 		7C7916ED1EBB36F70070E6C5 /* APITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APITests.swift; sourceTree = "<group>"; };
 		7C7916EF1EBB37910070E6C5 /* TeamFull.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamFull.swift; sourceTree = "<group>"; };
 		7C7916F31EBB3D050070E6C5 /* Storyboards.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Storyboards.swift; sourceTree = "<group>"; };
+		7CA2136A1ECEF61200F088DD /* ScoreViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreViewModel.swift; sourceTree = "<group>"; };
 		7CAAEFB81EC36B3900427D7E /* CombinedRefreshing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CombinedRefreshing.swift; sourceTree = "<group>"; };
 		7CAAEFBA1EC36E1A00427D7E /* Sourceful.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sourceful.swift; sourceTree = "<group>"; };
 		7CAAEFBC1EC370F400427D7E /* APICachier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APICachier.swift; sourceTree = "<group>"; };
@@ -538,6 +540,7 @@
 			isa = PBXGroup;
 			children = (
 				7C6B36C01EBCA98100FC17F9 /* MatchesTableViewController.swift */,
+				7CA2136A1ECEF61200F088DD /* ScoreViewModel.swift */,
 			);
 			path = MatchesList;
 			sourceTree = "<group>";
@@ -846,6 +849,7 @@
 				7C0EA65D1EBA218000F50EB2 /* TeamsTableViewController.swift in Sources */,
 				7C1E663A1EBB42C4003AF505 /* TableViewController.swift in Sources */,
 				7C1E66411EBB5740003AF505 /* Colors.swift in Sources */,
+				7CA2136B1ECEF61200F088DD /* ScoreViewModel.swift in Sources */,
 				7C0EA6271EBA1CB100F50EB2 /* Jubilee.swift in Sources */,
 				7C0EA6631EBA542E00F50EB2 /* TeamCompactTableViewCell.swift in Sources */,
 				7C7916E71EBB245A0070E6C5 /* UIKit+TGA.swift in Sources */,
