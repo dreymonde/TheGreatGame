@@ -139,3 +139,14 @@ extension Matches : Mappable {
     }
     
 }
+
+extension Sequence where Iterator.Element == Match.Compact {
+    
+    public func mostRelevant() -> Match.Compact? {
+        return sorted(by: { first, second in
+            let now = Date()
+            return abs(now.timeIntervalSince(first.date)) < abs(now.timeIntervalSince(second.date))
+        }).first
+    }
+    
+}

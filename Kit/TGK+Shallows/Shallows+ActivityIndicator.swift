@@ -8,6 +8,17 @@
 
 import Foundation
 import Shallows
+import TheGreatKit
+import Avenues
+
+extension NetworkActivity.IndicatorManager {
+    
+    public static var application: NetworkActivity.IndicatorManager {
+        let application = UIApplication.shared
+        return NetworkActivity.IndicatorManager(setVisible: { application.isNetworkActivityIndicatorVisible = $0 })
+    }
+    
+}
 
 extension ReadOnlyCache {
     
@@ -58,3 +69,18 @@ extension CacheProtocol {
     }
     
 }
+
+extension ProcessorProtocol {
+    
+    public func connectingNetworkActivityIndicator(manager: NetworkActivity.IndicatorManager = .application) -> Processor<Key, Value> {
+        return Processor.init(start: { (key, completion) in
+            self.start(key: key, completion: { (result) in
+                manager.decrement()
+                completion(result)
+            })
+            manager.increment()
+        }, cancel: self.cancel(key:), getState: self.processingState(key:), cancelAll: self.cancelAll)
+    }
+    
+}
+

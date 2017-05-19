@@ -21,7 +21,7 @@ final class Application {
         self.api = Application.makeAPI()
         self.imageFetching = ImageFetch(shouldCacheToDisk: true)
         self.cachier = Application.makeCachier()
-        self.favoriteTeams = FavoriteTeams.inDocumentsDirectory()
+        self.favoriteTeams = FavoriteTeams.inSharedDocumentsDirectory()
     }
     
     static func makeAPI() -> API {
@@ -39,7 +39,7 @@ final class Application {
     
     static func makeCachier() -> APICachier {
         let isCaching = launchArgument(.isCachingOnDisk)
-        return isCaching ? APICachier() : APICachier.dev()
+        return isCaching ? APICachier.inSharedCachesDirectory() : APICachier.dev()
     }
     
 }

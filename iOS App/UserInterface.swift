@@ -78,17 +78,3 @@ final class UserInterface {
     }
     
 }
-
-extension ReadOnlyCache {
-    
-    func mainThread() -> ReadOnlyCache<Key, Value> {
-        return ReadOnlyCache.init(cacheName: self.cacheName, retrieve: { (key, completion) in
-            self.retrieve(forKey: key, completion: { (result) in
-                DispatchQueue.main.async {
-                    completion(result)
-                }
-            })
-        })
-    }
-    
-}

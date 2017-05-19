@@ -68,6 +68,10 @@ public final class FavoriteTeams {
         return FavoriteTeams(fileSystemCache: FileSystemCache.inDirectory(.documentDirectory, appending: "favorite-teams"))
     }
     
+    public static func inSharedDocumentsDirectory() -> FavoriteTeams {
+        return FavoriteTeams(fileSystemCache: .inSharedContainer(appending: .documents(appending: "favorite-teams")))
+    }
+    
 }
 
 internal struct Favorites {

@@ -81,27 +81,8 @@ public final class NetworkActivity {
             }
         }
         
-        public static var application: IndicatorManager {
-            let application = UIApplication.shared
-            return IndicatorManager(setVisible: { application.isNetworkActivityIndicatorVisible = $0 })
-        }
+    }
         
-    }
-    
-    private static let manager = IndicatorManager.application
-    
-    public static func didStart() {
-        manager.increment()
-    }
-    
-    public static func didEnd() {
-        manager.decrement()
-    }
-    
-    private init() {
-        
-    }
-    
 }
 
 /// Essentially a cancellable `dispatch_after`.

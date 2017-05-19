@@ -15,13 +15,21 @@ extension APICachier {
         return APICachier(diskJSONCache: .empty())
     }
     
+    public static func inLocalCachesDirectory() -> APICachier {
+        return APICachier(diskCache: .inDirectory(.cachesDirectory, appending: "storage-cache-msk2"))
+    }
+    
+    public static func inSharedCachesDirectory() -> APICachier {
+        return APICachier(diskCache: .inSharedContainer(appending: .caches(appending: "storage-cache-kha1")))
+    }
+    
 }
 
 public final class APICachier {
     
     fileprivate let diskJSONCache: Cache<String, [String : Any]>
     
-    public init(diskCache: FileSystemCache = .inDirectory(.cachesDirectory, appending: "storage-cache-msk2")) {
+    public init(diskCache: FileSystemCache) {
         print("File cache location:", diskCache.directoryURL)
         self.diskJSONCache = diskCache
             .mapJSONDictionary()
