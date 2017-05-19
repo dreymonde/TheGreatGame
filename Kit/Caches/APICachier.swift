@@ -25,6 +25,20 @@ extension APICachier {
     
 }
 
+public protocol CacheableKey {
+    
+    func asString() -> String
+    
+}
+
+extension CacheableKey {
+    
+    static func represent(_ key: Self) -> String {
+        return key.asString()
+    }
+    
+}
+
 public final class APICachier {
     
     fileprivate let diskJSONCache: Cache<String, [String : Any]>
@@ -41,7 +55,7 @@ public final class APICachier {
     
     fileprivate var existing: [String : Any] = [:]
     
-    public func cachedLocally<Key, Value>(_ remoteCache: ReadOnlyCache<Key, Editioned<Value>>,
+    private func cachedLocally<Key, Value>(_ remoteCache: ReadOnlyCache<Key, Editioned<Value>>,
                               transformKey: @escaping (Key) -> String,
                               token: String) -> ReadOnlyCache<Key, Relevant<Value>> {
         if let existingCache = existing[token] as? ReadOnlyCache<Key, Relevant<Value>> {
@@ -60,6 +74,16 @@ public final class APICachier {
             .mapValues({ $0.map({ $0.content }) })
         existing[token] = combined
         return combined
+    }
+    
+    public func cachedLocally<Key : CacheableKey, Value>(_ remoteCache: ReadOnlyCache<Key, Editioned<Value>>,
+                               token: String) -> ReadOnlyCache<Key, Relevant<Value>> {
+        return self.cachedLocally(remoteCache, transformKey: Key.represent, token: token)
+    }
+    
+    public func cachedLocally<Value>(_ remoteCache: ReadOnlyCache<Void, Editioned<Value>>,
+                              key: String, token: String) -> ReadOnlyCache<Void, Relevant<Value>> {
+        return self.cachedLocally(remoteCache, transformKey: { key }, token: token)
     }
     
 }

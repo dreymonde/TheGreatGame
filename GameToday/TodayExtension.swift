@@ -8,15 +8,21 @@
 
 import Foundation
 import TheGreatKit
+import Avenues
 
 final class TodayExtension {
     
     let favoriteTeams: FavoriteTeams
     let api: API
+    let cachier: APICachier
+    let images: ImageFetch
     
     init() {
+        Avenues.Log.isEnabled = true
         self.api = API.gitHub(urlSession: .init(configuration: .default))
         self.favoriteTeams = FavoriteTeams.inSharedDocumentsDirectory()
+        self.cachier = APICachier.inSharedCachesDirectory()
+        self.images = ImageFetch(shouldCacheToDisk: true)
     }
     
 }

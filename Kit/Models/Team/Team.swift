@@ -8,7 +8,7 @@
 
 public enum Team {
     
-    public struct ID : RawRepresentable, Hashable {
+    public struct ID : RawRepresentable, Hashable, CacheableKey {
         
         public var rawID: Int
         
@@ -22,6 +22,10 @@ public enum Team {
         
         public var hashValue: Int {
             return rawValue
+        }
+        
+        public func asString() -> String {
+            return String(rawValue)
         }
         
     }

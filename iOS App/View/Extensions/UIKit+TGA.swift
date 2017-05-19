@@ -10,7 +10,7 @@ import UIKit
 
 extension UIImageView {
     
-    func setImage(_ newImage: UIImage?, afterDownload: Bool) {
+    public func setImage(_ newImage: UIImage?, afterDownload: Bool) {
         let old = self.image
         self.image = newImage
         if afterDownload && newImage != nil && old == nil {
@@ -22,7 +22,7 @@ extension UIImageView {
 
 extension UIView {
     
-    func fadeTransit(duration: TimeInterval = 0.2) {
+    public func fadeTransit(duration: TimeInterval = 0.2) {
         let transition = CATransition() <- {
             $0.duration = duration
             $0.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
@@ -35,7 +35,7 @@ extension UIView {
 
 extension IndexPath {
     
-    static func start(ofSection section: Int) -> IndexPath {
+    public static func start(ofSection section: Int) -> IndexPath {
         return IndexPath(row: NSNotFound, section: section)
     }
     
@@ -43,7 +43,7 @@ extension IndexPath {
 
 extension UIFont {
     
-    func monospacedNumbers() -> UIFont {
+    public func monospacedNumbers() -> UIFont {
         return UIFont(descriptor: fontDescriptor.monospacedNumbers(), size: 0)
     }
     

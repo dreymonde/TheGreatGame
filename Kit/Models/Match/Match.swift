@@ -32,6 +32,7 @@ public enum Match {
     public struct Team {
         public let id: TheGreatKit.Team.ID
         public let name: String
+        public let shortName: String
         public let badgeURL: URL
     }
     
@@ -55,19 +56,21 @@ public enum Match {
 extension Match.Team : Mappable {
     
     public enum MappingKeys : String, IndexPathElement {
-        case id, name, badge_url
+        case id, name, badge_url, short_name
     }
     
     public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.id = try mapper.map(from: .id)
         self.name = try mapper.map(from: .name)
         self.badgeURL = try mapper.map(from: .badge_url)
+        self.shortName = try mapper.map(from: .short_name)
     }
     
     public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.id, to: .id)
         try mapper.map(self.name, to: .name)
         try mapper.map(self.badgeURL, to: .badge_url)
+        try mapper.map(self.shortName, to: .short_name)
     }
     
 }
