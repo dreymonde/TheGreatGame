@@ -23,6 +23,10 @@ extension APICachier {
         return APICachier(diskCache: .inSharedContainer(appending: .caches(appending: "storage-cache-kha1")))
     }
     
+    public static func inSharedDocumentsDirectory() -> APICachier {
+        return APICachier(diskCache: FileSystemCache.inSharedContainer(appending: .documents(appending: "storage-cache-dnt-1")))
+    }
+    
 }
 
 public protocol CacheableKey {

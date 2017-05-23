@@ -38,8 +38,13 @@ final class Application {
     }
     
     static func makeCachier() -> APICachier {
-        let isCaching = launchArgument(.isCachingOnDisk)
-        return isCaching ? APICachier.inSharedCachesDirectory() : APICachier.dev()
+        #if debug
+            return APICachier.dev()
+        #else
+            return APICachier.inSharedCachesDirectory()
+        #endif
+//        let isCaching = launchArgument(.isCachingOnDisk)
+//        return isCaching ? APICachier.inSharedDocumentsDirectory() : APICachier.dev()
     }
     
 }

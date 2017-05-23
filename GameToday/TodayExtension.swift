@@ -18,7 +18,6 @@ final class TodayExtension {
     let images: ImageFetch
     
     init() {
-        Avenues.Log.isEnabled = true
         self.api = API.gitHub(urlSession: .init(configuration: .default))
         self.favoriteTeams = FavoriteTeams.inSharedDocumentsDirectory()
         self.cachier = APICachier.inSharedCachesDirectory()
