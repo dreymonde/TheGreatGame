@@ -49,6 +49,7 @@ public final class FavoriteTeams {
     }
     
     public let didUpdateFavorite = Publisher<(Team.ID, isFavorite: Bool)>(label: "FavoriteTeams.didUpdateFavorite")
+    public let didUpdateFavorites = Publisher<Set<Team.ID>>(label: "FavoriteTeams.didUpdateFavorites")
     
     public func updateFavorite(id: Team.ID, isFavorite: Bool) {
         full_favoriteTeams.update({ favs in
@@ -58,8 +59,9 @@ public final class FavoriteTeams {
                 favs.remove(id)
             }
         }, completion: { result in
-            if result.isSuccess {
+            if let new = result.asOptional {
                 self.didUpdateFavorite.publish((id, isFavorite: isFavorite))
+                self.didUpdateFavorites.publish(new)
             }
         })
     }

@@ -17,9 +17,7 @@ class InterfaceController: WKInterfaceController {
     
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
-        if let pub = context as? Subscribe<Set<Team.ID>> {
-            pub.subscribe(self, with: InterfaceController.updateFavorites)
-        }
+        WatchExtension.main.updates.subscribe(self, with: InterfaceController.updateFavorites)
         // Configure interface objects here.
     }
     

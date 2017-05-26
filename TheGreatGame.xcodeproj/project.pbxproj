@@ -84,6 +84,12 @@
 		7C13BC6D1ED84B5200588F5F /* TCK+UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2B7351ECC7CF100C7EC20 /* TCK+UserDefaults.swift */; };
 		7C13BC6E1ED84B5600588F5F /* NetworkActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916DC1EBB10370070E6C5 /* NetworkActivity.swift */; };
 		7C13BC711ED84C1400588F5F /* WatchExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C13BC701ED84C1400588F5F /* WatchExtension.swift */; };
+		7C13BC741ED84FF400588F5F /* AppleWatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C13BC731ED84FF400588F5F /* AppleWatch.swift */; };
+		7C13BC761ED8523600588F5F /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C13BC751ED8523600588F5F /* Package.swift */; };
+		7C13BC771ED8523600588F5F /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C13BC751ED8523600588F5F /* Package.swift */; };
+		7C13BC791ED8529A00588F5F /* Phone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C13BC781ED8529A00588F5F /* Phone.swift */; };
+		7C13BC7A1ED854D000588F5F /* Jubilee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6261EBA1CB100F50EB2 /* Jubilee.swift */; };
+		7C13BC7B1ED854D300588F5F /* Jubilee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6261EBA1CB100F50EB2 /* Jubilee.swift */; };
 		7C1D897F1EBF0D28006F7841 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1D897E1EBF0D28006F7841 /* API.swift */; };
 		7C1D89861EC0638D006F7841 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1D89851EC0638D006F7841 /* Functions.swift */; };
 		7C1D898A1EC0655A006F7841 /* TeamGroupTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1D89881EC0655A006F7841 /* TeamGroupTableViewCell.swift */; };
@@ -325,6 +331,9 @@
 		7C13BC551ED84B0D00588F5F /* Avenues.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Avenues.framework; path = Carthage/Build/watchOS/Avenues.framework; sourceTree = "<group>"; };
 		7C13BC561ED84B0D00588F5F /* Shallows.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Shallows.framework; path = Carthage/Build/watchOS/Shallows.framework; sourceTree = "<group>"; };
 		7C13BC701ED84C1400588F5F /* WatchExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchExtension.swift; sourceTree = "<group>"; };
+		7C13BC731ED84FF400588F5F /* AppleWatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppleWatch.swift; sourceTree = "<group>"; };
+		7C13BC751ED8523600588F5F /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		7C13BC781ED8529A00588F5F /* Phone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Phone.swift; sourceTree = "<group>"; };
 		7C1D897E1EBF0D28006F7841 /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		7C1D89851EC0638D006F7841 /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		7C1D89881EC0655A006F7841 /* TeamGroupTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamGroupTableViewCell.swift; sourceTree = "<group>"; };
@@ -740,6 +749,9 @@
 		7C13BC721ED84C2700588F5F /* WatchConnectivity */ = {
 			isa = PBXGroup;
 			children = (
+				7C13BC731ED84FF400588F5F /* AppleWatch.swift */,
+				7C13BC751ED8523600588F5F /* Package.swift */,
+				7C13BC781ED8529A00588F5F /* Phone.swift */,
 			);
 			name = WatchConnectivity;
 			sourceTree = "<group>";
@@ -1325,6 +1337,7 @@
 			files = (
 				7C7916DD1EBB10370070E6C5 /* NetworkActivity.swift in Sources */,
 				7C0EA6451EBA1D1E00F50EB2 /* OutMappable.swift in Sources */,
+				7C13BC741ED84FF400588F5F /* AppleWatch.swift in Sources */,
 				7C0EA64B1EBA1D1E00F50EB2 /* Mappable.swift in Sources */,
 				7C0EA6411EBA1D1E00F50EB2 /* InMapper.swift in Sources */,
 				7CAAEFBB1EC36E1A00427D7E /* Sourceful.swift in Sources */,
@@ -1334,6 +1347,7 @@
 				7C0EA6661EBA599D00F50EB2 /* Avenues+Shallows.swift in Sources */,
 				7C0EA63F1EBA1D1E00F50EB2 /* InMappable.swift in Sources */,
 				7C0EA64F1EBA1D3100F50EB2 /* Shallows+Mapper.swift in Sources */,
+				7C13BC761ED8523600588F5F /* Package.swift in Sources */,
 				7C1E66451EBB67CC003AF505 /* Group.swift in Sources */,
 				7C6B36BE1EBCA88100FC17F9 /* Matches.swift in Sources */,
 				7CA213741ECF382200F088DD /* SharedContainer.swift in Sources */,
@@ -1382,6 +1396,7 @@
 			files = (
 				7C13BC2A1ED8498300588F5F /* NotificationController.swift in Sources */,
 				7C13BC2C1ED8498300588F5F /* ComplicationController.swift in Sources */,
+				7C13BC7B1ED854D300588F5F /* Jubilee.swift in Sources */,
 				7C13BC281ED8498300588F5F /* ExtensionDelegate.swift in Sources */,
 				7C13BC261ED8498300588F5F /* InterfaceController.swift in Sources */,
 				7C13BC711ED84C1400588F5F /* WatchExtension.swift in Sources */,
@@ -1392,10 +1407,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7C13BC791ED8529A00588F5F /* Phone.swift in Sources */,
 				7C13BC611ED84B3D00588F5F /* OutMappable.swift in Sources */,
 				7C13BC6E1ED84B5600588F5F /* NetworkActivity.swift in Sources */,
 				7C13BC5E1ED84B3D00588F5F /* InMappable.swift in Sources */,
 				7C13BC6C1ED84B4C00588F5F /* Sourceful.swift in Sources */,
+				7C13BC771ED8523600588F5F /* Package.swift in Sources */,
 				7C13BC691ED84B4C00588F5F /* Team.swift in Sources */,
 				7C13BC601ED84B3D00588F5F /* OutMap.swift in Sources */,
 				7C13BC681ED84B4C00588F5F /* Group.swift in Sources */,
@@ -1410,6 +1427,7 @@
 				7C13BC5F1ED84B3D00588F5F /* InMapper.swift in Sources */,
 				7C13BC6D1ED84B5200588F5F /* TCK+UserDefaults.swift in Sources */,
 				7C13BC651ED84B3D00588F5F /* CocoaMapper.swift in Sources */,
+				7C13BC7A1ED854D000588F5F /* Jubilee.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -14,7 +14,7 @@
                 <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="Watch" customModuleProvider="target">
                     <items>
                         <label alignment="left" text="Favorites:" id="5UX-79-rUy"/>
-                        <label alignment="left" text="--" id="atu-iH-8qL"/>
+                        <label alignment="left" text="--" numberOfLines="0" id="atu-iH-8qL"/>
                     </items>
                     <connections>
                         <outlet property="favoritesLabel" destination="atu-iH-8qL" id="qeY-UX-iCS"/>

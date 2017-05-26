@@ -16,12 +16,17 @@ final class Application {
     let apiCache: APICache
     let imageFetching: ImageFetch
     let favoriteTeams: FavoriteTeams
+    let watch: AppleWatch
+    let favoriteTeamsToWatch: FavoritesToAppleWatch
     
     init() {
         self.api = Application.makeAPI()
         self.apiCache = Application.makeAPICache()
         self.imageFetching = ImageFetch(shouldCacheToDisk: true)
         self.favoriteTeams = FavoriteTeams.inSharedDocumentsDirectory()
+        self.watch = AppleWatch()
+        self.favoriteTeamsToWatch = FavoritesToAppleWatch(watch: watch)
+        favoriteTeamsToWatch.declare(favoritesDidUpdate: favoriteTeams.didUpdateFavorites.proxy)
     }
     
     static func makeAPI() -> API {

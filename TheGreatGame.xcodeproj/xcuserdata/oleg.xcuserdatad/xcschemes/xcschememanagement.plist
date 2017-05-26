@@ -19,21 +19,6 @@
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
-		<key>The Great Game (Complication).xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>5</integer>
-		</dict>
-		<key>The Great Game (Notification).xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>6</integer>
-		</dict>
-		<key>The Great Game.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>4</integer>
-		</dict>
 		<key>TheGreatKit-Watch.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
