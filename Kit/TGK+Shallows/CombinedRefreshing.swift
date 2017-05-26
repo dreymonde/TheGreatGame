@@ -26,10 +26,10 @@ public struct Relevant<Value> : HasSource {
         self.lastRelevant = lastRelevant
     }
     
-    public func map<OtherValue>(_ transform: (Value) -> OtherValue) -> Relevant<OtherValue> {
-        return Relevant<OtherValue>(valueIfRelevant: valueIfRelevant.map(transform),
-                                source: source,
-                                lastRelevant: transform(lastRelevant))
+    public func map<OtherValue>(_ transform: (Value) throws -> OtherValue) rethrows -> Relevant<OtherValue> {
+        return Relevant<OtherValue>(valueIfRelevant: try valueIfRelevant.map(transform),
+                                    source: source,
+                                    lastRelevant: try transform(lastRelevant))
     }
     
 }

@@ -23,14 +23,24 @@ final class UserInterface {
         self.window = window
         self.logic = application
         self.resources = UserInterface.makeResources(with: application)
+        prefetch()
     }
     
     static func makeResources(with logic: Application) -> Resources {
-        let stages = Resource(local: logic.apiCache.matches.stages,
-                              remote: logic.api.matches.stages,
-                              transform: { $0.stages })
-        stages.prefetch()
-        return Resources(stages: stages)
+        let resources = Resources(application: logic)
+        return resources
+    }
+    
+    func prefetch() {
+        resources.prefetchAll()
+        logic.favoriteTeams.favoriteTeams.retrieve { (result) in
+            print("Before favs prefetch is main thread:", Thread.isMainThread)
+            if let set = result.asOptional {
+                for id in set {
+                    self.resources.fullTeam(id).prefetch()
+                }
+            }
+        }
     }
     
     func start() {
@@ -45,16 +55,13 @@ final class UserInterface {
     
     func inject(to teamsList: TeamsTableViewController) {
         teamsList <- {
-            let provider = logic.cachier.cachedLocally(logic.api.teams.all, key: "all-teams", token: "all-teams")
-                .mapValues({ $0.map({ $0.teams }) })
-            $0.resource = ViewResource(provider: zip(provider, self.logic.favoriteTeams.favoriteTeams).mapValues({ $0.0.zipping($0.1) }))
+            $0.resource = self.resources.teams
+            $0.favoritesProvider = Local(provider: self.logic.favoriteTeams.favoriteTeams)
             $0.updateFavorite = self.logic.favoriteTeams.updateFavorite(id:isFavorite:)
             $0.makeAvenue = { self.logic.imageFetching.makeAvenue(forImageSize: $0) }
-            $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
+            $0.makeTeamDetailVC = { self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
         }
     }
-    
-    var stages: [Stage] = []
     
     func inject(to matchesList: MatchesTableViewController) {
         matchesList <- {
@@ -65,10 +72,7 @@ final class UserInterface {
     
     func inject(to groupsList: GroupsTableViewController) {
         groupsList <- {
-            let provider = logic.api.groups.all
-            let cached = logic.cachier.cachedLocally(provider, key: "all-groups", token: "all-groups")
-                .mapValues({ $0.map({ $0.groups }) })
-            $0.resource = ViewResource(provider: cached)
+            $0.resource = self.resources.groups
             $0.makeAvenue = { self.logic.imageFetching.makeAvenue(forImageSize: $0) }
             $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
         }
@@ -76,10 +80,7 @@ final class UserInterface {
     
     func teamDetailViewController(for teamID: Team.ID, preloaded: TeamDetailPreLoaded) -> TeamDetailTableViewController {
         return Storyboard.Main.teamDetailTableViewController.instantiate() <- {
-            let provider = logic.cachier.cachedLocally(logic.api.teams.fullTeam,
-                                                       token: "\(teamID.rawID)-team")
-                .singleKey(teamID)
-            $0.resource = ViewResource(provider: provider)
+            $0.resource = self.resources.fullTeam(teamID)
             $0.makeAvenue = { self.logic.imageFetching.makeAvenue(forImageSize: $0) }
             $0.preloadedTeam = preloaded
             $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }

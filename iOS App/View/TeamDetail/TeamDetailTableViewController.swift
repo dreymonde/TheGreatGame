@@ -42,7 +42,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     
     // MARK: - Injections
     var preloadedTeam: TeamDetailPreLoaded?
-    var resource: ViewResource<Team.Full>!
+    var resource: Resource<Team.Full>!
     var makeTeamDetailVC: (Group.Team) -> UIViewController = runtimeInject
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
 

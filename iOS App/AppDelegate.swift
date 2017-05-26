@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     override init() {
         super.init()
         //Avenues.Log.isEnabled = true
-        ShallowsLog.isEnabled = true
+        //ShallowsLog.isEnabled = true
         Alba.InformBureau.isEnabled = true
         Alba.InformBureau.Logger.enable()
         //NetworkActivity.IndicatorManager.isLogEnabled = true

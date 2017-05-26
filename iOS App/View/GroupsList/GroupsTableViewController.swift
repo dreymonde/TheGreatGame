@@ -17,7 +17,7 @@ class GroupsTableViewController: TheGreatGame.TableViewController, Refreshing {
     var groups: [Group.Compact] = []
     
     // MARK: - Injections
-    var resource: ViewResource<[Group.Compact]>!
+    var resource: Resource<[Group.Compact]>!
     var makeTeamDetailVC: (Group.Team) -> UIViewController = runtimeInject
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
 

@@ -30,19 +30,14 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
         configure(avenue)
         self.pullToRefreshActivities = make()
-        self.stages = resource.getValue() ?? []
-        self.resource.load(completion: reloadData(source:))
+        self.resource.load(completion: reloadData(stages:source:))
     }
     
     fileprivate func indexPathOfMostRelevantMatch(from stages: [Stage]) -> IndexPath {
         return IndexPath.start(ofSection: 0)
     }
     
-    fileprivate func reloadData(source: Source) {
-        guard let stages = resource.getValue() else {
-            fault("No value in resource (but supposed to be)")
-            return
-        }
+    fileprivate func reloadData(stages: [Stage], source: Source) {
         let mostRecent = indexPathOfMostRelevantMatch(from: stages)
         if self.stages.isEmpty && source.isAbsoluteTruth {
             self.stages = stages
@@ -61,7 +56,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
     }
     
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
-        resource.reload(connectingToIndicator: pullToRefreshActivities, completion: reloadData(source:))
+        resource.reload(connectingToIndicator: pullToRefreshActivities, completion: reloadData(stages:source:))
     }
     
     func didFetchImage(with url: URL) {

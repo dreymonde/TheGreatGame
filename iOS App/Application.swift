@@ -14,15 +14,13 @@ final class Application {
     
     let api: API
     let apiCache: APICache
-    let cachier: APICachier
     let imageFetching: ImageFetch
     let favoriteTeams: FavoriteTeams
     
     init() {
         self.api = Application.makeAPI()
-        self.apiCache = APICache.dev()
+        self.apiCache = Application.makeAPICache()
         self.imageFetching = ImageFetch(shouldCacheToDisk: true)
-        self.cachier = Application.makeCachier()
         self.favoriteTeams = FavoriteTeams.inSharedDocumentsDirectory()
     }
     
@@ -39,14 +37,13 @@ final class Application {
         }
     }
     
-    static func makeCachier() -> APICachier {
-        #if debug
-            return APICachier.dev()
-        #else
-            return APICachier.inSharedCachesDirectory()
-        #endif
-//        let isCaching = launchArgument(.isCachingOnDisk)
-//        return isCaching ? APICachier.inSharedDocumentsDirectory() : APICachier.dev()
+    static func makeAPICache() -> APICache {
+        let cachingDisabled = launchArgument(.isCachingDisabled)
+        if cachingDisabled {
+            return APICache.dev()
+        } else {
+            return APICache.inSharedCachesDirectory()
+        }
     }
     
 }

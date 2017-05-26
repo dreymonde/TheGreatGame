@@ -39,3 +39,22 @@ public final class GroupsAPI : APIPoint {
     }
     
 }
+
+public final class GroupsAPICache : APICachePoint {
+    
+    public let provider: Cache<GroupsEndpoint, [String : Any]>
+    public let all: Cache<Void, Editioned<Groups>>
+    
+    private let dataProvider: Cache<String, Data>
+    
+    public init(dataProvider: Cache<String, Data>) {
+        self.dataProvider = dataProvider
+        self.provider = dataProvider
+            .mapJSONDictionary()
+            .mapKeys({ $0.path })
+        self.all = provider
+            .singleKey(.all)
+            .mapMappable(of: Editioned<Groups>.self)
+    }
+    
+}

@@ -11,6 +11,18 @@ import TheGreatKit
 import Shallows
 import Avenues
 
+extension Set {
+    
+    mutating func updatePresence(_ element: Element, shouldBeInSet: Bool) {
+        if shouldBeInSet {
+            insert(element)
+        } else {
+            remove(element)
+        }
+    }
+    
+}
+
 class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
     
     // MARK: - Data source
@@ -18,7 +30,8 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
     var favorites: Set<Team.ID> = []
     
     // MARK: - Injections
-    var resource: ViewResource<([Team.Compact], Set<Team.ID>)>!
+    var resource: Resource<[Team.Compact]>!
+    var favoritesProvider: Local<Set<Team.ID>>!
     var makeTeamDetailVC: (Team.Compact) -> UIViewController = runtimeInject
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
     var updateFavorite: (Team.ID, Bool) -> () = runtimeInject
@@ -27,6 +40,8 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
     var avenue: SymmetricalAvenue<URL, UIImage>!
     var pullToRefreshActivities: NetworkActivity.IndicatorManager!
     
+    let favoritesLoaded = DispatchSemaphore(value: 0)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         registerFor3DTouch()
@@ -34,17 +49,24 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
         self.pullToRefreshActivities = make()
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
         configure(avenue)
+        self.favoritesProvider.retrieve { (favs) in
+            self.favorites = favs
+            self.favoritesLoaded.signal()
+        }
         self.resource.load(completion: reloadData(with:source:))
     }
     
-    fileprivate func reloadData(with items: (teams: [Team.Compact], favorites: Set<Team.ID>), source: Source) {
-        self.favorites = items.favorites
+    fileprivate func reloadData(with teams: [Team.Compact], source: Source) {
+        let awaiter = favoritesLoaded.wait(timeout: .now() + 2)
+        if awaiter == .timedOut {
+            fault("Timed out waiting for favorites to load")
+        }
         if self.teams.isEmpty && source.isAbsoluteTruth {
-            self.teams = items.teams
-            let ips = items.teams.indices.map({ IndexPath.init(row: $0, section: 0) })
+            self.teams = teams
+            let ips = teams.indices.map({ IndexPath.init(row: $0, section: 0) })
             tableView.insertRows(at: ips, with: UITableViewRowAnimation.automatic)
         } else {
-            self.teams = items.teams
+            self.teams = teams
             tableView.reloadData()
         }
     }
@@ -107,6 +129,7 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
         cell.onSwitch = { isFavorite in
             if let ipath = self.tableView.indexPath(for: cell) {
                 let team = self.teams[ipath.row]
+                self.favorites.updatePresence(team.id, shouldBeInSet: isFavorite)
                 self.updateFavorite(team.id, isFavorite)
             }
         }
