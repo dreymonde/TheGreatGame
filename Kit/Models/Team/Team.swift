@@ -6,9 +6,11 @@
 //  Copyright © 2017 The Great Game. All rights reserved.
 //
 
+import Foundation
+
 public enum Team {
     
-    public struct ID : RawRepresentable, Hashable, CacheableKey {
+    public struct ID : RawRepresentable, Hashable {
         
         public var rawID: Int
         

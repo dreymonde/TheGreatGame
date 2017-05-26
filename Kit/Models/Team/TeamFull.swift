@@ -6,6 +6,8 @@
 //  Copyright © 2017 The Great Game. All rights reserved.
 //
 
+import Foundation
+
 extension Team {
 
     public struct Full {
