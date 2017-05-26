@@ -15,12 +15,22 @@ final class UserInterface {
     
     fileprivate let window: UIWindow
     fileprivate let logic: Application
+    fileprivate let resources: Resources
     
     fileprivate let avenueSession = URLSession(configuration: .ephemeral)
     
     init(window: UIWindow, application: Application) {
         self.window = window
         self.logic = application
+        self.resources = UserInterface.makeResources(with: application)
+    }
+    
+    static func makeResources(with logic: Application) -> Resources {
+        let stages = Resource(local: logic.apiCache.matches.stages,
+                              remote: logic.api.matches.stages,
+                              transform: { $0.stages })
+        stages.prefetch()
+        return Resources(stages: stages)
     }
     
     func start() {
@@ -44,12 +54,11 @@ final class UserInterface {
         }
     }
     
+    var stages: [Stage] = []
+    
     func inject(to matchesList: MatchesTableViewController) {
         matchesList <- {
-            let provider = logic.api.matches.stages
-            let cached = logic.cachier.cachedLocally(provider, key: "all-matches", token: "all-matches")
-                .mapValues({ $0.map({ $0.stages }) })
-            $0.resource = ViewResource(provider: cached)
+            $0.resource = self.resources.stages
             $0.makeAvenue = { self.logic.imageFetching.makeAvenue(forImageSize: $0) }
         }
     }

@@ -43,9 +43,9 @@ public struct FileSystemSubPath : ExpressibleByStringLiteral {
 
 extension FileSystemCacheProtocol {
     
-    public static func inSharedContainer(appending subpath: FileSystemSubPath) -> Self {
+    public static func inSharedContainer(subpath: FileSystemSubPath, qos: DispatchQoS) -> Self {
         let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: TheGreatKit.groupIdentifier)?.appendingPathComponent(subpath.subpath)
-        return Self.init(directoryURL: url!, cacheName: "group-container")
+        return Self.init(directoryURL: url!, qos: qos, cacheName: "group-container")
     }
     
 }

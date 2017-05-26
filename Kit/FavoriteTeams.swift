@@ -69,7 +69,7 @@ public final class FavoriteTeams {
     }
     
     public static func inSharedDocumentsDirectory() -> FavoriteTeams {
-        return FavoriteTeams(fileSystemCache: .inSharedContainer(appending: .documents(appending: "favorite-teams")))
+        return FavoriteTeams(fileSystemCache: .inSharedContainer(subpath: .documents(appending: "favorite-teams"), qos: .userInitiated))
     }
     
 }

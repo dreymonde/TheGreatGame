@@ -17,7 +17,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
     var stages: [Stage] = []
     
     // MARK: - Injections
-    var resource: ViewResource<[Stage]>!
+    var resource: Resource<[Stage]>!
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
 
     // MARK: - Services
@@ -30,14 +30,19 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
         configure(avenue)
         self.pullToRefreshActivities = make()
-        self.resource.load(completion: reloadData(with:source:))
+        self.stages = resource.getValue() ?? []
+        self.resource.load(completion: reloadData(source:))
     }
     
     fileprivate func indexPathOfMostRelevantMatch(from stages: [Stage]) -> IndexPath {
         return IndexPath.start(ofSection: 0)
     }
     
-    fileprivate func reloadData(with stages: [Stage], source: Source) {
+    fileprivate func reloadData(source: Source) {
+        guard let stages = resource.getValue() else {
+            fault("No value in resource (but supposed to be)")
+            return
+        }
         let mostRecent = indexPathOfMostRelevantMatch(from: stages)
         if self.stages.isEmpty && source.isAbsoluteTruth {
             self.stages = stages
@@ -46,7 +51,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
         } else {
             self.stages = stages
             tableView.reloadData()
-            tableView.scrollToRow(at: mostRecent, at: .top, animated: false)
+//            tableView.scrollToRow(at: mostRecent, at: .top, animated: false)
         }
     }
     
@@ -56,7 +61,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
     }
     
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
-        resource.reload(connectingToIndicator: pullToRefreshActivities, completion: reloadData(with:source:))
+        resource.reload(connectingToIndicator: pullToRefreshActivities, completion: reloadData(source:))
     }
     
     func didFetchImage(with url: URL) {

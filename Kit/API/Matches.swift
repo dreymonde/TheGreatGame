@@ -33,9 +33,9 @@ public final class MatchesAPI : APIPoint {
     
     private let dataProvider: ReadOnlyCache<String, Data>
     
-    public init(networkProvider: ReadOnlyCache<String, Data>) {
-        self.dataProvider = networkProvider
-        self.provider = networkProvider
+    public init(dataProvider: ReadOnlyCache<String, Data>) {
+        self.dataProvider = dataProvider
+        self.provider = dataProvider
             .mapJSONDictionary()
             .mapKeys({ $0.path })
         self.all = provider
@@ -46,4 +46,27 @@ public final class MatchesAPI : APIPoint {
             .mapMappable()
     }
         
+}
+
+public final class MatchesAPICache : APICachePoint {
+    
+    public let provider: Cache<MatchesEndpoint, [String : Any]>
+    public let all: Cache<Void, Editioned<Matches>>
+    public let stages: Cache<Void, Editioned<Stages>>
+    
+    private let dataProvider: Cache<String, Data>
+    
+    init(dataProvider: Cache<String, Data>) {
+        self.dataProvider = dataProvider
+        self.provider = dataProvider
+            .mapJSONDictionary()
+            .mapKeys({ $0.path })
+        self.all = provider
+            .singleKey(.all)
+            .mapMappable()
+        self.stages = provider
+            .singleKey(.stages)
+            .mapMappable()
+    }
+    
 }

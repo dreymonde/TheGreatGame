@@ -13,12 +13,14 @@ import Shallows
 final class Application {
     
     let api: API
+    let apiCache: APICache
     let cachier: APICachier
     let imageFetching: ImageFetch
     let favoriteTeams: FavoriteTeams
     
     init() {
         self.api = Application.makeAPI()
+        self.apiCache = APICache.dev()
         self.imageFetching = ImageFetch(shouldCacheToDisk: true)
         self.cachier = Application.makeCachier()
         self.favoriteTeams = FavoriteTeams.inSharedDocumentsDirectory()

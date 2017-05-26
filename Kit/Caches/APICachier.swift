@@ -20,11 +20,11 @@ extension APICachier {
     }
     
     public static func inSharedCachesDirectory() -> APICachier {
-        return APICachier(diskCache: .inSharedContainer(appending: .caches(appending: "storage-cache-kha1")))
+        return APICachier(diskCache: .inSharedContainer(subpath: .caches(appending: "storage-cache-kha1"), qos: .userInitiated))
     }
     
     public static func inSharedDocumentsDirectory() -> APICachier {
-        return APICachier(diskCache: FileSystemCache.inSharedContainer(appending: .documents(appending: "storage-cache-dnt-1")))
+        return APICachier(diskCache: FileSystemCache.inSharedContainer(subpath: .documents(appending: "storage-cache-dnt-1"), qos: .userInitiated))
     }
     
 }
@@ -58,6 +58,13 @@ public final class APICachier {
     }
     
     fileprivate var existing: [String : Any] = [:]
+    
+    public func combineCaches<Key, Value>(localCache: Cache<Key, Editioned<Value>>, remoteCache: ReadOnlyCache<Key, Editioned<Value>>) -> ReadOnlyCache<Key, Relevant<Value>> {
+        return localCache.withSource(.disk)
+            .combinedRefreshing(with: remoteCache.withSource(.server),
+                                isMoreRecent: { $0.value.isMoreRecent(than: $1.value) })
+            .mapValues({ $0.map({ $0.content }) })
+    }
     
     private func cachedLocally<Key, Value>(_ remoteCache: ReadOnlyCache<Key, Editioned<Value>>,
                               transformKey: @escaping (Key) -> String,

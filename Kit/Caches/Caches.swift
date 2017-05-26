@@ -58,6 +58,16 @@ public enum EmptyCacheError : Error {
     case cacheIsAlwaysEmpty
 }
 
+extension ReadOnlyCache {
+    
+    public static func empty() -> ReadOnlyCache<Key, Value> {
+        return ReadOnlyCache(cacheName: "empty", retrieve: { (_, completion) in
+            completion(.failure(EmptyCacheError.cacheIsAlwaysEmpty))
+        })
+    }
+    
+}
+
 extension Cache {
     
     public static func empty() -> Cache<Key, Value> {

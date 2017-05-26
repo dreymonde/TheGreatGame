@@ -11,7 +11,13 @@ import Shallows
 
 internal protocol APIPoint {
     
-    init(networkProvider: ReadOnlyCache<String, Data>)
+    init(dataProvider: ReadOnlyCache<String, Data>)
+    
+}
+
+internal protocol APICachePoint {
+    
+    init(dataProvider: Cache<String, Data>)
     
 }
 
@@ -19,7 +25,7 @@ extension APIPoint {
     
     public static func gitHub(networkCache: ReadOnlyCache<URL, Data> = Self.makeUrlSessionCache()) -> Self {
         let gitRepo = GitHubRepo.theGreatGameStorage(networkCache: networkCache)
-        return Self(networkProvider: gitRepo.asReadOnlyCache())
+        return Self(dataProvider: gitRepo.asReadOnlyCache())
     }
     
     public static func macBookSteve() -> Self {
@@ -33,7 +39,7 @@ extension APIPoint {
                 })
             })
         }
-        return Self(networkProvider: cache)
+        return Self(dataProvider: cache)
     }
     
     internal static func makeUrlSessionCache() -> ReadOnlyCache<URL, Data> {
@@ -72,6 +78,23 @@ public final class API {
         return API(teams: .macBookSteve(),
                    matches: .macBookSteve(),
                    groups: .macBookSteve())
+    }
+    
+}
+
+public final class APICache {
+    
+    public let matches: MatchesAPICache
+    
+    public init(matches: MatchesAPICache) {
+        self.matches = matches
+    }
+    
+    public static func dev() -> APICache {
+        let fs = FileSystemCache.inSharedContainer(subpath: .caches(appending: "dev-1"), qos: .userInteractive)
+            .asCache()
+        let mac = MatchesAPICache(dataProvider: fs)
+        return APICache(matches: mac)
     }
     
 }

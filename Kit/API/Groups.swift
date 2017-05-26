@@ -28,9 +28,9 @@ public final class GroupsAPI : APIPoint {
     
     private let dataProvider: ReadOnlyCache<String, Data>
     
-    public init(networkProvider: ReadOnlyCache<String, Data>) {
-        self.dataProvider = networkProvider
-        self.provider = networkProvider
+    public init(dataProvider: ReadOnlyCache<String, Data>) {
+        self.dataProvider = dataProvider
+        self.provider = dataProvider
             .mapJSONDictionary()
             .mapKeys({ $0.path })
         self.all = provider

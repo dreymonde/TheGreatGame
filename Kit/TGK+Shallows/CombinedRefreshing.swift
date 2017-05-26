@@ -58,7 +58,7 @@ extension CacheProtocol {
         })
     }
     
-    func combinedRefreshing<CacheType : ReadableCacheProtocol>(with backCache: CacheType, isMoreRecent: @escaping (Value, Value) -> Bool) -> ReadOnlyCache<Key, Relevant<Value.Value>> where CacheType.Key == Key, CacheType.Value == Value, Value : SourcefulProtocol {
+    public func combinedRefreshing<CacheType : ReadableCacheProtocol>(with backCache: CacheType, isMoreRecent: @escaping (Value, Value) -> Bool) -> ReadOnlyCache<Key, Relevant<Value.Value>> where CacheType.Key == Key, CacheType.Value == Value, Value : SourcefulProtocol {
         let name = "\(self.cacheName)<-~\(backCache.cacheName)"
         func log(_ message: String) {
             let nameInBrackets = "(\(name))"
