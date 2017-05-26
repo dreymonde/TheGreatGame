@@ -8,16 +8,35 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="12029"/>
     </dependencies>
     <scenes>
-        <!--Interface Controller-->
+        <!--MatchesInterfaceController-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="Watch" customModuleProvider="target">
+                <controller identifier="MatchesInterfaceController" id="AgC-eL-Hgc" customClass="MatchesInterfaceController" customModule="Watch_Extension">
                     <items>
-                        <label alignment="left" text="Favorites:" id="5UX-79-rUy"/>
-                        <label alignment="left" text="--" numberOfLines="0" id="atu-iH-8qL"/>
+                        <table alignment="left" id="hn5-On-7gI">
+                            <items>
+                                <tableRow identifier="MatchCompact" id="wpz-Oj-LWN" customClass="MatchCellController" customModule="Watch_Extension">
+                                    <group key="rootItem" width="1" alignment="left" id="gO6-0v-mp6">
+                                        <items>
+                                            <imageView width="25" height="25" alignment="left" verticalAlignment="center" alpha="0.0" id="OVm-rs-KXT"/>
+                                            <label alignment="center" verticalAlignment="center" text="-:-" id="ULF-4F-fKL">
+                                                <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
+                                            </label>
+                                            <imageView width="25" height="25" alignment="right" verticalAlignment="center" alpha="0.0" id="7nt-yr-fy6"/>
+                                        </items>
+                                        <edgeInsets key="margins" left="14" right="14" top="0.0" bottom="0.0"/>
+                                    </group>
+                                    <connections>
+                                        <outlet property="awayBadgeImage" destination="7nt-yr-fy6" id="fjZ-5P-oe4"/>
+                                        <outlet property="homeBadgeImage" destination="OVm-rs-KXT" id="0Ka-hI-t85"/>
+                                        <outlet property="scoreLabel" destination="ULF-4F-fKL" id="9KZ-1M-fXd"/>
+                                    </connections>
+                                </tableRow>
+                            </items>
+                        </table>
                     </items>
                     <connections>
-                        <outlet property="favoritesLabel" destination="atu-iH-8qL" id="qeY-UX-iCS"/>
+                        <outlet property="table" destination="hn5-On-7gI" id="UjU-Tu-fHH"/>
                     </connections>
                 </controller>
             </objects>

@@ -7,6 +7,7 @@
 //
 
 import Shallows
+import Foundation
 
 public enum CombinedRefreshingError : Error {
     

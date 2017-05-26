@@ -25,10 +25,14 @@ class GroupsTableViewController: TheGreatGame.TableViewController, Refreshing {
     var avenue: SymmetricalAvenue<URL, UIImage>!
     var pullToRefreshActivities: NetworkActivity.IndicatorManager!
     
+    // MARK: - Cell Fillers
+    var teamGroupCellFiller: TeamGroupCellFiller!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configure(tableView)
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
+        self.teamGroupCellFiller = TeamGroupCellFiller(avenue: avenue)
         configure(avenue)
         self.pullToRefreshActivities = make()
         registerFor3DTouch()
@@ -101,13 +105,7 @@ class GroupsTableViewController: TheGreatGame.TableViewController, Refreshing {
     
     func configureTeamGroupCell(_ cell: TeamGroupTableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
         let groupTeam = groups[indexPath.section].teams[indexPath.row]
-        if !afterImageDownload {
-            avenue.prepareItem(at: groupTeam.badgeURL)
-        }
-        cell.nameLabel.text = groupTeam.name
-        cell.pointsLabel.text = String(groupTeam.points)
-        cell.positionLabel.text = "\(indexPath.row + 1)."
-        cell.badgeImageView.setImage(avenue.item(at: groupTeam.badgeURL), afterDownload: afterImageDownload)
+        teamGroupCellFiller.setup(cell, with: groupTeam, forRowAt: indexPath, afterImageDownload: afterImageDownload)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

@@ -24,10 +24,14 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
     var avenue: SymmetricalAvenue<URL, UIImage>!
     var pullToRefreshActivities: NetworkActivity.IndicatorManager!
     
+    // MARK: - Cell Fillers
+    var matchCellFiller: MatchCellFiller!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configure(tableView)
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
+        self.matchCellFiller = MatchCellFiller(avenue: avenue)
         configure(avenue)
         self.pullToRefreshActivities = make()
         self.resource.load(completion: reloadData(stages:source:))
@@ -106,15 +110,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
     
     func configureMatchCell(_ cell: MatchTableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
         let match = stages[indexPath.section].matches[indexPath.row]
-        if !afterImageDownload {
-            avenue.prepareItem(at: match.home.badgeURL)
-            avenue.prepareItem(at: match.away.badgeURL)
-        }
-        cell.scoreTimeLabel.text = match.score?.string ?? "-:-"
-        cell.homeTeamNameLabel.text = match.home.name
-        cell.awayTeamNameLabel.text = match.away.name
-        cell.homeBadgeImageView.setImage(avenue.item(at: match.home.badgeURL), afterDownload: afterImageDownload)
-        cell.awayBadgeImageView.setImage(avenue.item(at: match.away.badgeURL), afterDownload: afterImageDownload)
+        matchCellFiller.setup(cell, with: match, forRowAt: indexPath, afterImageDownload: afterImageDownload)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

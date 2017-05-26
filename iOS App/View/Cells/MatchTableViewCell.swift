@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Avenues
+import TheGreatKit
 
 class MatchTableViewCell: UITableViewCell {
     
@@ -34,3 +36,29 @@ class MatchTableViewCell: UITableViewCell {
     }
     
 }
+
+final class MatchCellFiller : CellFiller {
+    
+    typealias CellType = MatchTableViewCell
+    typealias Content = Match.Compact
+    
+    let avenue: Avenue<URL, URL, UIImage>
+    
+    init(avenue: Avenue<URL, URL, UIImage>) {
+        self.avenue = avenue
+    }
+    
+    func setup(_ cell: MatchTableViewCell, with match: Match.Compact, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
+        if !afterImageDownload {
+            avenue.prepareItem(at: match.home.badgeURL)
+            avenue.prepareItem(at: match.away.badgeURL)
+        }
+        cell.scoreTimeLabel.text = match.score?.string ?? "-:-"
+        cell.homeTeamNameLabel.text = match.home.name
+        cell.awayTeamNameLabel.text = match.away.name
+        cell.homeBadgeImageView.setImage(avenue.item(at: match.home.badgeURL), afterDownload: afterImageDownload)
+        cell.awayBadgeImageView.setImage(avenue.item(at: match.away.badgeURL), afterDownload: afterImageDownload)
+    }
+    
+}
+

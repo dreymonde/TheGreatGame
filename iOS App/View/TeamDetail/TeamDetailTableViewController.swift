@@ -50,11 +50,17 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     var mainBadgeAvenue: SymmetricalAvenue<URL, UIImage>!
     var smallBadgesAvenue: SymmetricalAvenue<URL, UIImage>!
     var pullToRefreshActivities: NetworkActivity.IndicatorManager!
+    
+    // MARK: - Cell Fillers
+    var matchCellFiller: MatchCellFiller!
+    var teamGroupCellFiller: TeamGroupCellFiller!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.smallBadgesAvenue = makeAvenue(CGSize(width: 30, height: 30))
         self.mainBadgeAvenue = makeAvenue(CGSize(width: 50, height: 50))
+        self.matchCellFiller = MatchCellFiller(avenue: smallBadgesAvenue)
+        self.teamGroupCellFiller = TeamGroupCellFiller(avenue: smallBadgesAvenue)
         self.pullToRefreshActivities = make()
         registerFor3DTouch()
         configure(tableView)
@@ -191,15 +197,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
             fault("No team still?")
             return
         }
-        if !afterImageDownload {
-            smallBadgesAvenue.prepareItem(at: match.home.badgeURL)
-            smallBadgesAvenue.prepareItem(at: match.away.badgeURL)
-        }
-        cell.scoreTimeLabel.text = "-:-"
-        cell.homeTeamNameLabel.text = match.home.name
-        cell.awayTeamNameLabel.text = match.away.name
-        cell.homeBadgeImageView.setImage(smallBadgesAvenue.item(at: match.home.badgeURL), afterDownload: afterImageDownload)
-        cell.awayBadgeImageView.setImage(smallBadgesAvenue.item(at: match.away.badgeURL), afterDownload: afterImageDownload)
+        matchCellFiller.setup(cell, with: match, forRowAt: indexPath, afterImageDownload: afterImageDownload)
     }
     
     func configureTeamGroupCell(_ cell: TeamGroupTableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
@@ -207,13 +205,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
             fault("No team, really?")
             return
         }
-        if !afterImageDownload {
-            smallBadgesAvenue.prepareItem(at: groupTeam.badgeURL)
-        }
-        cell.nameLabel.text = groupTeam.name
-        cell.pointsLabel.text = String(groupTeam.points)
-        cell.positionLabel.text = "\(indexPath.row + 1)."
-        cell.badgeImageView.setImage(smallBadgesAvenue.item(at: groupTeam.badgeURL), afterDownload: afterImageDownload)
+        teamGroupCellFiller.setup(cell, with: groupTeam, forRowAt: indexPath, afterImageDownload: afterImageDownload)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

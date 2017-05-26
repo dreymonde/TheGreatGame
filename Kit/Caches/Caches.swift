@@ -26,8 +26,12 @@ public final class ImageFetch {
     fileprivate let imageFetchingSession = URLSession(configuration: .ephemeral)
     fileprivate let diskCache: Cache<URL, UIImage>
     
-    public init(shouldCacheToDisk: Bool) {
-        self.diskCache = shouldCacheToDisk ? DiskCaching.inCachesDirectorySharedContainer().cache : .empty()
+    public init(diskCache: Cache<URL, UIImage>) {
+        self.diskCache = diskCache
+    }
+    
+    public convenience init(shouldCacheToDisk: Bool) {
+        self.init(diskCache: shouldCacheToDisk ? DiskCaching.inCachesDirectorySharedContainer().cache : .empty())
     }
     
     public func imageCache(forSize side: CGFloat) -> Storage<URL, UIImage> {
