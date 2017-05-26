@@ -16,7 +16,7 @@ enum Server : String {
 extension LaunchArgumentKey {
     
     static var isCachingDisabled: LaunchArgumentKey<Bool> {
-        return LaunchArgumentKey<Bool>("caching-disabled".bundled)
+        return LaunchArgumentKey<Bool>("disable-caching".bundled)
     }
     
     static var server: LaunchArgumentKey<Server> {
