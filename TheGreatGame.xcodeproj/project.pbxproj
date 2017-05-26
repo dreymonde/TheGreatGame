@@ -351,16 +351,16 @@
 		7C1E66441EBB67CC003AF505 /* Group.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		7C357ED51ED4408C00CFCF3B /* APICacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APICacheTests.swift; sourceTree = "<group>"; };
 		7C357ED71ED442D300CFCF3B /* SingleElementMemoryCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleElementMemoryCache.swift; sourceTree = "<group>"; };
-		7C357ED91ED44C4900CFCF3B /* Resources.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Resources.swift; path = ../Kit/Resources.swift; sourceTree = "<group>"; };
+		7C357ED91ED44C4900CFCF3B /* Resources.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Resources.swift; path = Resources.swift; sourceTree = "<group>"; };
 		7C357EDC1ED4828100CFCF3B /* Resource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Resource.swift; sourceTree = "<group>"; };
 		7C6B36BD1EBCA88100FC17F9 /* Matches.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Matches.swift; sourceTree = "<group>"; };
 		7C6B36C01EBCA98100FC17F9 /* MatchesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchesTableViewController.swift; sourceTree = "<group>"; };
 		7C6B36C21EBCAEDD00FC17F9 /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		7C7916DC1EBB10370070E6C5 /* NetworkActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkActivity.swift; sourceTree = "<group>"; };
 		7C7916DE1EBB12250070E6C5 /* NetworkActivityIndicatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkActivityIndicatorTests.swift; sourceTree = "<group>"; };
-		7C7916E01EBB14D40070E6C5 /* Shallows+ActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Shallows+ActivityIndicator.swift"; path = "../Kit/TGK+Shallows/Shallows+ActivityIndicator.swift"; sourceTree = "<group>"; };
+		7C7916E01EBB14D40070E6C5 /* Shallows+ActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Shallows+ActivityIndicator.swift"; path = "Shallows+ActivityIndicator.swift"; sourceTree = "<group>"; };
 		7C7916E31EBB15B20070E6C5 /* AvenuesExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvenuesExtensions.swift; sourceTree = "<group>"; };
-		7C7916E61EBB245A0070E6C5 /* UIKit+TGA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIKit+TGA.swift"; path = "../iOS App/View/Extensions/UIKit+TGA.swift"; sourceTree = "<group>"; };
+		7C7916E61EBB245A0070E6C5 /* UIKit+TGA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIKit+TGA.swift"; path = "UIKit+TGA.swift"; sourceTree = "<group>"; };
 		7C7916EA1EBB34E50070E6C5 /* ShallowsExtensionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShallowsExtensionsTests.swift; sourceTree = "<group>"; };
 		7C7916ED1EBB36F70070E6C5 /* APITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APITests.swift; sourceTree = "<group>"; };
 		7C7916EF1EBB37910070E6C5 /* TeamFull.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamFull.swift; sourceTree = "<group>"; };
@@ -471,9 +471,9 @@
 				7C0EA6251EBA1CA300F50EB2 /* Shared */,
 				7C0EA5D91EBA1B3500F50EB2 /* iOS App */,
 				7C0EA5EE1EBA1B3500F50EB2 /* iOS Tests */,
+				7CA2137C1ECF3F9A00F088DD /* Today */,
 				7C0EA6081EBA1C9000F50EB2 /* Kit */,
 				7C0EA6151EBA1C9000F50EB2 /* Kit Tests */,
-				7CA2137C1ECF3F9A00F088DD /* Today */,
 				7C13BC131ED8498300588F5F /* Watch App */,
 				7C13BC221ED8498300588F5F /* Watch Extension */,
 				7C13BC481ED84AF400588F5F /* TheGreatKit-Watch */,
@@ -693,6 +693,7 @@
 				7C109D261EC1D5AB00523376 /* TeamDetailInfoTableViewCell.xib */,
 			);
 			name = Views;
+			path = Views;
 			sourceTree = "<group>";
 		};
 		7C13BC131ED8498300588F5F /* Watch App */ = {
@@ -703,7 +704,7 @@
 				7C13BC191ED8498300588F5F /* Info.plist */,
 			);
 			name = "Watch App";
-			path = Watch;
+			path = "Watch App";
 			sourceTree = "<group>";
 		};
 		7C13BC221ED8498300588F5F /* Watch Extension */ = {
@@ -727,6 +728,7 @@
 				7C13BC241ED8498300588F5F /* PushNotificationPayload.apns */,
 			);
 			name = "Supporting Files";
+			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		7C13BC481ED84AF400588F5F /* TheGreatKit-Watch */ = {
@@ -744,6 +746,7 @@
 				7C13BC251ED8498300588F5F /* InterfaceController.swift */,
 			);
 			name = View;
+			path = View;
 			sourceTree = "<group>";
 		};
 		7C13BC721ED84C2700588F5F /* WatchConnectivity */ = {
@@ -754,6 +757,7 @@
 				7C13BC781ED8529A00588F5F /* Phone.swift */,
 			);
 			name = WatchConnectivity;
+			path = WatchConnectivity;
 			sourceTree = "<group>";
 		};
 		7C1D89871EC0651D006F7841 /* Cells */ = {
@@ -872,6 +876,7 @@
 				7CA213731ECF382200F088DD /* SharedContainer.swift */,
 			);
 			name = LocalInfo;
+			path = LocalInfo;
 			sourceTree = "<group>";
 		};
 		7CA2137C1ECF3F9A00F088DD /* Today */ = {
@@ -883,7 +888,7 @@
 				7CA213821ECF3F9A00F088DD /* Info.plist */,
 			);
 			name = Today;
-			path = GameToday;
+			path = Today;
 			sourceTree = "<group>";
 		};
 		7CE2B7371ECC7D2200C7EC20 /* Extensions */ = {
@@ -893,6 +898,7 @@
 				7C7916E01EBB14D40070E6C5 /* Shallows+ActivityIndicator.swift */,
 			);
 			name = Extensions;
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		7CF3D1781EBC872C00E86A91 /* Match */ = {
@@ -1511,6 +1517,7 @@
 				7C13BC151ED8498300588F5F /* Base */,
 			);
 			name = Interface.storyboard;
+			path = .;
 			sourceTree = "<group>";
 		};
 		7CA2137F1ECF3F9A00F088DD /* MainInterface.storyboard */ = {
@@ -1519,6 +1526,7 @@
 				7CA213801ECF3F9A00F088DD /* Base */,
 			);
 			name = MainInterface.storyboard;
+			path = .;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1791,7 +1799,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 8E9Y56P64W;
 				IBSC_MODULE = Watch_Extension;
-				INFOPLIST_FILE = Watch/Info.plist;
+				INFOPLIST_FILE = "Watch App/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatGame.watchkitapp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1809,7 +1817,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 8E9Y56P64W;
 				IBSC_MODULE = Watch_Extension;
-				INFOPLIST_FILE = Watch/Info.plist;
+				INFOPLIST_FILE = "Watch App/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatGame.watchkitapp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1931,7 +1939,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = GameToday/Info.plist;
+				INFOPLIST_FILE = Today/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatGame.GameToday";
@@ -1950,7 +1958,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = GameToday/Info.plist;
+				INFOPLIST_FILE = Today/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatGame.GameToday";
@@ -2015,6 +2023,7 @@
 				7C13BC361ED8498400588F5F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7C13BC391ED8498400588F5F /* Build configuration list for PBXNativeTarget "Watch" */ = {
 			isa = XCConfigurationList;
@@ -2023,6 +2032,7 @@
 				7C13BC341ED8498400588F5F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7C13BC501ED84AF400588F5F /* Build configuration list for PBXNativeTarget "TheGreatKit-Watch" */ = {
 			isa = XCConfigurationList;
@@ -2031,6 +2041,7 @@
 				7C13BC521ED84AF400588F5F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7CA213861ECF3F9A00F088DD /* Build configuration list for PBXNativeTarget "GameToday" */ = {
 			isa = XCConfigurationList;
