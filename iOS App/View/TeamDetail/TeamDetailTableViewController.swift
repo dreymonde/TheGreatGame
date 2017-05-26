@@ -61,10 +61,10 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
         configure(smallBadges: smallBadgesAvenue)
         configure(mainBadge: mainBadgeAvenue)
         configure(navigationItem)
-        self.resource.load(completion: completion(self.setup(with:)))
+        self.resource.load(completion: self.setup(with:source:))
     }
     
-    func setup(with team: Team.Full) {
+    func setup(with team: Team.Full, source: Source) {
         self.team = team
         self.tableView.reloadData()
         self.configure(self.navigationItem)
@@ -76,7 +76,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     }
     
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
-        resource.reload(connectingToIndicator: pullToRefreshActivities, completion: completion(setup(with:)))
+        resource.reload(connectingToIndicator: pullToRefreshActivities, completion: self.setup(with:source:))
     }
 
     // MARK: - Table view data source
