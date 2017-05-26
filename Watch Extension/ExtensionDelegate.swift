@@ -9,6 +9,8 @@
 import WatchKit
 
 class ExtensionDelegate: NSObject, WKExtensionDelegate {
+    
+    let watchExtension = WatchExtension()
 
     func applicationDidFinishLaunching() {
         // Perform any final initialization of your application.

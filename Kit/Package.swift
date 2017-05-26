@@ -72,6 +72,10 @@ public struct FavoritesPackage {
     
     public let favs: Set<Team.ID>
     
+    public init(_ favs: Set<Team.ID>) {
+        self.favs = favs
+    }
+    
 }
 
 extension FavoritesPackage : AppleWatchPackable {

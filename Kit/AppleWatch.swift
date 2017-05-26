@@ -30,6 +30,11 @@ public final class AppleWatch : NSObject, WCSessionDelegate {
         }
     }
     
+    public func feed<Pack : AppleWatchPackable>(packages: Subscribe<Pack>) {
+        packages.flatMap({ try? $0.pack() })
+            .subscribe(self, with: AppleWatch.send)
+    }
+    
     let didFailToSendPackage = Publisher<Error>(label: "AppleWatch.didFailToSendPackage")
     
 }
@@ -46,24 +51,6 @@ extension AppleWatch {
     
     public func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         printWithContext()
-    }
-    
-}
-
-public final class FavoritesToAppleWatch {
-    
-    public let watch: AppleWatch
-    
-    public init(watch: AppleWatch) {
-        self.watch = watch
-    }
-    
-    public func declare(favoritesDidUpdate: Subscribe<Set<Team.ID>>) {
-        favoritesDidUpdate.subscribe(self, with: FavoritesToAppleWatch.favoritesDidUpdate)
-    }
-    
-    fileprivate func favoritesDidUpdate(_ favorites: Set<Team.ID>) {
-        watch.send(try! FavoritesPackage.init(favs: favorites).pack())
     }
     
 }
