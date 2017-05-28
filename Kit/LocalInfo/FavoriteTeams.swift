@@ -25,6 +25,10 @@ fileprivate extension CacheProtocol {
         }, set: self.set)
     }
     
+    func renaming(to newName: String) -> Cache<Key, Value> {
+        return Cache(cacheName: newName, retrieve: self.retrieve, set: self.set)
+    }
+    
 }
 
 public final class FavoriteTeams {
@@ -34,9 +38,12 @@ public final class FavoriteTeams {
     
     public let favoriteTeams: ReadOnlyCache<Void, Set<Team.ID>>
     
+    private lazy var favoriteTeamsSync: ReadOnlySyncCache<Void, Set<Team.ID>> = self.favoriteTeams.makeSyncCache()
+    
     public init(fileSystemCache: FileSystemCache) {
         self.fs = fileSystemCache
         let fileSystemTeams = fileSystemCache
+            .renaming(to: "favorites-disk")
             .mapJSONDictionary()
             .singleKey("favorite-teams")
             .mapMappable(of: Favorites.self)
@@ -64,6 +71,16 @@ public final class FavoriteTeams {
                 self.didUpdateFavorites.publish(new)
             }
         })
+    }
+    
+    public func isFavorite(teamWith id: Team.ID) -> Bool {
+        do {
+            let favs = try favoriteTeamsSync.retrieve()
+            return favs.contains(id)
+        } catch {
+            fault(error)
+            return false
+        }
     }
     
     public static func inDocumentsDirectory() -> FavoriteTeams {

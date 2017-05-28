@@ -10,6 +10,7 @@ import UIKit
 import TheGreatKit
 import Shallows
 import Avenues
+import Alba
 
 class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
     
@@ -19,6 +20,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
     // MARK: - Injections
     var resource: Resource<[Stage]>!
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
+    var isFavorite: (Team.ID) -> Bool = runtimeInject
 
     // MARK: - Services
     var avenue: SymmetricalAvenue<URL, UIImage>!
@@ -27,14 +29,23 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
     // MARK: - Cell Fillers
     var matchCellFiller: MatchCellFiller!
     
+    // MARK: - Connections
+    var shouldReloadData: Subscribe<Void>?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.subscribe()
         configure(tableView)
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
-        self.matchCellFiller = MatchCellFiller(avenue: avenue)
+        self.matchCellFiller = MatchCellFiller(avenue: avenue, isFavorite: self.isFavorite)
         configure(avenue)
         self.pullToRefreshActivities = make()
         self.resource.load(completion: reloadData(stages:source:))
+    }
+    
+    func subscribe() {
+        shouldReloadData?.subscribe(self.tableView, with: UITableView.reloadData)
+        shouldReloadData = nil
     }
     
     fileprivate func indexPathOfMostRelevantMatch(from stages: [Stage]) -> IndexPath {

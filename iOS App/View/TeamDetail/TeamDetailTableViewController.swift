@@ -45,6 +45,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     var resource: Resource<Team.Full>!
     var makeTeamDetailVC: (Group.Team) -> UIViewController = runtimeInject
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
+    var isFavorite: () -> Bool = runtimeInject
 
     // MARK: - Services
     var mainBadgeAvenue: SymmetricalAvenue<URL, UIImage>!
@@ -59,7 +60,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
         super.viewDidLoad()
         self.smallBadgesAvenue = makeAvenue(CGSize(width: 30, height: 30))
         self.mainBadgeAvenue = makeAvenue(CGSize(width: 50, height: 50))
-        self.matchCellFiller = MatchCellFiller(avenue: smallBadgesAvenue)
+        self.matchCellFiller = MatchCellFiller(avenue: smallBadgesAvenue, isFavorite: { _ in return false })
         self.teamGroupCellFiller = TeamGroupCellFiller(avenue: smallBadgesAvenue)
         self.pullToRefreshActivities = make()
         registerFor3DTouch()

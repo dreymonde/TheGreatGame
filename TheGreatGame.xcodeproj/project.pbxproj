@@ -154,6 +154,8 @@
 		7CA542021EDAB6DC00B4D1BD /* Resource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C357EDC1ED4828100CFCF3B /* Resource.swift */; };
 		7CA542031EDAB74000B4D1BD /* Resources.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C357ED91ED44C4900CFCF3B /* Resources.swift */; };
 		7CA542041EDAB85A00B4D1BD /* Resources.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C357ED91ED44C4900CFCF3B /* Resources.swift */; };
+		7CA542061EDABF2B00B4D1BD /* TGK+Alba.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA542051EDABF2B00B4D1BD /* TGK+Alba.swift */; };
+		7CA542071EDABF2B00B4D1BD /* TGK+Alba.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA542051EDABF2B00B4D1BD /* TGK+Alba.swift */; };
 		7CAAEFB91EC36B3900427D7E /* CombinedRefreshing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAAEFB81EC36B3900427D7E /* CombinedRefreshing.swift */; };
 		7CAAEFBB1EC36E1A00427D7E /* Sourceful.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAAEFBA1EC36E1A00427D7E /* Sourceful.swift */; };
 		7CAAEFBD1EC370F400427D7E /* APICachier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAAEFBC1EC370F400427D7E /* APICachier.swift */; };
@@ -398,6 +400,7 @@
 		7CA213821ECF3F9A00F088DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7CA2138B1ECF3FB500F088DD /* GameToday.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = GameToday.entitlements; path = GameToday/GameToday.entitlements; sourceTree = "<group>"; };
 		7CA2138F1ECF40DA00F088DD /* TodayExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodayExtension.swift; sourceTree = "<group>"; };
+		7CA542051EDABF2B00B4D1BD /* TGK+Alba.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TGK+Alba.swift"; sourceTree = "<group>"; };
 		7CAAEFB81EC36B3900427D7E /* CombinedRefreshing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CombinedRefreshing.swift; sourceTree = "<group>"; };
 		7CAAEFBA1EC36E1A00427D7E /* Sourceful.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sourceful.swift; sourceTree = "<group>"; };
 		7CAAEFBC1EC370F400427D7E /* APICachier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APICachier.swift; sourceTree = "<group>"; };
@@ -579,6 +582,7 @@
 				7C7916E61EBB245A0070E6C5 /* UIKit+TGA.swift */,
 				7C0EA6091EBA1C9000F50EB2 /* TheGreatKit.h */,
 				7C0EA60A1EBA1C9000F50EB2 /* Info.plist */,
+				7CA542051EDABF2B00B4D1BD /* TGK+Alba.swift */,
 			);
 			path = Kit;
 			sourceTree = "<group>";
@@ -1403,6 +1407,7 @@
 				7C0EA6431EBA1D1E00F50EB2 /* OutMap.swift in Sources */,
 				7CAAEFB91EC36B3900427D7E /* CombinedRefreshing.swift in Sources */,
 				7C0EA6471EBA1D1E00F50EB2 /* OutMapper.swift in Sources */,
+				7CA542061EDABF2B00B4D1BD /* TGK+Alba.swift in Sources */,
 				7C1D89981EC07BC2006F7841 /* Groups.swift in Sources */,
 				7CA213721ECEFF3700F088DD /* ResultExtensions.swift in Sources */,
 			);
@@ -1445,6 +1450,7 @@
 				7C6AA1711ED878E9003F2388 /* API.swift in Sources */,
 				7C13BC791ED8529A00588F5F /* Phone.swift in Sources */,
 				7C13BC611ED84B3D00588F5F /* OutMappable.swift in Sources */,
+				7CA542071EDABF2B00B4D1BD /* TGK+Alba.swift in Sources */,
 				7C6AA1751ED878F9003F2388 /* Shallows+Mapper.swift in Sources */,
 				7C13BC6E1ED84B5600588F5F /* NetworkActivity.swift in Sources */,
 				7C6AA1721ED878E9003F2388 /* Teams.swift in Sources */,

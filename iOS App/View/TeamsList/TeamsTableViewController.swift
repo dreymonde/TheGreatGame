@@ -27,20 +27,18 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
     
     // MARK: - Data source
     var teams: [Team.Compact] = []
-    var favorites: Set<Team.ID> = []
     
     // MARK: - Injections
     var resource: Resource<[Team.Compact]>!
-    var favoritesProvider: Local<Set<Team.ID>>!
     var makeTeamDetailVC: (Team.Compact) -> UIViewController = runtimeInject
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
+    
+    var isFavorite: (Team.ID) -> Bool = runtimeInject
     var updateFavorite: (Team.ID, Bool) -> () = runtimeInject
 
     // MARK: - Services
     var avenue: SymmetricalAvenue<URL, UIImage>!
     var pullToRefreshActivities: NetworkActivityIndicatorManager!
-    
-    let favoritesLoaded = DispatchSemaphore(value: 0)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,18 +47,10 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
         self.pullToRefreshActivities = make()
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
         configure(avenue)
-        self.favoritesProvider.retrieve { (favs) in
-            self.favorites = favs
-            self.favoritesLoaded.signal()
-        }
         self.resource.load(completion: reloadData(with:source:))
     }
     
     fileprivate func reloadData(with teams: [Team.Compact], source: Source) {
-        let awaiter = favoritesLoaded.wait(timeout: .now() + 2)
-        if awaiter == .timedOut {
-            fault("Timed out waiting for favorites to load")
-        }
         if self.teams.isEmpty && source.isAbsoluteTruth {
             self.teams = teams
             let ips = teams.indices.map({ IndexPath.init(row: $0, section: 0) })
@@ -122,14 +112,13 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
         if !afterImageDownload {
             avenue.prepareItem(at: badgeURL)
         }
-        cell.favoriteSwitch.isOn = favorites.contains(team.id)
+        cell.favoriteSwitch.isOn = isFavorite(team.id)
         cell.nameLabel.text = team.name
         cell.shortNameLabel.text = team.shortName
         cell.badgeImageView.setImage(avenue.item(at: badgeURL), afterDownload: true)
         cell.onSwitch = { isFavorite in
             if let ipath = self.tableView.indexPath(for: cell) {
                 let team = self.teams[ipath.row]
-                self.favorites.updatePresence(team.id, shouldBeInSet: isFavorite)
                 self.updateFavorite(team.id, isFavorite)
             }
         }

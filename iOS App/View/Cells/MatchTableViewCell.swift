@@ -43,15 +43,22 @@ final class MatchCellFiller : CellFiller {
     typealias Content = Match.Compact
     
     let avenue: Avenue<URL, URL, UIImage>
+    let isFavorite: (Team.ID) -> Bool
     
-    init(avenue: Avenue<URL, URL, UIImage>) {
+    init(avenue: Avenue<URL, URL, UIImage>, isFavorite: @escaping (Team.ID) -> Bool) {
         self.avenue = avenue
+        self.isFavorite = isFavorite
     }
     
     func setup(_ cell: MatchTableViewCell, with match: Match.Compact, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
         if !afterImageDownload {
             avenue.prepareItem(at: match.home.badgeURL)
             avenue.prepareItem(at: match.away.badgeURL)
+        }
+        if isFavorite(match.home.id) || isFavorite(match.away.id) {
+            cell.backgroundColor = UIColor(named: .favoriteBackground)
+        } else {
+            cell.backgroundColor = .white
         }
         cell.scoreTimeLabel.text = match.score?.string ?? "-:-"
         cell.homeTeamNameLabel.text = match.home.name
