@@ -22,11 +22,11 @@ public final class Resource<Value> : Prefetchable {
     fileprivate var local: ReadOnlyCache<Void, Value>
     fileprivate var provider: ReadOnlyCache<Void, Relevant<Value>>
     
-    fileprivate let manager: NetworkActivity.IndicatorManager
+    fileprivate let manager: NetworkActivityIndicatorManager
     
     public init(provider: ReadOnlyCache<Void, Relevant<Value>>,
          local: ReadOnlyCache<Void, Value> = .empty(),
-         networkActivity manager: NetworkActivity.IndicatorManager,
+         networkActivity manager: NetworkActivityIndicatorManager,
          value: Value? = nil) {
         self.manager = manager
         self.provider = provider
@@ -74,7 +74,7 @@ public final class Resource<Value> : Prefetchable {
         }
     }
     
-    public func reload(connectingToIndicator indicator: NetworkActivity.IndicatorManager, completion: @escaping (Value, Source) -> ()) {
+    public func reload(connectingToIndicator indicator: NetworkActivityIndicatorManager, completion: @escaping (Value, Source) -> ()) {
         indicator.increment()
         provider.retrieve { (result) in
             if result.isLastRequest {
@@ -111,7 +111,7 @@ extension Resource where Value : Mappable {
     
     public convenience init(local: Cache<Void, Editioned<Value>>,
                      remote: ReadOnlyCache<Void, Editioned<Value>>,
-                     networkActivity manager: NetworkActivity.IndicatorManager,
+                     networkActivity manager: NetworkActivityIndicatorManager,
                      value: Value? = nil) {
         let prov = local.withSource(.disk).combinedRefreshing(with: remote.withSource(.server),
                                                               isMoreRecent: { $0.value.isMoreRecent(than: $1.value) })

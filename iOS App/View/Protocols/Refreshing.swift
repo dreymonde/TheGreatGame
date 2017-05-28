@@ -17,8 +17,8 @@ protocol Refreshing : class {
 
 extension Refreshing {
     
-    func make() -> NetworkActivity.IndicatorManager {
-        return NetworkActivity.IndicatorManager(show: { [weak self] in
+    func make() -> NetworkActivityIndicatorManager {
+        return NetworkActivityIndicatorManager(show: { [weak self] in
             self?.refreshControl?.beginRefreshing()
             }, hide: { [weak self] in
                 self?.refreshControl?.endRefreshing()

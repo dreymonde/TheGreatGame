@@ -9,80 +9,76 @@
 import Foundation
 import UIKit
 
-public final class NetworkActivity {
+public final class NetworkActivityIndicatorManager {
     
-    public final class IndicatorManager {
-        
-        public static var isLogEnabled: Bool = false
-        
-        private func log(_ item: Any) {
-            if IndicatorManager.isLogEnabled {
-                print(item)
-            }
+    public static var isLogEnabled: Bool = false
+    
+    private func log(_ item: Any) {
+        if NetworkActivityIndicatorManager.isLogEnabled {
+            print(item)
         }
-        
-        private var counter = 0 {
-            didSet {
-                log("NetworkActivityCounter: \(counter)")
-                assert(Thread.isMainThread)
-                assert(counter >= 0)
-                updateVisibility()
-            }
-        }
-        
-        private var visibilityTimer: TheGreatKit.Timer?
-        private func updateVisibility() {
-            if counter > 0 {
-                show()
-            } else {
-                visibilityTimer = Timer(interval: 1.0) {
-                    self.hide()
-                }
-            }
-        }
-        
-        private func cancelTimer() {
-            visibilityTimer?.cancel()
-            visibilityTimer = nil
-        }
-        
-        private func show() {
-            cancelTimer()
-            _show()
-        }
-        
-        private func hide() {
-            cancelTimer()
-            _hide()
-        }
-        
-        private let _show: () -> ()
-        private let _hide: () -> ()
-        
-        public init(show: @escaping () -> (),
-                    hide: @escaping () -> ()) {
-            self._show = show
-            self._hide = hide
-        }
-        
-        public convenience init(setVisible: @escaping (Bool) -> ()) {
-            self.init(show: { setVisible(true) }, hide: { setVisible(false) })
-        }
-        
-        public func increment() {
-            DispatchQueue.main.async {
-                self.counter += 1
-            }
-        }
-        
-        public func decrement() {
-            DispatchQueue.main.async {
-                self.counter -= 1
-            }
-        }
-        
     }
-        
+    
+    private var counter = 0 {
+        didSet {
+            log("NetworkActivityCounter: \(counter)")
+            assert(Thread.isMainThread)
+            assert(counter >= 0)
+            updateVisibility()
+        }
+    }
+    
+    private var visibilityTimer: TheGreatKit.Timer?
+    private func updateVisibility() {
+        if counter > 0 {
+            show()
+        } else {
+            visibilityTimer = Timer(interval: 1.0) {
+                self.hide()
+            }
+        }
+    }
+    
+    private func cancelTimer() {
+        visibilityTimer?.cancel()
+        visibilityTimer = nil
+    }
+    
+    private func show() {
+        cancelTimer()
+        _show()
+    }
+    
+    private func hide() {
+        cancelTimer()
+        _hide()
+    }
+    
+    private let _show: () -> ()
+    private let _hide: () -> ()
+    
+    public init(show: @escaping () -> (),
+                hide: @escaping () -> ()) {
+        self._show = show
+        self._hide = hide
+    }
+    
+    public convenience init(setVisible: @escaping (Bool) -> ()) {
+        self.init(show: { setVisible(true) }, hide: { setVisible(false) })
+    }
+    
+    public func increment() {
+        DispatchQueue.main.async {
+            self.counter += 1
+        }
+    }
+    
+    public func decrement() {
+        DispatchQueue.main.async {
+            self.counter -= 1
+        }
+    }
+    
 }
 
 /// Essentially a cancellable `dispatch_after`.

@@ -38,7 +38,7 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
 
     // MARK: - Services
     var avenue: SymmetricalAvenue<URL, UIImage>!
-    var pullToRefreshActivities: NetworkActivity.IndicatorManager!
+    var pullToRefreshActivities: NetworkActivityIndicatorManager!
     
     let favoritesLoaded = DispatchSemaphore(value: 0)
     

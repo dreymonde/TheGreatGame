@@ -49,7 +49,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     // MARK: - Services
     var mainBadgeAvenue: SymmetricalAvenue<URL, UIImage>!
     var smallBadgesAvenue: SymmetricalAvenue<URL, UIImage>!
-    var pullToRefreshActivities: NetworkActivity.IndicatorManager!
+    var pullToRefreshActivities: NetworkActivityIndicatorManager!
     
     // MARK: - Cell Fillers
     var matchCellFiller: MatchCellFiller!

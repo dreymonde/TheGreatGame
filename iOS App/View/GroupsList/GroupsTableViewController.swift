@@ -23,7 +23,7 @@ class GroupsTableViewController: TheGreatGame.TableViewController, Refreshing {
 
     // MARK: - Services
     var avenue: SymmetricalAvenue<URL, UIImage>!
-    var pullToRefreshActivities: NetworkActivity.IndicatorManager!
+    var pullToRefreshActivities: NetworkActivityIndicatorManager!
     
     // MARK: - Cell Fillers
     var teamGroupCellFiller: TeamGroupCellFiller!

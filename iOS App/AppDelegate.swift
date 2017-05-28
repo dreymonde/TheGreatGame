@@ -26,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //ShallowsLog.isEnabled = true
         Alba.InformBureau.isEnabled = true
         Alba.InformBureau.Logger.enable()
-        //NetworkActivity.IndicatorManager.isLogEnabled = true
+        //NetworkActivityIndicatorManager.isLogEnabled = true
     }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
@@ -61,11 +61,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
-extension NetworkActivity.IndicatorManager {
+extension NetworkActivityIndicatorManager {
     
-    public static var application: NetworkActivity.IndicatorManager {
+    public static var application: NetworkActivityIndicatorManager {
         let application = UIApplication.shared
-        return NetworkActivity.IndicatorManager(setVisible: { application.isNetworkActivityIndicatorVisible = $0 })
+        return NetworkActivityIndicatorManager(setVisible: { application.isNetworkActivityIndicatorVisible = $0 })
     }
     
 }
