@@ -10,6 +10,9 @@ import Foundation
 
 public enum Match {
     
+    public static let duration = TimeInterval(60 * 100)
+    public static let durationAndAftermath = TimeInterval(60 * 130)
+    
     public struct ID : RawRepresentable {
         
         public var rawID: Int
@@ -53,7 +56,7 @@ public enum Match {
         public var teams: [Team] {
             return [home, away]
         }
-        
+                
     }
     
 }
@@ -148,13 +151,23 @@ extension Matches : Mappable {
     
 }
 
-extension Sequence where Iterator.Element == Match.Compact {
+public protocol HasStartDate {
+    var date: Date { get }
+}
+
+extension Match.Compact : HasStartDate { }
+
+extension Sequence where Iterator.Element : HasStartDate {
     
-    public func mostRelevant() -> Match.Compact? {
+    public func mostRelevant() -> Iterator.Element? {
         return sorted(by: { first, second in
             let now = Date()
             return abs(now.timeIntervalSince(first.date)) < abs(now.timeIntervalSince(second.date))
         }).first
+    }
+    
+    public func firstToStart(after givenDate: Date) -> Iterator.Element? {
+        return filter({ $0.date > givenDate }).sorted(by: { $0.date < $1.date }).first
     }
     
 }

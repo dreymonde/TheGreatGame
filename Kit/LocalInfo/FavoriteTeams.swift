@@ -10,9 +10,9 @@ import Foundation
 import Shallows
 import Alba
 
-fileprivate extension CacheProtocol {
+extension CacheProtocol {
     
-    func defaulting(to defaultValue: Value) -> Cache<Key, Value> {
+    public func defaulting(to defaultValue: Value) -> Cache<Key, Value> {
         return Cache(cacheName: self.cacheName, retrieve: { (key, completion) in
             self.retrieve(forKey: key, completion: { (result) in
                 switch result {
@@ -25,7 +25,7 @@ fileprivate extension CacheProtocol {
         }, set: self.set)
     }
     
-    func renaming(to newName: String) -> Cache<Key, Value> {
+    public func renaming(to newName: String) -> Cache<Key, Value> {
         return Cache(cacheName: newName, retrieve: self.retrieve, set: self.set)
     }
     

@@ -23,7 +23,8 @@ final class WatchExtension {
     init() {
         self.phone = Phone()
         self.imageCache = ImageFetch(diskCache: FileSystemCache.inDirectory(.cachesDirectory, appending: "dev-1-images").mapKeys({ $0.absoluteString }).mapImage())
-        self.api = API.gitHub(urlSession: URLSession.init(configuration: .default))
+//        self.api = API.gitHub(urlSession: URLSession.init(configuration: .default))
+        self.api = API.macBookSteve()
         self.apiCache = APICache.inLocalCachesDirectory()
     }
     

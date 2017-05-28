@@ -47,7 +47,6 @@ class MatchesInterfaceController: WKInterfaceController {
         for (match, index) in zip(matches, matches.indices) {
             if match.teams.map({ $0.badgeURL }).contains(url) {
                 let controller = table.rowController(at: index) as! MatchCellController
-                print("Setting image!")
                 configure(controller, with: match, forRowAt: index)
             }
         }
