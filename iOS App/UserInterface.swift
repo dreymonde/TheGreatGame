@@ -27,7 +27,7 @@ final class UserInterface {
     }
     
     static func makeResources(with logic: Application) -> Resources {
-        let resources = Resources(application: logic)
+        let resources = Resources(api: logic.api, apiCache: logic.apiCache, networkActivity: .application)
         return resources
     }
     

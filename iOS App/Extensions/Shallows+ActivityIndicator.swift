@@ -8,21 +8,11 @@
 
 import Foundation
 import Shallows
-import TheGreatKit
 import Avenues
-
-extension NetworkActivity.IndicatorManager {
-    
-    public static var application: NetworkActivity.IndicatorManager {
-        let application = UIApplication.shared
-        return NetworkActivity.IndicatorManager(setVisible: { application.isNetworkActivityIndicatorVisible = $0 })
-    }
-    
-}
 
 extension ReadOnlyCache {
     
-    public func connectingNetworkActivityIndicator(manager: NetworkActivity.IndicatorManager = .application) -> ReadOnlyCache<Key, Value> {
+    public func connectingNetworkActivityIndicator(manager: NetworkActivity.IndicatorManager) -> ReadOnlyCache<Key, Value> {
         return ReadOnlyCache.init(cacheName: self.cacheName, retrieve: { (key, completion) in
             self.retrieve(forKey: key, completion: { (result) in
                 manager.decrement()
@@ -36,7 +26,7 @@ extension ReadOnlyCache {
 
 extension ReadOnlyCache where Value : HasSource {
     
-    public func sourceful_connectingNetworkActivityIndicator(manager: NetworkActivity.IndicatorManager = .application) -> ReadOnlyCache<Key, Value> {
+    public func sourceful_connectingNetworkActivityIndicator(manager: NetworkActivity.IndicatorManager) -> ReadOnlyCache<Key, Value> {
         return ReadOnlyCache.init(cacheName: self.cacheName, retrieve: { (key, completion) in
             self.retrieve(forKey: key, completion: { (result) in
                 if result.isLastRequest {
@@ -52,7 +42,7 @@ extension ReadOnlyCache where Value : HasSource {
 
 extension CacheProtocol {
     
-    public func connectingNetworkActivityIndicator(manager: NetworkActivity.IndicatorManager = .application) -> Cache<Key, Value> {
+    public func connectingNetworkActivityIndicator(manager: NetworkActivity.IndicatorManager) -> Cache<Key, Value> {
         return Cache.init(cacheName: self.cacheName, retrieve: { (key, completion) in
             self.retrieve(forKey: key, completion: { (result) in
                 manager.decrement()
@@ -72,7 +62,7 @@ extension CacheProtocol {
 
 extension ProcessorProtocol {
     
-    public func connectingNetworkActivityIndicator(manager: NetworkActivity.IndicatorManager = .application) -> Processor<Key, Value> {
+    public func connectingNetworkActivityIndicator(manager: NetworkActivity.IndicatorManager) -> Processor<Key, Value> {
         return Processor.init(start: { (key, completion) in
             self.start(key: key, completion: { (result) in
                 manager.decrement()

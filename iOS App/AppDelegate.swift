@@ -61,3 +61,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+extension NetworkActivity.IndicatorManager {
+    
+    public static var application: NetworkActivity.IndicatorManager {
+        let application = UIApplication.shared
+        return NetworkActivity.IndicatorManager(setVisible: { application.isNetworkActivityIndicatorVisible = $0 })
+    }
+    
+}

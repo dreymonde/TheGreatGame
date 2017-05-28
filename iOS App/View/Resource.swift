@@ -8,36 +8,39 @@
 
 import Foundation
 import Shallows
-import TheGreatKit
 
-protocol Prefetchable {
+public protocol Prefetchable {
     
     func prefetch()
     
 }
 
-final class Resource<Value> : Prefetchable {
+public final class Resource<Value> : Prefetchable {
     
     fileprivate var value: Value?
     
     fileprivate var local: ReadOnlyCache<Void, Value>
     fileprivate var provider: ReadOnlyCache<Void, Relevant<Value>>
     
-    init(provider: ReadOnlyCache<Void, Relevant<Value>>,
+    fileprivate let manager: NetworkActivity.IndicatorManager
+    
+    public init(provider: ReadOnlyCache<Void, Relevant<Value>>,
          local: ReadOnlyCache<Void, Value> = .empty(),
+         networkActivity manager: NetworkActivity.IndicatorManager,
          value: Value? = nil) {
+        self.manager = manager
         self.provider = provider
-            .sourceful_connectingNetworkActivityIndicator()
+            .sourceful_connectingNetworkActivityIndicator(manager: manager)
             .mainThread()
         self.local = local
         self.value = value
     }
     
-    func getValue() -> Value? {
+    public func getValue() -> Value? {
         return value
     }
     
-    func prefetch() {
+    public func prefetch() {
         local.retrieve { (result) in
             assert(Thread.isMainThread)
             printWithContext("Prefetched \(Value.self)")
@@ -47,7 +50,7 @@ final class Resource<Value> : Prefetchable {
         }
     }
     
-    func load(completion: @escaping (Value, Source) -> ()) {
+    public func load(completion: @escaping (Value, Source) -> ()) {
         if let prefetched = getValue() {
             printWithContext("Completing with previously prefetched")
             completion(prefetched, .memory)
@@ -71,7 +74,7 @@ final class Resource<Value> : Prefetchable {
         }
     }
     
-    func reload(connectingToIndicator indicator: NetworkActivity.IndicatorManager, completion: @escaping (Value, Source) -> ()) {
+    public func reload(connectingToIndicator indicator: NetworkActivity.IndicatorManager, completion: @escaping (Value, Source) -> ()) {
         indicator.increment()
         provider.retrieve { (result) in
             if result.isLastRequest {
@@ -83,17 +86,17 @@ final class Resource<Value> : Prefetchable {
     
 }
 
-final class Local<Value> {
+public final class Local<Value> {
     
     private let provider: ReadOnlyCache<Void, Value>
     private var value: Value?
     
-    init(provider: ReadOnlyCache<Void, Value>) {
+    public init(provider: ReadOnlyCache<Void, Value>) {
         self.provider = provider
             .mainThread()
     }
     
-    func retrieve(_ completion: @escaping (Value) -> ()) {
+    public func retrieve(_ completion: @escaping (Value) -> ()) {
         provider.retrieve { (result) in
             assert(Thread.isMainThread)
             if let value = result.asOptional {
@@ -106,8 +109,9 @@ final class Local<Value> {
 
 extension Resource where Value : Mappable {
     
-    convenience init(local: Cache<Void, Editioned<Value>>,
+    public convenience init(local: Cache<Void, Editioned<Value>>,
                      remote: ReadOnlyCache<Void, Editioned<Value>>,
+                     networkActivity manager: NetworkActivity.IndicatorManager,
                      value: Value? = nil) {
         let prov = local.withSource(.disk).combinedRefreshing(with: remote.withSource(.server),
                                                               isMoreRecent: { $0.value.isMoreRecent(than: $1.value) })
@@ -115,7 +119,7 @@ extension Resource where Value : Mappable {
         let loc = local.asReadOnlyCache()
             .mainThread()
             .mapValues({ $0.content })
-        self.init(provider: prov, local: loc, value: value)
+        self.init(provider: prov, local: loc, networkActivity: manager, value: value)
     }
 
     
@@ -123,9 +127,10 @@ extension Resource where Value : Mappable {
 
 extension Resource {
     
-    func map<OtherValue>(_ transform: @escaping (Value) -> OtherValue) -> Resource<OtherValue> {
+    public func map<OtherValue>(_ transform: @escaping (Value) -> OtherValue) -> Resource<OtherValue> {
         return Resource<OtherValue>(provider: provider.mapValues({ $0.map(transform) }),
                                     local: local.mapValues(transform),
+                                    networkActivity: self.manager,
                                     value: value.map(transform))
     }
     

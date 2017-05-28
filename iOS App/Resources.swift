@@ -7,26 +7,25 @@
 //
 
 import Foundation
-import TheGreatKit
 import Shallows
 
-final class Resources {
+public final class Resources {
     
-    var stages: Resource<[Stage]>
-    var teams: Resource<[Team.Compact]>
-    var groups: Resource<[Group.Compact]>
+    public var stages: Resource<[Stage]>
+    public var teams: Resource<[Team.Compact]>
+    public var groups: Resource<[Group.Compact]>
     
-    var fullTeam: (Team.ID) -> Resource<Team.Full>
+    public var fullTeam: (Team.ID) -> Resource<Team.Full>
     
-    var all: [Prefetchable] {
+    public var all: [Prefetchable] {
         return [stages, teams, groups]
     }
     
-    func prefetchAll() {
+    public func prefetchAll() {
         all.forEach({ $0.prefetch() })
     }
     
-    init(stages: Resource<[Stage]>, teams: Resource<[Team.Compact]>, groups: Resource<[Group.Compact]>, fullTeam: @escaping (Team.ID) -> Resource<Team.Full>) {
+    public init(stages: Resource<[Stage]>, teams: Resource<[Team.Compact]>, groups: Resource<[Group.Compact]>, fullTeam: @escaping (Team.ID) -> Resource<Team.Full>) {
         self.stages = stages
         self.teams = teams
         self.groups = groups
@@ -37,32 +36,35 @@ final class Resources {
 
 extension Resources {
     
-    convenience init(application: Application) {
-        self.init(stages: Resources.makeStagesResource(application: application),
-                  teams: Resources.makeTeamsResource(application: application),
-                  groups: Resources.makeGroupsResource(application: application),
-                  fullTeam: Resources.makeFullTeamsResources(application: application))
+    public convenience init(api: API, apiCache: APICache, networkActivity: NetworkActivity.IndicatorManager) {
+        self.init(stages: Resources.makeStagesResource(api: api, apiCache: apiCache, networkActivity: networkActivity),
+                  teams: Resources.makeTeamsResource(api: api, apiCache: apiCache, networkActivity: networkActivity),
+                  groups: Resources.makeGroupsResource(api: api, apiCache: apiCache, networkActivity: networkActivity),
+                  fullTeam: Resources.makeFullTeamsResources(api: api, apiCache: apiCache, networkActivity: networkActivity))
     }
     
-    private static func makeStagesResource(application: Application) -> Resource<[Stage]> {
-        return Resource<Stages>(local: application.apiCache.matches.stages,
-                                remote: application.api.matches.stages)
+    public static func makeStagesResource(api: API, apiCache: APICache, networkActivity: NetworkActivity.IndicatorManager) -> Resource<[Stage]> {
+        return Resource<Stages>(local: apiCache.matches.stages,
+                                remote: api.matches.stages,
+                                networkActivity: networkActivity)
             .map({ $0.stages })
     }
     
-    private static func makeTeamsResource(application: Application) -> Resource<[Team.Compact]> {
-        return Resource<Teams>(local: application.apiCache.teams.all,
-                               remote: application.api.teams.all)
+    public static func makeTeamsResource(api: API, apiCache: APICache, networkActivity: NetworkActivity.IndicatorManager) -> Resource<[Team.Compact]> {
+        return Resource<Teams>(local: apiCache.teams.all,
+                               remote: api.teams.all,
+                               networkActivity: networkActivity)
             .map({ $0.teams })
     }
     
-    private static func makeGroupsResource(application: Application) -> Resource<[Group.Compact]> {
-        return Resource<Groups>(local: application.apiCache.groups.all,
-                                remote: application.api.groups.all)
+    public static func makeGroupsResource(api: API, apiCache: APICache, networkActivity: NetworkActivity.IndicatorManager) -> Resource<[Group.Compact]> {
+        return Resource<Groups>(local: apiCache.groups.all,
+                                remote: api.groups.all,
+                                networkActivity: networkActivity)
             .map({ $0.groups })
     }
     
-    private static func makeFullTeamsResources(application: Application) -> (Team.ID) -> Resource<Team.Full> {
+    public static func makeFullTeamsResources(api: API, apiCache: APICache, networkActivity: NetworkActivity.IndicatorManager) -> (Team.ID) -> Resource<Team.Full> {
         var existing: [Team.ID : Resource<Team.Full>] = [:]
         let safety = DispatchQueue(label: "resources-pool-safety-queue")
         return { id in
@@ -70,8 +72,9 @@ extension Resources {
                 if let already = existing[id] {
                     return already
                 } else {
-                    let new = Resource<Team.Full>(local: application.apiCache.teams.fullTeam.singleKey(id),
-                                                  remote: application.api.teams.fullTeam.singleKey(id))
+                    let new = Resource<Team.Full>(local: apiCache.teams.fullTeam.singleKey(id),
+                                                  remote: api.teams.fullTeam.singleKey(id),
+                                                  networkActivity: networkActivity)
                     existing[id] = new
                     return new
                 }
