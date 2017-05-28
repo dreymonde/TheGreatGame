@@ -79,6 +79,8 @@ public final class NetworkActivityIndicatorManager {
         }
     }
     
+    public static let none = NetworkActivityIndicatorManager(setVisible: { _ in })
+    
 }
 
 /// Essentially a cancellable `dispatch_after`.

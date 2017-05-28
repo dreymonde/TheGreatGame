@@ -94,16 +94,29 @@ public final class APICache {
         self.groups = groups
     }
     
+    public convenience init(cache: Cache<String, Data>) {
+        self.init(teams: TeamsAPICache.init(dataProvider: cache),
+                  matches: MatchesAPICache.init(dataProvider: cache),
+                  groups: GroupsAPICache.init(dataProvider: cache))
+    }
+    
     public static func dev() -> APICache {
         printWithContext("Caching API to disk disabled")
         let sharedDataLayer = NSCacheCache<NSString, NSData>()
             .toNonObjCKeys()
             .mapValues(transformIn: { $0 as Data },
                        transformOut: { $0 as NSData })
-        let tac = TeamsAPICache(dataProvider: sharedDataLayer)
-        let mac = MatchesAPICache(dataProvider: sharedDataLayer)
-        let gac = GroupsAPICache(dataProvider: sharedDataLayer)
-        return APICache(teams: tac, matches: mac, groups: gac)
+        return APICache(cache: sharedDataLayer)
+    }
+    
+    public static func inLocalCachesDirectory() -> APICache {
+        let fs = FileSystemCache.inDirectory(.cachesDirectory, appending: "watch-cache-1")
+        let sharedDataLayer = NSCacheCache<NSString, NSData>()
+            .toNonObjCKeys()
+            .mapValues(transformIn: { $0 as Data },
+                       transformOut: { $0 as NSData })
+            .combined(with: fs)
+        return APICache(cache: sharedDataLayer)
     }
     
     public static func inSharedCachesDirectory() -> APICache {
@@ -113,11 +126,7 @@ public final class APICache {
             .mapValues(transformIn: { $0 as Data },
                        transformOut: { $0 as NSData })
             .combined(with: fs)
-        let tac = TeamsAPICache(dataProvider: sharedDataLayer)
-        let mac = MatchesAPICache(dataProvider: sharedDataLayer)
-        let gac = GroupsAPICache(dataProvider: sharedDataLayer)
-        return APICache(teams: tac, matches: mac, groups: gac)
-
+        return APICache(cache: sharedDataLayer)
     }
     
 }

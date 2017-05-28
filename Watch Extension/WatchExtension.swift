@@ -18,11 +18,13 @@ final class WatchExtension {
     let phone: Phone
     let imageCache: ImageFetch
     let api: API
+    let apiCache: APICache
     
     init() {
         self.phone = Phone()
         self.imageCache = ImageFetch(diskCache: FileSystemCache.inDirectory(.cachesDirectory, appending: "dev-1-images").mapKeys({ $0.absoluteString }).mapImage())
-        self.api = API.macBookSteve()
+        self.api = API.gitHub(urlSession: URLSession.init(configuration: .default))
+        self.apiCache = APICache.inLocalCachesDirectory()
     }
     
     var updates: Subscribe<Set<Team.ID>> {

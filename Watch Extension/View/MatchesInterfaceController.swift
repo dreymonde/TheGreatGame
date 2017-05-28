@@ -19,7 +19,7 @@ class MatchesInterfaceController: WKInterfaceController {
     let matchRowType = "MatchCompact"
     
     struct Context {
-        let provider: ReadOnlyCache<Void, [Match.Compact]>
+        let resource: Resource<[Match.Compact]>
         let makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage>
     }
     
@@ -34,13 +34,7 @@ class MatchesInterfaceController: WKInterfaceController {
         self.avenue = self.context.makeAvenue(CGSize.init(width: 25, height: 25))
         printWithContext()
         configure(avenue)
-        self.context.provider.mainThread().retrieve { (result) in
-            assert(Thread.isMainThread)
-            if let matches = result.asOptional {
-                self.reload(with: matches)
-            }
-        }
-        // Configure interface objects here.
+        self.context.resource.load(completion: reload(with:source:))
     }
     
     private func configure(_ avenue: SymmetricalAvenue<URL, UIImage>) {
@@ -59,7 +53,7 @@ class MatchesInterfaceController: WKInterfaceController {
         }
     }
     
-    func reload(with matches: [Match.Compact]) {
+    func reload(with matches: [Match.Compact], source: Source) {
         self.matches = matches
         table.setNumberOfRows(matches.count, withRowType: matchRowType)
         for (match, index) in zip(matches, matches.indices) {
@@ -71,7 +65,7 @@ class MatchesInterfaceController: WKInterfaceController {
     func configure(_ cell: MatchCellController, with match: Match.Compact, forRowAt index: Int) {
         avenue.prepareItem(at: match.home.badgeURL)
         avenue.prepareItem(at: match.away.badgeURL)
-        cell.scoreLabel.setText("-:-")
+        cell.scoreLabel.setText(match.score?.demo_string ?? "-:-")
         cell.homeBadgeImage.setImage(avenue.item(at: match.home.badgeURL))
         cell.awayBadgeImage.setImage(avenue.item(at: match.away.badgeURL))
     }

@@ -27,6 +27,11 @@ public enum Match {
     public struct Score {
         public let home: Int
         public let away: Int
+        
+        public var demo_string: String {
+            return "\(home):\(away)"
+        }
+        
     }
     
     public struct Team {

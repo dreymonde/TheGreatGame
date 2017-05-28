@@ -18,11 +18,11 @@
                                 <tableRow identifier="MatchCompact" id="wpz-Oj-LWN" customClass="MatchCellController" customModule="Watch_Extension">
                                     <group key="rootItem" width="1" alignment="left" id="gO6-0v-mp6">
                                         <items>
-                                            <imageView width="25" height="25" alignment="left" verticalAlignment="center" alpha="0.0" id="OVm-rs-KXT"/>
+                                            <imageView width="25" height="25" alignment="left" verticalAlignment="center" id="OVm-rs-KXT"/>
                                             <label alignment="center" verticalAlignment="center" text="-:-" id="ULF-4F-fKL">
                                                 <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
                                             </label>
-                                            <imageView width="25" height="25" alignment="right" verticalAlignment="center" alpha="0.0" id="7nt-yr-fy6"/>
+                                            <imageView width="25" height="25" alignment="right" verticalAlignment="center" id="7nt-yr-fy6"/>
                                         </items>
                                         <edgeInsets key="margins" left="14" right="14" top="0.0" bottom="0.0"/>
                                     </group>
