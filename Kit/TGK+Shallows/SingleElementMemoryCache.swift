@@ -53,3 +53,46 @@ public final class SingleElementMemoryCache<Value> : CacheProtocol {
     
 }
 
+public enum TemporaryMemoryCacheError : Error {
+    case expired
+}
+
+public final class TemporaryMemoryCache<Key : Hashable, Value> : CacheProtocol {
+    
+    private let queue = DispatchQueue(label: "temporary-memory-cache")
+    private let internalCache: MemoryCache<Key, Value>
+    private let interval: TimeInterval
+    private var expired: Bool
+    
+    public init(interval: TimeInterval) {
+        self.internalCache = MemoryCache()
+        self.interval = interval
+        self.expired = false
+        self.startExpiration()
+    }
+    
+    private func startExpiration() {
+        self.queue.asyncAfter(deadline: .now() + interval) {
+            self.expired = true
+        }
+    }
+    
+    public func retrieve(forKey key: Key, completion: @escaping (Result<Value>) -> ()) {
+        queue.sync {
+            if self.expired {
+                completion(Result.failure(TemporaryMemoryCacheError.expired))
+            } else {
+                internalCache.retrieve(forKey: key, completion: completion)
+            }
+        }
+    }
+    
+    public func set(_ value: Value, forKey key: Key, completion: @escaping (Result<Void>) -> ()) {
+        queue.sync {
+            self.expired = false
+            internalCache.set(value, forKey: key, completion: completion)
+            self.startExpiration()
+        }
+    }
+    
+}

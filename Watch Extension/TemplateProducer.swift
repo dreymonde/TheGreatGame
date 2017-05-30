@@ -13,26 +13,28 @@ import TheGreatKit
 
 final class TemplateProducer {
     
-    func template(for match: Match.Compact, family: CLKComplicationFamily) -> CLKComplicationTemplate? {
+    
+    
+    func template(for match: Match.Full, family: CLKComplicationFamily) -> CLKComplicationTemplate? {
         return producer(for: family)(match)
     }
     
-    private func producer(for family: CLKComplicationFamily) -> (Match.Compact) -> CLKComplicationTemplate? {
+    private func producer(for family: CLKComplicationFamily) -> (Match.Full) -> CLKComplicationTemplate? {
         switch family {
         case .modularSmall:
             return modularSmallTemplate(for:)
         case .utilitarianSmall, .utilitarianSmallFlat:
             return utilitarianSmallTemplate(for:)
         default:
-            return nope(match:)
+            return nope
         }
     }
     
-    private func nope(match: Match.Compact) -> CLKComplicationTemplate? {
+    private func nope(match: Match.Full) -> CLKComplicationTemplate? {
         return nil
     }
     
-    private func utilitarianSmallTemplate(for match: Match.Compact) -> CLKComplicationTemplate? {
+    private func utilitarianSmallTemplate(for match: Match.Full) -> CLKComplicationTemplate? {
         if let score = match.score {
             let text = "\(match.home.shortName) \(score.demo_string) \(match.away.shortName)"
             let shortText = "\(match.home.shortName.firstTwoChars()) \(score.demo_string) \(match.away.shortName.firstTwoChars())"
@@ -48,13 +50,13 @@ final class TemplateProducer {
         }
     }
     
-    private func modularSmallTemplate(for match: Match.Compact) -> CLKComplicationTemplate? {
+    private func modularSmallTemplate(for match: Match.Full) -> CLKComplicationTemplate? {
         if let score = match.score {
             return CLKComplicationTemplateModularSmallColumnsText() <- {
                 $0.row1Column1TextProvider = CLKSimpleTextProvider(text: match.home.shortName)
                 $0.row2Column1TextProvider = CLKSimpleTextProvider(text: match.away.shortName)
-                $0.row1Column2TextProvider = CLKSimpleTextProvider(text: String(score.home))
-                $0.row2Column2TextProvider = CLKSimpleTextProvider(text: String(score.away))
+                $0.row1Column2TextProvider = scoreTextProvder(score.home)
+                $0.row2Column2TextProvider = scoreTextProvder(score.away)
             }
         } else {
             return CLKComplicationTemplateModularSmallStackText() <- {
@@ -64,7 +66,11 @@ final class TemplateProducer {
         }
     }
     
-    private func shortestOneLineMatchTextProvider(match: Match.Compact) -> CLKSimpleTextProvider {
+    private func scoreTextProvder(_ score: Int) -> CLKSimpleTextProvider {
+        return CLKSimpleTextProvider(text: score < 0 ? "?" : String(score))
+    }
+    
+    private func shortestOneLineMatchTextProvider(match: Match.Full) -> CLKSimpleTextProvider {
         let text = "\(match.home.shortName.firstTwoChars()):\(match.away.shortName.firstTwoChars())"
         return CLKSimpleTextProvider(text: text)
     }

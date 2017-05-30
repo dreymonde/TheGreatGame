@@ -14,6 +14,7 @@ public protocol MatchProtocol {
     var home: Match.Team { get }
     var away: Match.Team { get }
     var date: Date { get }
+    var endDate: Date { get }
     
 }
 
@@ -29,6 +30,7 @@ public enum Match {
     
     public static let duration = TimeInterval(60 * 100)
     public static let durationAndAftermath = TimeInterval(60 * 130)
+    public static let aftermath = TimeInterval(60 * 30)
     
     public struct ID : RawRepresentable {
         
@@ -85,7 +87,7 @@ public enum Match {
         
     }
     
-    public struct Full {
+    public struct Full : MatchProtocol {
         
         public let id: Match.ID
         public let home: Team
@@ -93,8 +95,8 @@ public enum Match {
         public let date: Date
         public let endDate: Date
         public let location: String
-        public let score: Score?
-        public let events: [Event]
+        public var score: Score?
+        public var events: [Event]
         
         public static func reevaluateScore(from events: [Event]) -> Score? {
             guard events.contains(where: { $0.kind == .start }) else {
@@ -103,6 +105,18 @@ public enum Match {
             let goalsHome = events.filter({ $0.kind == .goalHome }).count
             let goalsAway = events.filter({ $0.kind == .goalAway }).count
             return Score(home: goalsHome, away: goalsAway)
+        }
+        
+        public func withUnpredictableScore() -> Full {
+            var copy = self
+            if copy.score != nil {
+                copy.score = Score(home: -1, away: -1)
+            }
+            return copy
+        }
+        
+        public func date(afterMinutesFromStart minutes: Int) -> Date {
+            return self.date.addingTimeInterval(TimeInterval(60 * minutes))
         }
         
         public func snapshot(beforeMinute minute: Int) -> Full {
@@ -115,6 +129,16 @@ public enum Match {
                         location: location,
                         score: Full.reevaluateScore(from: eventsBeforeMinute),
                         events: eventsBeforeMinute)
+        }
+        
+        public func allSnapshots() -> [(Full, minute: Int)] {
+            return events.map({ (event) in
+                return (self.snapshot(beforeMinute: event.minute), minute: event.minute)
+            })
+        }
+        
+        public func notStartedSnapshot() -> Full {
+            return snapshot(beforeMinute: -1)
         }
         
     }
@@ -292,6 +316,7 @@ public protocol HasStartDate {
 }
 
 extension Match.Compact : HasStartDate { }
+extension Match.Full : HasStartDate { }
 
 extension Sequence where Iterator.Element : HasStartDate {
     

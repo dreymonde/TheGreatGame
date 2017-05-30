@@ -12,11 +12,11 @@ import Shallows
 
 extension ComplicationDataSource {
     
-    public static let main = ComplicationDataSource(provider: ExtensionDelegate.watchExtension.apiCache.matches.all
+    public static let main = ComplicationDataSource(provider: ExtensionDelegate.watchExtension.apiCache.matches.allFull
         .asReadOnlyCache()
         .mapValues({ $0.content.matches }))
 
-    public static let dev_macbook = ComplicationDataSource(provider: API.macBookSteve().matches.all
+    public static let dev_macbook = ComplicationDataSource(provider: API.macBookSteve().matches.allFull
         .mapValues({ $0.content.matches }))
     
 }
@@ -31,6 +31,10 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     func getSupportedTimeTravelDirections(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimeTravelDirections) -> Void) {
         printWithContext()
         handler([.forward, .backward])
+    }
+    
+    func getTimelineAnimationBehavior(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimelineAnimationBehavior) -> Void) {
+        handler(.grouped)
     }
     
     func getTimelineStartDate(for complication: CLKComplication, withHandler handler: @escaping (Date?) -> Void) {
@@ -53,8 +57,12 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     func getCurrentTimelineEntry(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimelineEntry?) -> Void) {
         // Call the handler with the current timeline entry
         printWithContext()
-        getTimelineEntries(for: complication, before: Date(), limit: 1) { (entries) in
-            handler(entries?.first)
+        dataSource.currentMatch { (snapshot) in
+            if let snapshot = snapshot {
+                handler(self.entry(with: snapshot, for: complication))
+            } else {
+                handler(nil)
+            }
         }
     }
     
@@ -82,10 +90,11 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         }
     }
     
-    func entry(with match: ComplicationDataSource.Mtch, for complication: CLKComplication) -> CLKComplicationTimelineEntry? {
+    func entry(with match: ComplicationDataSource.MatchSnapshot, for complication: CLKComplication) -> CLKComplicationTimelineEntry? {
         if let template = producer.template(for: match.match, family: complication.family) {
             return CLKComplicationTimelineEntry(date: match.timelineDate,
-                                                complicationTemplate: template)
+                                                complicationTemplate: template,
+                                                timelineAnimationGroup: printed(String(match.match.id.rawID)))
         }
         return nil
     }
@@ -94,7 +103,10 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     
     func getLocalizableSampleTemplate(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTemplate?) -> Void) {
         // This method will be called once per supported complication, and the results will be cached
-        handler(nil)
+        printWithContext()
+        let sample = dataSource.placeholderMatch
+        let template = producer.template(for: sample, family: complication.family)
+        handler(template)
     }
     
 }

@@ -21,22 +21,33 @@ func asOptional<T>(_ completion: @escaping (T?) -> ()) -> (Result<T>) -> () {
     return { completion($0.asOptional) }
 }
 
+public func endsLater(_ lhs: Match.Full, _ rhs: Match.Full) -> Match.Full {
+    if lhs.endDate > rhs.endDate {
+        return lhs
+    }
+    return rhs
+}
+
 public final class ComplicationDataSource {
     
-    public struct Mtch {
-        public let match: Match.Compact
+    public struct MatchSnapshot {
+        public let match: Match.Full
         public let timelineDate: Date
         
-        public init(match: Match.Compact, timelineDate: Date) {
+        public init(match: Match.Full, timelineDate: Date) {
             self.match = match
             self.timelineDate = timelineDate
         }
     }
     
-    public let matches: ReadOnlyCache<Void, [Match.Compact]>
+    public let matches: ReadOnlyCache<Void, [Match.Full]>
     
-    public init(provider: ReadOnlyCache<Void, [Match.Compact]>) {
-        self.matches = provider
+    public init(provider: ReadOnlyCache<Void, [Match.Full]>) {
+        let finalProvider = provider.mapValues({ $0.removingStartingAtTheSameDate(with: endsLater) })
+        self.matches = TemporaryMemoryCache<Int, [Match.Full]>(interval: 10)
+            .singleKey(0)
+            .backed(by: finalProvider, pullingFromBack: true)
+            .asReadOnlyCache()
     }
     
     public func timelineStartDate(completion: @escaping (Date?) -> ()) {
@@ -51,10 +62,10 @@ public final class ComplicationDataSource {
         }
     }
     
-    public func matches(after date: Date, limit: Int, completion: @escaping ([Mtch]?) -> ()) {
+    public func matches(after date: Date, limit: Int, completion: @escaping ([MatchSnapshot]?) -> ()) {
         matches.retrieve { (result) in
             if let matches = result.asOptional {
-                let matchesAfter = matches.after(date)
+                let matchesAfter = matches.snapshots().after(date)
                 let realLimit = min(limit, matchesAfter.count)
                 completion(Array(matchesAfter.prefix(upTo: realLimit)))
             } else {
@@ -63,10 +74,21 @@ public final class ComplicationDataSource {
         }
     }
     
-    public func matches(before date: Date, limit: Int, completion: @escaping ([Mtch]?) -> ()) {
+    public func currentMatch(completion: @escaping (MatchSnapshot?) -> ()) {
         matches.retrieve { (result) in
             if let matches = result.asOptional {
-                let matchesBefore = matches.before(date)
+                let matchesBefore = matches.snapshots().before(Date())
+                completion(matchesBefore.last)
+            } else {
+                completion(nil)
+            }
+        }
+    }
+    
+    public func matches(before date: Date, limit: Int, completion: @escaping ([MatchSnapshot]?) -> ()) {
+        matches.retrieve { (result) in
+            if let matches = result.asOptional {
+                let matchesBefore = matches.snapshots().before(date)
                 let realLimit = min(limit, matchesBefore.count)
                 completion(Array(matchesBefore.prefix(upTo: realLimit)))
             } else {
@@ -75,21 +97,65 @@ public final class ComplicationDataSource {
         }
     }
     
-    private func timelineDate(forMatch match: Match.Compact, in matches: [Match.Compact]) -> Date {
-        return previousMatch(forMatch: match, in: matches)?.date.addingTimeInterval(Match.durationAndAftermath) ?? matches.timelineStartDate() ?? Date()
+    public lazy var placeholderMatch: Match.Full = self.makePlaceholderMatch(for: Locale.current)
+    
+    private func makePlaceholderMatch(for locale: Locale) -> Match.Full {
+        if let region = locale.regionCode {
+            switch region {
+            case "RU", "UA", "BY":
+                return makePlaceholderMatchRUS()
+            default:
+                return makeDefaultPlaceholderMatch()
+            }
+        }
+        return makeDefaultPlaceholderMatch()
     }
     
-    private func previousMatch(forMatch match: Match.Compact, in matches: [Match.Compact]) -> Match.Compact? {
-        if let index = matches.index(where: { $0.id == match.id }) {
-            if index == 0 { return nil }
-            return matches[index - 1]
-        }
-        return nil
+    private func makeDefaultPlaceholderMatch() -> Match.Full {
+        let home = Match.Team(id: Team.ID.init(rawValue: -1)!, name: "Germany", shortName: "GER", badgeURL: URL(string: "https://goo.gl")!)
+        let away = Match.Team(id: Team.ID.init(rawValue: -1)!, name: "Sweden", shortName: "SWE", badgeURL: URL(string: "https://goo.gl")!)
+        return makeMatch(teams: (home, away), score: (1, 1))
+    }
+    
+    private func makePlaceholderMatchRUS() -> Match.Full {
+        let home = Match.Team(id: Team.ID.init(rawValue: -1)!, name: "Russia", shortName: "RUS", badgeURL: URL(string: "https://goo.gl")!)
+        let away = Match.Team(id: Team.ID.init(rawValue: -1)!, name: "Germany", shortName: "GER", badgeURL: URL(string: "https://goo.gl")!)
+        return makeMatch(teams: (home, away), score: (2, 0))
+    }
+    
+    private func makeMatch(teams: (Match.Team, Match.Team), score: (Int, Int)?) -> Match.Full {
+        let scorescore = score.map({ Match.Score.init(home: $0.0, away: $0.1) })
+        return Match.Full(id: Match.ID.init(rawValue: -1)!, home: teams.0, away: teams.1, date: Date(), endDate: Date().addingTimeInterval(60 * 120), location: "Kharkiv", score: scorescore, events: [])
     }
     
 }
 
-internal extension Sequence where Iterator.Element == Match.Compact {
+internal extension Array where Element == ComplicationDataSource.MatchSnapshot {
+    
+    func after(_ date: Date) -> [ComplicationDataSource.MatchSnapshot] {
+        return Array(self.drop(while: { $0.timelineDate < date }))
+    }
+    
+    func before(_ date: Date) -> [ComplicationDataSource.MatchSnapshot] {
+        return Array(self.prefix(while: { $0.timelineDate < date }))
+    }
+    
+}
+
+internal extension Sequence where Iterator.Element == Match.Full {
+    
+    func removingStartingAtTheSameDate(with decide: (Match.Full, Match.Full) -> Match.Full) -> [Iterator.Element] {
+        var dates: [Date: Match.Full] = [:]
+        for match in self {
+            let date = match.date
+            if let conflicting = dates[date] {
+                dates[date] = decide(conflicting, match)
+            } else {
+                dates[date] = match
+            }
+        }
+        return dates.map({ $0.value }).sortedByDate()
+    }
     
     func timelineStartDate() -> Date? {
         if let first = self.firstStartDate() {
@@ -99,24 +165,22 @@ internal extension Sequence where Iterator.Element == Match.Compact {
         }
     }
     
-    func after(_ date: Date) -> [ComplicationDataSource.Mtch] {
-        return Array(sortedByDate()
-            .map({ ComplicationDataSource.Mtch.init(match: $0, timelineDate: timelineDate(for: $0)) })
-            .drop(while: { $0.timelineDate < date }))
+    func snapshots() -> [ComplicationDataSource.MatchSnapshot] {
+        return flatMap({ (match) -> [ComplicationDataSource.MatchSnapshot] in
+            let beforeStart = ComplicationDataSource.MatchSnapshot.init(match: match.notStartedSnapshot(), timelineDate: assumeSortedTimelineDate(for: match))
+            let otherSnapshots = match.allSnapshots()
+                .map({ ComplicationDataSource.MatchSnapshot.init(match: $0.0, timelineDate: $0.0.date(afterMinutesFromStart: $0.minute)) })
+            var all = [beforeStart]
+            all.append(contentsOf: otherSnapshots)
+            return all
+        })
     }
     
-    func before(_ date: Date) -> [ComplicationDataSource.Mtch] {
-        return Array(sortedByDate()
-            .map({ ComplicationDataSource.Mtch.init(match: $0, timelineDate: timelineDate(for: $0)) })
-            .prefix(while: { $0.timelineDate < date }))
-    }
-    
-    func timelineDate(for givenMatch: Match.Compact) -> Date {
-        let sortedMatches = self.sortedByDate()
-        var previous: Match.Compact? = nil
-        for match in sortedMatches {
+    func assumeSortedTimelineDate(for givenMatch: Match.Full) -> Date {
+        var previous: Match.Full? = nil
+        for match in self {
             if match.id == givenMatch.id {
-                return previous?.date.addingTimeInterval(Match.durationAndAftermath) ?? Swift.min(Date().startOfSameDay(), givenMatch.date.startOfSameDay())
+                return previous?.endDate.addingTimeInterval(Match.aftermath) ?? Swift.min(Date().startOfSameDay(), givenMatch.date.startOfSameDay())
             }
             previous = match
         }
@@ -133,10 +197,10 @@ extension Date {
     
 }
 
-extension Sequence where Iterator.Element : HasStartDate {
+extension Sequence where Iterator.Element : MatchProtocol {
     
     func ongoingMatches(for date: Date) -> [Iterator.Element] {
-        return filter({ date > $0.date || date < $0.date.addingTimeInterval(Match.durationAndAftermath) })
+        return filter({ date > $0.date || date < $0.endDate })
     }
     
     func sortedByDate() -> [Iterator.Element] {
@@ -148,7 +212,7 @@ extension Sequence where Iterator.Element : HasStartDate {
     }
     
     func endOfLastMatch() -> Date? {
-        return self.max(by: { $0.date < $1.date })?.date.addingTimeInterval(Match.duration)
+        return self.max(by: { $0.date < $1.date })?.endDate
     }
     
 }
