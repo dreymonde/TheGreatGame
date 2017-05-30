@@ -31,7 +31,8 @@ final class UserInterface {
 //        let matchesToday = logic.api.matches.all
 //            .mapValues({ $0.content.matches })
 ////            .mapValues({ $0.filter({ Calendar.current.isDateInToday($0.date) }) })
-        return MatchesInterfaceController.Context(resource: matches,
+        let matchesToday = matches.map({ $0.filter({ Calendar.autoupdatingCurrent.isDateInToday($0.date) }) })
+        return MatchesInterfaceController.Context(resource: matchesToday,
                                                   makeAvenue: logic.imageCache.makeAvenue(forImageSize:))
     }
     
