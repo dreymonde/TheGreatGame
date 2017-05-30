@@ -141,6 +141,10 @@ public enum Match {
             return snapshot(beforeMinute: -1)
         }
         
+        public var isEnded: Bool {
+            return events.contains(where: { $0.kind == .end })
+        }
+        
     }
     
 }

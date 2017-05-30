@@ -13,8 +13,6 @@ import TheGreatKit
 
 final class TemplateProducer {
     
-    
-    
     func template(for match: Match.Full, family: CLKComplicationFamily) -> CLKComplicationTemplate? {
         return producer(for: family)(match)
     }
@@ -25,6 +23,12 @@ final class TemplateProducer {
             return modularSmallTemplate(for:)
         case .utilitarianSmall, .utilitarianSmallFlat:
             return utilitarianSmallTemplate(for:)
+        case .utilitarianLarge:
+            return utilitarianLargeTemplate(for:)
+        case .circularSmall:
+            return circularSmallTemplate(for:)
+        case .extraLarge:
+            return extraLargeTemplate(for:)
         default:
             return nope
         }
@@ -50,6 +54,55 @@ final class TemplateProducer {
         }
     }
     
+    private func utilitarianLargeTemplate(for match: Match.Full) -> CLKComplicationTemplate? {
+        if let score = match.score {
+            var text = "\(match.home.shortName) \(score.demo_string) \(match.away.shortName)"
+            if match.isEnded {
+                text.append(" (FT)")
+            }
+            let shortText = "\(match.home.shortName.firstTwoChars()) \(score.demo_string) \(match.away.shortName.firstTwoChars())"
+            return CLKComplicationTemplateUtilitarianLargeFlat() <- {
+                $0.textProvider = CLKSimpleTextProvider(text: text, shortText: shortText)
+            }
+        } else {
+            let oneline = oneLineMatchTextProvider(match: match)
+            let date = textProvider(for: match.date)
+            return CLKComplicationTemplateUtilitarianLargeFlat() <- {
+                $0.textProvider = CLKTextProvider(byJoining: oneline, andProvider: date, with: " ")
+            }
+        }
+    }
+    
+    private func circularSmallTemplate(for match: Match.Full) -> CLKComplicationTemplate? {
+        if let score = match.score {
+            return CLKComplicationTemplateCircularSmallStackText() <- {
+                $0.line1TextProvider = shortestOneLineMatchTextProvider(match: match)
+                $0.line2TextProvider = scoreTextProvider(score)
+            }
+        } else {
+            return CLKComplicationTemplateCircularSmallStackText() <- {
+                $0.line1TextProvider = shortestOneLineMatchTextProvider(match: match)
+                $0.line2TextProvider = textProvider(for: match.date)
+            }
+        }
+    }
+    
+    private func extraLargeTemplate(for match: Match.Full) -> CLKComplicationTemplate? {
+        if let score = match.score {
+            return CLKComplicationTemplateExtraLargeColumnsText() <- {
+                $0.row1Column1TextProvider = CLKSimpleTextProvider(text: match.home.shortName)
+                $0.row2Column1TextProvider = CLKSimpleTextProvider(text: match.away.shortName)
+                $0.row1Column2TextProvider = scoreTextProvder(score.home)
+                $0.row2Column2TextProvider = scoreTextProvder(score.away)
+            }
+        } else {
+            return CLKComplicationTemplateExtraLargeStackText() <- {
+                $0.line1TextProvider = shortestOneLineMatchTextProvider(match: match)
+                $0.line2TextProvider = textProvider(for: match.date)
+            }
+        }
+    }
+    
     private func modularSmallTemplate(for match: Match.Full) -> CLKComplicationTemplate? {
         if let score = match.score {
             return CLKComplicationTemplateModularSmallColumnsText() <- {
@@ -66,21 +119,33 @@ final class TemplateProducer {
         }
     }
     
+    private func scoreTextProvider(_ score: Match.Score) -> CLKSimpleTextProvider {
+        return CLKSimpleTextProvider(text: score.demo_string)
+    }
+    
     private func scoreTextProvder(_ score: Int) -> CLKSimpleTextProvider {
         return CLKSimpleTextProvider(text: score < 0 ? "?" : String(score))
     }
     
+    private func oneLineMatchTextProvider(match: Match.Full) -> CLKSimpleTextProvider {
+        let text = "\(match.home.shortName):\(match.away.shortName)"
+        let shortText = "\(match.home.shortName.firstTwoChars()):\(match.away.shortName.firstTwoChars())"
+        return CLKSimpleTextProvider(text: text, shortText: shortText)
+    }
+    
     private func shortestOneLineMatchTextProvider(match: Match.Full) -> CLKSimpleTextProvider {
         let text = "\(match.home.shortName.firstTwoChars()):\(match.away.shortName.firstTwoChars())"
-        return CLKSimpleTextProvider(text: text)
+        let homeOnly = "\(match.home.shortName)"
+        return CLKSimpleTextProvider(text: text, shortText: homeOnly)
     }
     
     private func textProvider(for date: Date) -> CLKTextProvider {
-        if Calendar.current.isDateInToday(date) {
-            return CLKTimeTextProvider(date: date)
-        } else {
-            return CLKDateTextProvider(date: date, units: [.month, .day])
-        }
+        return CLKTimeTextProvider(date: date)
+//        if Calendar.current.isDateInToday(date) {
+//            return CLKTimeTextProvider(date: date)
+//        } else {
+//            return CLKDateTextProvider(date: date, units: [.month, .day])
+//        }
     }
     
 }

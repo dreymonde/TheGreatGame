@@ -20,7 +20,7 @@ public final class Resource<Value> : Prefetchable {
     fileprivate var value: Value?
     
     fileprivate var local: ReadOnlyCache<Void, Value>
-    fileprivate var provider: ReadOnlyCache<Void, Relevant<Value>>
+    public var provider: ReadOnlyCache<Void, Relevant<Value>>
     
     fileprivate let manager: NetworkActivityIndicatorManager
     

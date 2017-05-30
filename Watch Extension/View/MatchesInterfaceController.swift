@@ -19,14 +19,14 @@ class MatchesInterfaceController: WKInterfaceController {
     let matchRowType = "MatchCompact"
     
     struct Context {
-        let resource: Resource<[Match.Compact]>
+        let resource: Resource<[Match.Full]>
         let makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage>
     }
     
     var context: Context!
     var avenue: Avenue<URL, URL, UIImage>!
     
-    var matches: [Match.Compact] = []
+    var matches: [Match.Full] = []
     
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
@@ -52,7 +52,7 @@ class MatchesInterfaceController: WKInterfaceController {
         }
     }
     
-    func reload(with matches: [Match.Compact], source: Source) {
+    func reload(with matches: [Match.Full], source: Source) {
         self.matches = matches
         table.setNumberOfRows(matches.count, withRowType: matchRowType)
         for (match, index) in zip(matches, matches.indices) {
@@ -61,7 +61,7 @@ class MatchesInterfaceController: WKInterfaceController {
         }
     }
     
-    func configure(_ cell: MatchCellController, with match: Match.Compact, forRowAt index: Int) {
+    func configure(_ cell: MatchCellController, with match: Match.Full, forRowAt index: Int) {
         avenue.prepareItem(at: match.home.badgeURL)
         avenue.prepareItem(at: match.away.badgeURL)
         cell.scoreLabel.setText(match.score?.demo_string ?? "-:-")

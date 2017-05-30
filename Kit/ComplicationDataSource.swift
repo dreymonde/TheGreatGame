@@ -180,7 +180,11 @@ internal extension Sequence where Iterator.Element == Match.Full {
         var previous: Match.Full? = nil
         for match in self {
             if match.id == givenMatch.id {
-                return previous?.endDate.addingTimeInterval(Match.aftermath) ?? Swift.min(Date().startOfSameDay(), givenMatch.date.startOfSameDay())
+                if let previous = previous {
+                    return Swift.max(previous.endDate.addingTimeInterval(Match.aftermath), givenMatch.date.startOfSameDay())
+                } else {
+                    return Swift.min(Date().startOfSameDay(), givenMatch.date.startOfSameDay())
+                }
             }
             previous = match
         }

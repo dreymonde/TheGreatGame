@@ -13,14 +13,18 @@ import TheGreatKit
 final class UserInterface {
     
     let logic: WatchExtension
-    let matches: Resource<[Match.Compact]>
+    let matches: Resource<[Match.Full]>
     
     init(watchExtension: WatchExtension) {
         self.logic = watchExtension
-        self.matches = Resource<Matches>(local: logic.apiCache.matches.all,
-                                         remote: logic.api.matches.all,
-                                         networkActivity: .none)
+        self.matches = Resource<FullMatches>(local: logic.apiCache.matches.allFull,
+                                                 remote: logic.api.matches.allFull,
+                                                 networkActivity: .none)
             .map({ $0.matches })
+    }
+    
+    func preloadFullMatches() {
+        matches.load(completion: { _ in printWithContext("Loaded full matches") })
     }
     
     func makeContext(for contr: MatchesInterfaceController.Type) -> MatchesInterfaceController.Context {
