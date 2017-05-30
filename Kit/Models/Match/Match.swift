@@ -24,6 +24,10 @@ extension MatchProtocol {
         return [home, away]
     }
     
+    public func isFavorite(using isFavorite: @escaping (Team.ID) -> Bool) -> Bool {
+        return teams.map({ isFavorite($0.id) }).contains(true)
+    }
+    
 }
 
 public enum Match {
@@ -95,6 +99,7 @@ public enum Match {
         public let date: Date
         public let endDate: Date
         public let location: String
+        public let stageTitle: String
         public var score: Score?
         public var events: [Event]
         
@@ -127,6 +132,7 @@ public enum Match {
                         date: date,
                         endDate: endDate,
                         location: location,
+                        stageTitle: stageTitle,
                         score: Full.reevaluateScore(from: eventsBeforeMinute),
                         events: eventsBeforeMinute)
         }
@@ -242,7 +248,7 @@ extension Match.Compact : Mappable {
 extension Match.Full : Mappable {
     
     public enum MappingKeys : String, IndexPathElement {
-        case id, home, away, date, endDate, location, score, events
+        case id, home, away, date, endDate, location, score, events, stage_title
     }
     
     public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
@@ -252,6 +258,7 @@ extension Match.Full : Mappable {
         self.date = try mapper.map(from: .date)
         self.endDate = try mapper.map(from: .endDate)
         self.location = try mapper.map(from: .location)
+        self.stageTitle = try mapper.map(from: .stage_title)
         self.events = try mapper.map(from: .events)
         self.score = try? mapper.map(from: .score)
     }
@@ -263,6 +270,7 @@ extension Match.Full : Mappable {
         try mapper.map(self.date, to: .date)
         try mapper.map(self.endDate, to: .endDate)
         try mapper.map(self.location, to: .location)
+        try mapper.map(self.stageTitle, to: .stage_title)
         try mapper.map(self.events, to: .events)
         if let score = self.score {
             try mapper.map(score, to: .score)

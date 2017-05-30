@@ -29,8 +29,8 @@ final class TemplateProducer {
             return circularSmallTemplate(for:)
         case .extraLarge:
             return extraLargeTemplate(for:)
-        default:
-            return nope
+        case .modularLarge:
+            return modularLargeTemplate(for:)
         }
     }
     
@@ -92,8 +92,8 @@ final class TemplateProducer {
             return CLKComplicationTemplateExtraLargeColumnsText() <- {
                 $0.row1Column1TextProvider = CLKSimpleTextProvider(text: match.home.shortName)
                 $0.row2Column1TextProvider = CLKSimpleTextProvider(text: match.away.shortName)
-                $0.row1Column2TextProvider = scoreTextProvder(score.home)
-                $0.row2Column2TextProvider = scoreTextProvder(score.away)
+                $0.row1Column2TextProvider = scoreTextProvider(score.home)
+                $0.row2Column2TextProvider = scoreTextProvider(score.away)
             }
         } else {
             return CLKComplicationTemplateExtraLargeStackText() <- {
@@ -108,8 +108,8 @@ final class TemplateProducer {
             return CLKComplicationTemplateModularSmallColumnsText() <- {
                 $0.row1Column1TextProvider = CLKSimpleTextProvider(text: match.home.shortName)
                 $0.row2Column1TextProvider = CLKSimpleTextProvider(text: match.away.shortName)
-                $0.row1Column2TextProvider = scoreTextProvder(score.home)
-                $0.row2Column2TextProvider = scoreTextProvder(score.away)
+                $0.row1Column2TextProvider = scoreTextProvider(score.home)
+                $0.row2Column2TextProvider = scoreTextProvider(score.away)
             }
         } else {
             return CLKComplicationTemplateModularSmallStackText() <- {
@@ -119,12 +119,36 @@ final class TemplateProducer {
         }
     }
     
+    private func modularLargeTemplate(for match: Match.Full) -> CLKComplicationTemplate? {
+        if let score = match.score {
+            return CLKComplicationTemplateModularLargeTable() <- {
+                $0.headerTextProvider = CLKSimpleTextProvider(text: match.events.last?.text ?? match.stageTitle)
+                $0.row1Column1TextProvider = CLKSimpleTextProvider(text: match.home.name)
+                $0.row2Column1TextProvider = CLKSimpleTextProvider(text: match.away.name)
+                $0.row1Column2TextProvider = scoreTextProvider(score.home)
+                $0.row2Column2TextProvider = scoreTextProvider(score.away)
+            }
+        } else {
+            return CLKComplicationTemplateModularLargeStandardBody() <- {
+                $0.headerTextProvider = longestOneLineMatchTextProvider(match: match)
+                $0.body1TextProvider = CLKSimpleTextProvider(text: match.stageTitle)
+                $0.body2TextProvider = textProvider(for: match.date)
+            }
+        }
+    }
+    
     private func scoreTextProvider(_ score: Match.Score) -> CLKSimpleTextProvider {
         return CLKSimpleTextProvider(text: score.demo_string)
     }
     
-    private func scoreTextProvder(_ score: Int) -> CLKSimpleTextProvider {
+    private func scoreTextProvider(_ score: Int) -> CLKSimpleTextProvider {
         return CLKSimpleTextProvider(text: score < 0 ? "?" : String(score))
+    }
+    
+    private func longestOneLineMatchTextProvider(match: Match.Full) -> CLKSimpleTextProvider {
+        let text = "\(match.home.name) vs \(match.away.name)"
+        let shortText = "\(match.home.shortName) vs \(match.away.shortName)"
+        return CLKSimpleTextProvider(text: text, shortText: shortText)
     }
     
     private func oneLineMatchTextProvider(match: Match.Full) -> CLKSimpleTextProvider {

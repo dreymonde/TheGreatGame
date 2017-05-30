@@ -9,3 +9,14 @@
 import Foundation
 import Alba
 
+extension Subscribe {
+    
+    public func mainThread() -> Subscribe<Event> {
+        return rawModify(subscribe: { (id, handler) in
+            self.manual.subscribe(objectWith: id, with: { (event) in
+                DispatchQueue.main.async { handler(event) }
+            })
+        }, entry: ProxyPayload.Entry.custom("main-thread"))
+    }
+    
+}

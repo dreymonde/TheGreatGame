@@ -165,6 +165,8 @@
 		7CAAEFBB1EC36E1A00427D7E /* Sourceful.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAAEFBA1EC36E1A00427D7E /* Sourceful.swift */; };
 		7CAAEFBD1EC370F400427D7E /* APICachier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAAEFBC1EC370F400427D7E /* APICachier.swift */; };
 		7CCD25C61EDD7AE300F3C5CB /* SingleElementMemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C357ED71ED442D300CFCF3B /* SingleElementMemoryCache.swift */; };
+		7CCD25C71EDDCB2400F3C5CB /* FavoriteTeams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA2136D1ECEFA0A00F088DD /* FavoriteTeams.swift */; };
+		7CCD25C91EDDCF3F00F3C5CB /* ComplicationReloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD25C81EDDCF3F00F3C5CB /* ComplicationReloader.swift */; };
 		7CE2B7361ECC7CF100C7EC20 /* TCK+UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2B7351ECC7CF100C7EC20 /* TCK+UserDefaults.swift */; };
 		7CE2B7391ECC7D3200C7EC20 /* Vendor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2B7381ECC7D3200C7EC20 /* Vendor.swift */; };
 		7CE2B73B1ECC7D4D00C7EC20 /* LaunchArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2B73A1ECC7D4D00C7EC20 /* LaunchArguments.swift */; };
@@ -416,6 +418,7 @@
 		7CAAEFB81EC36B3900427D7E /* CombinedRefreshing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CombinedRefreshing.swift; sourceTree = "<group>"; };
 		7CAAEFBA1EC36E1A00427D7E /* Sourceful.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sourceful.swift; sourceTree = "<group>"; };
 		7CAAEFBC1EC370F400427D7E /* APICachier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APICachier.swift; sourceTree = "<group>"; };
+		7CCD25C81EDDCF3F00F3C5CB /* ComplicationReloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplicationReloader.swift; sourceTree = "<group>"; };
 		7CE2B7351ECC7CF100C7EC20 /* TCK+UserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TCK+UserDefaults.swift"; sourceTree = "<group>"; };
 		7CE2B7381ECC7D3200C7EC20 /* Vendor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vendor.swift; sourceTree = "<group>"; };
 		7CE2B73A1ECC7D4D00C7EC20 /* LaunchArguments.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaunchArguments.swift; sourceTree = "<group>"; };
@@ -951,6 +954,7 @@
 			isa = PBXGroup;
 			children = (
 				7CA5420C1EDB14C600B4D1BD /* ComplicationDataSource.swift */,
+				7CCD25C81EDDCF3F00F3C5CB /* ComplicationReloader.swift */,
 			);
 			name = Complication;
 			sourceTree = "<group>";
@@ -1502,12 +1506,14 @@
 				7C13BC691ED84B4C00588F5F /* Team.swift in Sources */,
 				7CA542021EDAB6DC00B4D1BD /* Resource.swift in Sources */,
 				7C13BC601ED84B3D00588F5F /* OutMap.swift in Sources */,
+				7CCD25C91EDDCF3F00F3C5CB /* ComplicationReloader.swift in Sources */,
 				7C13BC681ED84B4C00588F5F /* Group.swift in Sources */,
 				7C13BC6A1ED84B4C00588F5F /* TeamFull.swift in Sources */,
 				7C13BC6B1ED84B4C00588F5F /* Editioned.swift in Sources */,
 				7C6AA1741ED878E9003F2388 /* Groups.swift in Sources */,
 				7C6AA1731ED878E9003F2388 /* Matches.swift in Sources */,
 				7C13BC661ED84B4C00588F5F /* Match.swift in Sources */,
+				7CCD25C71EDDCB2400F3C5CB /* FavoriteTeams.swift in Sources */,
 				7C13BC641ED84B3D00588F5F /* Mappable.swift in Sources */,
 				7C6AA17D1ED879F9003F2388 /* Avenues+Shallows.swift in Sources */,
 				7CA541FF1EDAB65200B4D1BD /* Shallows+ActivityIndicator.swift in Sources */,
@@ -1662,7 +1668,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1706,7 +1712,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";

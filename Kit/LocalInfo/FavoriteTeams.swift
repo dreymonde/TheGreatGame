@@ -73,6 +73,19 @@ public final class FavoriteTeams {
         })
     }
     
+    public func replace(with updated: Set<Team.ID>) {
+        let existing = try! favoriteTeamsSync.retrieve()
+        let diff = existing.symmetricDifference(updated)
+        full_favoriteTeams.set(updated) { (result) in
+            if result.isSuccess {
+                self.didUpdateFavorites.publish(updated)
+                for diffed in diff {
+                    self.didUpdateFavorite.publish((diffed, isFavorite: updated.contains(diffed)))
+                }
+            }
+        }
+    }
+    
     public func isFavorite(teamWith id: Team.ID) -> Bool {
         do {
             let favs = try favoriteTeamsSync.retrieve()

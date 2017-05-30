@@ -41,13 +41,13 @@ public final class ComplicationDataSource {
     }
     
     public let matches: ReadOnlyCache<Void, [Match.Full]>
+    public let conflictResolver: (Match.Full, Match.Full) -> Match.Full
     
-    public init(provider: ReadOnlyCache<Void, [Match.Full]>) {
-        let finalProvider = provider.mapValues({ $0.removingStartingAtTheSameDate(with: endsLater) })
-        self.matches = TemporaryMemoryCache<Int, [Match.Full]>(interval: 10)
-            .singleKey(0)
-            .backed(by: finalProvider, pullingFromBack: true)
-            .asReadOnlyCache()
+    public init(provider: ReadOnlyCache<Void, [Match.Full]>,
+                conflictResolver: @escaping (Match.Full, Match.Full) -> Match.Full) {
+        let finalProvider = provider.mapValues({ $0.removingStartingAtTheSameDate(with: conflictResolver) })
+        self.matches = finalProvider
+        self.conflictResolver = conflictResolver
     }
     
     public func timelineStartDate(completion: @escaping (Date?) -> ()) {
@@ -125,7 +125,7 @@ public final class ComplicationDataSource {
     
     private func makeMatch(teams: (Match.Team, Match.Team), score: (Int, Int)?) -> Match.Full {
         let scorescore = score.map({ Match.Score.init(home: $0.0, away: $0.1) })
-        return Match.Full(id: Match.ID.init(rawValue: -1)!, home: teams.0, away: teams.1, date: Date(), endDate: Date().addingTimeInterval(60 * 120), location: "Kharkiv", score: scorescore, events: [])
+        return Match.Full(id: Match.ID.init(rawValue: -1)!, home: teams.0, away: teams.1, date: Date(), endDate: Date().addingTimeInterval(60 * 120), location: "Netherlands", stageTitle: "Group Stage", score: scorescore, events: [])
     }
     
 }
