@@ -44,6 +44,15 @@ class APITests: XCTestCase {
         XCTAssertEqual(team1.group.title, "Group B")
     }
     
+    func testAllMatchesFull() throws {
+        let api = MatchesAPI.macBookSteve()
+        let matches = try api.allFull.mapValues({ $0.content.matches }).makeSyncCache().retrieve()
+        let ned_nor = try matches.first.unwrap()
+        let cut = ned_nor.snapshot(beforeMinute: 14)
+        dump(cut)
+        XCTAssertEqual(try cut.score.unwrap().home, 1)
+    }
+    
     func testStages() throws {
         let api = MatchesAPI.gitHub(networkCache: APITests.testingNetworkCache)
         let stages = try api.stages.mapValues({ $0.content }).makeSyncCache().retrieve()

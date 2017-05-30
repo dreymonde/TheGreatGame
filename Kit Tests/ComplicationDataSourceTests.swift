@@ -28,9 +28,9 @@ class ComplicationDataSourceTests: XCTestCase {
         let dateComps = DateComponents(calendar: nil, timeZone: TimeZone.init(identifier: "Europe/Amsterdam"), era: nil, year: 2017, month: 7, day: 21, hour: 21, minute: 0, second: 0, nanosecond: nil, weekday: nil, weekdayOrdinal: nil, quarter: nil, weekOfMonth: nil, weekOfYear: nil, yearForWeekOfYear: nil)
         let date = try Calendar.current.date(from: dateComps).unwrap()
         let all = try allMatches.retrieve()
-        dump(all.matches(after: date))
+        dump(all.after(date))
         print("DEEEEEEE")
-        dump(all.matches(before: date))
+        dump(all.before(date))
     }
     
 }

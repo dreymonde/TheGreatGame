@@ -8,6 +8,23 @@
 
 import Foundation
 
+public protocol MatchProtocol {
+    
+    var id: Match.ID { get }
+    var home: Match.Team { get }
+    var away: Match.Team { get }
+    var date: Date { get }
+    
+}
+
+extension MatchProtocol {
+    
+    public var teams: [Match.Team] {
+        return [home, away]
+    }
+    
+}
+
 public enum Match {
     
     public static let duration = TimeInterval(60 * 100)
@@ -37,6 +54,18 @@ public enum Match {
         
     }
     
+    public struct Event {
+        
+        public enum Kind : String {
+            case start, goalHome, goalAway, end
+        }
+        
+        public let kind: Kind
+        public let text: String
+        public let minute: Int
+        
+    }
+    
     public struct Team {
         public let id: TheGreatKit.Team.ID
         public let name: String
@@ -44,19 +73,50 @@ public enum Match {
         public let badgeURL: URL
     }
     
-    public struct Compact {
+    public struct Compact : MatchProtocol {
         
         public let id: Match.ID
         public let home: Team
         public let away: Team
         public let date: Date
+        public let endDate: Date
         public let location: String
         public let score: Score?
         
-        public var teams: [Team] {
-            return [home, away]
+    }
+    
+    public struct Full {
+        
+        public let id: Match.ID
+        public let home: Team
+        public let away: Team
+        public let date: Date
+        public let endDate: Date
+        public let location: String
+        public let score: Score?
+        public let events: [Event]
+        
+        public static func reevaluateScore(from events: [Event]) -> Score? {
+            guard events.contains(where: { $0.kind == .start }) else {
+                return nil
+            }
+            let goalsHome = events.filter({ $0.kind == .goalHome }).count
+            let goalsAway = events.filter({ $0.kind == .goalAway }).count
+            return Score(home: goalsHome, away: goalsAway)
         }
-                
+        
+        public func snapshot(beforeMinute minute: Int) -> Full {
+            let eventsBeforeMinute = events.filter({ $0.minute <= minute })
+            return Full(id: self.id,
+                        home: self.home,
+                        away: self.away,
+                        date: date,
+                        endDate: endDate,
+                        location: location,
+                        score: Full.reevaluateScore(from: eventsBeforeMinute),
+                        events: eventsBeforeMinute)
+        }
+        
     }
     
 }
@@ -101,10 +161,30 @@ extension Match.Score : Mappable {
     
 }
 
+extension Match.Event : Mappable {
+    
+    public enum MappingKeys : String, IndexPathElement {
+        case type, text, minute
+    }
+    
+    public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
+        self.kind = try mapper.map(from: .type)
+        self.text = try mapper.map(from: .text)
+        self.minute = try mapper.map(from: .minute)
+    }
+    
+    public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+        try mapper.map(self.kind, to: .type)
+        try mapper.map(self.text, to: .text)
+        try mapper.map(self.minute, to: .minute)
+    }
+    
+}
+
 extension Match.Compact : Mappable {
     
     public enum MappingKeys : String, IndexPathElement {
-        case id, home, away, date, location, score
+        case id, home, away, date, endDate, location, score
     }
     
     public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
@@ -112,6 +192,7 @@ extension Match.Compact : Mappable {
         self.home = try mapper.map(from: .home)
         self.away = try mapper.map(from: .away)
         self.date = try mapper.map(from: .date)
+        self.endDate = try mapper.map(from: .endDate)
         self.location = try mapper.map(from: .location)
         self.score = try? mapper.map(from: .score)
     }
@@ -121,7 +202,40 @@ extension Match.Compact : Mappable {
         try mapper.map(self.home, to: .home)
         try mapper.map(self.away, to: .away)
         try mapper.map(self.date, to: .date)
+        try mapper.map(self.endDate, to: .endDate)
         try mapper.map(self.location, to: .location)
+        if let score = self.score {
+            try mapper.map(score, to: .score)
+        }
+    }
+    
+}
+
+extension Match.Full : Mappable {
+    
+    public enum MappingKeys : String, IndexPathElement {
+        case id, home, away, date, endDate, location, score, events
+    }
+    
+    public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
+        self.id = try mapper.map(from: .id)
+        self.home = try mapper.map(from: .home)
+        self.away = try mapper.map(from: .away)
+        self.date = try mapper.map(from: .date)
+        self.endDate = try mapper.map(from: .endDate)
+        self.location = try mapper.map(from: .location)
+        self.events = try mapper.map(from: .events)
+        self.score = try? mapper.map(from: .score)
+    }
+    
+    public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+        try mapper.map(self.id, to: .id)
+        try mapper.map(self.home, to: .home)
+        try mapper.map(self.away, to: .away)
+        try mapper.map(self.date, to: .date)
+        try mapper.map(self.endDate, to: .endDate)
+        try mapper.map(self.location, to: .location)
+        try mapper.map(self.events, to: .events)
         if let score = self.score {
             try mapper.map(score, to: .score)
         }
@@ -136,6 +250,28 @@ public struct Matches {
 }
 
 extension Matches : Mappable {
+    
+    public enum MappingKeys : String, IndexPathElement {
+        case matches
+    }
+    
+    public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
+        self.matches = try mapper.map(from: .matches)
+    }
+    
+    public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+        try mapper.map(self.matches, to: .matches)
+    }
+    
+}
+
+public struct FullMatches {
+    
+    public let matches: [Match.Full]
+    
+}
+
+extension FullMatches : Mappable {
     
     public enum MappingKeys : String, IndexPathElement {
         case matches

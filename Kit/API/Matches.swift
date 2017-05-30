@@ -18,6 +18,7 @@ public struct MatchesEndpoint {
     }
     
     public static let all = MatchesEndpoint(path: "all.json")
+    public static let allFull = MatchesEndpoint(path: "all-full.json")
     public static func fullMatch(withID id: Team.ID) -> MatchesEndpoint {
         return MatchesEndpoint(path: "\(id.rawID).json")
     }
@@ -29,6 +30,7 @@ public final class MatchesAPI : APIPoint {
     
     public let provider: ReadOnlyCache<MatchesEndpoint, [String : Any]>
     public let all: ReadOnlyCache<Void, Editioned<Matches>>
+    public let allFull: ReadOnlyCache<Void, Editioned<FullMatches>>
     public let stages: ReadOnlyCache<Void, Editioned<Stages>>
     
     private let dataProvider: ReadOnlyCache<String, Data>
@@ -41,6 +43,9 @@ public final class MatchesAPI : APIPoint {
         self.all = provider
             .singleKey(.all)
             .mapMappable(of: Editioned<Matches>.self)
+        self.allFull = provider
+            .singleKey(.allFull)
+            .mapMappable()
         self.stages = provider
             .singleKey(.stages)
             .mapMappable()
@@ -52,6 +57,7 @@ public final class MatchesAPICache : APICachePoint {
     
     public let provider: Cache<MatchesEndpoint, [String : Any]>
     public let all: Cache<Void, Editioned<Matches>>
+    public let allFull: Cache<Void, Editioned<FullMatches>>
     public let stages: Cache<Void, Editioned<Stages>>
     
     private let dataProvider: Cache<String, Data>
@@ -63,6 +69,9 @@ public final class MatchesAPICache : APICachePoint {
             .mapKeys({ $0.path })
         self.all = provider
             .singleKey(.all)
+            .mapMappable()
+        self.allFull = provider
+            .singleKey(.allFull)
             .mapMappable()
         self.stages = provider
             .singleKey(.stages)
