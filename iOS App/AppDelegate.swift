@@ -30,10 +30,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-//        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { (auth, error) in
-//            print("NOTIFICATIONS: ", auth, error as Any)
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { (auth, error) in
+            print("NOTIFICATIONS: ", auth, error as Any)
 //            application.registerForRemoteNotifications()
-//        }
+        }
         self.userInterface = UserInterface(window: self.window!, application: self.application)
         userInterface.start()
         return true
