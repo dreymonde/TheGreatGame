@@ -167,6 +167,10 @@
 		7CCD25C61EDD7AE300F3C5CB /* SingleElementMemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C357ED71ED442D300CFCF3B /* SingleElementMemoryCache.swift */; };
 		7CCD25C71EDDCB2400F3C5CB /* FavoriteTeams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA2136D1ECEFA0A00F088DD /* FavoriteTeams.swift */; };
 		7CCD25C91EDDCF3F00F3C5CB /* ComplicationReloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD25C81EDDCF3F00F3C5CB /* ComplicationReloader.swift */; };
+		7CCD25CB1EDEA23900F3C5CB /* ComplicationPusher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD25CA1EDEA23900F3C5CB /* ComplicationPusher.swift */; };
+		7CCD25CE1EDEB61C00F3C5CB /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD25CD1EDEB61C00F3C5CB /* Notifications.swift */; };
+		7CCD25D01EDEBE5700F3C5CB /* PushNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD25CF1EDEBE5700F3C5CB /* PushNotifications.swift */; };
+		7CCD25D11EDEBE5700F3C5CB /* PushNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD25CF1EDEBE5700F3C5CB /* PushNotifications.swift */; };
 		7CE2B7361ECC7CF100C7EC20 /* TCK+UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2B7351ECC7CF100C7EC20 /* TCK+UserDefaults.swift */; };
 		7CE2B7391ECC7D3200C7EC20 /* Vendor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2B7381ECC7D3200C7EC20 /* Vendor.swift */; };
 		7CE2B73B1ECC7D4D00C7EC20 /* LaunchArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2B73A1ECC7D4D00C7EC20 /* LaunchArguments.swift */; };
@@ -419,6 +423,10 @@
 		7CAAEFBA1EC36E1A00427D7E /* Sourceful.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sourceful.swift; sourceTree = "<group>"; };
 		7CAAEFBC1EC370F400427D7E /* APICachier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APICachier.swift; sourceTree = "<group>"; };
 		7CCD25C81EDDCF3F00F3C5CB /* ComplicationReloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplicationReloader.swift; sourceTree = "<group>"; };
+		7CCD25CA1EDEA23900F3C5CB /* ComplicationPusher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplicationPusher.swift; sourceTree = "<group>"; };
+		7CCD25CC1EDEB1BA00F3C5CB /* Watch Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Watch Extension.entitlements"; sourceTree = "<group>"; };
+		7CCD25CD1EDEB61C00F3C5CB /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
+		7CCD25CF1EDEBE5700F3C5CB /* PushNotifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushNotifications.swift; sourceTree = "<group>"; };
 		7CE2B7351ECC7CF100C7EC20 /* TCK+UserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TCK+UserDefaults.swift"; sourceTree = "<group>"; };
 		7CE2B7381ECC7D3200C7EC20 /* Vendor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vendor.swift; sourceTree = "<group>"; };
 		7CE2B73A1ECC7D4D00C7EC20 /* LaunchArguments.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaunchArguments.swift; sourceTree = "<group>"; };
@@ -547,6 +555,7 @@
 				7C0EA6521EBA1E4900F50EB2 /* UserInterface.swift */,
 				7C0EA5DA1EBA1B3500F50EB2 /* AppDelegate.swift */,
 				7CE2B73A1ECC7D4D00C7EC20 /* LaunchArguments.swift */,
+				7CCD25CD1EDEB61C00F3C5CB /* Notifications.swift */,
 				7C0EA5DE1EBA1B3500F50EB2 /* Main.storyboard */,
 				7C0EA5E11EBA1B3500F50EB2 /* Assets.xcassets */,
 				7C0EA5E31EBA1B3500F50EB2 /* LaunchScreen.storyboard */,
@@ -599,6 +608,7 @@
 				7C0EA6091EBA1C9000F50EB2 /* TheGreatKit.h */,
 				7C0EA60A1EBA1C9000F50EB2 /* Info.plist */,
 				7CA542051EDABF2B00B4D1BD /* TGK+Alba.swift */,
+				7CCD25CF1EDEBE5700F3C5CB /* PushNotifications.swift */,
 			);
 			path = Kit;
 			sourceTree = "<group>";
@@ -751,6 +761,7 @@
 		7C13BC221ED8498300588F5F /* Watch Extension */ = {
 			isa = PBXGroup;
 			children = (
+				7CCD25CC1EDEB1BA00F3C5CB /* Watch Extension.entitlements */,
 				7CA542081EDB011E00B4D1BD /* Complication */,
 				7C13BC6F1ED84BFE00588F5F /* View */,
 				7C13BC271ED8498300588F5F /* ExtensionDelegate.swift */,
@@ -955,6 +966,7 @@
 			children = (
 				7CA5420C1EDB14C600B4D1BD /* ComplicationDataSource.swift */,
 				7CCD25C81EDDCF3F00F3C5CB /* ComplicationReloader.swift */,
+				7CCD25CA1EDEA23900F3C5CB /* ComplicationPusher.swift */,
 			);
 			path = Complication;
 			sourceTree = "<group>";
@@ -1168,6 +1180,12 @@
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
 							};
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
+								enabled = 1;
+							};
 						};
 					};
 					7C0EA5EA1EBA1B3500F50EB2 = {
@@ -1192,12 +1210,25 @@
 						CreatedOnToolsVersion = 8.3.2;
 						DevelopmentTeam = 8E9Y56P64W;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes.watchos.app = {
+								enabled = 0;
+							};
+						};
 					};
 					7C13BC1D1ED8498300588F5F = {
 						CreatedOnToolsVersion = 8.3.2;
 						DevelopmentTeam = 8E9Y56P64W;
 						LastSwiftMigration = 0830;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes.watchos.extension = {
+								enabled = 0;
+							};
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 					7C13BC461ED84AF300588F5F = {
 						CreatedOnToolsVersion = 8.3.2;
@@ -1368,6 +1399,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CCD25CE1EDEB61C00F3C5CB /* Notifications.swift in Sources */,
 				7C1D898F1EC06981006F7841 /* Refreshing.swift in Sources */,
 				7C1E66381EBB4284003AF505 /* ViewController.swift in Sources */,
 				7C6B36C31EBCAEDD00FC17F9 /* TabBarController.swift in Sources */,
@@ -1409,10 +1441,12 @@
 				7CA5420D1EDB14C600B4D1BD /* ComplicationDataSource.swift in Sources */,
 				7C7916DD1EBB10370070E6C5 /* NetworkActivity.swift in Sources */,
 				7C0EA6451EBA1D1E00F50EB2 /* OutMappable.swift in Sources */,
+				7CCD25CB1EDEA23900F3C5CB /* ComplicationPusher.swift in Sources */,
 				7CA541FE1EDAB65000B4D1BD /* Shallows+ActivityIndicator.swift in Sources */,
 				7C13BC741ED84FF400588F5F /* AppleWatch.swift in Sources */,
 				7C0EA64B1EBA1D1E00F50EB2 /* Mappable.swift in Sources */,
 				7C0EA6411EBA1D1E00F50EB2 /* InMapper.swift in Sources */,
+				7CCD25D01EDEBE5700F3C5CB /* PushNotifications.swift in Sources */,
 				7CAAEFBB1EC36E1A00427D7E /* Sourceful.swift in Sources */,
 				7C0EA64D1EBA1D1E00F50EB2 /* CocoaMapper.swift in Sources */,
 				7CF3D17B1EBC879300E86A91 /* Match.swift in Sources */,
@@ -1502,6 +1536,7 @@
 				7C13BC6C1ED84B4C00588F5F /* Sourceful.swift in Sources */,
 				7C13BC771ED8523600588F5F /* Package.swift in Sources */,
 				7CA5420E1EDB14C600B4D1BD /* ComplicationDataSource.swift in Sources */,
+				7CCD25D11EDEBE5700F3C5CB /* PushNotifications.swift in Sources */,
 				7C6AA1761ED87900003F2388 /* GitHubCache.swift in Sources */,
 				7C13BC691ED84B4C00588F5F /* Team.swift in Sources */,
 				7CA542021EDAB6DC00B4D1BD /* Resource.swift in Sources */,
@@ -1726,6 +1761,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = TheGreatGame.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 8E9Y56P64W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1736,6 +1772,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatGame";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -1746,6 +1784,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = TheGreatGame.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 8E9Y56P64W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1756,6 +1795,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatGame";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
@@ -1928,6 +1968,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Watch Extension/Watch Extension.entitlements";
 				DEVELOPMENT_TEAM = 8E9Y56P64W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1952,6 +1993,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Watch Extension/Watch Extension.entitlements";
 				DEVELOPMENT_TEAM = 8E9Y56P64W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

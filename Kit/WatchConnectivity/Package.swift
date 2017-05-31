@@ -9,7 +9,7 @@
 import Foundation
 
 #if os(iOS)
-    public typealias Connection = AppleWatch
+    public typealias Connection = WatchSessionManager
 #else
     public typealias Connection = Phone
 #endif
@@ -20,6 +20,7 @@ extension Connection {
         
         public enum Kind : String {
             case favorites
+            case complication_match_update
         }
         
         public let kind: Kind
@@ -64,6 +65,14 @@ extension AppleWatchPackable {
     
     public static func unpacked(from package: Connection.Package) throws -> Self {
         return try Self.init(from: package.content)
+    }
+    
+}
+
+extension Match.Full : AppleWatchPackable {
+    
+    public static var kind: Connection.Package.Kind {
+        return .complication_match_update
     }
     
 }

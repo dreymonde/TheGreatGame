@@ -303,7 +303,11 @@ extension Matches : Mappable {
 
 public struct FullMatches {
     
-    public let matches: [Match.Full]
+    public var matches: [Match.Full]
+    
+    public init(matches: [Match.Full]) {
+        self.matches = matches
+    }
     
 }
 

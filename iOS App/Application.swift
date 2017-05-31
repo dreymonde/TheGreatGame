@@ -9,6 +9,7 @@
 import Foundation
 import TheGreatKit
 import Shallows
+import Alba
 
 final class Application {
     
@@ -19,12 +20,19 @@ final class Application {
     let watch: AppleWatch?
     
     init() {
+        Alba.InformBureau.isEnabled = true
+        Alba.InformBureau.Logger.enable()
+
         self.api = Application.makeAPI()
         self.apiCache = Application.makeAPICache()
         self.imageFetching = ImageFetch(shouldCacheToDisk: true)
         self.favoriteTeams = FavoriteTeams.inSharedDocumentsDirectory()
-        self.watch = AppleWatch(0)
-        watch?.feed(packages: favoriteTeams.didUpdateFavorites.proxy.map(FavoritesPackage.init))
+        self.watch = AppleWatch()
+        declare()
+    }
+    
+    func declare() {
+        watch?.declare(didUpdateFavorites: favoriteTeams.didUpdateFavorites.proxy)
     }
     
     static func makeAPI() -> API {

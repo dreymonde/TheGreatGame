@@ -11,6 +11,7 @@ import Shallows
 import Avenues
 import TheGreatKit
 import Alba
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -24,13 +25,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         super.init()
         //Avenues.Log.isEnabled = true
         //ShallowsLog.isEnabled = true
-        Alba.InformBureau.isEnabled = true
-        Alba.InformBureau.Logger.enable()
         //NetworkActivityIndicatorManager.isLogEnabled = true
     }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+//        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { (auth, error) in
+//            print("NOTIFICATIONS: ", auth, error as Any)
+//            application.registerForRemoteNotifications()
+//        }
         self.userInterface = UserInterface(window: self.window!, application: self.application)
         userInterface.start()
         return true
@@ -56,6 +59,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        printWithContext()
+    }
+    
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        printWithContext()
+        print(error)
     }
 
 

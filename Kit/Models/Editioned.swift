@@ -10,8 +10,8 @@ import Shallows
 
 public struct Editioned<Content : Mappable> : EditionedProtocol {
     
-    public let edition: Int
-    public let content: Content
+    public var edition: Int
+    public var content: Content
     
     public func isMoreRecent(than other: Editioned<Content>) -> Bool {
         if self.edition == -1 && other.edition != -1 {

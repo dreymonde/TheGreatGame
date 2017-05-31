@@ -18,10 +18,12 @@ public final class ComplicationReloader {
     public init() { }
     
     public func reloadComplications() {
-        if let complications = server.activeComplications {
-            printWithContext("Reloading complications")
-            for complication in complications {
-                server.reloadTimeline(for: complication)
+        DispatchQueue.main.async {
+            if let complications = self.server.activeComplications {
+                printWithContext("Reloading complications")
+                for complication in complications {
+                    self.server.reloadTimeline(for: complication)
+                }
             }
         }
     }
@@ -34,18 +36,33 @@ extension ComplicationReloader {
         didUpdateFavorite.flatSubscribe(self, with: { $0.didUpdateFavorite($1, matches: matches) })
     }
     
+    public func consume(complicationMatchUpdate: Subscribe<Match.Full>, writingTo matches: Cache<Void, Editioned<FullMatches>>) {
+        complicationMatchUpdate.flatSubscribe(self, with: { $0.complicationMatchUpdate($1, matchesCache: matches) })
+    }
+    
     fileprivate func didUpdateFavorite(_ update: (Team.ID, isFavorite: Bool), matches: ReadOnlyCache<Void, [Match.Full]>) {
         matches.mapValues({ $0.filter({ Calendar.autoupdatingCurrent.isDateInToday($0.date) }) }).retrieve { (result) in
             if let gamesToday = result.asOptional {
                 let idsToday = Set(gamesToday.flatMap({ $0.teams.map({ $0.id }) }))
                 if idsToday.contains(update.0) {
-                    DispatchQueue.main.async {
-                        printWithContext("Updated team is playing today, reloading complication")
-                        self.reloadComplications()
-                    }
+                    printWithContext("Updated team is playing today, reloading complication")
+                    self.reloadComplications()
                 }
             }
         }
+    }
+    
+    fileprivate func complicationMatchUpdate(_ match: Match.Full, matchesCache: Cache<Void, Editioned<FullMatches>>) {
+        matchesCache.defaulting(to: Editioned(edition: -1, content: FullMatches(matches: []))).update({ (editioned) in
+            if let indexOfReceived = editioned.content.matches.index(where: { $0.id == match.id }) {
+                editioned.content.matches[indexOfReceived] = match
+            }
+        }, completion: { result in
+            if result.isSuccess {
+                printWithContext("Received match update, reloading complication")
+                self.reloadComplications()
+            }
+        })
     }
     
 }

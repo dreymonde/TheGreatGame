@@ -40,6 +40,8 @@ final class WatchExtension {
         phone.didReceiveUpdatedFavorites.subscribe(self.favorites, with: FavoriteTeams.replace(with:))
         complicationReloader.consume(didUpdateFavorite: self.favorites.didUpdateFavorite.proxy,
                                      matches: apiCache.matches.allFull.backed(by: api.matches.allFull).asReadOnlyCache().mapValues({ $0.content.matches }))
+        complicationReloader.consume(complicationMatchUpdate: self.phone.didReceiveComplicationMatchUpdate,
+                                     writingTo: apiCache.matches.allFull)
     }
     
     func chooseMatchToShow(_ lhs: Match.Full, _ rhs: Match.Full) -> Match.Full {
@@ -57,6 +59,12 @@ final class WatchExtension {
 }
 
 extension Phone {
+    
+    var didReceiveComplicationMatchUpdate: Subscribe<Match.Full> {
+        return didReceivePackage.proxy
+            .filter({ $0.kind == .complication_match_update })
+            .flatMap({ try? Match.Full.unpacked(from: $0) })
+    }
     
     var didReceiveUpdatedFavorites: Subscribe<Set<Team.ID>> {
         return didReceivePackage.proxy
