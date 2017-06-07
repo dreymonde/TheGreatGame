@@ -9,9 +9,13 @@
 import Foundation
 import Shallows
 
-internal protocol APIPoint {
+public protocol APIProvider {
     
     init(dataProvider: ReadOnlyCache<String, Data>)
+    
+}
+
+internal protocol APIPoint : APIProvider {
     
 }
 
@@ -21,28 +25,29 @@ internal protocol APICachePoint {
     
 }
 
-extension APIPoint {
+extension APIProvider {
     
     public static func gitHub(networkCache: ReadOnlyCache<URL, Data> = Self.makeUrlSessionCache()) -> Self {
         let gitRepo = GitHubRepo.theGreatGameStorage(networkCache: networkCache)
         return Self(dataProvider: gitRepo.asReadOnlyCache())
     }
     
+    public static func gitHub(urlSession: URLSession) -> Self {
+        let sessionCache = Self.makeUrlSessionCache(from: urlSession)
+        return Self.gitHub(networkCache: sessionCache)
+    }
+    
     public static func macBookSteve() -> Self {
         let directory = "/Users/oleg/Development/TheGreatGame/Storage" <* URL.init(fileURLWithPath:)
         let rawFS = RawFileSystemCache(directoryURL: directory)
             .mapKeys(RawFileSystemCache.FileName.init)
-        let cache = ReadOnlyCache(cacheName: rawFS.cacheName) { (key, completion) in
-            rawFS.retrieve(forKey: key, completion: { (result) in
-                DispatchQueue.global().asyncAfter(deadline: .now() + 1.0, execute: { 
-                    completion(result)
-                })
-            })
-        }
+        let cache = rawFS
+            .asReadOnlyCache()
+            .latency(ofInterval: 1.0)
         return Self(dataProvider: cache)
     }
     
-    internal static func makeUrlSessionCache() -> ReadOnlyCache<URL, Data> {
+    internal static func makeUrlSessionCache(from session: URLSession = .init(configuration: .default)) -> ReadOnlyCache<URL, Data> {
         return URLSession(configuration: .default)
             .asReadOnlyCache()
             .droppingResponse()
@@ -51,7 +56,7 @@ extension APIPoint {
     
 }
 
-public final class API {
+public final class API : APIProvider {
     
     public let teams: TeamsAPI
     public let matches: MatchesAPI
@@ -63,21 +68,11 @@ public final class API {
         self.groups = groups
     }
     
-    public static func gitHub(urlSession: URLSession) -> API {
-        let sessionCache = urlSession
-            .asReadOnlyCache()
-            .droppingResponse()
-            .usingURLKeys()
-        let teamsAPI = TeamsAPI.gitHub(networkCache: sessionCache)
-        let matchesAPI = MatchesAPI.gitHub(networkCache: sessionCache)
-        let groupsAPI = GroupsAPI.gitHub(networkCache: sessionCache)
-        return API(teams: teamsAPI, matches: matchesAPI, groups: groupsAPI)
-    }
-    
-    public static func macBookSteve() -> API {
-        return API(teams: .macBookSteve(),
-                   matches: .macBookSteve(),
-                   groups: .macBookSteve())
+    public convenience init(dataProvider: ReadOnlyCache<String, Data>) {
+        let teamsAPI = TeamsAPI.init(dataProvider: dataProvider)
+        let matchesAPI = MatchesAPI.init(dataProvider: dataProvider)
+        let groupsAPI = GroupsAPI.init(dataProvider: dataProvider)
+        self.init(teams: teamsAPI, matches: matchesAPI, groups: groupsAPI)
     }
     
 }
@@ -127,6 +122,20 @@ public final class APICache {
                        transformOut: { $0 as NSData })
             .combined(with: fs)
         return APICache(cache: sharedDataLayer)
+    }
+    
+}
+
+extension ReadOnlyCache {
+    
+    public func latency(ofInterval interval: TimeInterval) -> ReadOnlyCache<Key, Value> {
+        return ReadOnlyCache(cacheName: self.cacheName) { (key, completion) in
+            self.retrieve(forKey: key, completion: { (result) in
+                DispatchQueue.global().asyncAfter(deadline: .now() + interval, execute: {
+                    completion(result)
+                })
+            })
+        }
     }
     
 }

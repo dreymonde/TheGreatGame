@@ -40,6 +40,8 @@ public final class Resource<Value> : Prefetchable {
         return value
     }
     
+    public var isAbsoluteTruth: Bool = false
+    
     public func prefetch() {
         local.retrieve { (result) in
             assert(Thread.isMainThread)
@@ -64,10 +66,13 @@ public final class Resource<Value> : Prefetchable {
         assert(Thread.isMainThread)
         switch result {
         case .success(let value):
+            self.isAbsoluteTruth = value.source.isAbsoluteTruth
             print("\(Value.self) relevance confirmed with:", value.source)
             if let relevant = value.valueIfRelevant {
                 self.value = relevant
                 completion(relevant, value.source)
+            } else {
+                completion(value.lastRelevant, value.source)
             }
         case .failure(let error):
             print("Error loading \(self):", error)

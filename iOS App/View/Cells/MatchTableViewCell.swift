@@ -44,10 +44,12 @@ final class MatchCellFiller : CellFiller {
     
     let avenue: Avenue<URL, URL, UIImage>
     let isFavorite: (Team.ID) -> Bool
+    let isAbsoluteTruth: () -> Bool
     
-    init(avenue: Avenue<URL, URL, UIImage>, isFavorite: @escaping (Team.ID) -> Bool) {
+    init(avenue: Avenue<URL, URL, UIImage>, isFavorite: @escaping (Team.ID) -> Bool, isAbsoluteTruth: @escaping () -> Bool) {
         self.avenue = avenue
         self.isFavorite = isFavorite
+        self.isAbsoluteTruth = isAbsoluteTruth
     }
     
     func setup(_ cell: MatchTableViewCell, with match: Match.Compact, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
@@ -59,6 +61,11 @@ final class MatchCellFiller : CellFiller {
             cell.backgroundColor = UIColor(named: .favoriteBackground)
         } else {
             cell.backgroundColor = .white
+        }
+        if isAbsoluteTruth() {
+            cell.scoreTimeLabel.textColor = .black
+        } else {
+            cell.scoreTimeLabel.textColor = .gray
         }
         cell.scoreTimeLabel.text = match.score?.string ?? "-:-"
         cell.homeTeamNameLabel.text = match.home.name

@@ -60,7 +60,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
         super.viewDidLoad()
         self.smallBadgesAvenue = makeAvenue(CGSize(width: 30, height: 30))
         self.mainBadgeAvenue = makeAvenue(CGSize(width: 50, height: 50))
-        self.matchCellFiller = MatchCellFiller(avenue: smallBadgesAvenue, isFavorite: { _ in return false })
+        self.matchCellFiller = MatchCellFiller(avenue: smallBadgesAvenue, isFavorite: { _ in return false }, isAbsoluteTruth: { self.resource.isAbsoluteTruth })
         self.teamGroupCellFiller = TeamGroupCellFiller(avenue: smallBadgesAvenue)
         self.pullToRefreshActivities = make()
         registerFor3DTouch()
