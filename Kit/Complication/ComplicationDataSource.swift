@@ -11,14 +11,14 @@ import Shallows
 
 func onlySuccess<T>(_ completion: @escaping (T) -> ()) -> (Result<T>) -> () {
     return { res in
-        if let val = res.asOptional {
+        if let val = res.value {
             completion(val)
         }
     }
 }
 
 func asOptional<T>(_ completion: @escaping (T?) -> ()) -> (Result<T>) -> () {
-    return { completion($0.asOptional) }
+    return { completion($0.value) }
 }
 
 public func endsLater(_ lhs: Match.Full, _ rhs: Match.Full) -> Match.Full {
@@ -52,19 +52,19 @@ public final class ComplicationDataSource {
     
     public func timelineStartDate(completion: @escaping (Date?) -> ()) {
         matches.retrieve { (result) in
-            completion(result.asOptional?.timelineStartDate())
+            completion(result.value?.timelineStartDate())
         }
     }
     
     public func timelineEndDate(completion: @escaping (Date?) -> ()) {
         matches.mapValues({ try $0.endOfLastMatch().unwrap() }).retrieve { (result) in
-            completion(result.asOptional?.addingTimeInterval(86400))
+            completion(result.value?.addingTimeInterval(86400))
         }
     }
     
     public func matches(after date: Date, limit: Int, completion: @escaping ([MatchSnapshot]?) -> ()) {
         matches.retrieve { (result) in
-            if let matches = result.asOptional {
+            if let matches = result.value {
                 let matchesAfter = matches.snapshots().after(date)
                 let realLimit = min(limit, matchesAfter.count)
                 completion(Array(matchesAfter.prefix(upTo: realLimit)))
@@ -76,7 +76,7 @@ public final class ComplicationDataSource {
     
     public func currentMatch(completion: @escaping (MatchSnapshot?) -> ()) {
         matches.retrieve { (result) in
-            if let matches = result.asOptional {
+            if let matches = result.value {
                 let matchesBefore = matches.snapshots().before(Date())
                 completion(matchesBefore.last)
             } else {
@@ -87,7 +87,7 @@ public final class ComplicationDataSource {
     
     public func matches(before date: Date, limit: Int, completion: @escaping ([MatchSnapshot]?) -> ()) {
         matches.retrieve { (result) in
-            if let matches = result.asOptional {
+            if let matches = result.value {
                 let matchesBefore = matches.snapshots().before(date)
                 let realLimit = min(limit, matchesBefore.count)
                 completion(Array(matchesBefore.prefix(upTo: realLimit)))

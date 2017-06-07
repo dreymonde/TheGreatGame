@@ -44,7 +44,7 @@ public final class Resource<Value> : Prefetchable {
         local.retrieve { (result) in
             assert(Thread.isMainThread)
             printWithContext("Prefetched \(Value.self)")
-            if let retrieved = result.asOptional {
+            if let retrieved = result.value {
                 self.value = retrieved
             }
         }
@@ -99,7 +99,7 @@ public final class Local<Value> {
     public func retrieve(_ completion: @escaping (Value) -> ()) {
         provider.retrieve { (result) in
             assert(Thread.isMainThread)
-            if let value = result.asOptional {
+            if let value = result.value {
                 completion(value)
             }
         }

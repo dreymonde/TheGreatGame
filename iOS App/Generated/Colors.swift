@@ -27,8 +27,8 @@ enum ColorName {
   /// <span style="display:block;width:3em;height:2em;border:1px solid black;background:#ffffcc"></span>
   /// Alpha: 100% <br/> (0xffffccff)
   case favoriteBackground
-  /// <span style="display:block;width:3em;height:2em;border:1px solid black;background:#e15800"></span>
-  /// Alpha: 100% <br/> (0xe15800ff)
+  /// <span style="display:block;width:3em;height:2em;border:1px solid black;background:#2980b9"></span>
+  /// Alpha: 100% <br/> (0x2980b9ff)
   case navigationBackground
 
   var rgbaValue: UInt32 {
@@ -36,7 +36,7 @@ enum ColorName {
     case .favoriteBackground:
       return 0xffffccff
     case .navigationBackground:
-      return 0xe15800ff
+      return 0x2980b9ff
     }
   }
 

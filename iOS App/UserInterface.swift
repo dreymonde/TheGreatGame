@@ -35,7 +35,7 @@ final class UserInterface {
         resources.prefetchAll()
         logic.favoriteTeams.favoriteTeams.retrieve { (result) in
             print("Before favs prefetch is main thread:", Thread.isMainThread)
-            if let set = result.asOptional {
+            if let set = result.value {
                 for id in set {
                     self.resources.fullTeam(id).prefetch()
                 }

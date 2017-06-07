@@ -62,7 +62,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         let favorites = todayExtension.favoriteTeams.favoriteTeams
         let zipped = zip(cachedAllMatches, favorites)
         zipped.mainThread().retrieve { (result) in
-            if let retrieved = result.asOptional {
+            if let retrieved = result.value {
                 let matches = retrieved.0.lastRelevant.matches
                 let favorites = retrieved.1
                 print(favorites)

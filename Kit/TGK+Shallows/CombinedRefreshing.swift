@@ -77,7 +77,7 @@ extension CacheProtocol {
                 backCache.retrieve(forKey: key, completion: { (backResult) in
                     switch backResult {
                     case .success(let backValue):
-                        if let frontValue = frontResult.asOptional {
+                        if let frontValue = frontResult.value {
                             if isMoreRecent(backValue, frontValue) {
                                 log("Backed value is more recent than existing, setting and completing second time")
                                 let relv = Relevant(valueIfRelevant: backValue.value, source: backValue.source, lastRelevant: backValue.value)

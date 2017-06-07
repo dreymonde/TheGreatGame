@@ -130,7 +130,7 @@ internal final class ActiveWatchSession {
         let mapped = directoryURLCache
             .mapPlistDictionary()
             .mapMappable(of: AppleWatchInfo.self)
-            .singleKey(.init("watch-info.plist"))
+            .singleKey(.init(validFileName: "watch-info.plist"))
             .defaulting(to: .blank)
         self.watchInfo = SingleElementMemoryCache().combined(with: mapped)
     }
@@ -141,7 +141,7 @@ internal final class ActiveWatchSession {
     
     private func act() {
         watchInfo.retrieve { (result) in
-            let info = result.asOptional!
+            let info = result.value!
             if info.wasPairedBefore {
                 print("Was paired before")
             } else {

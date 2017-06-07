@@ -11,20 +11,7 @@ import Shallows
 import Alba
 
 extension CacheProtocol {
-    
-    public func defaulting(to defaultValue: Value) -> Cache<Key, Value> {
-        return Cache(cacheName: self.cacheName, retrieve: { (key, completion) in
-            self.retrieve(forKey: key, completion: { (result) in
-                switch result {
-                case .failure:
-                    completion(.success(defaultValue))
-                case .success(let value):
-                    completion(.success(value))
-                }
-            })
-        }, set: self.set)
-    }
-    
+        
     public func renaming(to newName: String) -> Cache<Key, Value> {
         return Cache(cacheName: newName, retrieve: self.retrieve, set: self.set)
     }
@@ -66,7 +53,7 @@ public final class FavoriteTeams {
                 favs.remove(id)
             }
         }, completion: { result in
-            if let new = result.asOptional {
+            if let new = result.value {
                 self.didUpdateFavorite.publish((id, isFavorite: isFavorite))
                 self.didUpdateFavorites.publish(new)
             }
