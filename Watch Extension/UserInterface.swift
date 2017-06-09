@@ -18,8 +18,8 @@ final class UserInterface {
     init(watchExtension: WatchExtension) {
         self.logic = watchExtension
         self.matches = Resource<FullMatches>(local: logic.apiCache.matches.allFull,
-                                                 remote: logic.api.matches.allFull,
-                                                 networkActivity: .none)
+                                             remote: logic.api.matches.allFull,
+                                             networkActivity: .none)
             .map({ $0.matches })
     }
     
@@ -32,8 +32,8 @@ final class UserInterface {
 //            .mapValues({ $0.content.matches })
 ////            .mapValues({ $0.filter({ Calendar.current.isDateInToday($0.date) }) })
         let matchesToday = matches.map({ $0.filter({ Calendar.autoupdatingCurrent.isDateInToday($0.date) }) })
-        return MatchesInterfaceController.Context(resource: matchesToday,
-                                                  makeAvenue: logic.imageCache.makeAvenue(forImageSize:))
+        return MatchesInterfaceController.Context(resource: matches,
+                                                  makeAvenue: logic.imageCache.makeDoubleCachedAvenue(forImageSize:))
     }
     
     static let matchesList = "MatchesInterfaceController"

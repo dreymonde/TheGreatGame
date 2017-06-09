@@ -40,7 +40,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
         self.matchCellFiller = MatchCellFiller(avenue: avenue, isFavorite: self.isFavorite, isAbsoluteTruth: { self.resource.isAbsoluteTruth })
         configure(avenue)
         self.pullToRefreshActivities = make()
-        self.resource.load(completion: reloadData(stages:source:))
+        self.resource.load(confirmation: tableView.reloadData, completion: reloadData(stages:source:))
     }
     
     func subscribe() {

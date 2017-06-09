@@ -13,9 +13,26 @@ import TheGreatKit
 import Avenues
 import Shallows
 
+extension NetworkActivityIndicatorManager {
+    
+    public convenience init(image: WKInterfaceImage) {
+        self.init(show: { 
+            image.setHidden(false)
+            image.startAnimating()
+        }, hide: {
+            image.stopAnimating()
+            image.setHidden(true)
+        })
+    }
+    
+}
+
 class MatchesInterfaceController: WKInterfaceController {
     
+    @IBOutlet var stageLabel: WKInterfaceLabel!
+    @IBOutlet var activityImage: WKInterfaceImage!
     @IBOutlet var table: WKInterfaceTable!
+    
     let matchRowType = "MatchCompact"
     
     struct Context {
@@ -25,16 +42,36 @@ class MatchesInterfaceController: WKInterfaceController {
     
     var context: Context!
     var avenue: Avenue<URL, URL, UIImage>!
+    var networkActivityIndicator: NetworkActivityIndicatorManager!
     
-    var matches: [Match.Full] = []
+    var matches: [Match.Full] = [] {
+        didSet {
+            stageLabel.setText(matches.first?.stageTitle)
+        }
+    }
+    
+    var firstActivation = true
     
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
         self.context = ExtensionDelegate.userInterface.makeContext(for: MatchesInterfaceController.self)
         self.avenue = self.context.makeAvenue(CGSize.init(width: 25, height: 25))
+        self.networkActivityIndicator = NetworkActivityIndicatorManager(image: activityImage)
         printWithContext()
         configure(avenue)
+        self.context.resource.addActivityIndicator(networkActivityIndicator)
         self.context.resource.load(completion: reload(with:source:))
+    }
+    
+    override func willActivate() {
+        // This method is called when watch view controller is about to be visible to user
+        if firstActivation {
+            firstActivation = false
+            return
+        } else {
+            self.context.resource.reload(connectingToIndicator: .none, completion: reload(with:source:))
+        }
+        super.willActivate()
     }
     
     private func configure(_ avenue: SymmetricalAvenue<URL, UIImage>) {
@@ -53,6 +90,7 @@ class MatchesInterfaceController: WKInterfaceController {
     }
     
     func reload(with matches: [Match.Full], source: Source) {
+        printWithContext()
         self.matches = matches
         table.setNumberOfRows(matches.count, withRowType: matchRowType)
         for (match, index) in zip(matches, matches.indices) {
@@ -67,11 +105,19 @@ class MatchesInterfaceController: WKInterfaceController {
         cell.scoreLabel.setText(match.score?.demo_string ?? "-:-")
         cell.homeBadgeImage.setImage(avenue.item(at: match.home.badgeURL))
         cell.awayBadgeImage.setImage(avenue.item(at: match.away.badgeURL))
+        configureProgressSeparator(cell.minutesPassedSeparator, with: match)
     }
     
-    override func willActivate() {
-        // This method is called when watch view controller is about to be visible to user
-        super.willActivate()
+    func configureProgressSeparator(_ separator: WKInterfaceSeparator, with match: Match.Full) {
+        if match.isEnded {
+            separator.setRelativeWidth(1.0, withAdjustment: 0)
+            separator.setColor(.green)
+        } else if !match.isStarted {
+            separator.setRelativeWidth(0.0, withAdjustment: 0)
+        } else {
+            separator.setRelativeWidth(CGFloat(match.progress()), withAdjustment: 0)
+            separator.setColor(.blue)
+        }
     }
     
     override func didDeactivate() {

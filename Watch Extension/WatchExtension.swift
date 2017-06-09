@@ -10,6 +10,7 @@ import Foundation
 import Alba
 import TheGreatKit
 import Shallows
+import Avenues
 
 final class WatchExtension {
     
@@ -27,7 +28,10 @@ final class WatchExtension {
         Alba.InformBureau.Logger.enable()
         ShallowsLog.isEnabled = true
         self.phone = Phone()
-        self.imageCache = ImageFetch(diskCache: FileSystemCache.inDirectory(.cachesDirectory, appending: "dev-1-images").mapKeys({ $0.absoluteString }).mapImage())
+        let rawDiskCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "dev-2-images")
+        print(rawDiskCache.directoryURL)
+        let diskCache: Cache<URL, UIImage> = rawDiskCache.mapKeys({ $0.absoluteString }).mapImage()
+        self.imageCache = ImageFetch(diskCache: diskCache)
         self.api = API.gitHub(urlSession: URLSession.init(configuration: .default))
 //        self.api = API.macBookSteve()
         self.apiCache = APICache.inLocalCachesDirectory()

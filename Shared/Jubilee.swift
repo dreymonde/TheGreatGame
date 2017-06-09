@@ -81,3 +81,11 @@ public extension String {
     #endif
     
 }
+
+extension Bool {
+    
+    var not: Bool {
+        return !self
+    }
+    
+}

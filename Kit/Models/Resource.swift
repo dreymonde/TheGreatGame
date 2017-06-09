@@ -52,17 +52,21 @@ public final class Resource<Value> : Prefetchable {
         }
     }
     
-    public func load(completion: @escaping (Value, Source) -> ()) {
+    public func addActivityIndicator(_ activityIndicator: NetworkActivityIndicatorManager) {
+        self.provider = self.provider.sourceful_connectingNetworkActivityIndicator(manager: activityIndicator)
+    }
+    
+    public func load(confirmation: @escaping () -> () = { }, completion: @escaping (Value, Source) -> ()) {
         if let prefetched = getValue() {
             printWithContext("Completing with previously prefetched")
             completion(prefetched, .memory)
         }
         provider.retrieve { (result) in
-            self.handle(result, with: completion)
+            self.handle(result, confirmation: confirmation, with: completion)
         }
     }
     
-    private func handle(_ result: Result<Relevant<Value>>, with completion: @escaping (Value, Source) -> ()) {
+    private func handle(_ result: Result<Relevant<Value>>, confirmation: @escaping () -> (), with completion: @escaping (Value, Source) -> ()) {
         assert(Thread.isMainThread)
         switch result {
         case .success(let value):
@@ -71,8 +75,8 @@ public final class Resource<Value> : Prefetchable {
             if let relevant = value.valueIfRelevant {
                 self.value = relevant
                 completion(relevant, value.source)
-            } else {
-                completion(value.lastRelevant, value.source)
+            } else if value.source.isAbsoluteTruth {
+                confirmation()
             }
         case .failure(let error):
             print("Error loading \(self):", error)
@@ -84,7 +88,7 @@ public final class Resource<Value> : Prefetchable {
         provider.retrieve { (result) in
             if result.isLastRequest {
                 indicator.decrement()
-                self.handle(result, with: completion)
+                self.handle(result, confirmation: { }, with: completion)
             }
         }
     }

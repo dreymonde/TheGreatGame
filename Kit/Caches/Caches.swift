@@ -13,7 +13,7 @@ import UIKit
 extension CacheProtocol where Value == Data {
     
     public func mapImage() -> Cache<Key, UIImage> {
-        return mapValues(transformIn: throwing(UIImage.init(data:)),
+        return mapValues(transformIn: { try UIImage.init(data: $0, scale: 2.0).unwrap() },
                          transformOut: throwing(UIImagePNGRepresentation))
     }
     
@@ -52,6 +52,17 @@ public final class ImageFetch {
             .mapImage()
             .caching(to: diskCache)
         let lane = fullSizedLane.mapValue({ $0.resized(toFit: imageSize) })
+        let storage = imageCache(forSize: imageSize.width)
+        return Avenue(storage: storage, processor: lane)
+    }
+    
+    public func makeDoubleCachedAvenue(forImageSize imageSize: CGSize) -> Avenue<URL, URL, UIImage> {
+        let lane: Processor<URL, UIImage> = URLSessionProcessor(session: imageFetchingSession)
+            .mapImage()
+            .caching(to: diskCache)
+            .mapValue({ $0.resized(toFit: imageSize) })
+            .caching(to: diskCache.mapKeys({ $0.appendingPathComponent("-\(imageSize.width)") }))
+            .mapValue({ print($0.size); return $0 })
         let storage = imageCache(forSize: imageSize.width)
         return Avenue(storage: storage, processor: lane)
     }

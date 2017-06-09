@@ -28,6 +28,12 @@ extension MatchProtocol {
         return teams.map({ isFavorite($0.id) }).contains(true)
     }
     
+    public func progress() -> Double {
+        let completeInterval = endDate.timeIntervalSince(date)
+        let progressInterval = Date().timeIntervalSince(date)
+        return progressInterval / completeInterval
+    }
+    
 }
 
 public enum Match {
@@ -149,6 +155,10 @@ public enum Match {
         
         public var isEnded: Bool {
             return events.contains(where: { $0.kind == .end })
+        }
+        
+        public var isStarted: Bool {
+            return events.contains(where: { $0.kind == .start })
         }
         
     }

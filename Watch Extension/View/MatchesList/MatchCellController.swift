@@ -10,6 +10,7 @@ import WatchKit
 
 class MatchCellController: NSObject {
 
+    @IBOutlet var minutesPassedSeparator: WKInterfaceSeparator!
     @IBOutlet var homeBadgeImage: WKInterfaceImage!
     @IBOutlet var scoreLabel: WKInterfaceLabel!
     @IBOutlet var awayBadgeImage: WKInterfaceImage!
