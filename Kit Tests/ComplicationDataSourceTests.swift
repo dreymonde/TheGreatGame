@@ -24,10 +24,10 @@ class ComplicationDataSourceTests: XCTestCase {
     
     func testAfter() throws {
         let api = API.gitHub(urlSession: .init(configuration: .ephemeral))
-        let allMatches = api.matches.all.mapValues({ $0.content.matches }).makeSyncCache()
+        let allMatches = api.matches.allFull.mapValues({ $0.content.matches }).makeSyncCache()
         let dateComps = DateComponents(calendar: nil, timeZone: TimeZone.init(identifier: "Europe/Amsterdam"), era: nil, year: 2017, month: 7, day: 21, hour: 21, minute: 0, second: 0, nanosecond: nil, weekday: nil, weekdayOrdinal: nil, quarter: nil, weekOfMonth: nil, weekOfYear: nil, yearForWeekOfYear: nil)
         let date = try Calendar.current.date(from: dateComps).unwrap()
-        let all = try allMatches.retrieve()
+        let all = try allMatches.retrieve().snapshots()
         dump(all.after(date))
         print("DEEEEEEE")
         dump(all.before(date))
