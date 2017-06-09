@@ -17,8 +17,6 @@ final class UserInterface {
     fileprivate let logic: Application
     fileprivate let resources: Resources
     
-    fileprivate let avenueSession = URLSession(configuration: .ephemeral)
-    
     init(window: UIWindow, application: Application) {
         self.window = window
         self.logic = application
@@ -53,12 +51,17 @@ final class UserInterface {
         inject(to: groupsList!)
     }
     
+    private func makeAvenue(forImageSize imageSize: CGSize) -> Avenue<URL, URL, UIImage> {
+        return logic.imageFetching.makeAvenue(forImageSize: imageSize)
+            .connectingNetworkActivityIndicator(manager: .application)
+    }
+    
     func inject(to teamsList: TeamsTableViewController) {
         teamsList <- {
             $0.resource = self.resources.teams
             $0.isFavorite = self.logic.favoriteTeams.isFavorite(teamWith:)
             $0.updateFavorite = self.logic.favoriteTeams.updateFavorite(id:isFavorite:)
-            $0.makeAvenue = { self.logic.imageFetching.makeAvenue(forImageSize: $0) }
+            $0.makeAvenue = self.makeAvenue(forImageSize:)
             $0.makeTeamDetailVC = { self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
         }
     }

@@ -55,8 +55,9 @@ class MatchesInterfaceController: WKInterfaceController {
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
         self.context = ExtensionDelegate.userInterface.makeContext(for: MatchesInterfaceController.self)
-        self.avenue = self.context.makeAvenue(CGSize.init(width: 25, height: 25))
         self.networkActivityIndicator = NetworkActivityIndicatorManager(image: activityImage)
+        self.avenue = self.context.makeAvenue(CGSize.init(width: 25, height: 25))
+            .connectingNetworkActivityIndicator(manager: networkActivityIndicator)
         printWithContext()
         configure(avenue)
         self.context.resource.addActivityIndicator(networkActivityIndicator)

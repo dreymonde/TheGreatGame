@@ -39,7 +39,7 @@ final class Application {
         let server = launchArgument(.server) ?? .github
         switch server {
         case .github:
-            let urlSession = URLSession(configuration: .ephemeral)
+            let urlSession = URLSession(configuration: .default)
             printWithContext("Using github as a server")
             return API.gitHub(urlSession: urlSession)
         case .macBookSteve:

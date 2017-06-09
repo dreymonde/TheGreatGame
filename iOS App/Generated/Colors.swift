@@ -1,4 +1,4 @@
-// Generated using SwiftGen, by O.Halligon — https://github.com/AliSoftware/SwiftGen
+// Generated using SwiftGen, by O.Halligon — https://github.com/SwiftGen/SwiftGen
 
 #if os(iOS) || os(tvOS) || os(watchOS)
   import UIKit.UIColor
@@ -8,6 +8,7 @@
   typealias Color = NSColor
 #endif
 
+// swiftlint:disable operator_usage_whitespace
 extension Color {
   convenience init(rgbaValue: UInt32) {
     let red   = CGFloat((rgbaValue >> 24) & 0xff) / 255.0
@@ -18,6 +19,7 @@ extension Color {
     self.init(red: red, green: green, blue: blue, alpha: alpha)
   }
 }
+// swiftlint:enable operator_usage_whitespace
 
 // swiftlint:disable file_length
 // swiftlint:disable line_length
@@ -51,3 +53,5 @@ extension Color {
     self.init(rgbaValue: name.rgbaValue)
   }
 }
+// swiftlint:enable file_length
+// swiftlint:enable line_length

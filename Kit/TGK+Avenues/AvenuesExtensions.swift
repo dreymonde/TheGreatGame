@@ -10,6 +10,15 @@ import Foundation
 import Avenues
 import UIKit
 
+extension Avenue {
+    
+    public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicatorManager) -> Avenue<StoringKey, ProcessingKey, Value> {
+        let newLane = self.processor.connectingNetworkActivityIndicator(manager: manager)
+        return Avenue(storage: storage, processor: newLane)
+    }
+    
+}
+
 extension UIImage {
     
     public func resized(toFit size: CGSize) -> UIImage {

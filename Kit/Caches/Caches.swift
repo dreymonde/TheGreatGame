@@ -23,7 +23,7 @@ public final class ImageFetch {
     
     internal var caches: [Int : Storage<URL, UIImage>] = [:]
     
-    fileprivate let imageFetchingSession = URLSession(configuration: .ephemeral)
+    fileprivate let imageFetchingSession = URLSession(configuration: .default)
     fileprivate let diskCache: Cache<URL, UIImage>
     
     public init(diskCache: Cache<URL, UIImage>) {
@@ -62,7 +62,6 @@ public final class ImageFetch {
             .caching(to: diskCache)
             .mapValue({ $0.resized(toFit: imageSize) })
             .caching(to: diskCache.mapKeys({ $0.appendingPathComponent("-\(imageSize.width)") }))
-            .mapValue({ print($0.size); return $0 })
         let storage = imageCache(forSize: imageSize.width)
         return Avenue(storage: storage, processor: lane)
     }
