@@ -28,11 +28,14 @@ final class UserInterface {
     }
     
     func makeContext(for contr: MatchesInterfaceController.Type) -> MatchesInterfaceController.Context {
-//        let matchesToday = logic.api.matches.all
-//            .mapValues({ $0.content.matches })
-////            .mapValues({ $0.filter({ Calendar.current.isDateInToday($0.date) }) })
-        let matchesToday = matches.map({ $0.filter({ Calendar.autoupdatingCurrent.isDateInToday($0.date) }) })
-        return MatchesInterfaceController.Context(resource: matches,
+        let relevantMatches = matches.map { (all) -> [Match.Full] in
+            let allUpcoming = all.filter({ !$0.isStarted || Calendar.autoupdatingCurrent.isDateInToday($0.date) })
+            if let firstUpcoming = allUpcoming.min(by: { $0.date < $1.date }) {
+                return all.filter({ Calendar.autoupdatingCurrent.isDate($0.date, inSameDayAs: firstUpcoming.date) })
+            }
+            return []
+        }
+        return MatchesInterfaceController.Context(resource: relevantMatches,
                                                   makeAvenue: logic.imageCache.makeDoubleCachedAvenue(forImageSize:))
     }
     

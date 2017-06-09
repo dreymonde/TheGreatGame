@@ -27,8 +27,16 @@ extension NetworkActivityIndicatorManager {
     
 }
 
+let relativeDateFormatter = DateFormatter() <- {
+    $0.dateStyle = .medium
+    $0.timeStyle = .none
+    $0.doesRelativeDateFormatting = true
+}
+
 class MatchesInterfaceController: WKInterfaceController {
     
+    @IBOutlet var relativeDateLabel: WKInterfaceLabel!
+    @IBOutlet var noMatchesLabel: WKInterfaceLabel!
     @IBOutlet var stageLabel: WKInterfaceLabel!
     @IBOutlet var activityImage: WKInterfaceImage!
     @IBOutlet var table: WKInterfaceTable!
@@ -47,6 +55,8 @@ class MatchesInterfaceController: WKInterfaceController {
     var matches: [Match.Full] = [] {
         didSet {
             stageLabel.setText(matches.first?.stageTitle)
+            relativeDateLabel.setText(matches.first.map({ relativeDateFormatter.string(from: $0.date) }))
+            noMatchesLabel.setHidden(!matches.isEmpty)
         }
     }
     
@@ -56,7 +66,7 @@ class MatchesInterfaceController: WKInterfaceController {
         super.awake(withContext: context)
         self.context = ExtensionDelegate.userInterface.makeContext(for: MatchesInterfaceController.self)
         self.networkActivityIndicator = NetworkActivityIndicatorManager(image: activityImage)
-        self.avenue = self.context.makeAvenue(CGSize.init(width: 25, height: 25))
+        self.avenue = self.context.makeAvenue(CGSize.init(width: 35, height: 35))
             .connectingNetworkActivityIndicator(manager: networkActivityIndicator)
         printWithContext()
         configure(avenue)

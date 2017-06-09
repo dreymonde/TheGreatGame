@@ -13,29 +13,37 @@
             <objects>
                 <controller identifier="MatchesInterfaceController" id="AgC-eL-Hgc" customClass="MatchesInterfaceController" customModule="Watch_Extension">
                     <items>
-                        <group width="1" alignment="left" id="qEe-sz-J9z">
+                        <group width="1" alignment="left" layout="vertical" spacing="0.0" id="PrF-pI-ryW">
                             <items>
-                                <label alignment="left" text="Group A, leg 0" numberOfLines="0" id="OmK-E5-Cmp">
+                                <group width="1" alignment="left" id="qEe-sz-J9z">
+                                    <items>
+                                        <label alignment="left" text="Group A, leg 0" numberOfLines="0" id="OmK-E5-Cmp">
+                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <fontDescription key="font" style="UICTFontTextStyleSubhead"/>
+                                        </label>
+                                        <imageView alignment="right" verticalAlignment="center" image="Activity" initiallyAnimated="NO" animationDuration="1" id="901-Rv-deI"/>
+                                    </items>
+                                </group>
+                                <label alignment="left" text="Today" numberOfLines="0" id="vg5-2X-Sa1">
                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                    <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                    <fontDescription key="font" type="system" pointSize="12"/>
                                 </label>
-                                <imageView alignment="right" verticalAlignment="center" image="Activity" initiallyAnimated="NO" animationDuration="1" id="901-Rv-deI"/>
                             </items>
                         </group>
-                        <table alignment="left" spacing="6" id="hn5-On-7gI">
+                        <table alignment="left" id="hn5-On-7gI">
                             <items>
                                 <tableRow identifier="MatchCompact" id="wpz-Oj-LWN" customClass="MatchCellController" customModule="Watch_Extension">
-                                    <group key="rootItem" width="1" alignment="left" layout="vertical" id="gO6-0v-mp6">
+                                    <group key="rootItem" width="1" height="50" alignment="left" layout="vertical" id="gO6-0v-mp6">
                                         <items>
                                             <group width="1" alignment="left" verticalAlignment="center" id="pCD-GA-pOh">
                                                 <items>
-                                                    <imageView width="25" height="25" alignment="left" verticalAlignment="center" id="OVm-rs-KXT"/>
+                                                    <imageView width="32" height="32" alignment="left" verticalAlignment="center" id="OVm-rs-KXT"/>
                                                     <label alignment="center" verticalAlignment="center" text="-:-" id="ULF-4F-fKL">
                                                         <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
                                                     </label>
-                                                    <imageView width="25" height="25" alignment="right" verticalAlignment="center" id="7nt-yr-fy6"/>
+                                                    <imageView width="32" height="32" alignment="right" verticalAlignment="center" id="7nt-yr-fy6"/>
                                                 </items>
-                                                <edgeInsets key="margins" left="14" right="14" top="0.0" bottom="0.0"/>
+                                                <edgeInsets key="margins" left="10" right="10" top="0.0" bottom="0.0"/>
                                             </group>
                                             <separator width="0.29999999999999999" alignment="left" verticalAlignment="bottom" id="qUs-Ex-RaG">
                                                 <color key="color" red="0.70196078429999997" green="0.99215686270000003" blue="0.74509803919999995" alpha="1" colorSpace="calibratedRGB"/>
@@ -52,9 +60,15 @@
                                 </tableRow>
                             </items>
                         </table>
+                        <label height="60" alignment="center" verticalAlignment="center" text="Thank you for being with us!" textAlignment="center" numberOfLines="0" id="8vw-nR-Dol">
+                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                        </label>
                     </items>
                     <connections>
                         <outlet property="activityImage" destination="901-Rv-deI" id="AZ5-8C-FYT"/>
+                        <outlet property="noMatchesLabel" destination="8vw-nR-Dol" id="k22-gl-lFS"/>
+                        <outlet property="relativeDateLabel" destination="vg5-2X-Sa1" id="GW2-Zw-gao"/>
                         <outlet property="stageLabel" destination="OmK-E5-Cmp" id="De6-aq-XQd"/>
                         <outlet property="table" destination="hn5-On-7gI" id="UjU-Tu-fHH"/>
                     </connections>
