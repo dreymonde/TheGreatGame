@@ -36,9 +36,11 @@ final class TeamGroupCellFiller : CellFiller {
     typealias Content = Group.Team
     
     let avenue: Avenue<URL, URL, UIImage>
+    let isAbsoluteTruth: () -> Bool
     
-    init(avenue: Avenue<URL, URL, UIImage>) {
+    init(avenue: Avenue<URL, URL, UIImage>, isAbsoluteTruth: @escaping () -> Bool) {
         self.avenue = avenue
+        self.isAbsoluteTruth = isAbsoluteTruth
     }
     
     func setup(_ cell: TeamGroupTableViewCell, with team: Group.Team, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
@@ -47,6 +49,7 @@ final class TeamGroupCellFiller : CellFiller {
         }
         cell.nameLabel.text = team.name
         cell.pointsLabel.text = String(team.points)
+        cell.pointsLabel.textColor = isAbsoluteTruth() ? .black : .gray
         cell.positionLabel.text = "\(indexPath.row + 1)."
         cell.badgeImageView.setImage(avenue.item(at: team.badgeURL), afterDownload: afterImageDownload)
     }

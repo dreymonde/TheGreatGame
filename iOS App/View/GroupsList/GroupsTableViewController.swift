@@ -32,7 +32,8 @@ class GroupsTableViewController: TheGreatGame.TableViewController, Refreshing {
         super.viewDidLoad()
         configure(tableView)
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
-        self.teamGroupCellFiller = TeamGroupCellFiller(avenue: avenue)
+        self.teamGroupCellFiller = TeamGroupCellFiller(avenue: avenue,
+                                                       isAbsoluteTruth: { [unowned self] in self.resource.isAbsoluteTruth })
         configure(avenue)
         self.pullToRefreshActivities = make()
         registerFor3DTouch()

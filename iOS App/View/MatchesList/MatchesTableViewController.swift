@@ -37,7 +37,9 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
         self.subscribe()
         configure(tableView)
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
-        self.matchCellFiller = MatchCellFiller(avenue: avenue, isFavorite: self.isFavorite, isAbsoluteTruth: { self.resource.isAbsoluteTruth })
+        self.matchCellFiller = MatchCellFiller(avenue: avenue,
+                                               isFavorite: { [unowned self] in self.isFavorite($0) },
+                                               isAbsoluteTruth: { [unowned self] in self.resource.isAbsoluteTruth })
         configure(avenue)
         self.pullToRefreshActivities = make()
         self.resource.load(confirmation: tableView.reloadData, completion: reloadData(stages:source:))

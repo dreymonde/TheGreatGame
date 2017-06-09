@@ -60,15 +60,18 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
         super.viewDidLoad()
         self.smallBadgesAvenue = makeAvenue(CGSize(width: 30, height: 30))
         self.mainBadgeAvenue = makeAvenue(CGSize(width: 50, height: 50))
-        self.matchCellFiller = MatchCellFiller(avenue: smallBadgesAvenue, isFavorite: { _ in return false }, isAbsoluteTruth: { self.resource.isAbsoluteTruth })
-        self.teamGroupCellFiller = TeamGroupCellFiller(avenue: smallBadgesAvenue)
+        self.matchCellFiller = MatchCellFiller(avenue: smallBadgesAvenue,
+                                               isFavorite: { _ in return false },
+                                               isAbsoluteTruth: { [unowned self] in self.resource.isAbsoluteTruth })
+        self.teamGroupCellFiller = TeamGroupCellFiller(avenue: smallBadgesAvenue,
+                                                       isAbsoluteTruth: { [unowned self] in self.resource.isAbsoluteTruth })
         self.pullToRefreshActivities = make()
         registerFor3DTouch()
         configure(tableView)
         configure(smallBadges: smallBadgesAvenue)
         configure(mainBadge: mainBadgeAvenue)
         configure(navigationItem)
-        self.resource.load(completion: self.setup(with:source:))
+        self.resource.load(confirmation: tableView.reloadData, completion: self.setup(with:source:))
     }
     
     func setup(with team: Team.Full, source: Source) {

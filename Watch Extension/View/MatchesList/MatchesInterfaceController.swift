@@ -74,12 +74,6 @@ class MatchesInterfaceController: WKInterfaceController {
         super.willActivate()
     }
     
-    private func configure(_ avenue: SymmetricalAvenue<URL, UIImage>) {
-        avenue.onStateChange = { [weak self] url in
-            self?.didFetchImage(with: url)
-        }
-    }
-    
     func didFetchImage(with url: URL) {
         for (match, index) in zip(matches, matches.indices) {
             if match.teams.map({ $0.badgeURL }).contains(url) {
@@ -125,4 +119,16 @@ class MatchesInterfaceController: WKInterfaceController {
         super.didDeactivate()
     }
 
+}
+
+extension MatchesInterfaceController {
+    
+    // MARK: - Configurations
+    
+    fileprivate func configure(_ avenue: SymmetricalAvenue<URL, UIImage>) {
+        avenue.onStateChange = { [weak self] url in
+            self?.didFetchImage(with: url)
+        }
+    }
+    
 }
