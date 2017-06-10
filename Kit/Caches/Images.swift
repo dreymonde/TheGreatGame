@@ -19,7 +19,7 @@ extension CacheProtocol where Value == Data {
     
 }
 
-public final class ImageFetch : Storing {
+public final class Images : Storing {
     
     public static var preferredSubPath: String {
         return "image-cache-10"

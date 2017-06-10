@@ -36,7 +36,7 @@ final class UserInterface {
             return []
         }
         return MatchesInterfaceController.Context(resource: relevantMatches,
-                                                  makeAvenue: logic.imageCache.makeDoubleCachedAvenue(forImageSize:))
+                                                  makeAvenue: logic.images.makeDoubleCachedAvenue(forImageSize:))
     }
     
     static let matchesList = "MatchesInterfaceController"

@@ -16,13 +16,13 @@ final class TodayExtension {
     let favoriteTeams: FavoriteTeams
     let api: API
     let apiCache: APICache
-    let images: ImageFetch
+    let images: Images
     
     init() {
         self.api = API.gitHub()
         self.apiCache = APICache.inSharedCachesDirectory()
         self.favoriteTeams = FavoriteTeams.inSharedDocumentsDirectory()
-        self.images = ImageFetch.inSharedCachesDirectory()
+        self.images = Images.inSharedCachesDirectory()
         self._provider = apiCache.matches.allFull
             .backed(by: api.matches.allFull, pullingFromBack: true)
             .asReadOnlyCache()

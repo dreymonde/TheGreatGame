@@ -17,7 +17,7 @@ final class WatchExtension {
     static let main = WatchExtension()
     
     let phone: Phone
-    let imageCache: ImageFetch
+    let images: Images
     let api: API
     let apiCache: APICache
     let favorites: FavoriteTeams
@@ -28,7 +28,7 @@ final class WatchExtension {
         Alba.InformBureau.Logger.enable()
         ShallowsLog.isEnabled = true
         self.phone = Phone()
-        self.imageCache = ImageFetch.inLocalCachesDirectory(subpath: "dev-3-images")
+        self.images = Images.inLocalCachesDirectory(subpath: "dev-3-images")
         self.api = API.gitHub(urlSession: URLSession.init(configuration: .default))
 //        self.api = API.macBookSteve()
         self.apiCache = APICache.inLocalCachesDirectory()

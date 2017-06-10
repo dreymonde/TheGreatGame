@@ -15,7 +15,7 @@ final class Application {
     
     let api: API
     let apiCache: APICache
-    let imageFetching: ImageFetch
+    let images: Images
     let favoriteTeams: FavoriteTeams
     let watch: AppleWatch?
     
@@ -25,7 +25,7 @@ final class Application {
 
         self.api = Application.makeAPI()
         self.apiCache = Application.makeAPICache()
-        self.imageFetching = ImageFetch.inSharedCachesDirectory()
+        self.images = Images.inSharedCachesDirectory()
         self.favoriteTeams = FavoriteTeams.inSharedDocumentsDirectory()
         self.watch = AppleWatch()
         declare()
