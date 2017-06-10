@@ -28,6 +28,10 @@ public final class FavoriteTeams : Storing {
     
     public let favoriteTeams: ReadOnlyCache<Void, Set<Team.ID>>
     
+    public var all: Set<Team.ID> {
+        return try! favoriteTeams.makeSyncCache().retrieve()
+    }
+    
     private lazy var favoriteTeamsSync: ReadOnlySyncCache<Void, Set<Team.ID>> = self.favoriteTeams.makeSyncCache()
     
     public init(diskCache: Cache<String, Data>) {
@@ -40,7 +44,7 @@ public final class FavoriteTeams : Storing {
                        transformOut: { Favorites(teams: Array($0)) })
             .defaulting(to: [])
         let memoryCache = MemoryCache<Int, Set<Team.ID>>().singleKey(0)
-        self.full_favoriteTeams = memoryCache.combined(with: fileSystemTeams)
+        self.full_favoriteTeams = memoryCache.combined(with: fileSystemTeams).serial()
         self.favoriteTeams = full_favoriteTeams.asReadOnlyCache()
     }
     

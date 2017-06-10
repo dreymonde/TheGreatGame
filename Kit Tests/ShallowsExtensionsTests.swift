@@ -12,14 +12,17 @@ import Shallows
 
 class ShallowsExtensionsTests: XCTestCase {
     
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
+    func testSerial() {
+//        let slowCache = MemoryCache<Int, String>(storage: [1: "AAA"])
+//            .asReadOnlyCache()
+//            .latency(ofInterval: 5)
+//        let fastCache = MemoryCache<Int, String>()
+//        let combined = fastCache.backed(by: slowCache).singleKey(1)
+//            .serial()
+//        combined.retrieve(completion: jprint)
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { 
+//            combined.retrieve(completion: jprint)
+//        }
     }
         
 }

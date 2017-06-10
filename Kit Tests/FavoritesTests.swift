@@ -59,7 +59,7 @@ class FavoritesTests: XCTestCase {
     
     func testFavorites() throws {
         let fs = FileSystemCache.inDirectory(.cachesDirectory, appending: "fav-tests-1")
-        let favs = FavoriteTeams(fileSystemCache: fs)
+        let favs = FavoriteTeams(diskCache: fs.asCache())
         let waiter = favs.didUpdateFavorite.proxy.makeWaiter()
         favs.updateFavorite(id: Team.ID(rawValue: 1)!, isFavorite: true)
         waiter.wait()
@@ -71,7 +71,7 @@ class FavoritesTests: XCTestCase {
     
     func testGetMatches() throws {
         let fs = FileSystemCache.inDirectory(.cachesDirectory, appending: "fav-tests-2")
-        let favs = FavoriteTeams(fileSystemCache: fs)
+        let favs = FavoriteTeams(diskCache: fs.asCache())
         let waiter = favs.didUpdateFavorite.proxy.makeWaiter()
         favs.updateFavorite(id: Team.ID(rawValue: 1)!, isFavorite: true)
         waiter.wait()

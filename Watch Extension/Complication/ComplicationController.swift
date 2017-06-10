@@ -12,7 +12,7 @@ import Shallows
 
 extension ComplicationDataSource {
     
-    public static let main = ComplicationDataSource(provider: ExtensionDelegate.watchExtension.apiCache.matches.allFull.backed(by: ExtensionDelegate.watchExtension.api.matches.allFull, pullingFromBack: true).asReadOnlyCache().mapValues({ $0.content.matches }),
+    public static let main = ComplicationDataSource(provider: ExtensionDelegate.watchExtension.apiCache.matches.allFull.backed(by: ExtensionDelegate.watchExtension.api.matches.allFull, pullingFromBack: true).asReadOnlyCache().mapValues({ $0.content.matches }).serial(),
                                                     conflictResolver: ExtensionDelegate.watchExtension.chooseMatchToShow)
 
     public static let dev_macbook = ComplicationDataSource(provider: API.macBookSteve().matches.allFull
