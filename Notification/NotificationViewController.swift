@@ -33,11 +33,11 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
     }
     
     func didReceive(_ notification: UNNotification) {
-        let push = PushNotification(notification.request.content)!
-        guard let match = try? Match.Full(from: push.content) else {
-            fault("No match")
+        guard let push = PushNotification<Match.Full>(notification.request.content) else {
+            fault("Push is not match")
             return
         }
+        let match = push.content
         self.match = match
         reload(afterImageDownload: false)
     }

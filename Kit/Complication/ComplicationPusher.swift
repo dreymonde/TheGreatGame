@@ -17,9 +17,7 @@ public final class ComplicationPusher {
     
     public func declare(didReceiveIncomingPush: Subscribe<PKPushPayload>) {
         didReceiveIncomingPush
-            .flatMap({ $0.dictionaryPayload as? [String : Any] })
-            .flatMap({ try? PushNotification(from: $0) })
-            .flatMap({ try? Match.Full(from: $0.content) })
+            .flatMap({ PushNotification<Match.Full>(userInfo: $0.dictionaryPayload)?.content })
             .redirect(to: didReceiveComplicationMatchUpdate)
     }
     

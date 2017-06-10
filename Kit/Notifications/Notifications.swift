@@ -44,7 +44,7 @@ internal final class NotificationsReceiver : NSObject, UNUserNotificationCenterD
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        guard let notification = PushNotification(response.notification.request.content) else {
+        guard let notification = RawPushNotification(response.notification.request.content) else {
             print(response.notification.request.content.userInfo)
             fault("Cannot initialize PushNotification")
             return
@@ -65,7 +65,7 @@ internal final class NotificationsReceiver : NSObject, UNUserNotificationCenterD
 public struct NotificationResponse {
     
     public let action: NotificationAction
-    public let notification: PushNotification
+    public let notification: RawPushNotification
     
 }
 
@@ -84,18 +84,10 @@ public enum NotificationAction {
     
 }
 
-extension PushNotification {
+extension PushNotificationProtocol {
     
     public init?(_ content: UNNotificationContent) {
-        guard let payload = content.userInfo as? [String : Any] else {
-            return nil
-        }
-        do {
-            try self.init(from: payload)
-        } catch {
-            print(error)
-            return nil
-        }
+        self.init(userInfo: content.userInfo)
     }
     
 }

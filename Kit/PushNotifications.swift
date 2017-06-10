@@ -29,9 +29,13 @@ extension PushToken : CustomStringConvertible {
     
 }
 
-public struct PushNotification {
+public protocol PushNotificationProtocol {
     
-    public let content: [String : Any]
+    init(from dictionary: [String : Any]) throws
+    
+}
+
+extension PushNotificationProtocol {
     
     public init?(userInfo: [AnyHashable : Any]) {
         if let content = userInfo as? [String : Any] {
@@ -39,10 +43,54 @@ public struct PushNotification {
         }
         return nil
     }
+    
+}
+
+public struct RawPushNotification : PushNotificationProtocol {
+    
+    public let content: [String : Any]
         
 }
 
-extension PushNotification : Mappable {
+public protocol PushNotificationContent {
+    
+    init(userInfo: [AnyHashable : Any]) throws
+    
+}
+
+public enum PushNotificationContentError : Error {
+    case notValidPayload
+}
+
+extension PushNotificationContent where Self : InMappable {
+    
+    public init(userInfo: [AnyHashable : Any]) throws {
+        guard let payload = userInfo as? [String : Any] else {
+            throw PushNotificationContentError.notValidPayload
+        }
+        try self.init(from: payload)
+    }
+    
+}
+
+extension Match.Full : PushNotificationContent { }
+
+public struct PushNotification<Content : PushNotificationContent> : PushNotificationProtocol {
+    
+    public let content: Content
+    
+    public init(from dictionary: [String : Any]) throws {
+        let push = try RawPushNotification(from: dictionary)
+        try self.init(push)
+    }
+    
+    public init(_ pushNotification: RawPushNotification) throws {
+        self.content = try Content.init(userInfo: pushNotification.content)
+    }
+    
+}
+
+extension RawPushNotification : Mappable {
     
     public enum MappingKeys : String, IndexPathElement {
         case aps, content
