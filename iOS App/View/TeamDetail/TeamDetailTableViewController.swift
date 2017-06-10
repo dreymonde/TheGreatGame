@@ -35,6 +35,14 @@ extension Group.Team {
     
 }
 
+extension Match.Team {
+    
+    func preLoaded() -> TeamDetailPreLoaded {
+        return TeamDetailPreLoaded(name: self.name, shortName: self.shortName, badgeURL: self.badgeURL)
+    }
+    
+}
+
 class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshing {
     
     // MARK: - Data source

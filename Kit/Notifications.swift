@@ -15,9 +15,12 @@ public final class Notifications {
     let authorizer: NotificationAuthorizer
     let receiver: NotificationsReceiver
     
+    public let didReceiveNotificationResponse: Publisher<NotificationResponse>
+    
     public init<Application : CanAuthorizeForRemoteNotifications>(application: Application) {
         self.authorizer = NotificationAuthorizer(application: application)
         self.receiver = NotificationsReceiver()
+        self.didReceiveNotificationResponse = receiver.didReceiveNotificationResponse
         self.start()
     }
     
@@ -38,6 +41,61 @@ internal final class NotificationsReceiver : NSObject, UNUserNotificationCenterD
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.alert, .sound])
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        guard let notification = PushNotification(response.notification.request.content) else {
+            print(response.notification.request.content.userInfo)
+            fault("Cannot initialize PushNotification")
+            return
+        }
+        guard let action = NotificationAction(actionIdentifier: response.actionIdentifier) else {
+            fault("Unknown action identifier")
+            return
+        }
+        let nativeResponse = NotificationResponse(action: action, notification: notification)
+        didReceiveNotificationResponse.publish(nativeResponse)
+        completionHandler()
+    }
+    
+    let didReceiveNotificationResponse = Publisher<NotificationResponse>(label: "NotificationsReceiver.didRecieveNotificationResponse")
+    
+}
+
+public struct NotificationResponse {
+    
+    public let action: NotificationAction
+    public let notification: PushNotification
+    
+}
+
+public enum NotificationAction {
+    
+    case open
+    
+    public init?(actionIdentifier: String) {
+        switch actionIdentifier {
+        case UNNotificationDefaultActionIdentifier:
+            self = .open
+        default:
+            return nil
+        }
+    }
+    
+}
+
+extension PushNotification {
+    
+    public init?(_ content: UNNotificationContent) {
+        guard let payload = content.userInfo as? [String : Any] else {
+            return nil
+        }
+        do {
+            try self.init(from: payload)
+        } catch {
+            print(error)
+            return nil
+        }
     }
     
 }

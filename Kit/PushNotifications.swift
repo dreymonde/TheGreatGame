@@ -33,6 +33,13 @@ public struct PushNotification {
     
     public let content: [String : Any]
     
+    public init?(userInfo: [AnyHashable : Any]) {
+        if let content = userInfo as? [String : Any] {
+            try? self.init(from: content)
+        }
+        return nil
+    }
+        
 }
 
 extension PushNotification : Mappable {

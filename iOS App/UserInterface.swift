@@ -21,12 +21,20 @@ final class UserInterface {
         self.window = window
         self.logic = application
         self.resources = UserInterface.makeResources(with: application)
+        subscribe()
         prefetch()
     }
     
     static func makeResources(with logic: Application) -> Resources {
         let resources = Resources(api: logic.api, apiCache: logic.apiCache, networkActivity: .application)
         return resources
+    }
+    
+    func subscribe() {
+        logic.notifications.didReceiveNotificationResponse.proxy
+            .filter({ $0.action == .open })
+            .flatMap({ try? Match.Full(from: $0.notification.content) })
+            .subscribe(self, with: UserInterface.openMatch)
     }
     
     func prefetch() {
@@ -41,8 +49,12 @@ final class UserInterface {
         }
     }
     
+    var tabBarController: UITabBarController! {
+        return window.rootViewController as? UITabBarController
+    }
+    
     func start() {
-        let viewControllers = (window.rootViewController as? UITabBarController)?.viewControllers?.flatMap({ $0 as? UINavigationController }).flatMap({ $0.viewControllers.first })
+        let viewControllers = tabBarController.viewControllers?.flatMap({ $0 as? UINavigationController }).flatMap({ $0.viewControllers.first })
         let matchesList = viewControllers?.flatMap({ $0 as? MatchesTableViewController }).first
         inject(to: matchesList!)
         let teamsList = viewControllers?.flatMap({ $0 as? TeamsTableViewController }).first
@@ -90,6 +102,14 @@ final class UserInterface {
             $0.makeAvenue = { self.logic.images.makeAvenue(forImageSize: $0) }
             $0.preloadedTeam = preloaded
             $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
+        }
+    }
+    
+    func openMatch(match: Match.Full) {
+        let firstTeam = match.home
+        let vc = teamDetailViewController(for: firstTeam.id, preloaded: firstTeam.preLoaded())
+        if let selected = tabBarController.selectedViewController {
+            selected.show(vc, sender: selected)
         }
     }
     
