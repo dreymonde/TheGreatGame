@@ -25,7 +25,7 @@ final class Application {
 
         self.api = Application.makeAPI()
         self.apiCache = Application.makeAPICache()
-        self.imageFetching = ImageFetch(shouldCacheToDisk: true)
+        self.imageFetching = ImageFetch.inSharedCachesDirectory()
         self.favoriteTeams = FavoriteTeams.inSharedDocumentsDirectory()
         self.watch = AppleWatch()
         declare()
@@ -51,7 +51,7 @@ final class Application {
     static func makeAPICache() -> APICache {
         let cachingDisabled = launchArgument(.isCachingDisabled)
         if cachingDisabled {
-            return APICache.dev()
+            return APICache.inMemory()
         } else {
             return APICache.inSharedCachesDirectory()
         }

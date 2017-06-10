@@ -163,7 +163,6 @@
 		7CA542171EDB27FB00B4D1BD /* CLKTextProvider+CLKTextProviderCombine.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CA542161EDB27FB00B4D1BD /* CLKTextProvider+CLKTextProviderCombine.m */; };
 		7CAAEFB91EC36B3900427D7E /* CombinedRefreshing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAAEFB81EC36B3900427D7E /* CombinedRefreshing.swift */; };
 		7CAAEFBB1EC36E1A00427D7E /* Sourceful.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAAEFBA1EC36E1A00427D7E /* Sourceful.swift */; };
-		7CAAEFBD1EC370F400427D7E /* APICachier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAAEFBC1EC370F400427D7E /* APICachier.swift */; };
 		7CCD25C61EDD7AE300F3C5CB /* SingleElementMemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C357ED71ED442D300CFCF3B /* SingleElementMemoryCache.swift */; };
 		7CCD25C71EDDCB2400F3C5CB /* FavoriteTeams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA2136D1ECEFA0A00F088DD /* FavoriteTeams.swift */; };
 		7CCD25C91EDDCF3F00F3C5CB /* ComplicationReloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD25C81EDDCF3F00F3C5CB /* ComplicationReloader.swift */; };
@@ -421,7 +420,6 @@
 		7CA542161EDB27FB00B4D1BD /* CLKTextProvider+CLKTextProviderCombine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CLKTextProvider+CLKTextProviderCombine.m"; sourceTree = "<group>"; };
 		7CAAEFB81EC36B3900427D7E /* CombinedRefreshing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CombinedRefreshing.swift; sourceTree = "<group>"; };
 		7CAAEFBA1EC36E1A00427D7E /* Sourceful.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sourceful.swift; sourceTree = "<group>"; };
-		7CAAEFBC1EC370F400427D7E /* APICachier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APICachier.swift; sourceTree = "<group>"; };
 		7CCD25C81EDDCF3F00F3C5CB /* ComplicationReloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplicationReloader.swift; sourceTree = "<group>"; };
 		7CCD25CA1EDEA23900F3C5CB /* ComplicationPusher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplicationPusher.swift; sourceTree = "<group>"; };
 		7CCD25CC1EDEB1BA00F3C5CB /* Watch Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Watch Extension.entitlements"; sourceTree = "<group>"; };
@@ -827,7 +825,6 @@
 			children = (
 				7C1D89901EC07362006F7841 /* ImageCache.swift */,
 				7C1D89921EC0740D006F7841 /* Caches.swift */,
-				7CAAEFBC1EC370F400427D7E /* APICachier.swift */,
 			);
 			path = Caches;
 			sourceTree = "<group>";
@@ -1467,7 +1464,6 @@
 				7C357ED81ED442D300CFCF3B /* SingleElementMemoryCache.swift in Sources */,
 				7C0EA6281EBA1CB100F50EB2 /* Jubilee.swift in Sources */,
 				7CEEAA041EC33492005B574B /* Stage.swift in Sources */,
-				7CAAEFBD1EC370F400427D7E /* APICachier.swift in Sources */,
 				7C0EA6591EBA1EF200F50EB2 /* Team.swift in Sources */,
 				7C0EA6561EBA1ECB00F50EB2 /* Teams.swift in Sources */,
 				7CE2B7361ECC7CF100C7EC20 /* TCK+UserDefaults.swift in Sources */,

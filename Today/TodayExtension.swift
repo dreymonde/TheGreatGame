@@ -9,19 +9,43 @@
 import Foundation
 import TheGreatKit
 import Avenues
+import Shallows
 
 final class TodayExtension {
     
     let favoriteTeams: FavoriteTeams
     let api: API
-    let cachier: APICachier
+    let apiCache: APICache
     let images: ImageFetch
     
     init() {
-        self.api = API.gitHub(urlSession: .init(configuration: .default))
+        self.api = API.gitHub()
+        self.apiCache = APICache.inSharedCachesDirectory()
         self.favoriteTeams = FavoriteTeams.inSharedDocumentsDirectory()
-        self.cachier = APICachier.inSharedCachesDirectory()
-        self.images = ImageFetch(shouldCacheToDisk: true)
+        self.images = ImageFetch.inSharedCachesDirectory()
+        self._provider = apiCache.matches.allFull
+            .backed(by: api.matches.allFull, pullingFromBack: true)
+            .asReadOnlyCache()
+            .mapValues({ $0.content.matches })
+            .mainThread()
+    }
+    
+    private let _provider: ReadOnlyCache<Void, [Match.Full]>
+    
+    lazy var provider: ReadOnlyCache<Void, [Match.Full]> = {
+        return self._provider.mapValues({ $0.filter(self.relevanceFilter()) })
+    }()
+    
+    func relevanceFilter() -> (Match.Full) -> Bool {
+        return { match in
+            return match.isFavorite(using: self.favoriteTeams.isFavorite(teamWith:))
+        }
+    }
+    
+    func relevantMatches(from matches: [Match.Full]) -> [Match.Full] {
+        return matches.filter({ (match) -> Bool in
+            return match.isFavorite(using: favoriteTeams.isFavorite(teamWith:))
+        })
     }
     
 }

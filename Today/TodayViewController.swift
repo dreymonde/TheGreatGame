@@ -21,7 +21,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     
     let todayExtension = TodayExtension()
     
-    var showingMatch: Match.Compact?
+    var showingMatch: Match.Full?
     
     var avenue: SymmetricalAvenue<URL, UIImage>!
         
@@ -44,7 +44,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         update()
     }
     
-    func setup(with match: Match.Compact, afterDownload: Bool) {
+    func setup(with match: Match.Full, afterDownload: Bool) {
         self.homeNameLabel.text = match.home.shortName
         self.awayNameLabel.text = match.away.shortName
         avenue.prepareItem(at: match.home.badgeURL)
@@ -57,17 +57,9 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     }
     
     func update() {
-        let allMatches = todayExtension.api.matches.all
-        let cachedAllMatches = todayExtension.cachier.cachedLocally(allMatches, key: "all-matches", token: "all-matches")
-        let favorites = todayExtension.favoriteTeams.favoriteTeams
-        let zipped = zip(cachedAllMatches, favorites)
-        zipped.mainThread().retrieve { (result) in
-            if let retrieved = result.value {
-                let matches = retrieved.0.lastRelevant.matches
-                let favorites = retrieved.1
-                print(favorites)
-                let favoriteMatches = matches.filter({ !Set($0.teams.map({ $0.id })).intersection(favorites).isEmpty })
-                if let mostRelevant = favoriteMatches.mostRelevant() {
+        todayExtension.provider.retrieve { (result) in
+            if let matches = result.value {
+                if let mostRelevant = matches.mostRelevant() {
                     self.showingMatch = mostRelevant
                     self.setup(with: mostRelevant, afterDownload: false)
                 }

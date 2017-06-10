@@ -9,6 +9,44 @@
 import Foundation
 import Shallows
 
+public protocol Storing {
+    
+    static var preferredSubPath: String { get }
+    
+    init(diskCache: Cache<String, Data>)
+    
+}
+
+extension Storing {
+    
+    public static func notStoring() -> Self {
+        return Self.init(diskCache: .empty())
+    }
+    
+    public static func inMemory() -> Self {
+        return Self.init(diskCache: MemoryCache<String, Data>().asCache())
+    }
+    
+    public static func inLocalCachesDirectory(subpath: String = Self.preferredSubPath) -> Self {
+        return Self.init(diskCache: FileSystemCache.inDirectory(.cachesDirectory,
+                                                                appending: subpath).asCache())
+    }
+    
+    public static func inSharedCachesDirectory(subpath: String = Self.preferredSubPath) -> Self {
+        return Self.init(diskCache: FileSystemCache.inSharedContainer(subpath: FileSystemSubPath.caches(appending: subpath), qos: .default).asCache())
+    }
+    
+    public static func inLocalDocumentsDirectory(subpath: String = Self.preferredSubPath) -> Self {
+        return Self.init(diskCache: FileSystemCache.inDirectory(.documentDirectory, appending: subpath, qos: .userInitiated).asCache())
+    }
+    
+    public static func inSharedDocumentsDirectory(subpath: String = Self.preferredSubPath) -> Self {
+        return Self.init(diskCache: FileSystemCache.inSharedContainer(subpath: .documents(appending: subpath), qos: .userInitiated).asCache())
+    }
+
+    
+}
+
 public let groupIdentifier = "group.com.the-great-game.the-great-group"
 
 public struct FileSystemSubPath : ExpressibleByStringLiteral {

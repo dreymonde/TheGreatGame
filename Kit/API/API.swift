@@ -77,7 +77,11 @@ public final class API : APIProvider {
     
 }
 
-public final class APICache {
+public final class APICache : Storing {
+    
+    public static var preferredSubPath: String {
+        return "api-cache-10"
+    }
     
     public let teams: TeamsAPICache
     public let matches: MatchesAPICache
@@ -89,41 +93,12 @@ public final class APICache {
         self.groups = groups
     }
     
-    public convenience init(cache: Cache<String, Data>) {
+    public convenience init(diskCache cache: Cache<String, Data>) {
         self.init(teams: TeamsAPICache.init(dataProvider: cache),
                   matches: MatchesAPICache.init(dataProvider: cache),
                   groups: GroupsAPICache.init(dataProvider: cache))
     }
-    
-    public static func dev() -> APICache {
-        printWithContext("Caching API to disk disabled")
-        let sharedDataLayer = NSCacheCache<NSString, NSData>()
-            .toNonObjCKeys()
-            .mapValues(transformIn: { $0 as Data },
-                       transformOut: { $0 as NSData })
-        return APICache(cache: sharedDataLayer)
-    }
-    
-    public static func inLocalCachesDirectory() -> APICache {
-        let fs = FileSystemCache.inDirectory(.cachesDirectory, appending: "watch-cache-1")
-        let sharedDataLayer = NSCacheCache<NSString, NSData>()
-            .toNonObjCKeys()
-            .mapValues(transformIn: { $0 as Data },
-                       transformOut: { $0 as NSData })
-            .combined(with: fs)
-        return APICache(cache: sharedDataLayer)
-    }
-    
-    public static func inSharedCachesDirectory() -> APICache {
-        let fs = FileSystemCache.inSharedContainer(subpath: .caches(appending: "api-cache-mnt-1"), qos: .userInteractive)
-        let sharedDataLayer = NSCacheCache<NSString, NSData>()
-            .toNonObjCKeys()
-            .mapValues(transformIn: { $0 as Data },
-                       transformOut: { $0 as NSData })
-            .combined(with: fs)
-        return APICache(cache: sharedDataLayer)
-    }
-    
+
 }
 
 extension ReadOnlyCache {

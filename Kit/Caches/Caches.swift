@@ -19,21 +19,27 @@ extension CacheProtocol where Value == Data {
     
 }
 
-public final class ImageFetch {
+public final class ImageFetch : Storing {
+    
+    public static var preferredSubPath: String {
+        return "image-cache-10"
+    }
     
     internal var caches: [Int : Storage<URL, UIImage>] = [:]
     
     fileprivate let imageFetchingSession = URLSession(configuration: .default)
     fileprivate let diskCache: Cache<URL, UIImage>
     
-    public init(diskCache: Cache<URL, UIImage>) {
+    public init(diskCache: Cache<String, Data>) {
         self.diskCache = diskCache
+            .mapKeys({ $0.absoluteString })
+            .mapImage()
     }
     
-    public convenience init(shouldCacheToDisk: Bool) {
-        self.init(diskCache: shouldCacheToDisk ? DiskCaching.inCachesDirectorySharedContainer().cache : .empty())
+    public init(imageCache: Cache<URL, UIImage>) {
+        self.diskCache = imageCache
     }
-    
+        
     public func imageCache(forSize side: CGFloat) -> Storage<URL, UIImage> {
         let intside = Int(side)
         if let existing = caches[intside] {
@@ -90,33 +96,6 @@ extension Cache {
         }, set: { (_, _, completion) in
             completion(.failure(EmptyCacheError.cacheIsAlwaysEmpty))
         })
-    }
-    
-}
-
-extension ImageFetch {
-    
-    internal final class DiskCaching {
-        
-        private let rawImagesDiskCache: FileSystemCache
-        internal let cache: Cache<URL, UIImage>
-        
-        internal init(rawImagesDiskCache: FileSystemCache) {
-            self.rawImagesDiskCache = rawImagesDiskCache
-            self.cache = rawImagesDiskCache
-                .mapImage()
-                .mapKeys({ $0.absoluteString })
-        }
-        
-        internal static func inCachesDirectoryOwnContainer() -> DiskCaching {
-            return DiskCaching(rawImagesDiskCache: .inDirectory(.cachesDirectory, appending: "badges"))
-        }
-        
-        internal static func inCachesDirectorySharedContainer() -> DiskCaching {
-            let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.the-great-game.the-great-group")?.appendingPathComponent("Library/Caches/badges/")
-            return DiskCaching(rawImagesDiskCache: FileSystemCache(directoryURL: url!))
-        }
-        
     }
     
 }

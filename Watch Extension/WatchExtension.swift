@@ -28,14 +28,11 @@ final class WatchExtension {
         Alba.InformBureau.Logger.enable()
         ShallowsLog.isEnabled = true
         self.phone = Phone()
-        let rawDiskCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "dev-2-images")
-        print(rawDiskCache.directoryURL)
-        let diskCache: Cache<URL, UIImage> = rawDiskCache.mapKeys({ $0.absoluteString }).mapImage()
-        self.imageCache = ImageFetch(diskCache: diskCache)
+        self.imageCache = ImageFetch.inLocalCachesDirectory(subpath: "dev-3-images")
         self.api = API.gitHub(urlSession: URLSession.init(configuration: .default))
 //        self.api = API.macBookSteve()
         self.apiCache = APICache.inLocalCachesDirectory()
-        self.favorites = FavoriteTeams.inDocumentsDirectory()
+        self.favorites = FavoriteTeams.inLocalDocumentsDirectory()
         self.complicationReloader = ComplicationReloader()
         declare()
     }

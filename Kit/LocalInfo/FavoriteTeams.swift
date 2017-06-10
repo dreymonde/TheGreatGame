@@ -18,18 +18,20 @@ extension CacheProtocol {
     
 }
 
-public final class FavoriteTeams {
+public final class FavoriteTeams : Storing {
+    
+    public static var preferredSubPath: String {
+        return "favorite-teams"
+    }
     
     fileprivate let full_favoriteTeams: Cache<Void, Set<Team.ID>>
-    private let fs: FileSystemCache
     
     public let favoriteTeams: ReadOnlyCache<Void, Set<Team.ID>>
     
     private lazy var favoriteTeamsSync: ReadOnlySyncCache<Void, Set<Team.ID>> = self.favoriteTeams.makeSyncCache()
     
-    public init(fileSystemCache: FileSystemCache) {
-        self.fs = fileSystemCache
-        let fileSystemTeams = fileSystemCache
+    public init(diskCache: Cache<String, Data>) {
+        let fileSystemTeams = diskCache
             .renaming(to: "favorites-disk")
             .mapJSONDictionary()
             .singleKey("favorite-teams")
@@ -82,15 +84,7 @@ public final class FavoriteTeams {
             return false
         }
     }
-    
-    public static func inDocumentsDirectory() -> FavoriteTeams {
-        return FavoriteTeams(fileSystemCache: FileSystemCache.inDirectory(.documentDirectory, appending: "favorite-teams"))
-    }
-    
-    public static func inSharedDocumentsDirectory() -> FavoriteTeams {
-        return FavoriteTeams(fileSystemCache: .inSharedContainer(subpath: .documents(appending: "favorite-teams"), qos: .userInitiated))
-    }
-    
+        
 }
 
 internal struct Favorites {
