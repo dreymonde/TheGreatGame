@@ -54,8 +54,8 @@ final class MatchCellFiller : CellFiller {
     
     func setup(_ cell: MatchTableViewCell, with match: Match.Compact, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
         if !afterImageDownload {
-            avenue.prepareItem(at: match.home.badgeURL)
-            avenue.prepareItem(at: match.away.badgeURL)
+            avenue.prepareItem(at: match.home.badges.large)
+            avenue.prepareItem(at: match.away.badges.large)
         }
         if isFavorite(match.home.id) || isFavorite(match.away.id) {
             cell.backgroundColor = UIColor(named: .favoriteBackground)
@@ -70,8 +70,8 @@ final class MatchCellFiller : CellFiller {
         cell.scoreTimeLabel.text = match.score?.string ?? "-:-"
         cell.homeTeamNameLabel.text = match.home.name
         cell.awayTeamNameLabel.text = match.away.name
-        cell.homeBadgeImageView.setImage(avenue.item(at: match.home.badgeURL), afterDownload: afterImageDownload)
-        cell.awayBadgeImageView.setImage(avenue.item(at: match.away.badgeURL), afterDownload: afterImageDownload)
+        cell.homeBadgeImageView.setImage(avenue.item(at: match.home.badges.large), afterDownload: afterImageDownload)
+        cell.awayBadgeImageView.setImage(avenue.item(at: match.away.badges.large), afterDownload: afterImageDownload)
     }
     
 }

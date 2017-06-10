@@ -14,8 +14,16 @@ import TheGreatKit
 
 class TodayViewController: UIViewController, NCWidgetProviding {
     
-    @IBOutlet weak var homeBadgeImageView: UIImageView!
-    @IBOutlet weak var awayBadgeImageView: UIImageView!
+    @IBOutlet weak var homeBadgeImageView: UIImageView! {
+        didSet {
+            //homeBadgeImageView.transform = CGAffineTransform(rotationAngle: .pi / 2)
+        }
+    }
+    @IBOutlet weak var awayBadgeImageView: UIImageView! {
+        didSet {
+            //awayBadgeImageView.transform = CGAffineTransform(rotationAngle: .pi / 2)
+        }
+    }
     @IBOutlet weak var homeNameLabel: UILabel!
     @IBOutlet weak var awayNameLabel: UILabel!
     
@@ -47,11 +55,12 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     func setup(with match: Match.Full, afterDownload: Bool) {
         self.homeNameLabel.text = match.home.shortName
         self.awayNameLabel.text = match.away.shortName
-        avenue.prepareItem(at: match.home.badgeURL)
-        avenue.prepareItem(at: match.away.badgeURL)
-        self.homeBadgeImageView.setImage(avenue.item(at: match.home.badgeURL), afterDownload: false)
-        self.awayBadgeImageView.setImage(avenue.item(at: match.away.badgeURL), afterDownload: false)
-        if let _ = avenue.item(at: match.home.badgeURL), let _ = avenue.item(at: match.away.badgeURL) {
+        avenue.prepareItem(at: match.home.badges.flag)
+        avenue.prepareItem(at: match.away.badges.flag)
+        print(match.home.badges.flag)
+        self.homeBadgeImageView.setImage(avenue.item(at: match.home.badges.flag), afterDownload: false)
+        self.awayBadgeImageView.setImage(avenue.item(at: match.away.badges.flag), afterDownload: false)
+        if let _ = avenue.item(at: match.home.badges.flag), let _ = avenue.item(at: match.away.badges.flag) {
             self.completion?(.newData)
         }
     }

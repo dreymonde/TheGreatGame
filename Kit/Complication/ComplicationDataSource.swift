@@ -111,15 +111,20 @@ public final class ComplicationDataSource {
         return makeDefaultPlaceholderMatch()
     }
     
+    private lazy var badges: Team.Badges = {
+        let badge = URL(string: "https://goo.gl")!
+        return Team.Badges(large: badge, flag: badge)
+    }()
+    
     private func makeDefaultPlaceholderMatch() -> Match.Full {
-        let home = Match.Team(id: Team.ID.init(rawValue: -1)!, name: "Germany", shortName: "GER", badgeURL: URL(string: "https://goo.gl")!)
-        let away = Match.Team(id: Team.ID.init(rawValue: -1)!, name: "Sweden", shortName: "SWE", badgeURL: URL(string: "https://goo.gl")!)
+        let home = Match.Team(id: Team.ID.init(rawValue: -1)!, name: "Germany", shortName: "GER", badges: badges)
+        let away = Match.Team(id: Team.ID.init(rawValue: -1)!, name: "Sweden", shortName: "SWE", badges: badges)
         return makeMatch(teams: (home, away), score: (1, 1))
     }
     
     private func makePlaceholderMatchRUS() -> Match.Full {
-        let home = Match.Team(id: Team.ID.init(rawValue: -1)!, name: "Russia", shortName: "RUS", badgeURL: URL(string: "https://goo.gl")!)
-        let away = Match.Team(id: Team.ID.init(rawValue: -1)!, name: "Germany", shortName: "GER", badgeURL: URL(string: "https://goo.gl")!)
+        let home = Match.Team(id: Team.ID.init(rawValue: -1)!, name: "Russia", shortName: "RUS", badges: badges)
+        let away = Match.Team(id: Team.ID.init(rawValue: -1)!, name: "Germany", shortName: "GER", badges: badges)
         return makeMatch(teams: (home, away), score: (2, 0))
     }
     

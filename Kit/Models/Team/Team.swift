@@ -42,7 +42,7 @@ extension Team {
         public let name: String
         public let shortName: String
         public let rank: Int
-        public let badgeURL: URL
+        public let badges: Badges
         
     }
     
@@ -55,7 +55,7 @@ extension Team.Compact : Mappable {
         case short_name
         case id
         case rank
-        case badge_url
+        case badges
     }
     
     public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
@@ -63,7 +63,7 @@ extension Team.Compact : Mappable {
         self.shortName = try mapper.map(from: .short_name)
         self.id = try mapper.map(from: .id)
         self.rank = try mapper.map(from: .rank)
-        self.badgeURL = try mapper.map(from: .badge_url)
+        self.badges = try mapper.map(from: .badges)
     }
     
     public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
@@ -71,7 +71,7 @@ extension Team.Compact : Mappable {
         try mapper.map(self.shortName, to: .short_name)
         try mapper.map(self.id, to: .id)
         try mapper.map(self.rank, to: .rank)
-        try mapper.map(self.badgeURL, to: .badge_url)
+        try mapper.map(self.badges, to: .badges)
     }
     
 }

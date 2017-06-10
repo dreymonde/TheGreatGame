@@ -72,7 +72,7 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
     }
     
     func didFetchImage(with url: URL) {
-        guard let indexPath = teams.index(where: { $0.badgeURL == url }).map({ IndexPath(row: $0, section: 0) }) else {
+        guard let indexPath = teams.index(where: { $0.badges.large == url }).map({ IndexPath(row: $0, section: 0) }) else {
             fault("No team with badge url: \(url)")
             return
         }
@@ -108,7 +108,7 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
     
     func configureTeamCompactCell(_ cell: TeamCompactTableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
         let team = teams[indexPath.row]
-        let badgeURL = team.badgeURL
+        let badgeURL = team.badges.large
         if !afterImageDownload {
             avenue.prepareItem(at: badgeURL)
         }

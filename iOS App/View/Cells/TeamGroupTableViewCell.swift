@@ -45,13 +45,13 @@ final class TeamGroupCellFiller : CellFiller {
     
     func setup(_ cell: TeamGroupTableViewCell, with team: Group.Team, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
         if !afterImageDownload {
-            avenue.prepareItem(at: team.badgeURL)
+            avenue.prepareItem(at: team.badges.large)
         }
         cell.nameLabel.text = team.name
         cell.pointsLabel.text = String(team.points)
         cell.pointsLabel.textColor = isAbsoluteTruth() ? .black : .gray
         cell.positionLabel.text = "\(indexPath.row + 1)."
-        cell.badgeImageView.setImage(avenue.item(at: team.badgeURL), afterDownload: afterImageDownload)
+        cell.badgeImageView.setImage(avenue.item(at: team.badges.large), afterDownload: afterImageDownload)
     }
     
 }

@@ -80,7 +80,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
         var paths: [IndexPath] = []
         for (stage, stageIndex) in zip(stages, stages.indices) {
             for (match, matchIndex) in zip(stage.matches, stage.matches.indices) {
-                if match.teams.contains(where: { $0.badgeURL == url }) {
+                if match.teams.contains(where: { $0.badges.large == url }) {
                     paths.append(IndexPath(row: matchIndex, section: stageIndex))
                 }
             }

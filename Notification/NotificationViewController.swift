@@ -47,13 +47,13 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
             fault("No match in reload")
             return
         }
-        avenue.prepareItem(at: match.home.badgeURL)
-        avenue.prepareItem(at: match.away.badgeURL)
+        avenue.prepareItem(at: match.home.badges.large)
+        avenue.prepareItem(at: match.away.badges.large)
         scoreLabel.text = match.score?.demo_string ?? "-:-"
         homeLabel.text = match.home.shortName
         awayLabel.text = match.away.shortName
-        homeBadgeImageView.setImage(avenue.item(at: match.home.badgeURL), afterDownload: afterImageDownload)
-        awayBadgeImageView.setImage(avenue.item(at: match.away.badgeURL), afterDownload: afterImageDownload)
+        homeBadgeImageView.setImage(avenue.item(at: match.home.badges.large), afterDownload: afterImageDownload)
+        awayBadgeImageView.setImage(avenue.item(at: match.away.badges.large), afterDownload: afterImageDownload)
     }
 
 }

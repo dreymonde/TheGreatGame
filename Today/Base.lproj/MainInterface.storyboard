@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="M4Y-Lb-cyx">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="M4Y-Lb-cyx">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -23,16 +23,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="130"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" alpha="0.5" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="WA9-bw-t6l">
-                                <rect key="frame" x="199.5" y="10" width="110.5" height="110.5"/>
+                            <imageView userInteractionEnabled="NO" alpha="0.5" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="WA9-bw-t6l">
+                                <rect key="frame" x="193" y="36" width="117" height="58.5"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="WA9-bw-t6l" secondAttribute="height" multiplier="1:1" id="SXX-jK-WQt"/>
+                                    <constraint firstAttribute="width" secondItem="WA9-bw-t6l" secondAttribute="height" multiplier="2:1" id="SXX-jK-WQt"/>
                                 </constraints>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" alpha="0.5" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zQH-VR-ibt">
-                                <rect key="frame" x="10" y="10" width="110.5" height="110.5"/>
+                            <imageView userInteractionEnabled="NO" alpha="0.5" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zQH-VR-ibt">
+                                <rect key="frame" x="10" y="36" width="117" height="58.5"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="zQH-VR-ibt" secondAttribute="height" multiplier="1:1" id="kiU-M3-iCG"/>
+                                    <constraint firstAttribute="width" secondItem="zQH-VR-ibt" secondAttribute="height" multiplier="2:1" id="kiU-M3-iCG"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-:-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nLZ-Wg-Eje">
@@ -61,12 +61,11 @@
                             <constraint firstItem="zQH-VR-ibt" firstAttribute="leading" secondItem="S3S-Oj-5AN" secondAttribute="leading" constant="10" id="9Ww-bU-zDW"/>
                             <constraint firstItem="nLZ-Wg-Eje" firstAttribute="centerY" secondItem="S3S-Oj-5AN" secondAttribute="centerY" id="BgX-Tl-iBR"/>
                             <constraint firstItem="fkU-4B-2RY" firstAttribute="centerY" secondItem="zQH-VR-ibt" secondAttribute="centerY" id="FDB-qX-iV4"/>
-                            <constraint firstItem="WA9-bw-t6l" firstAttribute="height" secondItem="S3S-Oj-5AN" secondAttribute="height" multiplier="0.85" id="PZR-SO-iTM"/>
-                            <constraint firstItem="WA9-bw-t6l" firstAttribute="width" secondItem="WA9-bw-t6l" secondAttribute="height" multiplier="1:1" id="QMz-Ae-kmH"/>
+                            <constraint firstItem="WA9-bw-t6l" firstAttribute="height" secondItem="S3S-Oj-5AN" secondAttribute="height" multiplier="0.45" id="PZR-SO-iTM"/>
                             <constraint firstItem="zQH-VR-ibt" firstAttribute="centerY" secondItem="S3S-Oj-5AN" secondAttribute="centerY" id="Vs1-eb-CFw"/>
                             <constraint firstItem="WA9-bw-t6l" firstAttribute="centerY" secondItem="S3S-Oj-5AN" secondAttribute="centerY" id="azb-lM-NwD"/>
                             <constraint firstAttribute="trailing" secondItem="WA9-bw-t6l" secondAttribute="trailing" constant="10" id="eRH-xJ-FQb"/>
-                            <constraint firstItem="zQH-VR-ibt" firstAttribute="height" secondItem="S3S-Oj-5AN" secondAttribute="height" multiplier="0.85" id="gM0-fD-7Ce"/>
+                            <constraint firstItem="zQH-VR-ibt" firstAttribute="height" secondItem="S3S-Oj-5AN" secondAttribute="height" multiplier="0.45" id="gM0-fD-7Ce"/>
                             <constraint firstItem="F4t-sl-eKK" firstAttribute="leading" secondItem="nLZ-Wg-Eje" secondAttribute="trailing" constant="15" id="vSJ-Sd-H8z"/>
                         </constraints>
                     </view>

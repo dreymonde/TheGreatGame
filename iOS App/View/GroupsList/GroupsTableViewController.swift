@@ -63,7 +63,7 @@ class GroupsTableViewController: TheGreatGame.TableViewController, Refreshing {
         var paths: [IndexPath] = []
         for (group, groupIndex) in zip(groups, groups.indices) {
             for (team, teamIndex) in zip(group.teams, group.teams.indices) {
-                if team.badgeURL == url {
+                if team.badges.large == url {
                     paths.append(IndexPath.init(row: teamIndex, section: groupIndex))
                 }
             }

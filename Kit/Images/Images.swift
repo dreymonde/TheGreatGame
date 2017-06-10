@@ -45,9 +45,9 @@ public final class Images : Storing {
         if let existing = caches[intside] {
             return existing
         } else {
-            let new: Storage<URL, UIImage> = ImageNSCache()
-                .mapValue(inTransform: { assert(max($0.size.width, $0.size.height) == side); return $0 },
-                          outTransform: { assert(max($0.size.width, $0.size.height) == side); return $0 })
+            let new: Storage<URL, UIImage> = Storage(ImageNSCache())
+                //.mapValue(inTransform: { assert(max($0.size.width, $0.size.height) == side); return $0 },
+                //          outTransform: { assert(max($0.size.width, $0.size.height) == side); return $0 })
             caches[intside] = new
             return new
         }

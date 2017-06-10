@@ -15,14 +15,14 @@ struct TeamDetailPreLoaded {
     
     let name: String?
     let shortName: String?
-    let badgeURL: URL?
+    let badges: Team.Badges?
     
 }
 
 extension Team.Compact {
     
     func preLoaded() -> TeamDetailPreLoaded {
-        return TeamDetailPreLoaded(name: self.name, shortName: self.shortName, badgeURL: self.badgeURL)
+        return TeamDetailPreLoaded(name: self.name, shortName: self.shortName, badges: self.badges)
     }
     
 }
@@ -30,7 +30,7 @@ extension Team.Compact {
 extension Group.Team {
     
     func preLoaded() -> TeamDetailPreLoaded {
-        return TeamDetailPreLoaded(name: self.name, shortName: nil, badgeURL: self.badgeURL)
+        return TeamDetailPreLoaded(name: self.name, shortName: nil, badges: self.badges)
     }
     
 }
@@ -38,7 +38,7 @@ extension Group.Team {
 extension Match.Team {
     
     func preLoaded() -> TeamDetailPreLoaded {
-        return TeamDetailPreLoaded(name: self.name, shortName: self.shortName, badgeURL: self.badgeURL)
+        return TeamDetailPreLoaded(name: self.name, shortName: self.shortName, badges: self.badges)
     }
     
 }
@@ -141,12 +141,12 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
         }
         var paths: [IndexPath] = []
         for (match, index) in zip(team.matches, team.matches.indices) {
-            if match.teams.map({ $0.badgeURL }).contains(url) {
+            if match.teams.map({ $0.badges.large }).contains(url) {
                 paths.append(IndexPath.init(row: index, section: matchesSectionIndex))
             }
         }
         for (team, index) in zip(team.group.teams, team.group.teams.indices) {
-            if team.badgeURL == url {
+            if team.badges.large == url {
                 paths.append(IndexPath.init(row: index, section: groupSectionIndex))
             }
         }
@@ -192,12 +192,12 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     func configureTeamDetailsCell(_ cell: TeamDetailInfoTableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
         cell.selectionStyle = .none
         if let team = team {
-            mainBadgeAvenue.prepareItem(at: team.badgeURL)
+            mainBadgeAvenue.prepareItem(at: team.badges.large)
             cell.nameLabel.text = team.name
-            cell.badgeImageView.image = mainBadgeAvenue.item(at: team.badgeURL)
+            cell.badgeImageView.image = mainBadgeAvenue.item(at: team.badges.large)
         } else if let preloaded = preloadedTeam {
             cell.nameLabel.text = preloaded.name
-            if let badgeURL = preloaded.badgeURL {
+            if let badgeURL = preloaded.badges?.large {
                 mainBadgeAvenue.prepareItem(at: badgeURL)
                 cell.badgeImageView.image = mainBadgeAvenue.item(at: badgeURL)
             }

@@ -15,7 +15,7 @@ public enum Group {
         public let id: TheGreatKit.Team.ID
         public let name: String
         public let points: Int
-        public let badgeURL: URL
+        public let badges: TheGreatKit.Team.Badges
         
     }
     
@@ -37,21 +37,21 @@ public struct Groups {
 extension Group.Team : Mappable {
     
     public enum MappingKeys : String, IndexPathElement {
-        case id, position, name, points, badge_url
+        case id, position, name, points, badges
     }
     
     public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.id = try mapper.map(from: .id)
         self.name = try mapper.map(from: .name)
         self.points = try mapper.map(from: .points)
-        self.badgeURL = try mapper.map(from: .badge_url)
+        self.badges = try mapper.map(from: .badges)
     }
     
     public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.id, to: .id)
         try mapper.map(self.name, to: .name)
         try mapper.map(self.points, to: .points)
-        try mapper.map(self.badgeURL, to: .badge_url)
+        try mapper.map(self.badges, to: .badges)
     }
     
 }

@@ -87,7 +87,7 @@ class MatchesInterfaceController: WKInterfaceController {
     
     func didFetchImage(with url: URL) {
         for (match, index) in zip(matches, matches.indices) {
-            if match.teams.map({ $0.badgeURL }).contains(url) {
+            if match.teams.map({ $0.badges.large }).contains(url) {
                 let controller = table.rowController(at: index) as! MatchCellController
                 configure(controller, with: match, forRowAt: index)
             }
@@ -105,11 +105,11 @@ class MatchesInterfaceController: WKInterfaceController {
     }
     
     func configure(_ cell: MatchCellController, with match: Match.Full, forRowAt index: Int) {
-        avenue.prepareItem(at: match.home.badgeURL)
-        avenue.prepareItem(at: match.away.badgeURL)
+        avenue.prepareItem(at: match.home.badges.large)
+        avenue.prepareItem(at: match.away.badges.large)
         cell.scoreLabel.setText(match.score?.demo_string ?? "-:-")
-        cell.homeBadgeImage.setImage(avenue.item(at: match.home.badgeURL))
-        cell.awayBadgeImage.setImage(avenue.item(at: match.away.badgeURL))
+        cell.homeBadgeImage.setImage(avenue.item(at: match.home.badges.large))
+        cell.awayBadgeImage.setImage(avenue.item(at: match.away.badges.large))
         configureProgressSeparator(cell.minutesPassedSeparator, with: match)
     }
     
