@@ -795,6 +795,7 @@
 				7C0EFD941EEC483C0077C37E /* NotificationAuthorizer.swift */,
 			);
 			name = Notifications;
+			path = Notifications;
 			sourceTree = "<group>";
 		};
 		7C109D241EC1D58000523376 /* Views */ = {
@@ -887,7 +888,7 @@
 				7C1D89921EC0740D006F7841 /* Images.swift */,
 			);
 			name = Images;
-			path = Caches;
+			path = Images;
 			sourceTree = "<group>";
 		};
 		7C1D898D1EC06977006F7841 /* Protocols */ = {
@@ -1790,6 +1791,7 @@
 				7CF7DF921EEC6430004F0A73 /* Base */,
 			);
 			name = MainInterface.storyboard;
+			path = .;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
