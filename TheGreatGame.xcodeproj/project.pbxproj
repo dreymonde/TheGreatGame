@@ -184,6 +184,16 @@
 		7CF3D1751EBC838B00E86A91 /* MatchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CF3D1731EBC838B00E86A91 /* MatchTableViewCell.xib */; };
 		7CF3D1771EBC870400E86A91 /* TeamDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF3D1761EBC870400E86A91 /* TeamDetailTableViewController.swift */; };
 		7CF3D17B1EBC879300E86A91 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF3D1791EBC873700E86A91 /* Match.swift */; };
+		7CF7DF8B1EEC6430004F0A73 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CF7DF8A1EEC6430004F0A73 /* UserNotifications.framework */; };
+		7CF7DF8D1EEC6430004F0A73 /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CF7DF8C1EEC6430004F0A73 /* UserNotificationsUI.framework */; };
+		7CF7DF901EEC6430004F0A73 /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF7DF8F1EEC6430004F0A73 /* NotificationViewController.swift */; };
+		7CF7DF931EEC6430004F0A73 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7CF7DF911EEC6430004F0A73 /* MainInterface.storyboard */; };
+		7CF7DF971EEC6430004F0A73 /* Notification.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 7CF7DF891EEC6430004F0A73 /* Notification.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		7CF7DF9B1EEC6460004F0A73 /* Alba.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C0EA5FC1EBA1C3100F50EB2 /* Alba.framework */; };
+		7CF7DF9C1EEC6466004F0A73 /* Avenues.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C0EA5FD1EBA1C3100F50EB2 /* Avenues.framework */; };
+		7CF7DF9D1EEC6468004F0A73 /* Shallows.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C0EA5FE1EBA1C3100F50EB2 /* Shallows.framework */; };
+		7CF7DF9E1EEC6472004F0A73 /* TheGreatKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C0EA6071EBA1C9000F50EB2 /* TheGreatKit.framework */; };
+		7CF7DF9F1EEC6B9D004F0A73 /* Jubilee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6261EBA1CB100F50EB2 /* Jubilee.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -243,6 +253,13 @@
 			remoteGlobalIDString = 7CA213781ECF3F9A00F088DD;
 			remoteInfo = GameToday;
 		};
+		7CF7DF951EEC6430004F0A73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7C0EA5CF1EBA1B3400F50EB2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7CF7DF881EEC6430004F0A73;
+			remoteInfo = Notification;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -297,6 +314,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				7CA213851ECF3F9A00F088DD /* GameToday.appex in Embed App Extensions */,
+				7CF7DF971EEC6430004F0A73 /* Notification.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -441,6 +459,13 @@
 		7CF3D1731EBC838B00E86A91 /* MatchTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MatchTableViewCell.xib; sourceTree = "<group>"; };
 		7CF3D1761EBC870400E86A91 /* TeamDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailTableViewController.swift; sourceTree = "<group>"; };
 		7CF3D1791EBC873700E86A91 /* Match.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
+		7CF7DF891EEC6430004F0A73 /* Notification.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Notification.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		7CF7DF8A1EEC6430004F0A73 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		7CF7DF8C1EEC6430004F0A73 /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
+		7CF7DF8F1EEC6430004F0A73 /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
+		7CF7DF921EEC6430004F0A73 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		7CF7DF941EEC6430004F0A73 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7CF7DFA01EEC6BEA004F0A73 /* Notification.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Notification.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -513,6 +538,19 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7CF7DF861EEC6430004F0A73 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7CF7DF8D1EEC6430004F0A73 /* UserNotificationsUI.framework in Frameworks */,
+				7CF7DF8B1EEC6430004F0A73 /* UserNotifications.framework in Frameworks */,
+				7CF7DF9C1EEC6466004F0A73 /* Avenues.framework in Frameworks */,
+				7CF7DF9D1EEC6468004F0A73 /* Shallows.framework in Frameworks */,
+				7CF7DF9E1EEC6472004F0A73 /* TheGreatKit.framework in Frameworks */,
+				7CF7DF9B1EEC6460004F0A73 /* Alba.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -525,6 +563,7 @@
 				7C0EA5D91EBA1B3500F50EB2 /* iOS App */,
 				7C0EA5EE1EBA1B3500F50EB2 /* iOS Tests */,
 				7CA2137C1ECF3F9A00F088DD /* Today */,
+				7CF7DF8E1EEC6430004F0A73 /* Notification */,
 				7C0EA6081EBA1C9000F50EB2 /* Kit */,
 				7C0EA6151EBA1C9000F50EB2 /* Kit Tests */,
 				7C13BC131ED8498300588F5F /* Watch App */,
@@ -546,6 +585,7 @@
 				7C13BC121ED8498300588F5F /* Watch.app */,
 				7C13BC1E1ED8498300588F5F /* Watch Extension.appex */,
 				7C13BC471ED84AF300588F5F /* TheGreatKit.framework */,
+				7CF7DF891EEC6430004F0A73 /* Notification.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -591,6 +631,8 @@
 				7C0EA5FD1EBA1C3100F50EB2 /* Avenues.framework */,
 				7C0EA5FE1EBA1C3100F50EB2 /* Shallows.framework */,
 				7CA2137A1ECF3F9A00F088DD /* NotificationCenter.framework */,
+				7CF7DF8A1EEC6430004F0A73 /* UserNotifications.framework */,
+				7CF7DF8C1EEC6430004F0A73 /* UserNotificationsUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1004,6 +1046,17 @@
 			path = Match;
 			sourceTree = "<group>";
 		};
+		7CF7DF8E1EEC6430004F0A73 /* Notification */ = {
+			isa = PBXGroup;
+			children = (
+				7CF7DFA01EEC6BEA004F0A73 /* Notification.entitlements */,
+				7CF7DF8F1EEC6430004F0A73 /* NotificationViewController.swift */,
+				7CF7DF911EEC6430004F0A73 /* MainInterface.storyboard */,
+				7CF7DF941EEC6430004F0A73 /* Info.plist */,
+			);
+			path = Notification;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1045,6 +1098,7 @@
 				7C0EA61B1EBA1C9000F50EB2 /* PBXTargetDependency */,
 				7CA213841ECF3F9A00F088DD /* PBXTargetDependency */,
 				7C13BC311ED8498300588F5F /* PBXTargetDependency */,
+				7CF7DF961EEC6430004F0A73 /* PBXTargetDependency */,
 			);
 			name = TheGreatGame;
 			productName = TheGreatGame;
@@ -1178,6 +1232,23 @@
 			productReference = 7CA213791ECF3F9A00F088DD /* GameToday.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		7CF7DF881EEC6430004F0A73 /* Notification */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7CF7DF9A1EEC6430004F0A73 /* Build configuration list for PBXNativeTarget "Notification" */;
+			buildPhases = (
+				7CF7DF851EEC6430004F0A73 /* Sources */,
+				7CF7DF861EEC6430004F0A73 /* Frameworks */,
+				7CF7DF871EEC6430004F0A73 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Notification;
+			productName = Notification;
+			productReference = 7CF7DF891EEC6430004F0A73 /* Notification.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1261,6 +1332,16 @@
 							};
 						};
 					};
+					7CF7DF881EEC6430004F0A73 = {
+						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = 8E9Y56P64W;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
+					};
 				};
 			};
 			buildConfigurationList = 7C0EA5D21EBA1B3400F50EB2 /* Build configuration list for PBXProject "TheGreatGame" */;
@@ -1284,6 +1365,7 @@
 				7CA213781ECF3F9A00F088DD /* GameToday */,
 				7C13BC111ED8498300588F5F /* Watch */,
 				7C13BC1D1ED8498300588F5F /* Watch Extension */,
+				7CF7DF881EEC6430004F0A73 /* Notification */,
 			);
 		};
 /* End PBXProject section */
@@ -1354,6 +1436,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				7CA213811ECF3F9A00F088DD /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7CF7DF871EEC6430004F0A73 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7CF7DF931EEC6430004F0A73 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1598,6 +1688,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7CF7DF851EEC6430004F0A73 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7CF7DF9F1EEC6B9D004F0A73 /* Jubilee.swift in Sources */,
+				7CF7DF901EEC6430004F0A73 /* NotificationViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1641,6 +1740,11 @@
 			target = 7CA213781ECF3F9A00F088DD /* GameToday */;
 			targetProxy = 7CA213831ECF3F9A00F088DD /* PBXContainerItemProxy */;
 		};
+		7CF7DF961EEC6430004F0A73 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7CF7DF881EEC6430004F0A73 /* Notification */;
+			targetProxy = 7CF7DF951EEC6430004F0A73 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -1678,6 +1782,14 @@
 			);
 			name = MainInterface.storyboard;
 			path = .;
+			sourceTree = "<group>";
+		};
+		7CF7DF911EEC6430004F0A73 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7CF7DF921EEC6430004F0A73 /* Base */,
+			);
+			name = MainInterface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -2131,6 +2243,44 @@
 			};
 			name = Release;
 		};
+		7CF7DF981EEC6430004F0A73 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Notification/Notification.entitlements;
+				DEVELOPMENT_TEAM = 8E9Y56P64W;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = Notification/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatGame.Notification";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		7CF7DF991EEC6430004F0A73 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Notification/Notification.entitlements;
+				DEVELOPMENT_TEAM = 8E9Y56P64W;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = Notification/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatGame.Notification";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2214,6 +2364,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		7CF7DF9A1EEC6430004F0A73 /* Build configuration list for PBXNativeTarget "Notification" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7CF7DF981EEC6430004F0A73 /* Debug */,
+				7CF7DF991EEC6430004F0A73 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};

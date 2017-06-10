@@ -25,7 +25,7 @@ public final class Notifications {
     }
     
     internal func start() {
-        authorizer.authorize()
+        authorizer.start()
     }
     
 }

@@ -14,6 +14,11 @@
 			<key>orderHint</key>
 			<integer>3</integer>
 		</dict>
+		<key>Notification.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>8</integer>
+		</dict>
 		<key>Peer Distribute.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -22,7 +27,7 @@
 		<key>TheGreatKit-Watch.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>10</integer>
+			<integer>7</integer>
 		</dict>
 		<key>TheGreatKit.xcscheme</key>
 		<dict>
@@ -32,17 +37,17 @@
 		<key>Watch (Complication).xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>9</integer>
+			<integer>6</integer>
 		</dict>
 		<key>Watch (Notification).xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>8</integer>
+			<integer>5</integer>
 		</dict>
 		<key>Watch.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>7</integer>
+			<integer>4</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
@@ -78,6 +83,11 @@
 			<true/>
 		</dict>
 		<key>7CA213781ECF3F9A00F088DD</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>7CF7DF881EEC6430004F0A73</key>
 		<dict>
 			<key>primary</key>
 			<true/>

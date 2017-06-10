@@ -23,7 +23,17 @@ internal final class NotificationAuthorizer {
         self.init(registerForRemote: application.registerForRemoteNotifications)
     }
     
-    internal func authorize() {
+    internal func start() {
+        authorize()
+        setCategories()
+    }
+    
+    private func setCategories() {
+        let match_update = UNNotificationCategory(identifier: "match-update", actions: [], intentIdentifiers: [], options: [])
+        center.setNotificationCategories([match_update])
+    }
+
+    private func authorize() {
         center.requestAuthorization(options: [.alert, .sound]) { (authorized, error) in
             if let error = error {
                 self.didFailToAuthorizeForNotifications.publish(error)
