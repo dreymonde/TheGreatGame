@@ -46,6 +46,10 @@
 		7C0EA6641EBA542E00F50EB2 /* TeamCompactTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C0EA6621EBA542E00F50EB2 /* TeamCompactTableViewCell.xib */; };
 		7C0EA6661EBA599D00F50EB2 /* Avenues+Shallows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6651EBA599D00F50EB2 /* Avenues+Shallows.swift */; };
 		7C0EFD8F1EEC21E80077C37E /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1D89851EC0638D006F7841 /* Functions.swift */; };
+		7C0EFD921EEC43460077C37E /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EFD911EEC43460077C37E /* Notifications.swift */; };
+		7C0EFD931EEC43460077C37E /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EFD911EEC43460077C37E /* Notifications.swift */; };
+		7C0EFD951EEC483C0077C37E /* NotificationAuthorizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EFD941EEC483C0077C37E /* NotificationAuthorizer.swift */; };
+		7C0EFD961EEC483C0077C37E /* NotificationAuthorizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EFD941EEC483C0077C37E /* NotificationAuthorizer.swift */; };
 		7C109D271EC1D5AB00523376 /* TeamDetailInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C109D251EC1D5AB00523376 /* TeamDetailInfoTableViewCell.swift */; };
 		7C109D281EC1D5AB00523376 /* TeamDetailInfoTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C109D261EC1D5AB00523376 /* TeamDetailInfoTableViewCell.xib */; };
 		7C13BC161ED8498300588F5F /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7C13BC141ED8498300588F5F /* Interface.storyboard */; };
@@ -338,6 +342,8 @@
 		7C0EA6611EBA542E00F50EB2 /* TeamCompactTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamCompactTableViewCell.swift; sourceTree = "<group>"; };
 		7C0EA6621EBA542E00F50EB2 /* TeamCompactTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TeamCompactTableViewCell.xib; sourceTree = "<group>"; };
 		7C0EA6651EBA599D00F50EB2 /* Avenues+Shallows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Avenues+Shallows.swift"; sourceTree = "<group>"; };
+		7C0EFD911EEC43460077C37E /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
+		7C0EFD941EEC483C0077C37E /* NotificationAuthorizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationAuthorizer.swift; sourceTree = "<group>"; };
 		7C109D251EC1D5AB00523376 /* TeamDetailInfoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailInfoTableViewCell.swift; sourceTree = "<group>"; };
 		7C109D261EC1D5AB00523376 /* TeamDetailInfoTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TeamDetailInfoTableViewCell.xib; sourceTree = "<group>"; };
 		7C109EC31EC1DDC200523376 /* TheGreatGame.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TheGreatGame.entitlements; sourceTree = "<group>"; };
@@ -592,6 +598,7 @@
 		7C0EA6081EBA1C9000F50EB2 /* Kit */ = {
 			isa = PBXGroup;
 			children = (
+				7C0EFD901EEC432B0077C37E /* Notifications */,
 				7CA5420B1EDB14B300B4D1BD /* Complication */,
 				7C13BC721ED84C2700588F5F /* WatchConnectivity */,
 				7CA2136C1ECEF9EC00F088DD /* LocalInfo */,
@@ -736,6 +743,15 @@
 				7C0EA6621EBA542E00F50EB2 /* TeamCompactTableViewCell.xib */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		7C0EFD901EEC432B0077C37E /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				7C0EFD911EEC43460077C37E /* Notifications.swift */,
+				7C0EFD941EEC483C0077C37E /* NotificationAuthorizer.swift */,
+			);
+			name = Notifications;
 			sourceTree = "<group>";
 		};
 		7C109D241EC1D58000523376 /* Views */ = {
@@ -1452,6 +1468,7 @@
 				7CA542031EDAB74000B4D1BD /* Resources.swift in Sources */,
 				7C7916E41EBB15B20070E6C5 /* AvenuesExtensions.swift in Sources */,
 				7C0EA6661EBA599D00F50EB2 /* Avenues+Shallows.swift in Sources */,
+				7C0EFD951EEC483C0077C37E /* NotificationAuthorizer.swift in Sources */,
 				7C0EA63F1EBA1D1E00F50EB2 /* InMappable.swift in Sources */,
 				7C0EA64F1EBA1D3100F50EB2 /* Shallows+Mapper.swift in Sources */,
 				7C13BC761ED8523600588F5F /* Package.swift in Sources */,
@@ -1479,6 +1496,7 @@
 				7C0EA6431EBA1D1E00F50EB2 /* OutMap.swift in Sources */,
 				7CAAEFB91EC36B3900427D7E /* CombinedRefreshing.swift in Sources */,
 				7C0EA6471EBA1D1E00F50EB2 /* OutMapper.swift in Sources */,
+				7C0EFD921EEC43460077C37E /* Notifications.swift in Sources */,
 				7CA542061EDABF2B00B4D1BD /* TGK+Alba.swift in Sources */,
 				7C1D89981EC07BC2006F7841 /* Groups.swift in Sources */,
 				7CA213721ECEFF3700F088DD /* ResultExtensions.swift in Sources */,
@@ -1543,7 +1561,9 @@
 				7CCD25C91EDDCF3F00F3C5CB /* ComplicationReloader.swift in Sources */,
 				7C13BC681ED84B4C00588F5F /* Group.swift in Sources */,
 				7C13BC6A1ED84B4C00588F5F /* TeamFull.swift in Sources */,
+				7C0EFD961EEC483C0077C37E /* NotificationAuthorizer.swift in Sources */,
 				7C13BC6B1ED84B4C00588F5F /* Editioned.swift in Sources */,
+				7C0EFD931EEC43460077C37E /* Notifications.swift in Sources */,
 				7C6AA1741ED878E9003F2388 /* Groups.swift in Sources */,
 				7C6AA1731ED878E9003F2388 /* Matches.swift in Sources */,
 				7C13BC661ED84B4C00588F5F /* Match.swift in Sources */,

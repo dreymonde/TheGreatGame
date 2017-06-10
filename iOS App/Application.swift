@@ -17,7 +17,9 @@ final class Application {
     let apiCache: APICache
     let images: Images
     let favoriteTeams: FavoriteTeams
+    
     let watch: AppleWatch?
+    let notifications: Notifications
     
     init() {
         Alba.InformBureau.isEnabled = true
@@ -28,6 +30,7 @@ final class Application {
         self.images = Images.inSharedCachesDirectory()
         self.favoriteTeams = FavoriteTeams.inSharedDocumentsDirectory()
         self.watch = AppleWatch()
+        self.notifications = Notifications(application: UIApplication.shared)
         declare()
     }
     
