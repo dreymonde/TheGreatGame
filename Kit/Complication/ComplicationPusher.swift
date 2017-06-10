@@ -38,7 +38,7 @@ public final class PushKitReceiver : NSObject, PKPushRegistryDelegate {
         }
     }
     
-    public let didRegisterWithToken = Publisher<String>(label: "PushKitReceiver.didRegisterWithToken")
+    public let didRegisterWithToken = Publisher<PushToken>(label: "PushKitReceiver.didRegisterWithToken")
     public let didReceiveIncomingPush = Publisher<PKPushPayload>(label: "PushKitReceiver.didReceiveIncomingPush")
     
 }
@@ -46,8 +46,8 @@ public final class PushKitReceiver : NSObject, PKPushRegistryDelegate {
 extension PushKitReceiver {
     
     public func pushRegistry(_ registry: PKPushRegistry, didUpdate credentials: PKPushCredentials, forType type: PKPushType) {
-        let tokenString = credentials.token.reduce("", { $0 + String.init(format: "%02.2hhx", $1) })
-        didRegisterWithToken.publish(tokenString)
+        let token = PushToken(credentials.token)
+        didRegisterWithToken.publish(token)
     }
     
     public func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, forType type: PKPushType) {

@@ -8,6 +8,27 @@
 
 import Foundation
 
+public struct PushToken {
+    
+    public let rawToken: Data
+    public var string: String {
+        return rawToken.reduce("", { $0 + String(format: "%02.2hhx", $1) })
+    }
+    
+    public init(_ token: Data) {
+        self.rawToken = token
+    }
+    
+}
+
+extension PushToken : CustomStringConvertible {
+    
+    public var description: String {
+        return string
+    }
+    
+}
+
 public struct PushNotification {
     
     public let content: [String : Any]

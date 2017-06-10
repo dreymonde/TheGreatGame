@@ -65,20 +65,14 @@ extension Resources {
     }
     
     public static func makeFullTeamsResources(api: API, apiCache: APICache, networkActivity: NetworkActivityIndicatorManager) -> (Team.ID) -> Resource<Team.Full> {
-        var existing: [Team.ID : Resource<Team.Full>] = [:]
-        let safety = DispatchQueue(label: "resources-pool-safety-queue")
+        let lazyDict = LazyDictionary<Team.ID, Resource<Team.Full>> { (id) -> Resource<Team.Full> in
+            return Resource<Team.Full>(local: apiCache.teams.fullTeam.singleKey(id),
+                                       remote: api.teams.fullTeam.singleKey(id),
+                                       networkActivity: networkActivity)
+        }
+        let threadSafeLazyDict = ThreadSafe(lazyDict)
         return { id in
-            return safety.sync {
-                if let already = existing[id] {
-                    return already
-                } else {
-                    let new = Resource<Team.Full>(local: apiCache.teams.fullTeam.singleKey(id),
-                                                  remote: api.teams.fullTeam.singleKey(id),
-                                                  networkActivity: networkActivity)
-                    existing[id] = new
-                    return new
-                }
-            }
+            return threadSafeLazyDict.read()[id]
         }
     }
     

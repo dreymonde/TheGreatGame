@@ -45,6 +45,7 @@
 		7C0EA6631EBA542E00F50EB2 /* TeamCompactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6611EBA542E00F50EB2 /* TeamCompactTableViewCell.swift */; };
 		7C0EA6641EBA542E00F50EB2 /* TeamCompactTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C0EA6621EBA542E00F50EB2 /* TeamCompactTableViewCell.xib */; };
 		7C0EA6661EBA599D00F50EB2 /* Avenues+Shallows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6651EBA599D00F50EB2 /* Avenues+Shallows.swift */; };
+		7C0EFD8F1EEC21E80077C37E /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1D89851EC0638D006F7841 /* Functions.swift */; };
 		7C109D271EC1D5AB00523376 /* TeamDetailInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C109D251EC1D5AB00523376 /* TeamDetailInfoTableViewCell.swift */; };
 		7C109D281EC1D5AB00523376 /* TeamDetailInfoTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C109D261EC1D5AB00523376 /* TeamDetailInfoTableViewCell.xib */; };
 		7C13BC161ED8498300588F5F /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7C13BC141ED8498300588F5F /* Interface.storyboard */; };
@@ -1526,6 +1527,7 @@
 				7C13BC611ED84B3D00588F5F /* OutMappable.swift in Sources */,
 				7CA542071EDABF2B00B4D1BD /* TGK+Alba.swift in Sources */,
 				7C6AA1751ED878F9003F2388 /* Shallows+Mapper.swift in Sources */,
+				7C0EFD8F1EEC21E80077C37E /* Functions.swift in Sources */,
 				7C13BC6E1ED84B5600588F5F /* NetworkActivity.swift in Sources */,
 				7C6AA1721ED878E9003F2388 /* Teams.swift in Sources */,
 				7CCD25C61EDD7AE300F3C5CB /* SingleElementMemoryCache.swift in Sources */,
