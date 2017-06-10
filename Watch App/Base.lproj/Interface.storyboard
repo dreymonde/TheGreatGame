@@ -17,14 +17,14 @@
                             <items>
                                 <group width="1" alignment="left" id="qEe-sz-J9z">
                                     <items>
-                                        <label alignment="left" text="Group A, leg 0" numberOfLines="0" id="OmK-E5-Cmp">
+                                        <label alignment="left" numberOfLines="0" id="OmK-E5-Cmp">
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <fontDescription key="font" style="UICTFontTextStyleSubhead"/>
                                         </label>
                                         <imageView alignment="right" verticalAlignment="center" image="Activity" initiallyAnimated="NO" animationDuration="1" id="901-Rv-deI"/>
                                     </items>
                                 </group>
-                                <label alignment="left" text="Today" numberOfLines="0" id="vg5-2X-Sa1">
+                                <label alignment="left" numberOfLines="0" id="vg5-2X-Sa1">
                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                     <fontDescription key="font" type="system" pointSize="12"/>
                                 </label>
@@ -60,7 +60,7 @@
                                 </tableRow>
                             </items>
                         </table>
-                        <label height="60" alignment="center" verticalAlignment="center" text="Thank you for being with us!" textAlignment="center" numberOfLines="0" id="8vw-nR-Dol">
+                        <label height="60" alignment="center" verticalAlignment="center" hidden="YES" text="Thank you for being with us!" textAlignment="center" numberOfLines="0" id="8vw-nR-Dol">
                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
                         </label>
