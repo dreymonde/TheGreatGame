@@ -1,10 +1,50 @@
 {
     "aps": {
         "alert": {
-            "body": "Test message",
-            "title": "Optional title"
+            "title": "Goal!"
         },
         "category": "myCategory"
+    },
+    
+    "content": {
+        "location": "Stadion Galgenwaard, Utrecht",
+        "score": {
+            "away": 1,
+            "home": 1
+        },
+        "id": 1,
+        "stage_title": "Group A, leg 1",
+        "endDate": 1500227100,
+        "away": {
+            "name": "Norway",
+            "id": 8,
+            "short_name": "NOR",
+            "badge_url": "https:\/\/upload.wikimedia.org\/wikipedia\/en\/1\/1c\/Norges_Fotballforbund_-_Norway_Norge.png"
+        },
+        "date": 1500220800,
+        "home": {
+            "name": "Netherlands",
+            "id": 2,
+            "short_name": "NED",
+            "badge_url": "https:\/\/upload.wikimedia.org\/wikipedia\/en\/thumb\/a\/a1\/Royal_Netherlands_Football_Association_Logo.svg\/428px-Royal_Netherlands_Football_Association_Logo.svg.png"
+        },
+        "events": [
+                    {
+                    "type": "start",
+                    "text": "",
+                    "minute": 0
+                    },
+                    {
+                    "type": "goalHome",
+                    "text": "Nederlands goes first!",
+                    "minute": 14
+                    },
+                    {
+                    "type": "goalAway",
+                    "text": "",
+                    "minute": 23
+                    }
+                    ]
     },
     
     "WatchKit Simulator Actions": [

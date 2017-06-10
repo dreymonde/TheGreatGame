@@ -95,7 +95,14 @@
         <!--Notification Controller-->
         <scene sceneID="ZPc-GJ-vnh">
             <objects>
-                <controller id="4sK-HA-Art" customClass="NotificationController" customModule="Watch" customModuleProvider="target"/>
+                <controller id="4sK-HA-Art" customClass="NotificationController" customModule="Watch" customModuleProvider="target">
+                    <items>
+                        <label height="73" alignment="center" verticalAlignment="center" text="Sweden 1:0 Norway" numberOfLines="0" id="Q8N-9h-ro7"/>
+                    </items>
+                    <connections>
+                        <outlet property="testLabel" destination="Q8N-9h-ro7" id="sV1-zW-6la"/>
+                    </connections>
+                </controller>
             </objects>
             <point key="canvasLocation" x="468" y="643"/>
         </scene>

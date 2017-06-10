@@ -29,10 +29,9 @@ extension MatchProtocol {
     }
     
     public func progress() -> Double {
-//        let completeInterval = endDate.timeIntervalSince(date)
-//        let progressInterval = Date().timeIntervalSince(date)
-//        return progressInterval / completeInterval
-        return 0.75
+        let completeInterval = endDate.timeIntervalSince(date)
+        let progressInterval = Date().timeIntervalSince(date)
+        return progressInterval / completeInterval
     }
     
 }
