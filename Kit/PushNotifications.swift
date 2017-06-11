@@ -31,7 +31,7 @@ extension PushToken : CustomStringConvertible {
 
 public protocol PushNotificationProtocol {
     
-    init(from dictionary: [String : Any]) throws
+    init(payload: [String : Any]) throws
     
 }
 
@@ -39,9 +39,10 @@ extension PushNotificationProtocol {
     
     public init?(userInfo: [AnyHashable : Any]) {
         if let content = userInfo as? [String : Any] {
-            try? self.init(from: content)
+            try? self.init(payload: content)
+        } else {
+            return nil
         }
-        return nil
     }
     
 }
@@ -49,43 +50,24 @@ extension PushNotificationProtocol {
 public struct RawPushNotification : PushNotificationProtocol {
     
     public let content: [String : Any]
+    
+    public init(payload: [String : Any]) throws {
+        try self.init(from: payload)
+    }
         
 }
 
-public protocol PushNotificationContent {
-    
-    init(userInfo: [AnyHashable : Any]) throws
-    
-}
-
-public enum PushNotificationContentError : Error {
-    case notValidPayload
-}
-
-extension PushNotificationContent where Self : InMappable {
-    
-    public init(userInfo: [AnyHashable : Any]) throws {
-        guard let payload = userInfo as? [String : Any] else {
-            throw PushNotificationContentError.notValidPayload
-        }
-        try self.init(from: payload)
-    }
-    
-}
-
-extension Match.Full : PushNotificationContent { }
-
-public struct PushNotification<Content : PushNotificationContent> : PushNotificationProtocol {
+public struct PushNotification<Content : InMappable> : PushNotificationProtocol {
     
     public let content: Content
     
-    public init(from dictionary: [String : Any]) throws {
-        let push = try RawPushNotification(from: dictionary)
+    public init(payload: [String : Any]) throws {
+        let push = try RawPushNotification(payload: payload)
         try self.init(push)
     }
     
     public init(_ pushNotification: RawPushNotification) throws {
-        self.content = try Content.init(userInfo: pushNotification.content)
+        self.content = try! Content(from: pushNotification.content)
     }
     
 }

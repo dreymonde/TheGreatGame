@@ -9,6 +9,7 @@
 import Foundation
 import Avenues
 import UIKit
+import CoreGraphics
 
 extension Avenue {
     
@@ -46,5 +47,53 @@ extension UIImage {
         
         return scaledImage
     }
+    
+    #if os(iOS)
+    
+    public func rotate90() -> UIImage {
+        
+        let size = CGSize(width: self.size.height, height: self.size.width)
+        
+        let renderer = UIGraphicsImageRenderer(size: size)
+        let image = renderer.image { (context) in
+            //Move the origin to the middle of the image so we will rotate and scale around the center.
+            let bitmap = context.cgContext
+            bitmap.translateBy(x: size.width / 2, y: size.height / 2)
+            //Rotate the image context
+            bitmap.rotate(by: .pi / 2)
+            //Now, draw the rotated/scaled image into the context
+            bitmap.scaleBy(x: 2.0, y: -1.0)
+            
+            let origin = CGPoint(x: -size.width / 2, y: -size.width / 2)
+            
+            bitmap.draw(self.cgImage!, in: CGRect(origin: origin, size: size))
+        }
+        
+        return image
+        
+    }
+    
+    public func rotated(by angle: CGFloat) -> UIImage {
+        let size = self.size
+        
+        let renderer = UIGraphicsImageRenderer(size: size)
+        let image = renderer.image { (context) in
+            //Move the origin to the middle of the image so we will rotate and scale around the center.
+            let bitmap = context.cgContext
+            bitmap.translateBy(x: size.width / 2, y: size.height / 2)
+            //Rotate the image context
+            bitmap.rotate(by: angle)
+            //Now, draw the rotated/scaled image into the context
+            bitmap.scaleBy(x: 1.0, y: -1.0)
+            
+            let origin = CGPoint(x: -size.width / 2, y: -size.width / 2)
+            
+            bitmap.draw(self.cgImage!, in: CGRect(origin: origin, size: size))
+        }
+        
+        return image
+    }
+    
+    #endif
     
 }

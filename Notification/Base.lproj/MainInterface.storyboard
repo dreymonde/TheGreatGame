@@ -23,20 +23,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" alpha="0.5" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PZN-ls-Qjo">
+                                <rect key="frame" x="10" y="7" width="85.5" height="85"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="PZN-ls-Qjo" secondAttribute="height" multiplier="1:1" id="EKt-PD-F6j"/>
+                                </constraints>
+                            </imageView>
                             <imageView userInteractionEnabled="NO" alpha="0.5" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dFa-pG-Uyg">
                                 <rect key="frame" x="224.5" y="7.5" width="85.5" height="85"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="dFa-pG-Uyg" secondAttribute="height" multiplier="1:1" id="1ce-gZ-SCm"/>
                                 </constraints>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" alpha="0.5" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PZN-ls-Qjo">
-                                <rect key="frame" x="10" y="7.5" width="85.5" height="85"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="PZN-ls-Qjo" secondAttribute="height" multiplier="1:1" id="EKt-PD-F6j"/>
-                                </constraints>
-                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-:-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZRt-zu-YQi">
-                                <rect key="frame" x="150" y="39.5" width="20" height="21"/>
+                                <rect key="frame" x="150" y="40" width="20" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -77,9 +77,9 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="100"/>
                     <connections>
-                        <outlet property="awayBadgeImageView" destination="PZN-ls-Qjo" id="9ih-mq-QOs"/>
+                        <outlet property="awayBadgeImageView" destination="dFa-pG-Uyg" id="cRi-a9-v9d"/>
                         <outlet property="awayLabel" destination="ypJ-Qn-HEw" id="S45-VU-pbE"/>
-                        <outlet property="homeBadgeImageView" destination="dFa-pG-Uyg" id="FOW-8W-8CL"/>
+                        <outlet property="homeBadgeImageView" destination="PZN-ls-Qjo" id="XxO-g0-3ZA"/>
                         <outlet property="homeLabel" destination="tF4-qY-QYZ" id="Pyd-7P-y20"/>
                         <outlet property="scoreLabel" destination="ZRt-zu-YQi" id="ptu-lS-4E7"/>
                     </connections>

@@ -14,16 +14,9 @@ import TheGreatKit
 
 class TodayViewController: UIViewController, NCWidgetProviding {
     
-    @IBOutlet weak var homeBadgeImageView: UIImageView! {
-        didSet {
-            //homeBadgeImageView.transform = CGAffineTransform(rotationAngle: .pi / 2)
-        }
-    }
-    @IBOutlet weak var awayBadgeImageView: UIImageView! {
-        didSet {
-            //awayBadgeImageView.transform = CGAffineTransform(rotationAngle: .pi / 2)
-        }
-    }
+    @IBOutlet weak var homeBadgeImageView: UIImageView!
+    @IBOutlet weak var awayBadgeImageView: UIImageView!
+
     @IBOutlet weak var homeNameLabel: UILabel!
     @IBOutlet weak var awayNameLabel: UILabel!
     
@@ -35,7 +28,8 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.avenue = todayExtension.images.makeAvenue(forImageSize: homeBadgeImageView.frame.size)
+        print(homeBadgeImageView.frame.size)
+        self.avenue = todayExtension.images.makeNotSizedAvenue()
         avenue.onStateChange = { _ in
             if let match = self.showingMatch {
                 self.setup(with: match, afterDownload: true)
@@ -55,12 +49,11 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     func setup(with match: Match.Full, afterDownload: Bool) {
         self.homeNameLabel.text = match.home.shortName
         self.awayNameLabel.text = match.away.shortName
-        avenue.prepareItem(at: match.home.badges.flag)
-        avenue.prepareItem(at: match.away.badges.flag)
-        print(match.home.badges.flag)
-        self.homeBadgeImageView.setImage(avenue.item(at: match.home.badges.flag), afterDownload: false)
-        self.awayBadgeImageView.setImage(avenue.item(at: match.away.badges.flag), afterDownload: false)
-        if let _ = avenue.item(at: match.home.badges.flag), let _ = avenue.item(at: match.away.badges.flag) {
+        avenue.prepareItem(at: match.home.badges.large)
+        avenue.prepareItem(at: match.away.badges.large)
+        self.homeBadgeImageView.setImage(avenue.item(at: match.home.badges.large), afterDownload: false)
+        self.awayBadgeImageView.setImage(avenue.item(at: match.away.badges.large), afterDownload: false)
+        if let _ = avenue.item(at: match.home.badges.large), let _ = avenue.item(at: match.away.badges.large) {
             self.completion?(.newData)
         }
     }
