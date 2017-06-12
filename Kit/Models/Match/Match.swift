@@ -143,7 +143,7 @@ public enum Match {
                         events: eventsBeforeMinute)
         }
         
-        public func allSnapshots() -> [(Full, minute: Int)] {
+        public func allSnapshots() -> [(match: Full, minute: Int)] {
             return events.map({ (event) in
                 return (self.snapshot(beforeMinute: event.minute), minute: event.minute)
             })

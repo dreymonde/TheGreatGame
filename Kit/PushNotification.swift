@@ -31,6 +31,10 @@ extension PushToken : CustomStringConvertible {
 
 public protocol PushNotificationProtocol {
     
+    associatedtype Content
+    
+    var content: Content { get }
+    
     init(payload: [String : Any]) throws
     
 }

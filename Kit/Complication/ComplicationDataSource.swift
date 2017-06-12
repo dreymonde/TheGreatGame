@@ -9,34 +9,17 @@
 import Foundation
 import Shallows
 
-func onlySuccess<T>(_ completion: @escaping (T) -> ()) -> (Result<T>) -> () {
-    return { res in
-        if let val = res.value {
-            completion(val)
-        }
-    }
-}
-
-func asOptional<T>(_ completion: @escaping (T?) -> ()) -> (Result<T>) -> () {
-    return { completion($0.value) }
-}
-
-public func endsLater(_ lhs: Match.Full, _ rhs: Match.Full) -> Match.Full {
-    if lhs.endDate > rhs.endDate {
-        return lhs
-    }
-    return rhs
-}
-
 public final class ComplicationDataSource {
     
     public struct MatchSnapshot {
-        public let match: Match.Full
-        public let timelineDate: Date
+        public var match: Match.Full
+        public var timelineDate: Date
+        public var aforetime: Bool
         
-        public init(match: Match.Full, timelineDate: Date) {
+        public init(match: Match.Full, timelineDate: Date, aforetime: Bool = false) {
             self.match = match
             self.timelineDate = timelineDate
+            self.aforetime = aforetime
         }
     }
     
@@ -171,14 +154,23 @@ internal extension Sequence where Iterator.Element == Match.Full {
     }
     
     func snapshots() -> [ComplicationDataSource.MatchSnapshot] {
-        return flatMap({ (match) -> [ComplicationDataSource.MatchSnapshot] in
+        var allMatchesSnapshots = flatMap({ (match) -> [ComplicationDataSource.MatchSnapshot] in
             let beforeStart = ComplicationDataSource.MatchSnapshot.init(match: match.notStartedSnapshot(), timelineDate: assumeSortedTimelineDate(for: match))
             let otherSnapshots = match.allSnapshots()
-                .map({ ComplicationDataSource.MatchSnapshot.init(match: $0.0, timelineDate: $0.0.date(afterMinutesFromStart: $0.minute)) })
+                .map({ ComplicationDataSource.MatchSnapshot(match: $0.match,
+                                                            timelineDate: $0.match.date(afterMinutesFromStart: $0.minute)) })
             var all = [beforeStart]
             all.append(contentsOf: otherSnapshots)
             return all
         })
+        if let first = allMatchesSnapshots.first {
+            let aforetime = first <- {
+                $0.aforetime = true
+                $0.timelineDate = Date().startOfSameDay()
+            }
+            allMatchesSnapshots.insert(aforetime, at: 0)
+        }
+        return allMatchesSnapshots
     }
     
     func assumeSortedTimelineDate(for givenMatch: Match.Full) -> Date {
@@ -202,6 +194,17 @@ extension Date {
     
     internal func startOfSameDay() -> Date {
         return Calendar.current.startOfDay(for: self)
+    }
+    
+}
+
+extension Match {
+    
+    public static func endsLater<MatchType : MatchProtocol>(_ lhs: MatchType, _ rhs: MatchType) -> MatchType {
+        if lhs.endDate > rhs.endDate {
+            return lhs
+        }
+        return rhs
     }
     
 }

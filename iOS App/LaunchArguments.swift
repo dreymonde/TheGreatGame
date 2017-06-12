@@ -10,6 +10,7 @@ import TheGreatKit
 
 enum Server : String {
     case github
+    case heroku
     case macBookSteve = "macbook-steve"
 }
 

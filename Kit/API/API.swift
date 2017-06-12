@@ -32,6 +32,13 @@ extension APIProvider {
         return Self(dataProvider: gitRepo.asReadOnlyCache())
     }
     
+    public static func heroku(networkCache: ReadOnlyCache<URL, Data> = Self.makeUrlSessionCache()) -> Self {
+        let baseURL = URL(string: "https://the-great-game-ruby.herokuapp.com")!
+        let subcache: ReadOnlyCache<String, Data> = networkCache
+            .mapKeys({ URL.init(string: $0, relativeTo: baseURL)! })
+        return Self(dataProvider: subcache)
+    }
+    
     public static func gitHub(urlSession: URLSession) -> Self {
         let sessionCache = Self.makeUrlSessionCache(from: urlSession)
         return Self.gitHub(networkCache: sessionCache)

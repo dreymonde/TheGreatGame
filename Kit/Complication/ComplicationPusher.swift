@@ -49,16 +49,6 @@ extension PushKitReceiver {
     }
     
     public func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, forType type: PKPushType) {
-        
-        let content = UNMutableNotificationContent() <- {
-            $0.title = "Update"
-            $0.body = "I got some news"
-            $0.sound = UNNotificationSound.default()
-        }
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
-        UNUserNotificationCenter.current().add(request) { (error) in
-            print("Add notif:", error as Any)
-        }
         didReceiveIncomingPush.publish(payload)
         dump(payload.dictionaryPayload)
     }

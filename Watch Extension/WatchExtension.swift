@@ -49,7 +49,7 @@ final class WatchExtension {
         switch (lhs.isFavorite(using: favorites.isFavorite(teamWith:)),
                 rhs.isFavorite(using: favorites.isFavorite(teamWith:))) {
         case (true, true), (false, false):
-            return endsLater(lhs, rhs)
+            return Match.endsLater(lhs, rhs)
         case (true, false):
             return lhs
         case (false, true):

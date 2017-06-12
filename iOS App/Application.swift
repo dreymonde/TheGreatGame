@@ -39,7 +39,7 @@ final class Application {
     }
     
     static func makeAPI() -> API {
-        let server = launchArgument(.server) ?? .github
+        let server = launchArgument(.server) ?? .heroku
         switch server {
         case .github:
             let urlSession = URLSession(configuration: .default)
@@ -48,6 +48,9 @@ final class Application {
         case .macBookSteve:
             printWithContext("Using this MacBook as a server")
             return API.macBookSteve()
+        case .heroku:
+            printWithContext("Using the-great-game-ruby.herokuapp.com as a server (Heroku)")
+            return API.heroku()
         }
     }
     
