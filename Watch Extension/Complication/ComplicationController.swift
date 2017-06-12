@@ -31,6 +31,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     
     let dataSource = ComplicationDataSource.main
     let producer = TemplateProducer()
+    let placeholder = ComplicationTemplate()
     
     // MARK: - Timeline Configuration
     
@@ -110,7 +111,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     func getLocalizableSampleTemplate(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTemplate?) -> Void) {
         // This method will be called once per supported complication, and the results will be cached
         printWithContext()
-        let sample = dataSource.placeholderMatch
+        let sample = placeholder.placeholderMatch
         let template = producer.template(for: sample, aforetime: false, family: complication.family)
         handler(template)
     }

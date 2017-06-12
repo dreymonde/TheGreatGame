@@ -195,6 +195,8 @@
 		7CF7DF9E1EEC6472004F0A73 /* TheGreatKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C0EA6071EBA1C9000F50EB2 /* TheGreatKit.framework */; };
 		7CF7DF9F1EEC6B9D004F0A73 /* Jubilee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6261EBA1CB100F50EB2 /* Jubilee.swift */; };
 		BE1713BF1EEF412300CFB448 /* gallery.ckcomplication in Resources */ = {isa = PBXBuildFile; fileRef = BE1713BE1EEF412300CFB448 /* gallery.ckcomplication */; };
+		BE1713C11EEF428A00CFB448 /* ComplicationTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1713C01EEF428A00CFB448 /* ComplicationTemplate.swift */; };
+		BE1713C21EEF428A00CFB448 /* ComplicationTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1713C01EEF428A00CFB448 /* ComplicationTemplate.swift */; };
 		BEB5C4311EEF0790005A4065 /* NotificationsReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB5C4301EEF0790005A4065 /* NotificationsReceiver.swift */; };
 		BEB5C4321EEF0790005A4065 /* NotificationsReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB5C4301EEF0790005A4065 /* NotificationsReceiver.swift */; };
 		BEB5C4341EEF082E005A4065 /* NotificationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB5C4331EEF082E005A4065 /* NotificationResponse.swift */; };
@@ -472,6 +474,7 @@
 		7CF7DF941EEC6430004F0A73 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7CF7DFA01EEC6BEA004F0A73 /* Notification.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Notification.entitlements; sourceTree = "<group>"; };
 		BE1713BE1EEF412300CFB448 /* gallery.ckcomplication */ = {isa = PBXFileReference; lastKnownFileType = folder; path = gallery.ckcomplication; sourceTree = "<group>"; };
+		BE1713C01EEF428A00CFB448 /* ComplicationTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplicationTemplate.swift; sourceTree = "<group>"; };
 		BEB5C4301EEF0790005A4065 /* NotificationsReceiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsReceiver.swift; sourceTree = "<group>"; };
 		BEB5C4331EEF082E005A4065 /* NotificationResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationResponse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1035,6 +1038,7 @@
 				7CA5420C1EDB14C600B4D1BD /* ComplicationDataSource.swift */,
 				7CCD25C81EDDCF3F00F3C5CB /* ComplicationReloader.swift */,
 				7CCD25CA1EDEA23900F3C5CB /* ComplicationPusher.swift */,
+				BE1713C01EEF428A00CFB448 /* ComplicationTemplate.swift */,
 			);
 			path = Complication;
 			sourceTree = "<group>";
@@ -1575,6 +1579,7 @@
 				7C0EA64F1EBA1D3100F50EB2 /* Shallows+Mapper.swift in Sources */,
 				7C13BC761ED8523600588F5F /* Package.swift in Sources */,
 				7C1E66451EBB67CC003AF505 /* Group.swift in Sources */,
+				BE1713C11EEF428A00CFB448 /* ComplicationTemplate.swift in Sources */,
 				7C6B36BE1EBCA88100FC17F9 /* Matches.swift in Sources */,
 				7CA213741ECF382200F088DD /* SharedContainer.swift in Sources */,
 				7C1D89861EC0638D006F7841 /* Functions.swift in Sources */,
@@ -1678,6 +1683,7 @@
 				7CA541FF1EDAB65200B4D1BD /* Shallows+ActivityIndicator.swift in Sources */,
 				BEB5C4321EEF0790005A4065 /* NotificationsReceiver.swift in Sources */,
 				7C13BC621ED84B3D00588F5F /* OutMapper.swift in Sources */,
+				BE1713C21EEF428A00CFB448 /* ComplicationTemplate.swift in Sources */,
 				7C13BC5D1ED84B3D00588F5F /* InMap.swift in Sources */,
 				7C13BC671ED84B4C00588F5F /* Stage.swift in Sources */,
 				7C6AA17E1ED87A0D003F2388 /* AvenuesExtensions.swift in Sources */,

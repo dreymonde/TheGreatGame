@@ -80,42 +80,6 @@ public final class ComplicationDataSource {
         }
     }
     
-    public lazy var placeholderMatch: Match.Full = self.makePlaceholderMatch(for: Locale.current)
-    
-    private func makePlaceholderMatch(for locale: Locale) -> Match.Full {
-        if let region = locale.regionCode {
-            switch region {
-            case "RU", "UA", "BY":
-                return makePlaceholderMatchRUS()
-            default:
-                return makeDefaultPlaceholderMatch()
-            }
-        }
-        return makeDefaultPlaceholderMatch()
-    }
-    
-    private lazy var badges: Team.Badges = {
-        let badge = URL(string: "https://goo.gl")!
-        return Team.Badges(large: badge, flag: badge)
-    }()
-    
-    private func makeDefaultPlaceholderMatch() -> Match.Full {
-        let home = Match.Team(id: Team.ID.init(rawValue: -1)!, name: "Germany", shortName: "GER", badges: badges)
-        let away = Match.Team(id: Team.ID.init(rawValue: -1)!, name: "Sweden", shortName: "SWE", badges: badges)
-        return makeMatch(teams: (home, away), score: (1, 1))
-    }
-    
-    private func makePlaceholderMatchRUS() -> Match.Full {
-        let home = Match.Team(id: Team.ID.init(rawValue: -1)!, name: "Russia", shortName: "RUS", badges: badges)
-        let away = Match.Team(id: Team.ID.init(rawValue: -1)!, name: "Germany", shortName: "GER", badges: badges)
-        return makeMatch(teams: (home, away), score: (2, 0))
-    }
-    
-    private func makeMatch(teams: (Match.Team, Match.Team), score: (Int, Int)?) -> Match.Full {
-        let scorescore = score.map({ Match.Score.init(home: $0.0, away: $0.1) })
-        return Match.Full(id: Match.ID.init(rawValue: -1)!, home: teams.0, away: teams.1, date: Date(), endDate: Date().addingTimeInterval(60 * 120), location: "Netherlands", stageTitle: "Group Stage", score: scorescore, events: [])
-    }
-    
 }
 
 internal extension Array where Element == ComplicationDataSource.MatchSnapshot {
