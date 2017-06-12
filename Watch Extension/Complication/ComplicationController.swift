@@ -97,7 +97,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
     }
     
     func entry(with match: ComplicationDataSource.MatchSnapshot, for complication: CLKComplication) -> CLKComplicationTimelineEntry? {
-        if let template = producer.template(for: match.match, family: complication.family) {
+        if let template = producer.template(for: match.match, aforetime: match.aforetime, family: complication.family) {
             return CLKComplicationTimelineEntry(date: match.timelineDate,
                                                 complicationTemplate: template,
                                                 timelineAnimationGroup: printed(String(match.match.id.rawID)))
@@ -111,7 +111,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         // This method will be called once per supported complication, and the results will be cached
         printWithContext()
         let sample = dataSource.placeholderMatch
-        let template = producer.template(for: sample, family: complication.family)
+        let template = producer.template(for: sample, aforetime: false, family: complication.family)
         handler(template)
     }
     

@@ -13,32 +13,32 @@ import TheGreatKit
 
 final class TemplateProducer {
     
-    func template(for match: Match.Full, family: CLKComplicationFamily) -> CLKComplicationTemplate? {
-        return producer(for: family)(match)
+    func template(for match: Match.Full, aforetime: Bool, family: CLKComplicationFamily) -> CLKComplicationTemplate? {
+        return producer(for: family)(match, aforetime)
     }
     
-    private func producer(for family: CLKComplicationFamily) -> (Match.Full) -> CLKComplicationTemplate? {
+    private func producer(for family: CLKComplicationFamily) -> (Match.Full, Bool) -> CLKComplicationTemplate? {
         switch family {
         case .modularSmall:
-            return modularSmallTemplate(for:)
+            return modularSmallTemplate(for:aforetime:)
         case .utilitarianSmall, .utilitarianSmallFlat:
-            return utilitarianSmallTemplate(for:)
+            return utilitarianSmallTemplate(for:aforetime:)
         case .utilitarianLarge:
-            return utilitarianLargeTemplate(for:)
+            return utilitarianLargeTemplate(for:aforetime:)
         case .circularSmall:
-            return circularSmallTemplate(for:)
+            return circularSmallTemplate(for:aforetime:)
         case .extraLarge:
-            return extraLargeTemplate(for:)
+            return extraLargeTemplate(for:aforetime:)
         case .modularLarge:
-            return modularLargeTemplate(for:)
+            return modularLargeTemplate(for:aforetime:)
         }
     }
     
-    private func nope(match: Match.Full) -> CLKComplicationTemplate? {
+    private func nope(for match: Match.Full, aforetime: Bool) -> CLKComplicationTemplate? {
         return nil
     }
     
-    private func utilitarianSmallTemplate(for match: Match.Full) -> CLKComplicationTemplate? {
+    private func utilitarianSmallTemplate(for match: Match.Full, aforetime: Bool) -> CLKComplicationTemplate? {
         if let score = match.score {
             let text = "\(match.home.shortName) \(score.demo_string) \(match.away.shortName)"
             let shortText = "\(match.home.shortName.firstTwoChars()) \(score.demo_string) \(match.away.shortName.firstTwoChars())"
@@ -47,14 +47,14 @@ final class TemplateProducer {
             }
         } else {
             let oneline = shortestOneLineMatchTextProvider(match: match)
-            let date = textProvider(for: match.date)
+            let date = textProvider(for: match.date, aforetime: aforetime)
             return CLKComplicationTemplateUtilitarianSmallFlat() <- {
                 $0.textProvider = CLKTextProvider(byJoining: oneline, andProvider: date, with: " ")
             }
         }
     }
     
-    private func utilitarianLargeTemplate(for match: Match.Full) -> CLKComplicationTemplate? {
+    private func utilitarianLargeTemplate(for match: Match.Full, aforetime: Bool) -> CLKComplicationTemplate? {
         if let score = match.score {
             var text = "\(match.home.shortName) \(score.demo_string) \(match.away.shortName)"
             if match.isEnded {
@@ -66,14 +66,14 @@ final class TemplateProducer {
             }
         } else {
             let oneline = oneLineMatchTextProvider(match: match)
-            let date = textProvider(for: match.date)
+            let date = textProvider(for: match.date, aforetime: aforetime)
             return CLKComplicationTemplateUtilitarianLargeFlat() <- {
                 $0.textProvider = CLKTextProvider(byJoining: oneline, andProvider: date, with: " ")
             }
         }
     }
     
-    private func circularSmallTemplate(for match: Match.Full) -> CLKComplicationTemplate? {
+    private func circularSmallTemplate(for match: Match.Full, aforetime: Bool) -> CLKComplicationTemplate? {
         if let score = match.score {
             return CLKComplicationTemplateCircularSmallStackText() <- {
                 $0.line1TextProvider = shortestOneLineMatchTextProvider(match: match)
@@ -82,12 +82,12 @@ final class TemplateProducer {
         } else {
             return CLKComplicationTemplateCircularSmallStackText() <- {
                 $0.line1TextProvider = shortestOneLineMatchTextProvider(match: match)
-                $0.line2TextProvider = textProvider(for: match.date)
+                $0.line2TextProvider = textProvider(for: match.date, aforetime: aforetime)
             }
         }
     }
     
-    private func extraLargeTemplate(for match: Match.Full) -> CLKComplicationTemplate? {
+    private func extraLargeTemplate(for match: Match.Full, aforetime: Bool) -> CLKComplicationTemplate? {
         if let score = match.score {
             return CLKComplicationTemplateExtraLargeColumnsText() <- {
                 $0.row1Column1TextProvider = CLKSimpleTextProvider(text: match.home.shortName)
@@ -98,12 +98,12 @@ final class TemplateProducer {
         } else {
             return CLKComplicationTemplateExtraLargeStackText() <- {
                 $0.line1TextProvider = shortestOneLineMatchTextProvider(match: match)
-                $0.line2TextProvider = textProvider(for: match.date)
+                $0.line2TextProvider = textProvider(for: match.date, aforetime: aforetime)
             }
         }
     }
     
-    private func modularSmallTemplate(for match: Match.Full) -> CLKComplicationTemplate? {
+    private func modularSmallTemplate(for match: Match.Full, aforetime: Bool) -> CLKComplicationTemplate? {
         if let score = match.score {
             return CLKComplicationTemplateModularSmallColumnsText() <- {
                 $0.row1Column1TextProvider = CLKSimpleTextProvider(text: match.home.shortName)
@@ -114,12 +114,12 @@ final class TemplateProducer {
         } else {
             return CLKComplicationTemplateModularSmallStackText() <- {
                 $0.line1TextProvider = shortestOneLineMatchTextProvider(match: match)
-                $0.line2TextProvider = textProvider(for: match.date)
+                $0.line2TextProvider = textProvider(for: match.date, aforetime: aforetime)
             }
         }
     }
     
-    private func modularLargeTemplate(for match: Match.Full) -> CLKComplicationTemplate? {
+    private func modularLargeTemplate(for match: Match.Full, aforetime: Bool) -> CLKComplicationTemplate? {
         if let score = match.score {
             return CLKComplicationTemplateModularLargeTable() <- {
                 $0.headerTextProvider = CLKSimpleTextProvider(text: match.events.last?.text ?? match.stageTitle)
@@ -132,7 +132,7 @@ final class TemplateProducer {
             return CLKComplicationTemplateModularLargeStandardBody() <- {
                 $0.headerTextProvider = longestOneLineMatchTextProvider(match: match)
                 $0.body1TextProvider = CLKSimpleTextProvider(text: match.stageTitle)
-                $0.body2TextProvider = textProvider(for: match.date)
+                $0.body2TextProvider = textProvider(for: match.date, aforetime: aforetime)
             }
         }
     }
@@ -163,13 +163,13 @@ final class TemplateProducer {
         return CLKSimpleTextProvider(text: text, shortText: homeOnly)
     }
     
-    private func textProvider(for date: Date) -> CLKTextProvider {
-        return CLKTimeTextProvider(date: date)
-//        if Calendar.current.isDateInToday(date) {
-//            return CLKTimeTextProvider(date: date)
-//        } else {
-//            return CLKDateTextProvider(date: date, units: [.month, .day])
-//        }
+    private func textProvider(for date: Date, aforetime: Bool) -> CLKTextProvider {
+        if !aforetime {
+            return CLKTimeTextProvider(date: date)
+        } else {
+            print("Aforetime template!")
+            return CLKDateTextProvider(date: date, units: [.month, .day])
+        }
     }
     
 }

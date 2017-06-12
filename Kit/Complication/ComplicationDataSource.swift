@@ -137,7 +137,10 @@ internal extension Sequence where Iterator.Element == Match.Full {
         for match in self {
             let date = match.date
             if let conflicting = dates[date] {
-                dates[date] = decide(conflicting, match)
+                printWithContext("Conflicting matches: \(conflicting.id) vs \(match.id)")
+                let decided = decide(conflicting, match)
+                printWithContext("Choosing \(decided.id)")
+                dates[date] = decided
             } else {
                 dates[date] = match
             }
@@ -180,7 +183,7 @@ internal extension Sequence where Iterator.Element == Match.Full {
                 if let previous = previous {
                     return Swift.max(previous.endDate.addingTimeInterval(Match.aftermath), givenMatch.date.startOfSameDay())
                 } else {
-                    return Swift.min(Date().startOfSameDay(), givenMatch.date.startOfSameDay())
+                    return givenMatch.date.startOfSameDay()
                 }
             }
             previous = match
