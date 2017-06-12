@@ -1,0 +1,22 @@
+{
+  "row2Column2TextProvider" : {
+    "class" : "CLKSimpleTextProvider",
+    "text" : "1"
+  },
+  "row1Column2TextProvider" : {
+    "class" : "CLKSimpleTextProvider",
+    "text" : "1"
+  },
+  "column2Alignment" : 0,
+  "highlightColumn2" : false,
+  "class" : "CLKComplicationTemplateExtraLargeColumnsText",
+  "row2Column1TextProvider" : {
+    "class" : "CLKSimpleTextProvider",
+    "text" : "SWE"
+  },
+  "row1Column1TextProvider" : {
+    "class" : "CLKSimpleTextProvider",
+    "text" : "GER"
+  },
+  "version" : 30000
+}

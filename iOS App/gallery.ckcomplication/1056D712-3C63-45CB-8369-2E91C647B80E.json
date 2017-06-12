@@ -1,0 +1,25 @@
+{
+  "row2Column2TextProvider" : {
+    "class" : "CLKSimpleTextProvider",
+    "text" : "1"
+  },
+  "row1Column2TextProvider" : {
+    "class" : "CLKSimpleTextProvider",
+    "text" : "1"
+  },
+  "column2Alignment" : 0,
+  "headerTextProvider" : {
+    "class" : "CLKSimpleTextProvider",
+    "text" : "Group Stage"
+  },
+  "class" : "CLKComplicationTemplateModularLargeTable",
+  "row2Column1TextProvider" : {
+    "class" : "CLKSimpleTextProvider",
+    "text" : "Sweden"
+  },
+  "row1Column1TextProvider" : {
+    "class" : "CLKSimpleTextProvider",
+    "text" : "Germany"
+  },
+  "version" : 30000
+}

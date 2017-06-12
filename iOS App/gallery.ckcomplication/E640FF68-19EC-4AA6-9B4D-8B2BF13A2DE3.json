@@ -1,0 +1,13 @@
+{
+  "class" : "CLKComplicationTemplateCircularSmallStackText",
+  "line2TextProvider" : {
+    "class" : "CLKSimpleTextProvider",
+    "text" : "1:1"
+  },
+  "line1TextProvider" : {
+    "shortText" : "GER",
+    "class" : "CLKSimpleTextProvider",
+    "text" : "GE:SW"
+  },
+  "version" : 30000
+}

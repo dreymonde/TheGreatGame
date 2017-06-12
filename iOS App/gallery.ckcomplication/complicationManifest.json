@@ -1,0 +1,12 @@
+{
+  "supported complication families" : {
+    "7" : "21F0AEBB-5223-4EDD-89C2-C5E768B4E83F.json",
+    "3" : "4796236C-A6B2-4391-9A26-7103B789DF66.json",
+    "4" : "E640FF68-19EC-4AA6-9B4D-8B2BF13A2DE3.json",
+    "0" : "A7A83DA4-74A3-47B9-88A2-B3835C8C1C92.json",
+    "1" : "1056D712-3C63-45CB-8369-2E91C647B80E.json",
+    "6" : "CBC37B50-C127-4515-82B0-A16A4794B85F.json",
+    "2" : "E17A0906-7BA2-4A9E-948D-E0C78E83338A.json"
+  },
+  "client ID" : "com.the-great-game.TheGreatGame.watchkitapp.watchkitextension"
+}
