@@ -121,3 +121,23 @@ extension ReadOnlyCache {
     }
     
 }
+
+extension CacheProtocol {
+    
+    public func latency(ofInterval interval: TimeInterval) -> Cache<Key, Value> {
+        return Cache(cacheName: self.cacheName, retrieve: { (key, completion) in
+            self.retrieve(forKey: key, completion: { (result) in
+                DispatchQueue.global().asyncAfter(deadline: .now() + interval, execute: {
+                    completion(result)
+                })
+            })
+        }, set: { (value, key, completion) in
+            self.set(value, forKey: key, completion: { (result) in
+                DispatchQueue.global().asyncAfter(deadline: .now() + interval, execute: { 
+                    completion(result)
+                })
+            })
+        })
+    }
+    
+}
