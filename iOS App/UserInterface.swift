@@ -43,7 +43,7 @@ final class UserInterface {
     }
     
     func prefetchFavorites() {
-        logic.favoriteTeams.all.forEach({ self.resources.fullTeam($0).prefetch() })
+        logic.favoriteTeams.registry.all.forEach({ self.resources.fullTeam($0).prefetch() })
     }
     
     var tabBarController: UITabBarController! {
@@ -68,19 +68,21 @@ final class UserInterface {
     func inject(to teamsList: TeamsTableViewController) {
         teamsList <- {
             $0.resource = self.resources.teams
-            $0.isFavorite = self.logic.favoriteTeams.isFavorite(id:)
-            $0.updateFavorite = self.logic.favoriteTeams.updateFavorite(id:isFavorite:)
+            $0.isFavorite = self.logic.favoriteTeams.registry.isFavorite(id:)
+            let id = objectID(teamsList)
+            $0.updateFavorite = { self.logic.favoriteTeams.registry.updateFavorite(id: $0, isFavorite: $1, submitter: id) }
             $0.makeAvenue = self.makeAvenue(forImageSize:)
             $0.makeTeamDetailVC = { self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
+            $0.shouldReloadData = self.logic.favoriteTeams.registry.unitedDidUpdate.proxy.mapValue({ _ in })
         }
     }
     
     func inject(to matchesList: MatchesTableViewController) {
         matchesList <- {
             $0.resource = self.resources.stages
-            $0.isFavorite = self.logic.favoriteTeams.isFavorite(id:)
+            $0.isFavorite = self.logic.favoriteTeams.registry.isFavorite(id:)
             $0.makeAvenue = { self.logic.images.makeAvenue(forImageSize: $0) }
-            $0.shouldReloadData = self.logic.favoriteTeams.didUpdateFavorite.proxy.void()
+            $0.shouldReloadData = self.logic.favoriteTeams.registry.didUpdateFavorite.void()
         }
     }
     
@@ -95,7 +97,7 @@ final class UserInterface {
     func teamDetailViewController(for teamID: Team.ID, preloaded: TeamDetailPreLoaded) -> TeamDetailTableViewController {
         return Storyboard.Main.teamDetailTableViewController.instantiate() <- {
             $0.resource = self.resources.fullTeam(teamID)
-            $0.isFavorite = { self.logic.favoriteTeams.isFavorite(id: teamID) }
+            $0.isFavorite = { self.logic.favoriteTeams.registry.isFavorite(id: teamID) }
             $0.makeAvenue = { self.logic.images.makeAvenue(forImageSize: $0) }
             $0.preloadedTeam = preloaded
             $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }

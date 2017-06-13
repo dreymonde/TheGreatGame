@@ -10,6 +10,7 @@ import UIKit
 import TheGreatKit
 import Shallows
 import Avenues
+import Alba
 
 extension Set {
     
@@ -40,14 +41,27 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
     var avenue: SymmetricalAvenue<URL, UIImage>!
     var pullToRefreshActivities: NetworkActivityIndicatorManager!
     
+    // MARK: - Connections
+    var shouldReloadData: SignedSubscribe<Void>?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        subscribe()
         registerFor3DTouch()
         configure(tableView)
         self.pullToRefreshActivities = make()
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
         configure(avenue)
         self.resource.load(completion: reloadData(with:source:))
+    }
+    
+    func subscribe() {
+        shouldReloadData?
+            .mainThread()
+            .drop(eventsSignedBy: self)
+            .unsigned
+            .subscribe(self.tableView, with: UITableView.reloadData)
+        shouldReloadData = nil
     }
     
     fileprivate func reloadData(with teams: [Team.Compact], source: Source) {

@@ -14,7 +14,7 @@ import Shallows
 public final class AppleWatch {
     
     internal let session: WatchSessionManager
-    internal let pushKitReceiver: PushKitReceiver
+    public let pushKitReceiver: PushKitReceiver
     internal let pusher: ComplicationPusher
     
     public init?() {

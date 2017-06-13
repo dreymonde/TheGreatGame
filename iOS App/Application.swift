@@ -16,7 +16,8 @@ final class Application {
     let api: API
     let apiCache: APICache
     let images: Images
-    let favoriteTeams: FavoriteTeams
+    let favoriteTeams: Favorites<Team.ID>
+    let tokens: DeviceTokens
     
     let watch: AppleWatch?
     let notifications: Notifications
@@ -28,14 +29,18 @@ final class Application {
         self.api = Application.makeAPI()
         self.apiCache = Application.makeAPICache()
         self.images = Images.inSharedCachesDirectory()
-        self.favoriteTeams = FavoriteTeams.inSharedDocumentsDirectory()
+        self.tokens = DeviceTokens()
+        self.favoriteTeams = Favorites(tokens: self.tokens)
         self.watch = AppleWatch()
         self.notifications = Notifications(application: UIApplication.shared)
         declare()
     }
     
     func declare() {
-        watch?.declare(didUpdateFavorites: favoriteTeams.didUpdateFavorites.proxy)
+        tokens.declare(notifications: AppDelegate.didRegisterForRemoteNotificationsWithDeviceToken.proxy,
+                       complication: watch?.pushKitReceiver.didRegisterWithToken.proxy ?? .empty())
+        watch?.declare(didUpdateFavorites: favoriteTeams.registry.didUpdateFavorites)
+        favoriteTeams.declare()
     }
     
     static func makeAPI() -> API {

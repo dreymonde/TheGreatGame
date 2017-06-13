@@ -76,14 +76,11 @@ final class PUSHer : CacheProtocol {
 
 internal final class FavoritesUploader<IDType : IDProtocol> where IDType.RawValue == Int {
     
-    let rollback: (Favorites<IDType>.Update) -> ()
     let getNotificationsToken: () -> PushToken?
     let getComplicationToken: () -> PushToken?
     
-    init(rollback: @escaping (Favorites<IDType>.Update) -> (),
-         getNotificationsToken: @escaping () -> PushToken?,
+    init(getNotificationsToken: @escaping () -> PushToken?,
          getComplicationToken: @escaping () -> PushToken?) {
-        self.rollback = rollback
         self.getNotificationsToken = getNotificationsToken
         self.getComplicationToken = getComplicationToken
     }
@@ -96,19 +93,21 @@ internal final class FavoritesUploader<IDType : IDProtocol> where IDType.RawValu
             return baseURL
         })
     
-    internal func declare(didUpdateFavorites: Subscribe<(Favorites<IDType>.Update, Set<IDType>)>) {
-        didUpdateFavorites.subscribe(self, with: FavoritesUploader.didUpdateFavorites)
+    internal func declare(didUpdateFavorites: SignedSubscribe<FavoritesRegistry<IDType>.Update>) {
+        didUpdateFavorites
+            .drop(eventsSignedBy: self)
+            .unsigned
+            .subscribe(self, with: FavoritesUploader.didUpdateFavorites)
     }
     
-    internal func didUpdateFavorites(_ favorites: (Favorites<IDType>.Update, Set<IDType>)) {
-        let notification = getNotificationsToken().flatMap({ FavoritesUpload.init(token: $0, tokenType: .notificaions, favorites: favorites.1) })
-        let complication = getComplicationToken().flatMap({ FavoritesUpload.init(token: $0, tokenType: .complication, favorites: favorites.1) })
+    internal func didUpdateFavorites(_ update: (FavoritesRegistry<IDType>.Update)) {
+        let notification = getNotificationsToken().flatMap({ FavoritesUpload.init(token: $0, tokenType: .notificaions, favorites: update.favorites) })
+        let complication = getComplicationToken().flatMap({ FavoritesUpload.init(token: $0, tokenType: .complication, favorites: update.favorites) })
         let uploads = [notification, complication].flatMap({ $0 })
         for upload in uploads {
             pusher.set(upload) { result in
                 if let error = result.error {
-                    printWithContext("Failed to write favorites, rolling back \(favorites.0). Error: \(error)")
-                    self.rollback(favorites.0)
+                    printWithContext("Failed to write favorites \(update.changes). Error: \(error)")
                 } else {
                     self.didUploadFavorites.publish(upload)
                 }
