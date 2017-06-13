@@ -20,7 +20,7 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
     @IBOutlet weak var homeBadgeImageView: UIImageView!
     @IBOutlet weak var awayBadgeImageView: UIImageView!
     
-    let avenue = Images.inSharedCachesDirectory().makeAvenue(forImageSize: CGSize.init(width: 100, height: 100))
+    let avenue = Images.inSharedCachesDirectory().makeAvenue(forImageSize: CGSize.init(width: 100, height: 100), activityIndicator: .none)
     
     var match: Match.Full?
     

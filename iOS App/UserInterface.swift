@@ -61,8 +61,7 @@ final class UserInterface {
     }
     
     private func makeAvenue(forImageSize imageSize: CGSize) -> Avenue<URL, URL, UIImage> {
-        return logic.images.makeAvenue(forImageSize: imageSize)
-            .connectingNetworkActivityIndicator(manager: .application)
+        return logic.images.makeAvenue(forImageSize: imageSize, activityIndicator: .application)
     }
     
     func inject(to teamsList: TeamsTableViewController) {
@@ -80,7 +79,7 @@ final class UserInterface {
         matchesList <- {
             $0.resource = self.resources.stages
             $0.isFavorite = self.logic.favoriteTeams.registry.isFavorite(id:)
-            $0.makeAvenue = { self.logic.images.makeAvenue(forImageSize: $0) }
+            $0.makeAvenue = self.makeAvenue(forImageSize:)
             $0.shouldReloadData = self.logic.favoriteTeams.registry.didUpdateFavorite.void()
         }
     }
@@ -88,7 +87,7 @@ final class UserInterface {
     func inject(to groupsList: GroupsTableViewController) {
         groupsList <- {
             $0.resource = self.resources.groups
-            $0.makeAvenue = { self.logic.images.makeAvenue(forImageSize: $0) }
+            $0.makeAvenue = self.makeAvenue(forImageSize:)
             $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
         }
     }
@@ -97,7 +96,7 @@ final class UserInterface {
         return Storyboard.Main.teamDetailTableViewController.instantiate() <- {
             $0.resource = self.resources.fullTeam(teamID)
             $0.isFavorite = { self.logic.favoriteTeams.registry.isFavorite(id: teamID) }
-            $0.makeAvenue = { self.logic.images.makeAvenue(forImageSize: $0) }
+            $0.makeAvenue = self.makeAvenue(forImageSize:)
             $0.preloadedTeam = preloaded
             $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
         }

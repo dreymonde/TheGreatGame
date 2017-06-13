@@ -15,7 +15,27 @@ public final class DeviceTokens {
     var notifications: ThreadSafe<PushToken?> = ThreadSafe(nil)
     var complication: ThreadSafe<PushToken?> = ThreadSafe(nil)
     
-    public init() { }
+    public private(set) var getNotification: Retrieve<PushToken>!
+    public private(set) var getComplication: Retrieve<PushToken>!
+    
+    public init() {
+        self.getNotification = Retrieve<PushToken>(cacheName: "retrieve-notif", retrieve: { (_, completion) in
+            do {
+                let val = try self.notifications.read().unwrap()
+                completion(.success(val))
+            } catch {
+                completion(.failure(error))
+            }
+        })
+        self.getComplication = Retrieve<PushToken>(cacheName: "retrieve-compl", retrieve: { (_, completion) in
+            do {
+                let val = try self.complication.read().unwrap()
+                completion(.success(val))
+            } catch {
+                completion(.failure(error))
+            }
+        })
+    }
     
     public func declare(notifications: Subscribe<PushToken>, complication: Subscribe<PushToken>) {
         notifications.subscribe(self, with: DeviceTokens.updateNotificationsToken)

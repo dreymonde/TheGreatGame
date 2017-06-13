@@ -206,6 +206,8 @@
 		BE461ACF1EF026D40035AE11 /* UploadKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE461ACD1EF026D40035AE11 /* UploadKeeper.swift */; };
 		BE461AD11EF027330035AE11 /* FavoritesRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE461AD01EF027330035AE11 /* FavoritesRegistry.swift */; };
 		BE461AD21EF027330035AE11 /* FavoritesRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE461AD01EF027330035AE11 /* FavoritesRegistry.swift */; };
+		BE461AD41EF03A260035AE11 /* Retrieve.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE461AD31EF03A260035AE11 /* Retrieve.swift */; };
+		BE461AD51EF03A260035AE11 /* Retrieve.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE461AD31EF03A260035AE11 /* Retrieve.swift */; };
 		BEB5C4311EEF0790005A4065 /* NotificationsReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB5C4301EEF0790005A4065 /* NotificationsReceiver.swift */; };
 		BEB5C4321EEF0790005A4065 /* NotificationsReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB5C4301EEF0790005A4065 /* NotificationsReceiver.swift */; };
 		BEB5C4341EEF082E005A4065 /* NotificationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB5C4331EEF082E005A4065 /* NotificationResponse.swift */; };
@@ -489,6 +491,7 @@
 		BE1713C81EEFF7A100CFB448 /* DeviceTokens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTokens.swift; sourceTree = "<group>"; };
 		BE461ACD1EF026D40035AE11 /* UploadKeeper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadKeeper.swift; sourceTree = "<group>"; };
 		BE461AD01EF027330035AE11 /* FavoritesRegistry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesRegistry.swift; sourceTree = "<group>"; };
+		BE461AD31EF03A260035AE11 /* Retrieve.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Retrieve.swift; sourceTree = "<group>"; };
 		BEB5C4301EEF0790005A4065 /* NotificationsReceiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsReceiver.swift; sourceTree = "<group>"; };
 		BEB5C4331EEF082E005A4065 /* NotificationResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationResponse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -721,6 +724,7 @@
 				7C357ED71ED442D300CFCF3B /* SingleElementMemoryCache.swift */,
 				7C7916E01EBB14D40070E6C5 /* Shallows+ActivityIndicator.swift */,
 				7C6B4E061EEC5AA700468A3D /* SerialCache.swift */,
+				BE461AD31EF03A260035AE11 /* Retrieve.swift */,
 			);
 			path = "TGK+Shallows";
 			sourceTree = "<group>";
@@ -1616,6 +1620,7 @@
 				7C0EA6591EBA1EF200F50EB2 /* Team.swift in Sources */,
 				7C0EA6561EBA1ECB00F50EB2 /* Teams.swift in Sources */,
 				7C6B4E071EEC5AA700468A3D /* SerialCache.swift in Sources */,
+				BE461AD41EF03A260035AE11 /* Retrieve.swift in Sources */,
 				7CE2B7361ECC7CF100C7EC20 /* TCK+UserDefaults.swift in Sources */,
 				7C1D897F1EBF0D28006F7841 /* API.swift in Sources */,
 				7C0EA6491EBA1D1E00F50EB2 /* IndexPath.swift in Sources */,
@@ -1718,6 +1723,7 @@
 				7C7A501E1ED8819C000BFFB1 /* CombinedRefreshing.swift in Sources */,
 				7C13BC5F1ED84B3D00588F5F /* InMapper.swift in Sources */,
 				7C13BC6D1ED84B5200588F5F /* TCK+UserDefaults.swift in Sources */,
+				BE461AD51EF03A260035AE11 /* Retrieve.swift in Sources */,
 				BEB5C4351EEF082E005A4065 /* NotificationResponse.swift in Sources */,
 				7C13BC651ED84B3D00588F5F /* CocoaMapper.swift in Sources */,
 				7CA542041EDAB85A00B4D1BD /* Resources.swift in Sources */,

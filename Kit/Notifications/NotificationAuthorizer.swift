@@ -33,7 +33,7 @@ internal final class NotificationAuthorizer {
         center.setNotificationCategories([match_update])
     }
 
-    private func authorize() {
+    internal func authorize() {
         center.requestAuthorization(options: [.alert, .sound]) { (authorized, error) in
             if let error = error {
                 self.didFailToAuthorizeForNotifications.publish(error)

@@ -10,18 +10,6 @@ import Foundation
 import Alba
 import Shallows
 
-extension Subscribe {
-    
-    public func dispatched(to queue: DispatchQueue) -> Subscribe<Event> {
-        return rawModify(subscribe: { (id, handler) in
-            self.manual.subscribe(objectWith: id, with: { (event) in
-                queue.async { handler(event) }
-            })
-        }, entry: ProxyPayload.Entry.custom("redispatched"))
-    }
-    
-}
-
 final class PUSHer : CacheProtocol {
     
     typealias Key = URL
@@ -50,6 +38,8 @@ final class PUSHer : CacheProtocol {
         request.httpMethod = "POST"
         request.httpBody = value
         let task = session.dataTask(with: request) { (data, response, error) in
+            printWithContext("Push finished")
+            print("Is main thread:", Thread.isMainThread)
             guard error == nil else {
                 completion(Result.failure(error!))
                 return
@@ -76,12 +66,12 @@ final class PUSHer : CacheProtocol {
 
 internal final class FavoritesUploader<IDType : IDProtocol> where IDType.RawValue == Int {
     
-    let getNotificationsToken: () -> PushToken?
-    let getComplicationToken: () -> PushToken?
+    let getNotificationsToken: Retrieve<PushToken>
+    let getComplicationToken: Retrieve<PushToken>
     
     init(pusher: Cache<Void, Data>,
-         getNotificationsToken: @escaping () -> PushToken?,
-         getComplicationToken: @escaping () -> PushToken?) {
+         getNotificationsToken: Retrieve<PushToken>,
+         getComplicationToken: Retrieve<PushToken>) {
         self.pusher = pusher
             .mapJSONDictionary()
             .mapMappable()
@@ -91,24 +81,42 @@ internal final class FavoritesUploader<IDType : IDProtocol> where IDType.RawValu
     
     let pusher: Cache<Void, FavoritesUpload<IDType>>
     
-    internal func declare(didUpdateFavorites: SignedSubscribe<Set<IDType>>) {
+    internal func declare(didUpdateFavorites: SignedSubscribe<Set<IDType>>,
+                          shouldUpdate_notifications: Subscribe<Set<IDType>>,
+                          shouldUpdate_complication: Subscribe<Set<IDType>>) {
         didUpdateFavorites
             .drop(eventsSignedBy: self)
             .unsigned
-            .subscribe(self, with: FavoritesUploader.didUpdateFavorites)
+            .flatSubscribe(self, with: { obj, event in obj.didUpdateFavorites(event, tokenType: .notifications); obj.didUpdateFavorites(event, tokenType: .complication) })
+        shouldUpdate_notifications
+            .flatSubscribe(self, with: { obj, event in obj.didUpdateFavorites(event, tokenType: .notifications) })
+        shouldUpdate_complication
+            .flatSubscribe(self, with: { obj, event in obj.didUpdateFavorites(event, tokenType: .complication) })
     }
     
-    internal func didUpdateFavorites(_ update: Set<IDType>) {
-        let notification = getNotificationsToken().flatMap({ FavoritesUpload.init(token: $0, tokenType: .notificaions, favorites: update) })
-        let complication = getComplicationToken().flatMap({ FavoritesUpload.init(token: $0, tokenType: .complication, favorites: update) })
-        let uploads = [notification, complication].flatMap({ $0 })
-        for upload in uploads {
-            pusher.set(upload) { result in
-                if let error = result.error {
-                    printWithContext("Failed to write favorites \(update). Error: \(error)")
-                } else {
-                    self.didUploadFavorites.publish(upload)
-                }
+    internal func didUpdateFavorites(_ update: Set<IDType>, tokenType: TokenType) {
+        printWithContext()
+        switch tokenType {
+        case .notifications:
+            self.uploadFavorites(update, usingTokenProvider: getNotificationsToken, tokenType: tokenType)
+        case .complication:
+            self.uploadFavorites(update, usingTokenProvider: getComplicationToken, tokenType: tokenType)
+        }
+    }
+    
+    private func uploadFavorites(_ favorites: Set<IDType>, usingTokenProvider provider: Retrieve<PushToken>, tokenType: TokenType) {
+        provider.retrieve { (result) in
+            if let token = result.value {
+                let upload = FavoritesUpload(token: token, tokenType: tokenType, favorites: favorites)
+                self.pusher.set(upload, completion: { (result) in
+                    if let error = result.error {
+                        printWithContext("Failed to write favorites \(favorites). Error: \(error)")
+                    } else {
+                        self.didUploadFavorites.publish(upload)
+                    }
+                })
+            } else {
+                printWithContext("No token for \(tokenType)")
             }
         }
     }
@@ -117,12 +125,12 @@ internal final class FavoritesUploader<IDType : IDProtocol> where IDType.RawValu
     
 }
 
+internal enum TokenType : String {
+    case notifications
+    case complication
+}
+
 internal struct FavoritesUpload<IDType : IDProtocol> {
-    
-    internal enum TokenType : String {
-        case notificaions
-        case complication
-    }
     
     let token: PushToken
     let tokenType: TokenType
