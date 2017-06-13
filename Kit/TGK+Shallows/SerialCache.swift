@@ -11,6 +11,14 @@ import Shallows
 
 extension CacheProtocol {
     
+    public func renaming(to newName: String) -> Cache<Key, Value> {
+        return Cache(cacheName: newName, retrieve: self.retrieve, set: self.set)
+    }
+    
+}
+
+extension CacheProtocol {
+    
     public func serial() -> Cache<Key, Value> {
         let queue = DispatchQueue(label: "serial")
         return Cache(cacheName: self.cacheName, retrieve: { (key, completion) in

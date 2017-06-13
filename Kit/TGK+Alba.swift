@@ -19,4 +19,23 @@ extension Subscribe {
         }, entry: ProxyPayload.Entry.custom("main-thread"))
     }
     
+    public func signed(with identifier: ObjectIdentifier?) -> SignedSubscribe<Event> {
+        return map({ Signed.init($0, identifier) })
+    }
+    
 }
+
+extension Subscribe where Event : Sequence {
+    
+    public func unfolded() -> Subscribe<Event.Iterator.Element> {
+        return rawModify(subscribe: { (identifier, handler) in
+            self.manual.subscribe(objectWith: identifier, with: { (sequence) in
+                for element in sequence {
+                    handler(element)
+                }
+            })
+        }, entry: ProxyPayload.Entry.transformation(label: "unfolded", ProxyPayload.Entry.Transformation.transformed(fromType: Event.self, toType: Event.Iterator.self)))
+    }
+    
+}
+

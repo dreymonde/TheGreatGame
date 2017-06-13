@@ -9,9 +9,17 @@
 import Foundation
 import Shallows
 
-public protocol Storing {
+public protocol HardStoring {
     
     static var preferredSubPath: String { get }
+    
+    associatedtype Configurable
+    
+    static func withDiskCache(_ diskCache: Cache<String, Data>) -> Configurable
+    
+}
+
+public protocol Storing : HardStoring {
     
     init(diskCache: Cache<String, Data>)
     
@@ -19,31 +27,39 @@ public protocol Storing {
 
 extension Storing {
     
-    public static func notStoring() -> Self {
-        return Self.init(diskCache: .empty())
+    public static func withDiskCache(_ diskCache: Cache<String, Data>) -> Self {
+        return Self.init(diskCache: diskCache)
     }
     
-    public static func inMemory() -> Self {
-        return Self.init(diskCache: MemoryCache<String, Data>().asCache())
-    }
-    
-    public static func inLocalCachesDirectory(subpath: String = Self.preferredSubPath) -> Self {
-        return Self.init(diskCache: FileSystemCache.inDirectory(.cachesDirectory,
-                                                                appending: subpath).asCache())
-    }
-    
-    public static func inSharedCachesDirectory(subpath: String = Self.preferredSubPath) -> Self {
-        return Self.init(diskCache: FileSystemCache.inSharedContainer(subpath: FileSystemSubPath.caches(appending: subpath), qos: .default).asCache())
-    }
-    
-    public static func inLocalDocumentsDirectory(subpath: String = Self.preferredSubPath) -> Self {
-        return Self.init(diskCache: FileSystemCache.inDirectory(.documentDirectory, appending: subpath, qos: .userInitiated).asCache())
-    }
-    
-    public static func inSharedDocumentsDirectory(subpath: String = Self.preferredSubPath) -> Self {
-        return Self.init(diskCache: FileSystemCache.inSharedContainer(subpath: .documents(appending: subpath), qos: .userInitiated).asCache())
-    }
+}
 
+extension HardStoring {
+    
+    public static func notStoring() -> Configurable {
+        return Self.withDiskCache(.empty())
+    }
+    
+    public static func inMemory() -> Configurable {
+        return Self.withDiskCache(MemoryCache<String, Data>().asCache())
+    }
+    
+    public static func inLocalCachesDirectory(subpath: String = Self.preferredSubPath) -> Configurable {
+        return Self.withDiskCache(FileSystemCache.inDirectory(.cachesDirectory,
+                                                              appending: subpath).asCache())
+    }
+    
+    public static func inSharedCachesDirectory(subpath: String = Self.preferredSubPath) -> Configurable {
+        return Self.withDiskCache(FileSystemCache.inSharedContainer(subpath: FileSystemSubPath.caches(appending: subpath), qos: .default).asCache())
+    }
+    
+    public static func inLocalDocumentsDirectory(subpath: String = Self.preferredSubPath) -> Configurable {
+        return Self.withDiskCache(FileSystemCache.inDirectory(.documentDirectory, appending: subpath, qos: .userInitiated).asCache())
+    }
+    
+    public static func inSharedDocumentsDirectory(subpath: String = Self.preferredSubPath) -> Configurable {
+        return Self.withDiskCache(FileSystemCache.inSharedContainer(subpath: .documents(appending: subpath), qos: .userInitiated).asCache())
+    }
+    
     
 }
 

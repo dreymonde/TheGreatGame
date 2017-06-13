@@ -202,6 +202,10 @@
 		BE1713C71EEFED1100CFB448 /* UploadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1713C61EEFED1100CFB448 /* UploadTests.swift */; };
 		BE1713C91EEFF7A100CFB448 /* DeviceTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1713C81EEFF7A100CFB448 /* DeviceTokens.swift */; };
 		BE1713CA1EEFF7A100CFB448 /* DeviceTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1713C81EEFF7A100CFB448 /* DeviceTokens.swift */; };
+		BE461ACE1EF026D40035AE11 /* UploadKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE461ACD1EF026D40035AE11 /* UploadKeeper.swift */; };
+		BE461ACF1EF026D40035AE11 /* UploadKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE461ACD1EF026D40035AE11 /* UploadKeeper.swift */; };
+		BE461AD11EF027330035AE11 /* FavoritesRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE461AD01EF027330035AE11 /* FavoritesRegistry.swift */; };
+		BE461AD21EF027330035AE11 /* FavoritesRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE461AD01EF027330035AE11 /* FavoritesRegistry.swift */; };
 		BEB5C4311EEF0790005A4065 /* NotificationsReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB5C4301EEF0790005A4065 /* NotificationsReceiver.swift */; };
 		BEB5C4321EEF0790005A4065 /* NotificationsReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB5C4301EEF0790005A4065 /* NotificationsReceiver.swift */; };
 		BEB5C4341EEF082E005A4065 /* NotificationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB5C4331EEF082E005A4065 /* NotificationResponse.swift */; };
@@ -483,6 +487,8 @@
 		BE1713C31EEFE79800CFB448 /* FavoritesUploader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesUploader.swift; sourceTree = "<group>"; };
 		BE1713C61EEFED1100CFB448 /* UploadTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadTests.swift; sourceTree = "<group>"; };
 		BE1713C81EEFF7A100CFB448 /* DeviceTokens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTokens.swift; sourceTree = "<group>"; };
+		BE461ACD1EF026D40035AE11 /* UploadKeeper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadKeeper.swift; sourceTree = "<group>"; };
+		BE461AD01EF027330035AE11 /* FavoritesRegistry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesRegistry.swift; sourceTree = "<group>"; };
 		BEB5C4301EEF0790005A4065 /* NotificationsReceiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsReceiver.swift; sourceTree = "<group>"; };
 		BEB5C4331EEF082E005A4065 /* NotificationResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationResponse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1016,6 +1022,8 @@
 				7CA2136D1ECEFA0A00F088DD /* Favorites.swift */,
 				7CA213731ECF382200F088DD /* SharedContainer.swift */,
 				BE1713C31EEFE79800CFB448 /* FavoritesUploader.swift */,
+				BE461ACD1EF026D40035AE11 /* UploadKeeper.swift */,
+				BE461AD01EF027330035AE11 /* FavoritesRegistry.swift */,
 			);
 			path = LocalInfo;
 			sourceTree = "<group>";
@@ -1585,6 +1593,7 @@
 				7CF3D17B1EBC879300E86A91 /* Match.swift in Sources */,
 				7CA542031EDAB74000B4D1BD /* Resources.swift in Sources */,
 				7C7916E41EBB15B20070E6C5 /* AvenuesExtensions.swift in Sources */,
+				BE461AD11EF027330035AE11 /* FavoritesRegistry.swift in Sources */,
 				7C0EA6661EBA599D00F50EB2 /* Avenues+Shallows.swift in Sources */,
 				7C0EFD951EEC483C0077C37E /* NotificationAuthorizer.swift in Sources */,
 				7C0EA63F1EBA1D1E00F50EB2 /* InMappable.swift in Sources */,
@@ -1595,6 +1604,7 @@
 				BE1713C11EEF428A00CFB448 /* ComplicationTemplate.swift in Sources */,
 				7C6B36BE1EBCA88100FC17F9 /* Matches.swift in Sources */,
 				7CA213741ECF382200F088DD /* SharedContainer.swift in Sources */,
+				BE461ACE1EF026D40035AE11 /* UploadKeeper.swift in Sources */,
 				7C1D89861EC0638D006F7841 /* Functions.swift in Sources */,
 				7C1D89911EC07362006F7841 /* ImageCache.swift in Sources */,
 				7CA2136E1ECEFA0A00F088DD /* Favorites.swift in Sources */,
@@ -1695,6 +1705,7 @@
 				7C13BC661ED84B4C00588F5F /* Match.swift in Sources */,
 				7CCD25C71EDDCB2400F3C5CB /* Favorites.swift in Sources */,
 				7C13BC641ED84B3D00588F5F /* Mappable.swift in Sources */,
+				BE461ACF1EF026D40035AE11 /* UploadKeeper.swift in Sources */,
 				7C6AA17D1ED879F9003F2388 /* Avenues+Shallows.swift in Sources */,
 				7CA541FF1EDAB65200B4D1BD /* Shallows+ActivityIndicator.swift in Sources */,
 				BEB5C4321EEF0790005A4065 /* NotificationsReceiver.swift in Sources */,
@@ -1710,6 +1721,7 @@
 				BEB5C4351EEF082E005A4065 /* NotificationResponse.swift in Sources */,
 				7C13BC651ED84B3D00588F5F /* CocoaMapper.swift in Sources */,
 				7CA542041EDAB85A00B4D1BD /* Resources.swift in Sources */,
+				BE461AD21EF027330035AE11 /* FavoritesRegistry.swift in Sources */,
 				7C6AA1771ED87925003F2388 /* SharedContainer.swift in Sources */,
 				7C13BC7A1ED854D000588F5F /* Jubilee.swift in Sources */,
 			);

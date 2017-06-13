@@ -79,35 +79,33 @@ internal final class FavoritesUploader<IDType : IDProtocol> where IDType.RawValu
     let getNotificationsToken: () -> PushToken?
     let getComplicationToken: () -> PushToken?
     
-    init(getNotificationsToken: @escaping () -> PushToken?,
+    init(pusher: Cache<Void, Data>,
+         getNotificationsToken: @escaping () -> PushToken?,
          getComplicationToken: @escaping () -> PushToken?) {
+        self.pusher = pusher
+            .mapJSONDictionary()
+            .mapMappable()
         self.getNotificationsToken = getNotificationsToken
         self.getComplicationToken = getComplicationToken
     }
     
-    let pusher = PUSHer(urlSession: URLSession(configuration: .ephemeral))
-        .mapJSONDictionary()
-        .mapMappable(of: FavoritesUpload<IDType>.self)
-        .mapKeys({
-            let baseURL = URL.init(string: "https://the-great-game-ruby.herokuapp.com/favorites")!
-            return baseURL
-        })
+    let pusher: Cache<Void, FavoritesUpload<IDType>>
     
-    internal func declare(didUpdateFavorites: SignedSubscribe<FavoritesRegistry<IDType>.Update>) {
+    internal func declare(didUpdateFavorites: SignedSubscribe<Set<IDType>>) {
         didUpdateFavorites
             .drop(eventsSignedBy: self)
             .unsigned
             .subscribe(self, with: FavoritesUploader.didUpdateFavorites)
     }
     
-    internal func didUpdateFavorites(_ update: (FavoritesRegistry<IDType>.Update)) {
-        let notification = getNotificationsToken().flatMap({ FavoritesUpload.init(token: $0, tokenType: .notificaions, favorites: update.favorites) })
-        let complication = getComplicationToken().flatMap({ FavoritesUpload.init(token: $0, tokenType: .complication, favorites: update.favorites) })
+    internal func didUpdateFavorites(_ update: Set<IDType>) {
+        let notification = getNotificationsToken().flatMap({ FavoritesUpload.init(token: $0, tokenType: .notificaions, favorites: update) })
+        let complication = getComplicationToken().flatMap({ FavoritesUpload.init(token: $0, tokenType: .complication, favorites: update) })
         let uploads = [notification, complication].flatMap({ $0 })
         for upload in uploads {
             pusher.set(upload) { result in
                 if let error = result.error {
-                    printWithContext("Failed to write favorites \(update.changes). Error: \(error)")
+                    printWithContext("Failed to write favorites \(update). Error: \(error)")
                 } else {
                     self.didUploadFavorites.publish(upload)
                 }

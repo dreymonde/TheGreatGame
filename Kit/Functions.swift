@@ -50,3 +50,7 @@ public final class LazyDictionary<Key : Hashable, Value> {
     }
     
 }
+
+public func objectID(_ object: AnyObject) -> ObjectIdentifier {
+    return ObjectIdentifier(object)
+}

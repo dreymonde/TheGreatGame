@@ -73,7 +73,6 @@ final class UserInterface {
             $0.updateFavorite = { self.logic.favoriteTeams.registry.updateFavorite(id: $0, isFavorite: $1, submitter: id) }
             $0.makeAvenue = self.makeAvenue(forImageSize:)
             $0.makeTeamDetailVC = { self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
-            $0.shouldReloadData = self.logic.favoriteTeams.registry.unitedDidUpdate.proxy.mapValue({ _ in })
         }
     }
     
