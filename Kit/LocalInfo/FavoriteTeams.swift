@@ -48,7 +48,17 @@ public final class FavoriteTeams : Storing {
         self.favoriteTeams = full_favoriteTeams.asReadOnlyCache()
     }
     
-    public let didUpdateFavorite = Publisher<(Team.ID, isFavorite: Bool)>(label: "FavoriteTeams.didUpdateFavorite")
+    public struct Update {
+        public var team: Team.ID
+        public var isFavorite: Bool
+        
+        public init(teamID: Team.ID, isFavorite: Bool) {
+            self.team = teamID
+            self.isFavorite = isFavorite
+        }
+    }
+    
+    public let didUpdateFavorite = Publisher<Update>(label: "FavoriteTeams.didUpdateFavorite")
     public let didUpdateFavorites = Publisher<Set<Team.ID>>(label: "FavoriteTeams.didUpdateFavorites")
     
     public func updateFavorite(id: Team.ID, isFavorite: Bool) {
@@ -60,7 +70,8 @@ public final class FavoriteTeams : Storing {
             }
         }, completion: { result in
             if let new = result.value {
-                self.didUpdateFavorite.publish((id, isFavorite: isFavorite))
+                let update = Update(teamID: id, isFavorite: isFavorite)
+                self.didUpdateFavorite.publish(update)
                 self.didUpdateFavorites.publish(new)
             }
         })
@@ -73,7 +84,8 @@ public final class FavoriteTeams : Storing {
             if result.isSuccess {
                 self.didUpdateFavorites.publish(updated)
                 for diffed in diff {
-                    self.didUpdateFavorite.publish((diffed, isFavorite: updated.contains(diffed)))
+                    let update = Update(teamID: diffed, isFavorite: updated.contains(diffed))
+                    self.didUpdateFavorite.publish(update)
                 }
             }
         }
