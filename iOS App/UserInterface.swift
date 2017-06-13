@@ -68,7 +68,7 @@ final class UserInterface {
     func inject(to teamsList: TeamsTableViewController) {
         teamsList <- {
             $0.resource = self.resources.teams
-            $0.isFavorite = self.logic.favoriteTeams.isFavorite(teamWith:)
+            $0.isFavorite = self.logic.favoriteTeams.isFavorite(id:)
             $0.updateFavorite = self.logic.favoriteTeams.updateFavorite(id:isFavorite:)
             $0.makeAvenue = self.makeAvenue(forImageSize:)
             $0.makeTeamDetailVC = { self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
@@ -78,7 +78,7 @@ final class UserInterface {
     func inject(to matchesList: MatchesTableViewController) {
         matchesList <- {
             $0.resource = self.resources.stages
-            $0.isFavorite = self.logic.favoriteTeams.isFavorite(teamWith:)
+            $0.isFavorite = self.logic.favoriteTeams.isFavorite(id:)
             $0.makeAvenue = { self.logic.images.makeAvenue(forImageSize: $0) }
             $0.shouldReloadData = self.logic.favoriteTeams.didUpdateFavorite.proxy.void()
         }
@@ -95,7 +95,7 @@ final class UserInterface {
     func teamDetailViewController(for teamID: Team.ID, preloaded: TeamDetailPreLoaded) -> TeamDetailTableViewController {
         return Storyboard.Main.teamDetailTableViewController.instantiate() <- {
             $0.resource = self.resources.fullTeam(teamID)
-            $0.isFavorite = { self.logic.favoriteTeams.isFavorite(teamWith: teamID) }
+            $0.isFavorite = { self.logic.favoriteTeams.isFavorite(id: teamID) }
             $0.makeAvenue = { self.logic.images.makeAvenue(forImageSize: $0) }
             $0.preloadedTeam = preloaded
             $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }

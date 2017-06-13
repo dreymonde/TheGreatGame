@@ -44,7 +44,7 @@ extension ComplicationReloader {
         matches.mapValues({ $0.filter({ Calendar.autoupdatingCurrent.isDateInToday($0.date) }) }).retrieve { (result) in
             if let gamesToday = result.value {
                 let idsToday = Set(gamesToday.flatMap({ $0.teams.map({ $0.id }) }))
-                if idsToday.contains(update.team) {
+                if idsToday.contains(update.id) {
                     printWithContext("Updated team is playing today, reloading complication")
                     self.reloadComplications()
                 }

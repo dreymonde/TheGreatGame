@@ -200,6 +200,8 @@
 		BE1713C41EEFE79800CFB448 /* FavoriteTeamsUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1713C31EEFE79800CFB448 /* FavoriteTeamsUploader.swift */; };
 		BE1713C51EEFE79800CFB448 /* FavoriteTeamsUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1713C31EEFE79800CFB448 /* FavoriteTeamsUploader.swift */; };
 		BE1713C71EEFED1100CFB448 /* UploadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1713C61EEFED1100CFB448 /* UploadTests.swift */; };
+		BE1713C91EEFF7A100CFB448 /* DeviceTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1713C81EEFF7A100CFB448 /* DeviceTokens.swift */; };
+		BE1713CA1EEFF7A100CFB448 /* DeviceTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1713C81EEFF7A100CFB448 /* DeviceTokens.swift */; };
 		BEB5C4311EEF0790005A4065 /* NotificationsReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB5C4301EEF0790005A4065 /* NotificationsReceiver.swift */; };
 		BEB5C4321EEF0790005A4065 /* NotificationsReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB5C4301EEF0790005A4065 /* NotificationsReceiver.swift */; };
 		BEB5C4341EEF082E005A4065 /* NotificationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB5C4331EEF082E005A4065 /* NotificationResponse.swift */; };
@@ -480,6 +482,7 @@
 		BE1713C01EEF428A00CFB448 /* ComplicationTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplicationTemplate.swift; sourceTree = "<group>"; };
 		BE1713C31EEFE79800CFB448 /* FavoriteTeamsUploader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteTeamsUploader.swift; sourceTree = "<group>"; };
 		BE1713C61EEFED1100CFB448 /* UploadTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadTests.swift; sourceTree = "<group>"; };
+		BE1713C81EEFF7A100CFB448 /* DeviceTokens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTokens.swift; sourceTree = "<group>"; };
 		BEB5C4301EEF0790005A4065 /* NotificationsReceiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsReceiver.swift; sourceTree = "<group>"; };
 		BEB5C4331EEF082E005A4065 /* NotificationResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationResponse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -813,6 +816,7 @@
 				7C0EFD941EEC483C0077C37E /* NotificationAuthorizer.swift */,
 				BEB5C4301EEF0790005A4065 /* NotificationsReceiver.swift */,
 				BEB5C4331EEF082E005A4065 /* NotificationResponse.swift */,
+				BE1713C81EEFF7A100CFB448 /* DeviceTokens.swift */,
 			);
 			path = Notifications;
 			sourceTree = "<group>";
@@ -1574,6 +1578,7 @@
 				7C13BC741ED84FF400588F5F /* AppleWatch.swift in Sources */,
 				7C0EA64B1EBA1D1E00F50EB2 /* Mappable.swift in Sources */,
 				7C0EA6411EBA1D1E00F50EB2 /* InMapper.swift in Sources */,
+				BE1713C91EEFF7A100CFB448 /* DeviceTokens.swift in Sources */,
 				7CCD25D01EDEBE5700F3C5CB /* PushNotification.swift in Sources */,
 				7CAAEFBB1EC36E1A00427D7E /* Sourceful.swift in Sources */,
 				7C0EA64D1EBA1D1E00F50EB2 /* CocoaMapper.swift in Sources */,
@@ -1660,6 +1665,7 @@
 				7C6AA17B1ED879E6003F2388 /* Images.swift in Sources */,
 				7C6AA1711ED878E9003F2388 /* API.swift in Sources */,
 				7C13BC791ED8529A00588F5F /* Phone.swift in Sources */,
+				BE1713CA1EEFF7A100CFB448 /* DeviceTokens.swift in Sources */,
 				7C13BC611ED84B3D00588F5F /* OutMappable.swift in Sources */,
 				7CA542071EDABF2B00B4D1BD /* TGK+Alba.swift in Sources */,
 				7C6AA1751ED878F9003F2388 /* Shallows+Mapper.swift in Sources */,

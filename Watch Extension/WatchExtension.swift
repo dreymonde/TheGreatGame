@@ -46,8 +46,8 @@ final class WatchExtension {
     }
     
     func chooseMatchToShow(_ lhs: Match.Full, _ rhs: Match.Full) -> Match.Full {
-        switch (lhs.isFavorite(using: favorites.isFavorite(teamWith:)),
-                rhs.isFavorite(using: favorites.isFavorite(teamWith:))) {
+        switch (lhs.isFavorite(using: favorites.isFavorite(id:)),
+                rhs.isFavorite(using: favorites.isFavorite(id:))) {
         case (true, true), (false, false):
             return Match.endsLater(lhs, rhs)
         case (true, false):

@@ -24,11 +24,14 @@ class UploadTests: XCTestCase {
     }
     
     func testSome() {
-        let uploader = FavoriteTeamsUploader(rollback: jprint)
+        let fakeToken = Data.init(repeating: 4, count: 8)
+        let uploader = FavoritesUploader<Team.ID>(rollback: jprint,
+                                                  getNotificationsToken: { PushToken(fakeToken) },
+                                                  getComplicationToken: { nil })
         let pub = Publisher<(FavoriteTeams.Update, Set<Team.ID>)>(label: "test")
         uploader.declare(didUpdateFavorites: pub.proxy)
         let ids = Set([1, 3, 10].flatMap(Team.ID.init))
-        let update = FavoriteTeams.Update.init(teamID: ids.first!, isFavorite: true)
+        let update = FavoriteTeams.Update.init(id: ids.first!, isFavorite: true)
         pub.publish((update, ids))
         RunLoop.current.run()
     }

@@ -38,13 +38,13 @@ final class TodayExtension {
     
     func relevanceFilter() -> (Match.Full) -> Bool {
         return { match in
-            return match.isFavorite(using: self.favoriteTeams.isFavorite(teamWith:))
+            return match.isFavorite(using: self.favoriteTeams.isFavorite(id:))
         }
     }
     
     func relevantMatches(from matches: [Match.Full]) -> [Match.Full] {
         return matches.filter({ (match) -> Bool in
-            return match.isFavorite(using: favoriteTeams.isFavorite(teamWith:))
+            return match.isFavorite(using: favoriteTeams.isFavorite(id:))
         })
     }
     

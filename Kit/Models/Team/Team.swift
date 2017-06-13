@@ -8,9 +8,11 @@
 
 import Foundation
 
+public protocol IDProtocol : Hashable, RawRepresentable {  }
+
 public enum Team {
     
-    public struct ID : RawRepresentable, Hashable {
+    public struct ID : RawRepresentable, Hashable, IDProtocol {
         
         public var rawID: Int
         

@@ -74,52 +74,66 @@ final class PUSHer : CacheProtocol {
     
 }
 
-internal final class FavoriteTeamsUploader {
+internal final class FavoritesUploader<IDType : IDProtocol> where IDType.RawValue == Int {
     
-    let rollback: (FavoriteTeams.Update) -> ()
+    let rollback: (Favorites<IDType>.Update) -> ()
+    let getNotificationsToken: () -> PushToken?
+    let getComplicationToken: () -> PushToken?
     
-    init(rollback: @escaping (FavoriteTeams.Update) -> ()) {
+    init(rollback: @escaping (Favorites<IDType>.Update) -> (),
+         getNotificationsToken: @escaping () -> PushToken?,
+         getComplicationToken: @escaping () -> PushToken?) {
         self.rollback = rollback
+        self.getNotificationsToken = getNotificationsToken
+        self.getComplicationToken = getComplicationToken
     }
     
     let pusher = PUSHer(urlSession: URLSession(configuration: .ephemeral))
         .mapJSONDictionary()
-        .mapMappable(of: FavoriteTeamsUpload.self)
-        .mapKeys({ (sub: String) in
-            let baseURL = URL.init(string: "https://the-great-game-ruby.herokuapp.com/")!
-            return baseURL.appendingPathComponent(sub)
+        .mapMappable(of: FavoritesUpload<IDType>.self)
+        .mapKeys({
+            let baseURL = URL.init(string: "https://the-great-game-ruby.herokuapp.com/favorites")!
+            return baseURL
         })
     
-    internal func declare(didUpdateFavorites: Subscribe<(FavoriteTeams.Update, Set<Team.ID>)>) {
-        didUpdateFavorites.subscribe(self, with: FavoriteTeamsUploader.didUpdateFavorites)
+    internal func declare(didUpdateFavorites: Subscribe<(Favorites<IDType>.Update, Set<IDType>)>) {
+        didUpdateFavorites.subscribe(self, with: FavoritesUploader.didUpdateFavorites)
     }
     
-    internal func didUpdateFavorites(_ favorites: (FavoriteTeams.Update, Set<Team.ID>)) {
-        let upload = FavoriteTeamsUpload(token: PushToken.init(Data.init(repeating: 4, count: 8)), tokenType: .push, favorites: favorites.1)
-        pusher.set(upload, forKey: "favorites") { (result) in
-            if let error = result.error {
-                printWithContext("Failed to write favorites, rolling back \(favorites.0). Error: \(error)")
-                self.rollback(favorites.0)
+    internal func didUpdateFavorites(_ favorites: (Favorites<IDType>.Update, Set<IDType>)) {
+        let notification = getNotificationsToken().flatMap({ FavoritesUpload.init(token: $0, tokenType: .notificaions, favorites: favorites.1) })
+        let complication = getComplicationToken().flatMap({ FavoritesUpload.init(token: $0, tokenType: .complication, favorites: favorites.1) })
+        let uploads = [notification, complication].flatMap({ $0 })
+        for upload in uploads {
+            pusher.set(upload) { result in
+                if let error = result.error {
+                    printWithContext("Failed to write favorites, rolling back \(favorites.0). Error: \(error)")
+                    self.rollback(favorites.0)
+                } else {
+                    self.didUploadFavorites.publish(upload)
+                }
             }
         }
     }
     
+    let didUploadFavorites = Publisher<FavoritesUpload<IDType>>(label: "FavoriteTeamsUploader.didUploadFavorites")
+    
 }
 
-internal struct FavoriteTeamsUpload {
+internal struct FavoritesUpload<IDType : IDProtocol> {
     
     internal enum TokenType : String {
-        case push
+        case notificaions
         case complication
     }
     
     let token: PushToken
     let tokenType: TokenType
-    let favorites: Set<Team.ID>
+    let favorites: Set<IDType>
     
 }
 
-extension FavoriteTeamsUpload : Mappable {
+extension FavoritesUpload : Mappable {
     
     enum MapError : Error {
         case outOnly
@@ -133,7 +147,7 @@ extension FavoriteTeamsUpload : Mappable {
         throw MapError.outOnly
     }
     
-    func outMap<Destination>(mapper: inout OutMapper<Destination, FavoriteTeamsUpload.MappingKeys>) throws where Destination : OutMap {
+    func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws where Destination : OutMap {
         try mapper.map(self.token.string, to: .token)
         try mapper.map(self.tokenType, to: .token_type)
         try mapper.map(Array(self.favorites), to: .favorites)
