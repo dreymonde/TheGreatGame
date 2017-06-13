@@ -18,9 +18,15 @@ extension CacheProtocol {
     
 }
 
+//public final class Favorites<IDType : IDProtocol> : Storing where IDType.RawValue == Int {
+//    
+//    
+//    
+//}
+
 public typealias FavoriteTeams = Favorites<Team.ID>
 
-public final class Favorites<IDType : IDProtocol> : Storing where IDType.RawValue == Int {
+public final class FavoritesStorage<IDType : IDProtocol> : Storing where IDType.RawValue == Int {
     
     public static var preferredSubPath: String {
         return "favorite-teams"
