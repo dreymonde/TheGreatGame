@@ -10,32 +10,21 @@ import Foundation
 import Shallows
 import Alba
 
-internal final class FavoritesUploadKeeper<IDType : IDProtocol> where IDType.RawValue == Int {
+internal final class UploadConsistencyKeeper<Upload : Equatable> {
     
-    let favorites: ReadOnlyCache<Void, Set<IDType>>
-    let lastUploaded: Cache<Void, Set<IDType>>
+    let favorites: ReadOnlyCache<Void, Upload>
+    let lastUploaded: Cache<Void, Upload>
     
-    init(favorites: ReadOnlyCache<Void, Set<IDType>>, lastUploaded: Cache<Void, Set<IDType>>) {
+    init(favorites: ReadOnlyCache<Void, Upload>, lastUploaded: Cache<Void, Upload>) {
         self.favorites = favorites
         self.lastUploaded = lastUploaded
     }
     
-    convenience init(favorites: ReadOnlyCache<Void, Set<IDType>>, diskCache: Cache<String, Data>) {
-        let last: Cache<Void, Set<IDType>> = diskCache
-            .mapJSONDictionary()
-            .mapMappable(of: FavoritesBox<IDType>.self)
-            .singleKey("last-uploaded-favorites")
-            .mapValues(transformIn: { Set($0.all) },
-                       transformOut: { FavoritesBox(all: Array($0)) })
-            .defaulting(to: [])
-        self.init(favorites: favorites, lastUploaded: last)
+    func declare(didUploadFavorites: Subscribe<Upload>) {
+        didUploadFavorites.subscribe(self, with: UploadConsistencyKeeper.didUploadFavorites)
     }
     
-    func declare(didUploadFavorites: Subscribe<Set<IDType>>) {
-        didUploadFavorites.subscribe(self, with: FavoritesUploadKeeper.didUploadFavorites)
-    }
-    
-    func didUploadFavorites(_ upload: Set<IDType>) {
+    func didUploadFavorites(_ upload: Upload) {
         lastUploaded.set(upload)
     }
     
@@ -56,6 +45,19 @@ internal final class FavoritesUploadKeeper<IDType : IDProtocol> where IDType.Raw
         }
     }
     
-    let shouldUploadFavorites = Publisher<Set<IDType>>(label: "FavoritesUploadKeeper.shouldUploadFavorites")
+    let shouldUploadFavorites = Publisher<Upload>(label: "FavoritesUploadKeeper.shouldUploadFavorites")
+    
+}
+
+extension UploadConsistencyKeeper where Upload == Set<Team.ID> {
+    
+    convenience init(favorites: ReadOnlyCache<Void, Set<Team.ID>>, diskCache: Cache<String, Data>) {
+        let last: Cache<Void, Set<Team.ID>> = diskCache
+            .mapJSONDictionary()
+            .mapBoxedSet()
+            .singleKey("last-uploaded-favorites-teams")
+            .defaulting(to: [])
+        self.init(favorites: favorites, lastUploaded: last)
+    }
     
 }

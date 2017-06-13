@@ -33,9 +33,7 @@ public final class FavoritesRegistry<IDType : IDProtocol> : Storing where IDType
             .renaming(to: "favorites-disk")
             .mapJSONDictionary()
             .singleKey("favorite-teams")
-            .mapMappable(of: FavoritesBox<IDType>.self)
-            .mapValues(transformIn: { Set($0.all) },
-                       transformOut: { FavoritesBox(all: Array($0)) })
+            .mapBoxedSet(of: IDType.self)
             .defaulting(to: [])
         let memoryCache = MemoryCache<Int, Set<IDType>>().singleKey(0)
         self.full_favoriteTeams = memoryCache.combined(with: fileSystemTeams).serial()
@@ -100,6 +98,17 @@ public final class FavoritesRegistry<IDType : IDProtocol> : Storing where IDType
             fault(error)
             return false
         }
+    }
+    
+}
+
+extension CacheProtocol where Value == [String : Any] {
+    
+    func mapBoxedSet<IDType : IDProtocol>(of type: IDType.Type = IDType.self) -> Cache<Key, Set<IDType>> where IDType.RawValue == Int {
+        return self
+            .mapMappable(of: FavoritesBox<IDType>.self)
+            .mapValues(transformIn: { Set($0.all) },
+                       transformOut: { FavoritesBox<IDType>(all: Array($0)) })
     }
     
 }
