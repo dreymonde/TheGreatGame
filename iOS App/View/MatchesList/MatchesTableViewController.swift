@@ -19,6 +19,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
     
     // MARK: - Injections
     var resource: Resource<[Stage]>!
+    var makeMatchDetailVC: (Match.Compact) -> UIViewController = runtimeInject
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
     var isFavorite: (Team.ID) -> Bool = runtimeInject
 
@@ -127,7 +128,9 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        let match = stages[indexPath.section].matches[indexPath.row]
+        let vc = makeMatchDetailVC(match)
+        show(vc, sender: self)
     }
     
 }

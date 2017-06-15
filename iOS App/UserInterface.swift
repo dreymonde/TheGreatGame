@@ -81,6 +81,7 @@ final class UserInterface {
             $0.isFavorite = self.logic.favoriteTeams.registry.isFavorite(id:)
             $0.makeAvenue = self.makeAvenue(forImageSize:)
             $0.shouldReloadData = self.logic.favoriteTeams.registry.didUpdateFavorite.void()
+            $0.makeMatchDetailVC = { self.matchDetailViewController(for: $0.id, preloaded: $0.preloaded()) }
         }
     }
     

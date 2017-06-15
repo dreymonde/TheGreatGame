@@ -81,7 +81,11 @@
                         </connections>
                     </tableView>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="Erw-1x-9Tw">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <connections>
+                            <action selector="didPullToRefresh:" destination="WoW-0A-EBg" eventType="valueChanged" id="mkM-tf-l26"/>
+                        </connections>
                     </refreshControl>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="L0t-Ed-UnT" userLabel="First Responder" sceneMemberID="firstResponder"/>
