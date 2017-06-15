@@ -44,7 +44,7 @@ final class Application {
     }
     
     static func makeAPI() -> API {
-        let server = launchArgument(.server) ?? .heroku
+        let server = launchArgument(.server) ?? .github
         switch server {
         case .github:
             let urlSession = URLSession(configuration: .default)
@@ -62,7 +62,8 @@ final class Application {
     static func makeFavorites(tokens: DeviceTokens) -> Favorites<Team.ID> {
         return Favorites.inSharedDocumentsDirectory().make(tokens: tokens,
                                                            indicatorManager: .application,
-                                                           shouldCheckUploadConsistency: AppDelegate.applicationDidBecomeActive.proxy.void().wait(seconds: 4.0))
+                                                           shouldCheckUploadConsistency: AppDelegate.applicationDidBecomeActive.proxy.void().wait(seconds: 4.0),
+                                                           apiSubpath: "favorite-teams")
     }
     
     static func makeAPICache() -> APICache {

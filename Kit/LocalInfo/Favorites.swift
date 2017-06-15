@@ -66,12 +66,12 @@ extension Favorites : HardStoring {
         
         public let diskCache: Cache<String, Data>
         
-        public func make(tokens: DeviceTokens, indicatorManager: NetworkActivityIndicatorManager, shouldCheckUploadConsistency: Subscribe<Void>) -> Favorites<IDType> {
+        public func make(tokens: DeviceTokens, indicatorManager: NetworkActivityIndicatorManager, shouldCheckUploadConsistency: Subscribe<Void>, apiSubpath: String) -> Favorites<IDType> {
             let registry = FavoritesRegistry<IDType>(diskCache: diskCache)
             let favs = registry.favoriteTeams
             let keeper_n = Favorites.makeKeeper(withName: "keeper-notifications", diskCache: diskCache, favorites: favs)
             let keeper_c = Favorites.makeKeeper(withName: "keeper-complications", diskCache: diskCache, favorites: favs)
-            let uploader = FavoritesUploader<IDType>(pusher: PUSHer.init(urlSession: URLSession.init(configuration: .default)).singleKey(URL.init(string: "https://the-great-game-ruby.herokuapp.com/favorites")!).connectingNetworkActivityIndicator(manager: indicatorManager),
+            let uploader = FavoritesUploader<IDType>(pusher: PUSHer.init(urlSession: URLSession.init(configuration: .default)).singleKey(URL.init(string: "https://the-great-game-ruby.herokuapp.com/\(apiSubpath)")!).connectingNetworkActivityIndicator(manager: indicatorManager),
                                                      getNotificationsToken: tokens.getNotification,
                                                      getComplicationToken: tokens.getComplication)
             return Favorites(registry: registry,
