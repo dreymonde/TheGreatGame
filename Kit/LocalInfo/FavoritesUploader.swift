@@ -81,12 +81,10 @@ internal final class FavoritesUploader<IDType : IDProtocol> where IDType.RawValu
     
     let pusher: Cache<Void, FavoritesUpload<IDType>>
     
-    internal func declare(didUpdateFavorites: SignedSubscribe<Set<IDType>>,
+    internal func declare(didUpdateFavorites: Subscribe<Set<IDType>>,
                           shouldUpdate_notifications: Subscribe<Set<IDType>>,
                           shouldUpdate_complication: Subscribe<Set<IDType>>) {
         didUpdateFavorites
-            .drop(eventsSignedBy: self)
-            .unsigned
             .flatSubscribe(self, with: { obj, event in obj.didUpdateFavorites(event, tokenType: .notifications); obj.didUpdateFavorites(event, tokenType: .complication) })
         shouldUpdate_notifications
             .flatSubscribe(self, with: { obj, event in obj.didUpdateFavorites(event, tokenType: .notifications) })

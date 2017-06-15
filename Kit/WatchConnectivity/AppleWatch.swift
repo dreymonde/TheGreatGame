@@ -15,7 +15,6 @@ public final class AppleWatch {
     
     internal let session: WatchSessionManager
     public let pushKitReceiver: PushKitReceiver
-    internal let pusher: ComplicationPusher
     
     public init?(favoriteTeams: Retrieve<Set<Team.ID>>) {
         guard let session = WatchSessionManager(makeActiveSession: { ActiveWatchSession.init(session: $0, favoriteTeams: favoriteTeams, sendage: $1) }) else {
@@ -23,12 +22,11 @@ public final class AppleWatch {
         }
         self.session = session
         self.pushKitReceiver = PushKitReceiver()
-        self.pusher = ComplicationPusher()
     }
     
     public func declare(didUpdateFavorites: Subscribe<Set<Team.ID>>) {
-        pusher.declare(didReceiveIncomingPush: pushKitReceiver.didReceiveIncomingPush.proxy)
-        session.declare(complicationMatchUpdate: pusher.didReceiveComplicationMatchUpdate.proxy)
+        session.declare(complicationMatchUpdate: pushKitReceiver.didReceiveIncomingPush.proxy
+            .adapting(with: ComplicationPusher.adapter))
         session.feed(packages: didUpdateFavorites.map(FavoritesPackage.init))
     }
     
@@ -113,7 +111,7 @@ extension WatchSessionManager {
                 self.didSendPackage.publish(package)
             }
         } catch {
-            fault("Invalida package reported: \(userInfoTransfer)")
+            fault("Invalid package reported: \(userInfoTransfer)")
         }
     }
     
@@ -126,7 +124,7 @@ extension WatchSessionManager {
     }
     
     public func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        printWithContext("\(activationState.rawValue) ; \(error)")
+        printWithContext("\(activationState.rawValue) ; \(error as Any)")
         if activationState == .activated {
             if let newSession = makeActiveSession(session, didSendUpdatedFavorites) {
                 self.activeSession = newSession

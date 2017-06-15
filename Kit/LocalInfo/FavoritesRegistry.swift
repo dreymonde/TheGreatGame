@@ -52,17 +52,17 @@ public final class FavoritesRegistry<IDType : IDProtocol> : Storing where IDType
         
     }
     
-    public let unitedDidUpdate = SignedPublisher<Update>(label: "FavoriteTeams.unitedDidUpdate")
+    public let unitedDidUpdate = Publisher<Update>(label: "FavoriteTeams.unitedDidUpdate")
     
     public var didUpdateFavorite: Subscribe<Favorites<IDType>.Change> {
-        return self.unitedDidUpdate.proxy.unsigned.map({ $0.changes }).unfolded()
+        return self.unitedDidUpdate.proxy.map({ $0.changes }).unfolded()
     }
     public var didUpdateFavorites: Subscribe<Set<IDType>> {
-        return self.unitedDidUpdate.proxy.unsigned.map({ $0.favorites })
+        return self.unitedDidUpdate.proxy.map({ $0.favorites })
     }
     
     
-    public func updateFavorite(id: IDType, isFavorite: Bool, submitter: ObjectIdentifier?) {
+    public func updateFavorite(id: IDType, isFavorite: Bool) {
         full_favoriteTeams.update({ favs in
             if isFavorite {
                 favs.insert(id)
@@ -73,19 +73,19 @@ public final class FavoritesRegistry<IDType : IDProtocol> : Storing where IDType
             if let new = result.value {
                 let update = Favorites.Change(id: id, isFavorite: isFavorite)
                 let united = Update(changes: [update], all: new)
-                self.unitedDidUpdate.publish(united, submitterIdentifier: submitter)
+                self.unitedDidUpdate.publish(united)
             }
         })
     }
     
-    public func replace(with updated: Set<IDType>, submitter: ObjectIdentifier?) {
+    public func replace(with updated: Set<IDType>) {
         let existing = try! favoriteTeamsSync.retrieve()
         let diff = existing.symmetricDifference(updated)
         full_favoriteTeams.set(updated) { (result) in
             if result.isSuccess {
                 let updates = diff.map({ Favorites.Change.init(id: $0, isFavorite: updated.contains($0)) })
                 let united = Update(changes: updates, all: updated)
-                self.unitedDidUpdate.publish(united, submitterIdentifier: submitter)
+                self.unitedDidUpdate.publish(united)
             }
         }
     }

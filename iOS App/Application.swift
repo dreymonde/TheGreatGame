@@ -9,7 +9,6 @@
 import Foundation
 import TheGreatKit
 import Shallows
-import Alba
 
 final class Application {
     
@@ -18,20 +17,20 @@ final class Application {
     let images: Images
     let favoriteTeams: Favorites<Team.ID>
     let tokens: DeviceTokens
+    let loggers: Loggers
     
     let watch: AppleWatch?
     let notifications: Notifications
     
     init() {
-        Alba.InformBureau.isEnabled = true
-        Alba.InformBureau.Logger.enable()
-
+        self.loggers = Loggers()
+        loggers.start()
+        
         self.api = Application.makeAPI()
         self.apiCache = Application.makeAPICache()
         self.images = Images.inSharedCachesDirectory()
         self.tokens = DeviceTokens()
-        let favoriteConfig = Favorites<Team.ID>.Config(tokens: self.tokens, indicatorManager: .application)
-        self.favoriteTeams = Favorites.inSharedDocumentsDirectory()(favoriteConfig)
+        self.favoriteTeams = Application.makeFavorites(tokens: tokens)
         self.watch = AppleWatch(favoriteTeams: favoriteTeams.registry.favoriteTeams)
         self.notifications = Notifications(application: UIApplication.shared)
         declare()
@@ -58,6 +57,12 @@ final class Application {
             printWithContext("Using the-great-game-ruby.herokuapp.com as a server (Heroku)")
             return API.heroku()
         }
+    }
+    
+    static func makeFavorites(tokens: DeviceTokens) -> Favorites<Team.ID> {
+        return Favorites.inSharedDocumentsDirectory().make(tokens: tokens,
+                                                           indicatorManager: .application,
+                                                           shouldCheckUploadConsistency: AppDelegate.applicationDidBecomeActive.proxy.void().wait(seconds: 4.0))
     }
     
     static func makeAPICache() -> APICache {

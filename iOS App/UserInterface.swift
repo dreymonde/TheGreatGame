@@ -68,8 +68,7 @@ final class UserInterface {
         teamsList <- {
             $0.resource = self.resources.teams
             $0.isFavorite = self.logic.favoriteTeams.registry.isFavorite(id:)
-            let id = objectID(teamsList)
-            $0.updateFavorite = { self.logic.favoriteTeams.registry.updateFavorite(id: $0, isFavorite: $1, submitter: id) }
+            $0.updateFavorite = { self.logic.favoriteTeams.registry.updateFavorite(id: $0, isFavorite: $1) }
             $0.makeAvenue = self.makeAvenue(forImageSize:)
             $0.makeTeamDetailVC = { self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
         }

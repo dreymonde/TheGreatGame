@@ -182,6 +182,9 @@
 		7CCD25CB1EDEA23900F3C5CB /* ComplicationPusher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD25CA1EDEA23900F3C5CB /* ComplicationPusher.swift */; };
 		7CCD25D01EDEBE5700F3C5CB /* PushNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD25CF1EDEBE5700F3C5CB /* PushNotification.swift */; };
 		7CCD25D11EDEBE5700F3C5CB /* PushNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD25CF1EDEBE5700F3C5CB /* PushNotification.swift */; };
+		7CD8F2261EF2D64A0006F0A1 /* AlbaGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD8F2251EF2D64A0006F0A1 /* AlbaGraph.swift */; };
+		7CD8F2271EF2D64A0006F0A1 /* AlbaGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD8F2251EF2D64A0006F0A1 /* AlbaGraph.swift */; };
+		7CD8F2291EF2D6FD0006F0A1 /* Loggers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD8F2281EF2D6FD0006F0A1 /* Loggers.swift */; };
 		7CE2B7361ECC7CF100C7EC20 /* TCK+UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2B7351ECC7CF100C7EC20 /* TCK+UserDefaults.swift */; };
 		7CE2B7391ECC7D3200C7EC20 /* Vendor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2B7381ECC7D3200C7EC20 /* Vendor.swift */; };
 		7CE2B73B1ECC7D4D00C7EC20 /* LaunchArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2B73A1ECC7D4D00C7EC20 /* LaunchArguments.swift */; };
@@ -481,6 +484,8 @@
 		7CCD25CA1EDEA23900F3C5CB /* ComplicationPusher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplicationPusher.swift; sourceTree = "<group>"; };
 		7CCD25CC1EDEB1BA00F3C5CB /* Watch Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Watch Extension.entitlements"; sourceTree = "<group>"; };
 		7CCD25CF1EDEBE5700F3C5CB /* PushNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PushNotification.swift; path = ../PushNotification.swift; sourceTree = "<group>"; };
+		7CD8F2251EF2D64A0006F0A1 /* AlbaGraph.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbaGraph.swift; sourceTree = "<group>"; };
+		7CD8F2281EF2D6FD0006F0A1 /* Loggers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Loggers.swift; sourceTree = "<group>"; };
 		7CE2B7351ECC7CF100C7EC20 /* TCK+UserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TCK+UserDefaults.swift"; sourceTree = "<group>"; };
 		7CE2B7381ECC7D3200C7EC20 /* Vendor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vendor.swift; sourceTree = "<group>"; };
 		7CE2B73A1ECC7D4D00C7EC20 /* LaunchArguments.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaunchArguments.swift; sourceTree = "<group>"; };
@@ -646,6 +651,7 @@
 				7C0EA5E11EBA1B3500F50EB2 /* Assets.xcassets */,
 				7C0EA5E31EBA1B3500F50EB2 /* LaunchScreen.storyboard */,
 				7C0EA5E61EBA1B3500F50EB2 /* Info.plist */,
+				7CD8F2281EF2D6FD0006F0A1 /* Loggers.swift */,
 			);
 			path = "iOS App";
 			sourceTree = "<group>";
@@ -697,6 +703,7 @@
 				7C0EA6091EBA1C9000F50EB2 /* TheGreatKit.h */,
 				7C0EA60A1EBA1C9000F50EB2 /* Info.plist */,
 				7CA542051EDABF2B00B4D1BD /* TGK+Alba.swift */,
+				7CD8F2251EF2D64A0006F0A1 /* AlbaGraph.swift */,
 			);
 			path = Kit;
 			sourceTree = "<group>";
@@ -1583,6 +1590,7 @@
 				7C3AEFAF1EF28D3600CE576A /* MatchEventTableViewCell.swift in Sources */,
 				7C1D898F1EC06981006F7841 /* Refreshing.swift in Sources */,
 				7C1E66381EBB4284003AF505 /* ViewController.swift in Sources */,
+				7CD8F2291EF2D6FD0006F0A1 /* Loggers.swift in Sources */,
 				7C6B36C31EBCAEDD00FC17F9 /* TabBarController.swift in Sources */,
 				7CF3D1771EBC870400E86A91 /* TeamDetailTableViewController.swift in Sources */,
 				7C6AA1701ED86F73003F2388 /* Cell.swift in Sources */,
@@ -1658,6 +1666,7 @@
 				7C357ED81ED442D300CFCF3B /* SingleElementMemoryCache.swift in Sources */,
 				7C0EA6281EBA1CB100F50EB2 /* Jubilee.swift in Sources */,
 				7CEEAA041EC33492005B574B /* Stage.swift in Sources */,
+				7CD8F2261EF2D64A0006F0A1 /* AlbaGraph.swift in Sources */,
 				7C0EA6591EBA1EF200F50EB2 /* Team.swift in Sources */,
 				7C0EA6561EBA1ECB00F50EB2 /* Teams.swift in Sources */,
 				7C6B4E071EEC5AA700468A3D /* SerialCache.swift in Sources */,
@@ -1727,6 +1736,7 @@
 				7C6AA1751ED878F9003F2388 /* Shallows+Mapper.swift in Sources */,
 				7C0EFD8F1EEC21E80077C37E /* Functions.swift in Sources */,
 				7C13BC6E1ED84B5600588F5F /* NetworkActivity.swift in Sources */,
+				7CD8F2271EF2D64A0006F0A1 /* AlbaGraph.swift in Sources */,
 				7C6AA1721ED878E9003F2388 /* Teams.swift in Sources */,
 				7CCD25C61EDD7AE300F3C5CB /* SingleElementMemoryCache.swift in Sources */,
 				7C13BC5E1ED84B3D00588F5F /* InMappable.swift in Sources */,

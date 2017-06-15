@@ -9,6 +9,16 @@
 import Foundation
 import Alba
 
+public typealias AlbaAdapter<From, To> = (Subscribe<From>) -> Subscribe<To>
+
+extension Subscribe {
+    
+    public func adapting<OtherEvent>(with adapter: @escaping AlbaAdapter<Event, OtherEvent>) -> Subscribe<OtherEvent> {
+        return adapter(self)
+    }
+    
+}
+
 extension Subscribe {
     
     public func mainThread() -> Subscribe<Event> {
@@ -21,6 +31,16 @@ extension Subscribe {
     
     public func signed(with identifier: ObjectIdentifier?) -> SignedSubscribe<Event> {
         return map({ Signed.init($0, identifier) })
+    }
+    
+    public func wait(seconds: TimeInterval) -> Subscribe<Event> {
+        return rawModify(subscribe: { (identifier, handle) in
+            self.manual.subscribe(objectWith: identifier, with: { (event) in
+                DispatchQueue.global().asyncAfter(deadline: .now() + seconds, execute: { 
+                    handle(event)
+                })
+            })
+        }, entry: ProxyPayload.Entry.custom("wait-\(seconds)-seconds"))
     }
     
 }

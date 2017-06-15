@@ -13,14 +13,11 @@ import UserNotifications
 
 public final class ComplicationPusher {
     
-    public let didReceiveComplicationMatchUpdate = Publisher<Match.Full>(label: "ComplicationPusher.didReceiveComplicationMatchUpdate")
-    
-    public func declare(didReceiveIncomingPush: Subscribe<PKPushPayload>) {
-        didReceiveIncomingPush
+    public static let adapter: AlbaAdapter<PKPushPayload, Match.Full> = { proxy in
+        return proxy
             .flatMap({ PushNotification<Match.Full>(userInfo: $0.dictionaryPayload)?.content })
-            .redirect(to: didReceiveComplicationMatchUpdate)
     }
-    
+        
 }
 
 public final class PushKitReceiver : NSObject, PKPushRegistryDelegate {
