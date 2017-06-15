@@ -20,7 +20,7 @@ public final class FavoritesRegistry<IDType : IDProtocol> : Storing where IDType
     
     fileprivate let full_favoriteTeams: Cache<Void, Set<IDType>>
     
-    public let favoriteTeams: ReadOnlyCache<Void, Set<IDType>>
+    public let favoriteTeams: Retrieve<Set<IDType>>
     
     public var all: Set<IDType> {
         return try! favoriteTeams.makeSyncCache().retrieve()

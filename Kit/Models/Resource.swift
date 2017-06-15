@@ -19,13 +19,13 @@ public final class Resource<Value> : Prefetchable {
     
     fileprivate var value: Value?
     
-    fileprivate var local: ReadOnlyCache<Void, Value>
-    public var provider: ReadOnlyCache<Void, Relevant<Value>>
+    fileprivate var local: Retrieve<Value>
+    public var provider: Retrieve<Relevant<Value>>
     
     fileprivate let manager: NetworkActivityIndicatorManager
     
-    public init(provider: ReadOnlyCache<Void, Relevant<Value>>,
-         local: ReadOnlyCache<Void, Value> = .empty(),
+    public init(provider: Retrieve<Relevant<Value>>,
+         local: Retrieve<Value> = .empty(),
          networkActivity manager: NetworkActivityIndicatorManager,
          value: Value? = nil) {
         self.manager = manager
@@ -97,10 +97,10 @@ public final class Resource<Value> : Prefetchable {
 
 public final class Local<Value> {
     
-    private let provider: ReadOnlyCache<Void, Value>
+    private let provider: Retrieve<Value>
     private var value: Value?
     
-    public init(provider: ReadOnlyCache<Void, Value>) {
+    public init(provider: Retrieve<Value>) {
         self.provider = provider
             .mainThread()
     }
@@ -119,7 +119,7 @@ public final class Local<Value> {
 extension Resource where Value : Mappable {
     
     public convenience init(local: Cache<Void, Editioned<Value>>,
-                     remote: ReadOnlyCache<Void, Editioned<Value>>,
+                     remote: Retrieve<Editioned<Value>>,
                      networkActivity manager: NetworkActivityIndicatorManager,
                      value: Value? = nil) {
         let prov = local.withSource(.disk).combinedRefreshing(with: remote.withSource(.server),

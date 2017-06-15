@@ -12,12 +12,14 @@ import Alba
 
 internal final class UploadConsistencyKeeper<Upload : Equatable> {
     
-    let favorites: ReadOnlyCache<Void, Upload>
+    let actual: Retrieve<Upload>
     let lastUploaded: Cache<Void, Upload>
+    let name: String
     
-    init(favorites: ReadOnlyCache<Void, Upload>, lastUploaded: Cache<Void, Upload>) {
-        self.favorites = favorites
+    init(actual: Retrieve<Upload>, lastUploaded: Cache<Void, Upload>, name: String) {
+        self.actual = actual
         self.lastUploaded = lastUploaded
+        self.name = name
     }
     
     func declare(didUploadFavorites: Subscribe<Upload>) {
@@ -29,10 +31,11 @@ internal final class UploadConsistencyKeeper<Upload : Equatable> {
     }
     
     func check() {
-        printWithContext("Checking if last update was properly uploaded")
-        zip(favorites, lastUploaded.asReadOnlyCache()).retrieve { (result) in
+        let name = self.name
+        printWithContext("(uploads-\(name)) Checking if last update was properly uploaded")
+        zip(actual, lastUploaded.asReadOnlyCache()).retrieve { (result) in
             guard let value = result.value else {
-                fault("Both caches should be defaulted")
+                fault("(uploads-\(name)) Both caches should be defaulted")
                 return
             }
             let favors = value.0
@@ -40,7 +43,7 @@ internal final class UploadConsistencyKeeper<Upload : Equatable> {
             if lasts != favors {
                 self.shouldUploadFavorites.publish(favors)
             } else {
-                printWithContext("It was")
+                printWithContext("(uploads-\(name)) It was")
             }
         }
     }
@@ -51,13 +54,13 @@ internal final class UploadConsistencyKeeper<Upload : Equatable> {
 
 extension UploadConsistencyKeeper where Upload == Set<Team.ID> {
     
-    convenience init(favorites: ReadOnlyCache<Void, Set<Team.ID>>, diskCache: Cache<String, Data>) {
+    convenience init(favorites: Retrieve<Set<Team.ID>>, diskCache: Cache<String, Data>) {
         let last: Cache<Void, Set<Team.ID>> = diskCache
             .mapJSONDictionary()
             .mapBoxedSet()
             .singleKey("last-uploaded-favorites-teams")
             .defaulting(to: [])
-        self.init(favorites: favorites, lastUploaded: last)
+        self.init(actual: favorites, lastUploaded: last, name: "teams")
     }
     
 }

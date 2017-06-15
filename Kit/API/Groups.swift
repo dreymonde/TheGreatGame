@@ -24,7 +24,7 @@ public struct GroupsEndpoint {
 public final class GroupsAPI : APIPoint {
     
     public let provider: ReadOnlyCache<GroupsEndpoint, [String : Any]>
-    public let all: ReadOnlyCache<Void, Editioned<Groups>>
+    public let all: Retrieve<Editioned<Groups>>
     
     private let dataProvider: ReadOnlyCache<String, Data>
     

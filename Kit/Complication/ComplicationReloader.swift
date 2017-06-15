@@ -32,7 +32,7 @@ public final class ComplicationReloader {
 
 extension ComplicationReloader {
     
-    public func consume(didUpdateFavorite: Subscribe<Favorites<Team.ID>.Change>, matches: ReadOnlyCache<Void, [Match.Full]>) {
+    public func consume(didUpdateFavorite: Subscribe<Favorites<Team.ID>.Change>, matches: Retrieve<[Match.Full]>) {
         didUpdateFavorite.flatSubscribe(self, with: { $0.didUpdateFavorite($1, matches: matches) })
     }
     
@@ -40,7 +40,7 @@ extension ComplicationReloader {
         complicationMatchUpdate.flatSubscribe(self, with: { $0.complicationMatchUpdate($1, matchesCache: matches) })
     }
     
-    fileprivate func didUpdateFavorite(_ update: Favorites<Team.ID>.Change, matches: ReadOnlyCache<Void, [Match.Full]>) {
+    fileprivate func didUpdateFavorite(_ update: Favorites<Team.ID>.Change, matches: Retrieve<[Match.Full]>) {
         matches.mapValues({ $0.filter({ Calendar.autoupdatingCurrent.isDateInToday($0.date) }) }).retrieve { (result) in
             if let gamesToday = result.value {
                 let idsToday = Set(gamesToday.flatMap({ $0.teams.map({ $0.id }) }))

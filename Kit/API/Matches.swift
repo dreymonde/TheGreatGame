@@ -29,9 +29,9 @@ public struct MatchesEndpoint {
 public final class MatchesAPI : APIPoint {
     
     public let provider: ReadOnlyCache<MatchesEndpoint, [String : Any]>
-    public let all: ReadOnlyCache<Void, Editioned<Matches>>
-    public let allFull: ReadOnlyCache<Void, Editioned<FullMatches>>
-    public let stages: ReadOnlyCache<Void, Editioned<Stages>>
+    public let all: Retrieve<Editioned<Matches>>
+    public let allFull: Retrieve<Editioned<FullMatches>>
+    public let stages: Retrieve<Editioned<Stages>>
     public let fullMatch: ReadOnlyCache<Match.ID, Editioned<Match.Full>>
     
     private let dataProvider: ReadOnlyCache<String, Data>

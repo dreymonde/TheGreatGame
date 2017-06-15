@@ -100,7 +100,7 @@ extension Favorites : HardStoring {
             .mapBoxedSet(of: IDType.self)
             .singleKey(name)
             .defaulting(to: [])
-        return UploadConsistencyKeeper<Set<IDType>>(favorites: favorites, lastUploaded: last)
+        return UploadConsistencyKeeper<Set<IDType>>(actual: favorites, lastUploaded: last, name: name)
 
     }
     

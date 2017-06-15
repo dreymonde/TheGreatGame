@@ -17,8 +17,8 @@ public final class AppleWatch {
     public let pushKitReceiver: PushKitReceiver
     internal let pusher: ComplicationPusher
     
-    public init?() {
-        guard let session = WatchSessionManager.init(0) else {
+    public init?(favoriteTeams: Retrieve<Set<Team.ID>>) {
+        guard let session = WatchSessionManager(makeActiveSession: { ActiveWatchSession.init(session: $0, favoriteTeams: favoriteTeams, sendage: $1) }) else {
             return nil
         }
         self.session = session
@@ -40,10 +40,13 @@ public final class WatchSessionManager : NSObject, WCSessionDelegate {
     
     var activeSession: ActiveWatchSession? = nil
     
-    public init?(_ flag: Int8) {
+    let makeActiveSession: (WCSession, Subscribe<Set<Team.ID>>) -> ActiveWatchSession?
+    
+    internal init?(makeActiveSession: @escaping (WCSession, Subscribe<Set<Team.ID>>) -> ActiveWatchSession?) {
         guard WCSession.isSupported() else {
             return nil
         }
+        self.makeActiveSession = makeActiveSession
         super.init()
         session.delegate = self
         session.activate()
@@ -92,6 +95,17 @@ public final class WatchSessionManager : NSObject, WCSessionDelegate {
 
 extension WatchSessionManager {
     
+    var didSendUpdatedFavorites: Subscribe<Set<Team.ID>> {
+        return didSendPackage.proxy
+            .filter({ $0.kind == .favorites })
+            .flatMap({ try? FavoritesPackage.unpacked(from: $0) })
+            .map({ $0.favs })
+    }
+    
+}
+
+extension WatchSessionManager {
+    
     public func sessionDidDeactivate(_ session: WCSession) {
         printWithContext()
     }
@@ -101,11 +115,15 @@ extension WatchSessionManager {
     }
     
     public func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        printWithContext()
+        printWithContext("\(activationState.rawValue) ; \(error)")
         if activationState == .activated {
-            if let newSession = ActiveWatchSession(session: session) {
+            if let newSession = makeActiveSession(session, didSendUpdatedFavorites) {
                 self.activeSession = newSession
+                feed(packages: newSession.uploadConsistencyKeeper.shouldUploadFavorites.proxy
+                    .map(FavoritesPackage.init))
                 newSession.start()
+            } else {
+                printWithContext("Cannot create new active session")
             }
         }
     }
@@ -118,8 +136,9 @@ internal final class ActiveWatchSession {
     let directoryURL: URL
     let directoryURLCache: RawFileSystemCache
     let watchInfo: Cache<Void, AppleWatchInfo>
+    let uploadConsistencyKeeper: UploadConsistencyKeeper<Set<Team.ID>>
     
-    init?(session: WCSession) {
+    init?(session: WCSession, favoriteTeams: Retrieve<Set<Team.ID>>, sendage: Subscribe<Set<Team.ID>>) {
         guard session.activationState == .activated,
             let url = session.watchDirectoryURL else {
                 return nil
@@ -133,10 +152,19 @@ internal final class ActiveWatchSession {
             .singleKey(.init(validFileName: "watch-info.plist"))
             .defaulting(to: .blank)
         self.watchInfo = SingleElementMemoryCache().combined(with: mapped)
+        let lastTransfer = directoryURLCache
+            .mapJSONDictionary()
+            .mapBoxedSet(of: Team.ID.self)
+            .singleKey(.init(validFileName: "last-transfer.json"))
+            .defaulting(to: [])
+        self.uploadConsistencyKeeper = UploadConsistencyKeeper(actual: favoriteTeams, lastUploaded: lastTransfer, name: "watch-transfers")
+        uploadConsistencyKeeper.declare(didUploadFavorites: sendage)
     }
     
     func start() {
+        printWithContext("Starting new active session \(self)")
         act()
+        uploadConsistencyKeeper.check()
     }
     
     private func act() {

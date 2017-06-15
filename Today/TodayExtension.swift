@@ -30,9 +30,9 @@ final class TodayExtension {
             .mainThread()
     }
     
-    private let _provider: ReadOnlyCache<Void, [Match.Full]>
+    private let _provider: Retrieve<[Match.Full]>
     
-    lazy var provider: ReadOnlyCache<Void, [Match.Full]> = {
+    lazy var provider: Retrieve<[Match.Full]> = {
         return self._provider.mapValues({ $0.filter(self.relevanceFilter()) })
     }()
     

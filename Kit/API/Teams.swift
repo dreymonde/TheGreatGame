@@ -27,7 +27,7 @@ public struct TeamsEndpoint {
 public final class TeamsAPI : APIPoint {
     
     public let provider: ReadOnlyCache<TeamsEndpoint, [String : Any]>
-    public let all: ReadOnlyCache<Void, Editioned<Teams>>
+    public let all: Retrieve<Editioned<Teams>>
     public let fullTeam: ReadOnlyCache<Team.ID, Editioned<Team.Full>>
     
     private let dataProvider: ReadOnlyCache<String, Data>

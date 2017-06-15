@@ -32,7 +32,7 @@ final class Application {
         self.tokens = DeviceTokens()
         let favoriteConfig = Favorites<Team.ID>.Config(tokens: self.tokens, indicatorManager: .application)
         self.favoriteTeams = Favorites.inSharedDocumentsDirectory()(favoriteConfig)
-        self.watch = AppleWatch()
+        self.watch = AppleWatch(favoriteTeams: favoriteTeams.registry.favoriteTeams)
         self.notifications = Notifications(application: UIApplication.shared)
         declare()
     }

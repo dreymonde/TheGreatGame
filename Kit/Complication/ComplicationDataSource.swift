@@ -23,10 +23,10 @@ public final class ComplicationDataSource {
         }
     }
     
-    public let matches: ReadOnlyCache<Void, [Match.Full]>
+    public let matches: Retrieve<[Match.Full]>
     public let conflictResolver: (Match.Full, Match.Full) -> Match.Full
     
-    public init(provider: ReadOnlyCache<Void, [Match.Full]>,
+    public init(provider: Retrieve<[Match.Full]>,
                 conflictResolver: @escaping (Match.Full, Match.Full) -> Match.Full) {
         let finalProvider = provider.mapValues({ $0.removingStartingAtTheSameDate(with: conflictResolver) })
         self.matches = finalProvider
