@@ -15,6 +15,7 @@ public protocol MatchProtocol {
     var away: Match.Team { get }
     var date: Date { get }
     var endDate: Date { get }
+    var score: Match.Score? { get }
     
 }
 
@@ -42,7 +43,7 @@ public enum Match {
     public static let durationAndAftermath = TimeInterval(60 * 130)
     public static let aftermath = TimeInterval(60 * 30)
     
-    public struct ID : RawRepresentable {
+    public struct ID : RawRepresentable, Hashable, IDProtocol {
         
         public var rawID: Int
         
@@ -52,6 +53,14 @@ public enum Match {
         
         public var rawValue: Int {
             return rawID
+        }
+        
+        public var hashValue: Int {
+            return rawValue
+        }
+        
+        public func asString() -> String {
+            return String(rawValue)
         }
         
     }

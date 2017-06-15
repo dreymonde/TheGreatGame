@@ -74,6 +74,11 @@ enum Storyboard {
       return ViewControllerResource(scene: .groupsTableViewControllerScene)
     }
 
+    case matchDetailTableViewControllerScene = "MatchDetailTableViewController"
+    static var matchDetailTableViewController: ViewControllerResource<Main, TheGreatGame.MatchDetailTableViewController> {
+      return ViewControllerResource(scene: .matchDetailTableViewControllerScene)
+    }
+
     case matchesTableViewControllerScene = "MatchesTableViewController"
     static var matchesTableViewController: ViewControllerResource<Main, TheGreatGame.MatchesTableViewController> {
       return ViewControllerResource(scene: .matchesTableViewControllerScene)
@@ -94,6 +99,7 @@ enum Storyboard {
 enum StoryboardSegue {
   enum Main: String, StoryboardSegueType {
     case __Unused = "<#unused#>"
+    case __Unused2 = "<#unused-2#>"
   }
 }
 

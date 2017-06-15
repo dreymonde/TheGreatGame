@@ -16,6 +16,7 @@ public final class Resources {
     public var groups: Resource<[Group.Compact]>
     
     public var fullTeam: (Team.ID) -> Resource<Team.Full>
+    public var fullMatch: (Match.ID) -> Resource<Match.Full>
     
     public var all: [Prefetchable] {
         return [stages, teams, groups]
@@ -25,11 +26,12 @@ public final class Resources {
         all.forEach({ $0.prefetch() })
     }
     
-    public init(stages: Resource<[Stage]>, teams: Resource<[Team.Compact]>, groups: Resource<[Group.Compact]>, fullTeam: @escaping (Team.ID) -> Resource<Team.Full>) {
+    public init(stages: Resource<[Stage]>, teams: Resource<[Team.Compact]>, groups: Resource<[Group.Compact]>, fullTeam: @escaping (Team.ID) -> Resource<Team.Full>, fullMatch: @escaping (Match.ID) -> Resource<Match.Full>) {
         self.stages = stages
         self.teams = teams
         self.groups = groups
         self.fullTeam = fullTeam
+        self.fullMatch = fullMatch
     }
     
 }
@@ -40,7 +42,8 @@ extension Resources {
         self.init(stages: Resources.makeStagesResource(api: api, apiCache: apiCache, networkActivity: networkActivity),
                   teams: Resources.makeTeamsResource(api: api, apiCache: apiCache, networkActivity: networkActivity),
                   groups: Resources.makeGroupsResource(api: api, apiCache: apiCache, networkActivity: networkActivity),
-                  fullTeam: Resources.makeFullTeamsResources(api: api, apiCache: apiCache, networkActivity: networkActivity))
+                  fullTeam: Resources.makeFullTeamsResources(api: api, apiCache: apiCache, networkActivity: networkActivity),
+                  fullMatch: Resources.makeFullMatchesResources(api: api, apiCache: apiCache, networkActivity: networkActivity))
     }
     
     public static func makeStagesResource(api: API, apiCache: APICache, networkActivity: NetworkActivityIndicatorManager) -> Resource<[Stage]> {
@@ -68,6 +71,18 @@ extension Resources {
         let lazyDict = LazyDictionary<Team.ID, Resource<Team.Full>> { (id) -> Resource<Team.Full> in
             return Resource<Team.Full>(local: apiCache.teams.fullTeam.singleKey(id),
                                        remote: api.teams.fullTeam.singleKey(id),
+                                       networkActivity: networkActivity)
+        }
+        let threadSafeLazyDict = ThreadSafe(lazyDict)
+        return { id in
+            return threadSafeLazyDict.read()[id]
+        }
+    }
+    
+    public static func makeFullMatchesResources(api: API, apiCache: APICache, networkActivity: NetworkActivityIndicatorManager) -> (Match.ID) -> Resource<Match.Full> {
+        let lazyDict = LazyDictionary<Match.ID, Resource<Match.Full>> { (id) -> Resource<Match.Full> in
+            return Resource<Match.Full>(local: apiCache.matches.fullMatch.singleKey(id),
+                                       remote: api.matches.fullMatch.singleKey(id),
                                        networkActivity: networkActivity)
         }
         let threadSafeLazyDict = ThreadSafe(lazyDict)

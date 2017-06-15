@@ -99,12 +99,20 @@ final class UserInterface {
             $0.makeAvenue = self.makeAvenue(forImageSize:)
             $0.preloadedTeam = preloaded
             $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
+            $0.makeMatchDetailVC = { self.matchDetailViewController(for: $0.id, preloaded: $0.preloaded()) }
+        }
+    }
+    
+    func matchDetailViewController(for matchID: Match.ID, preloaded: MatchDetailPreLoaded) -> MatchDetailTableViewController {
+        return Storyboard.Main.matchDetailTableViewController.instantiate() <- {
+            $0.resource = self.resources.fullMatch(matchID)
+            $0.makeAvenue = self.makeAvenue(forImageSize:)
+            $0.preloadedMatch = preloaded
         }
     }
     
     func openMatch(match: Match.Full) {
-        let firstTeam = match.home
-        let vc = teamDetailViewController(for: firstTeam.id, preloaded: firstTeam.preLoaded())
+        let vc = matchDetailViewController(for: match.id, preloaded: match.preloaded())
         if let selected = tabBarController.selectedViewController {
             selected.show(vc, sender: selected)
         }

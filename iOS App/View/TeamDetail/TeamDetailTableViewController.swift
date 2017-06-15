@@ -52,6 +52,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     var preloadedTeam: TeamDetailPreLoaded?
     var resource: Resource<Team.Full>!
     var makeTeamDetailVC: (Group.Team) -> UIViewController = runtimeInject
+    var makeMatchDetailVC: (Match.Compact) -> UIViewController = runtimeInject
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
     var isFavorite: () -> Bool = runtimeInject
 
@@ -228,6 +229,12 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
             }
             let anotherTeamVC = makeTeamDetailVC(team)
             show(anotherTeamVC, sender: self)
+        case matchesSectionIndex:
+            guard let match = self.team?.matches[indexPath.row] else {
+                return
+            }
+            let matchVC = makeMatchDetailVC(match)
+            show(matchVC, sender: self)
         default:
             break
         }

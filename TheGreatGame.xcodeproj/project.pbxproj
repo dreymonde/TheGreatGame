@@ -112,6 +112,9 @@
 		7C1E66451EBB67CC003AF505 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1E66441EBB67CC003AF505 /* Group.swift */; };
 		7C357ED61ED4408C00CFCF3B /* APICacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C357ED51ED4408C00CFCF3B /* APICacheTests.swift */; };
 		7C357ED81ED442D300CFCF3B /* SingleElementMemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C357ED71ED442D300CFCF3B /* SingleElementMemoryCache.swift */; };
+		7C3AEFA81EF2827000CE576A /* MatchDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3AEFA61EF2827000CE576A /* MatchDetailTableViewCell.swift */; };
+		7C3AEFA91EF2827000CE576A /* MatchDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C3AEFA71EF2827000CE576A /* MatchDetailTableViewCell.xib */; };
+		7C3AEFAC1EF283FD00CE576A /* MatchDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3AEFAB1EF283FD00CE576A /* MatchDetailTableViewController.swift */; };
 		7C6AA1701ED86F73003F2388 /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6AA16F1ED86F73003F2388 /* Cell.swift */; };
 		7C6AA1711ED878E9003F2388 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1D897E1EBF0D28006F7841 /* API.swift */; };
 		7C6AA1721ED878E9003F2388 /* Teams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6551EBA1ECB00F50EB2 /* Teams.swift */; };
@@ -428,6 +431,9 @@
 		7C357ED71ED442D300CFCF3B /* SingleElementMemoryCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleElementMemoryCache.swift; sourceTree = "<group>"; };
 		7C357ED91ED44C4900CFCF3B /* Resources.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Resources.swift; sourceTree = "<group>"; };
 		7C357EDC1ED4828100CFCF3B /* Resource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Resource.swift; sourceTree = "<group>"; };
+		7C3AEFA61EF2827000CE576A /* MatchDetailTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchDetailTableViewCell.swift; sourceTree = "<group>"; };
+		7C3AEFA71EF2827000CE576A /* MatchDetailTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MatchDetailTableViewCell.xib; sourceTree = "<group>"; };
+		7C3AEFAB1EF283FD00CE576A /* MatchDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchDetailTableViewController.swift; sourceTree = "<group>"; };
 		7C6AA16F1ED86F73003F2388 /* Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
 		7C6AA1791ED87995003F2388 /* MatchCellController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchCellController.swift; sourceTree = "<group>"; };
 		7C6B36BD1EBCA88100FC17F9 /* Matches.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Matches.swift; sourceTree = "<group>"; };
@@ -795,6 +801,7 @@
 				7C0EA65F1EBA53F600F50EB2 /* TeamsList */,
 				7C7916F51EBB3D2D0070E6C5 /* TeamDetail */,
 				7C6B36BF1EBCA96300FC17F9 /* MatchesList */,
+				7C3AEFAA1EF283E300CE576A /* MatchDetail */,
 				7C1D89941EC0792B006F7841 /* GroupsList */,
 			);
 			path = View;
@@ -965,6 +972,25 @@
 				7C1E66441EBB67CC003AF505 /* Group.swift */,
 			);
 			path = Group;
+			sourceTree = "<group>";
+		};
+		7C3AEFA51EF2825F00CE576A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				7C3AEFA61EF2827000CE576A /* MatchDetailTableViewCell.swift */,
+				7C3AEFA71EF2827000CE576A /* MatchDetailTableViewCell.xib */,
+			);
+			name = Views;
+			path = MatchesList;
+			sourceTree = "<group>";
+		};
+		7C3AEFAA1EF283E300CE576A /* MatchDetail */ = {
+			isa = PBXGroup;
+			children = (
+				7C3AEFA51EF2825F00CE576A /* Views */,
+				7C3AEFAB1EF283FD00CE576A /* MatchDetailTableViewController.swift */,
+			);
+			name = MatchDetail;
 			sourceTree = "<group>";
 		};
 		7C6AA1781ED87976003F2388 /* MatchesList */ = {
@@ -1412,6 +1438,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7C3AEFA91EF2827000CE576A /* MatchDetailTableViewCell.xib in Resources */,
 				7C1D898B1EC0655A006F7841 /* TeamGroupTableViewCell.xib in Resources */,
 				7C109D281EC1D5AB00523376 /* TeamDetailInfoTableViewCell.xib in Resources */,
 				7C0EA5E51EBA1B3500F50EB2 /* LaunchScreen.storyboard in Resources */,
@@ -1549,6 +1576,7 @@
 				7CF3D1771EBC870400E86A91 /* TeamDetailTableViewController.swift in Sources */,
 				7C6AA1701ED86F73003F2388 /* Cell.swift in Sources */,
 				7C1E663C1EBB42FE003AF505 /* NavigationController.swift in Sources */,
+				7C3AEFAC1EF283FD00CE576A /* MatchDetailTableViewController.swift in Sources */,
 				7C1D89961EC07944006F7841 /* GroupsTableViewController.swift in Sources */,
 				7C7916F41EBB3D050070E6C5 /* Storyboards.swift in Sources */,
 				7CE2B7391ECC7D3200C7EC20 /* Vendor.swift in Sources */,
@@ -1563,6 +1591,7 @@
 				7C0EA6271EBA1CB100F50EB2 /* Jubilee.swift in Sources */,
 				7C0EA6631EBA542E00F50EB2 /* TeamCompactTableViewCell.swift in Sources */,
 				7C0EA6531EBA1E4900F50EB2 /* UserInterface.swift in Sources */,
+				7C3AEFA81EF2827000CE576A /* MatchDetailTableViewCell.swift in Sources */,
 				7C6B36C11EBCA98100FC17F9 /* MatchesTableViewController.swift in Sources */,
 				7C1D898A1EC0655A006F7841 /* TeamGroupTableViewCell.swift in Sources */,
 				7C109D271EC1D5AB00523376 /* TeamDetailInfoTableViewCell.swift in Sources */,
