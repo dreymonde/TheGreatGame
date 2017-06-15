@@ -61,7 +61,6 @@ public final class WatchSessionManager : NSObject, WCSessionDelegate {
             let rawPackage = try package.map() as [String : Any]
             session.transferUserInfo(rawPackage)
             printWithContext("Sending package \(package.kind)...")
-            didSendPackage.publish(package)
         } catch {
             didFailToSendPackage.publish(error)
         }
@@ -72,7 +71,6 @@ public final class WatchSessionManager : NSObject, WCSessionDelegate {
             let rawPackage = try package.map()
             session.transferCurrentComplicationUserInfo(rawPackage)
             printWithContext("Updating complication user info...")
-            didSendPackage.publish(package)
         } catch {
             didFailToSendPackage.publish(error)
         }
@@ -105,6 +103,19 @@ extension WatchSessionManager {
 }
 
 extension WatchSessionManager {
+    
+    public func session(_ session: WCSession, didFinish userInfoTransfer: WCSessionUserInfoTransfer, error: Error?) {
+        do {
+            let package = try Package(from: userInfoTransfer.userInfo)
+            if let error = error {
+                self.didFailToSendPackage.publish(error)
+            } else {
+                self.didSendPackage.publish(package)
+            }
+        } catch {
+            fault("Invalida package reported: \(userInfoTransfer)")
+        }
+    }
     
     public func sessionDidDeactivate(_ session: WCSession) {
         printWithContext()
