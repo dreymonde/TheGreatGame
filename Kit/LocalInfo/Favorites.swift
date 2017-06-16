@@ -60,40 +60,27 @@ public final class Favorites<IDType : IDProtocol> where IDType.RawValue == Int {
     
 }
 
-extension Favorites : HardStoring {
+extension Favorites {
     
-    public struct Configurator {
-        
-        public let diskCache: Cache<String, Data>
-        
-        public func make(tokens: DeviceTokens, indicatorManager: NetworkActivityIndicatorManager, shouldCheckUploadConsistency: Subscribe<Void>, apiSubpath: String) -> Favorites<IDType> {
-            let registry = FavoritesRegistry<IDType>(diskCache: diskCache)
-            let favs = registry.favoriteTeams
-            let keeper_n = Favorites.makeKeeper(withName: "keeper-notifications", diskCache: diskCache, favorites: favs)
-            let keeper_c = Favorites.makeKeeper(withName: "keeper-complications", diskCache: diskCache, favorites: favs)
-            let uploader = FavoritesUploader<IDType>(pusher: PUSHer.init(urlSession: URLSession.init(configuration: .default)).singleKey(URL.init(string: "https://the-great-game-ruby.herokuapp.com/\(apiSubpath)")!).connectingNetworkActivityIndicator(manager: indicatorManager),
-                                                     getNotificationsToken: tokens.getNotification,
-                                                     getComplicationToken: tokens.getComplication)
-            return Favorites(registry: registry,
-                             uploader: uploader,
-                             uploadConsistencyKeeper_notifications: keeper_n,
-                             uploadConsistencyKeeper_complication: keeper_c,
-                             shouldCheckUploadConsistency: shouldCheckUploadConsistency)
-        }
-        
+    public convenience init(favoritesRegistry: FavoritesRegistry<IDType>, tokens: DeviceTokens, indicatorManager: NetworkActivityIndicatorManager, shouldCheckUploadConsistency: Subscribe<Void>, consistencyKeepersStorage: Cache<String, Data>, apiSubpath: String) {
+        let favs = favoritesRegistry.favoriteTeams
+        let keeper_n = Favorites.makeKeeper(withName: "keeper-notifications", diskCache: consistencyKeepersStorage, favorites: favs)
+        let keeper_c = Favorites.makeKeeper(withName: "keeper-complications", diskCache: consistencyKeepersStorage, favorites: favs)
+        let uploader = FavoritesUploader<IDType>(pusher: PUSHer.init(urlSession: URLSession.init(configuration: .default)).singleKey(URL.init(string: "https://the-great-game-ruby.herokuapp.com/\(apiSubpath)")!).connectingNetworkActivityIndicator(manager: indicatorManager),
+                                                 getNotificationsToken: tokens.getNotification,
+                                                 getComplicationToken: tokens.getComplication)
+        self.init(registry: favoritesRegistry,
+                  uploader: uploader,
+                  uploadConsistencyKeeper_notifications: keeper_n,
+                  uploadConsistencyKeeper_complication: keeper_c,
+                  shouldCheckUploadConsistency: shouldCheckUploadConsistency)
     }
     
-    public typealias Configurable = (Configurator)
+}
+
+extension Favorites {
     
-    public static var preferredSubPath: String {
-        return "favorites"
-    }
-    
-    public static func withDiskCache(_ diskCache: Cache<String, Data>) -> Configurator {
-        return Configurator(diskCache: diskCache)
-    }
-    
-    private static func makeKeeper(withName name: String, diskCache: Cache<String, Data>, favorites: Retrieve<Set<IDType>>) -> UploadConsistencyKeeper<Set<IDType>> {
+    fileprivate static func makeKeeper(withName name: String, diskCache: Cache<String, Data>, favorites: Retrieve<Set<IDType>>) -> UploadConsistencyKeeper<Set<IDType>> {
         let last = diskCache
             .mapJSONDictionary()
             .mapBoxedSet(of: IDType.self)

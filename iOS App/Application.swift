@@ -60,10 +60,14 @@ final class Application {
     }
     
     static func makeFavorites(tokens: DeviceTokens) -> Favorites<Team.ID> {
-        return Favorites.inSharedDocumentsDirectory().make(tokens: tokens,
-                                                           indicatorManager: .application,
-                                                           shouldCheckUploadConsistency: AppDelegate.applicationDidBecomeActive.proxy.void().wait(seconds: 4.0),
-                                                           apiSubpath: "favorite-teams")
+        let keepersCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "teams-upload-keepers")
+        print(keepersCache.directoryURL)
+        return Favorites<Team.ID>(favoritesRegistry: FavoritesRegistry.inSharedDocumentsDirectory(),
+                                  tokens: tokens,
+                                  indicatorManager: .application,
+                                  shouldCheckUploadConsistency: AppDelegate.applicationDidBecomeActive.proxy.void().wait(seconds: 4.0),
+                                  consistencyKeepersStorage: keepersCache.asCache(),
+                                  apiSubpath: "favorite-teams")
     }
     
     static func makeAPICache() -> APICache {
