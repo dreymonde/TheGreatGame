@@ -43,7 +43,7 @@ extension Match.Team {
     
 }
 
-class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshing {
+class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshing, Showing {
     
     // MARK: - Data source
     var team: Team.Full?
@@ -75,7 +75,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
         self.teamGroupCellFiller = TeamGroupCellFiller(avenue: smallBadgesAvenue,
                                                        isAbsoluteTruth: { [unowned self] in self.resource.isAbsoluteTruth })
         self.pullToRefreshActivities = make()
-        registerFor3DTouch()
+        registerForPeekAndPop()
         configure(tableView)
         configure(smallBadges: smallBadgesAvenue)
         configure(mainBadge: mainBadgeAvenue)
@@ -222,21 +222,19 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        showViewController(for: indexPath)
+    }
+    
+    func viewController(for indexPath: IndexPath) -> UIViewController? {
         switch indexPath.section {
         case groupSectionIndex:
-            guard let team = self.team?.group.teams[indexPath.row] else {
-                return
-            }
-            let anotherTeamVC = makeTeamDetailVC(team)
-            show(anotherTeamVC, sender: self)
+            let team = self.team?.group.teams[indexPath.row]
+            return team.map(makeTeamDetailVC)
         case matchesSectionIndex:
-            guard let match = self.team?.matches[indexPath.row] else {
-                return
-            }
-            let matchVC = makeMatchDetailVC(match)
-            show(matchVC, sender: self)
+            let match = self.team?.matches[indexPath.row]
+            return match.map(makeMatchDetailVC)
         default:
-            break
+            return nil
         }
     }
 
@@ -286,25 +284,7 @@ extension TeamDetailTableViewController {
 extension TeamDetailTableViewController : UIViewControllerPreviewingDelegate {
     
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-        guard let indexPath = tableView.indexPathForRow(at: location) else {
-            return nil
-        }
-        var vc: UIViewController?
-        switch indexPath.section {
-        case groupSectionIndex:
-            guard let teamGroup = team?.group.teams[indexPath.row] else {
-                return nil
-            }
-            vc = makeTeamDetailVC(teamGroup)
-        default:
-            return nil
-        }
-        
-        let cellRect = tableView.rectForRow(at: indexPath)
-        let sourceRect = previewingContext.sourceView.convert(cellRect, from: tableView)
-        previewingContext.sourceRect = sourceRect
-        
-        return vc
+        return viewController(for: location, previewingContext: previewingContext)
     }
     
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {

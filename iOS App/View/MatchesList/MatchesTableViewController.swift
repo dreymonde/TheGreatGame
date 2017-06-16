@@ -12,7 +12,7 @@ import Shallows
 import Avenues
 import Alba
 
-class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
+class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, Showing {
     
     // MARK: - Data source
     var stages: [Stage] = []
@@ -35,6 +35,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        registerForPeekAndPop()
         self.subscribe()
         configure(tableView)
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
@@ -128,9 +129,11 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let match = stages[indexPath.section].matches[indexPath.row]
-        let vc = makeMatchDetailVC(match)
-        show(vc, sender: self)
+        showViewController(for: indexPath)
+    }
+    
+    func viewController(for indexPath: IndexPath) -> UIViewController? {
+        return makeMatchDetailVC(stages[indexPath.section].matches[indexPath.row])
     }
     
 }
@@ -153,6 +156,18 @@ extension MatchesTableViewController {
                            forCellReuseIdentifier: "MatchListMatch")
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableViewAutomaticDimension
+    }
+    
+}
+
+extension MatchesTableViewController {
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        return viewController(for: location, previewingContext: previewingContext)
+    }
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+        show(viewControllerToCommit, sender: self)
     }
     
 }

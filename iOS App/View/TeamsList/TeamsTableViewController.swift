@@ -24,7 +24,7 @@ extension Set {
     
 }
 
-class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
+class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing, Showing {
     
     // MARK: - Data source
     var teams: [Team.Compact] = []
@@ -43,7 +43,7 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        registerFor3DTouch()
+        registerForPeekAndPop()
         configure(tableView)
         self.pullToRefreshActivities = make()
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
@@ -126,10 +126,12 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        showViewController(for: indexPath)
+    }
+    
+    func viewController(for indexPath: IndexPath) -> UIViewController? {
         let team = teams[indexPath.row]
-        let detail = teamDetailViewController(for: team)
-        navigationController?.pushViewController(detail, animated: true)
-        tableView.deselectRow(at: indexPath, animated: true)
+        return teamDetailViewController(for: team)
     }
     
     fileprivate func teamDetailViewController(for team: Team.Compact) -> UIViewController {
@@ -140,12 +142,6 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing {
 
 // MARK: - Configurations
 extension TeamsTableViewController {
-    
-    fileprivate func registerFor3DTouch() {
-        if traitCollection.forceTouchCapability == .available {
-            registerForPreviewing(with: self, sourceView: tableView)
-        }
-    }
     
     fileprivate func configure(_ avenue: Avenue<URL, URL, UIImage>) {
         avenue.onStateChange = { [weak self] url in
@@ -170,17 +166,7 @@ extension TeamsTableViewController {
 extension TeamsTableViewController : UIViewControllerPreviewingDelegate {
     
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-        guard let indexPath = tableView.indexPathForRow(at: location) else {
-            return nil
-        }
-        let team = teams[indexPath.row]
-        let teamDetail = teamDetailViewController(for: team)
-        
-        let cellRect = tableView.rectForRow(at: indexPath)
-        let sourceRect = previewingContext.sourceView.convert(cellRect, from: tableView)
-        previewingContext.sourceRect = sourceRect
-        
-        return teamDetail
+        return viewController(for: location, previewingContext: previewingContext)
     }
     
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
