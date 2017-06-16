@@ -17,14 +17,12 @@ final class Application {
     let images: Images
     let favoriteTeams: Favorites<Team.ID>
     let tokens: DeviceTokens
-    let loggers: Loggers
     
     let watch: AppleWatch?
     let notifications: Notifications
     
     init() {
-        self.loggers = Loggers()
-        loggers.start()
+        Loggers.start()
         
         self.api = Application.makeAPI()
         self.apiCache = Application.makeAPICache()

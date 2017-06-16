@@ -13,15 +13,15 @@ import Alba
 
 final class Loggers {
     
-    let cartographer: AlbaCartographer?
-    
-    init() {
+    static let cartographer: AlbaCartographer? = {
         #if DEBUG
-            self.cartographer = AlbaCartographer(writeTo: URL(fileURLWithPath: "/Users/oleg/Desktop/tgg-graph.json", isDirectory: false))
+            return AlbaCartographer(writeTo: URL(fileURLWithPath: "/Users/oleg/Desktop/tgg-graph.json", isDirectory: false))
+        #else
+            return nil
         #endif
-    }
+    }()
     
-    func start() {
+    static func start() {
         Alba.InformBureau.isEnabled = true
         Alba.InformBureau.Logger.enable()
         #if DEBUG
