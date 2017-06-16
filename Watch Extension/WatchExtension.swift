@@ -20,7 +20,8 @@ final class WatchExtension {
     let images: Images
     let api: API
     let apiCache: APICache
-    let favorites: FavoriteTeams
+    let favoriteTeams: FavoritesRegistry<Team.ID>
+    let favoriteMatches: FavoritesRegistry<Match.ID>
     let complicationReloader: ComplicationReloader
     
     init() {
@@ -32,22 +33,24 @@ final class WatchExtension {
         self.api = API.gitHub(urlSession: URLSession.init(configuration: .default))
 //        self.api = API.macBookSteve()
         self.apiCache = APICache.inLocalCachesDirectory()
-        self.favorites = FavoriteTeams.inLocalDocumentsDirectory()
+        self.favoriteTeams = FavoritesRegistry.inLocalDocumentsDirectory()
+        self.favoriteMatches = FavoritesRegistry.inLocalDocumentsDirectory()
         self.complicationReloader = ComplicationReloader()
         declare()
     }
     
     func declare() {
-        phone.didReceiveUpdatedFavorites.subscribe(self.favorites, with: FavoriteTeams.replace)
-        complicationReloader.consume(didUpdateFavorite: self.favorites.didUpdateFavorite,
+        phone.didReceiveUpdatedFavoriteTeams.subscribe(self.favoriteTeams, with: FavoritesRegistry.replace)
+        phone.didReceiveUpdatedFavoriteMatches.subscribe(self.favoriteMatches, with: FavoritesRegistry.replace)
+        complicationReloader.consume(didUpdateFavorite: self.favoriteTeams.didUpdateFavorite,
                                      matches: apiCache.matches.allFull.backed(by: api.matches.allFull).asReadOnlyCache().mapValues({ $0.content.matches }))
         complicationReloader.consume(complicationMatchUpdate: self.phone.didReceiveComplicationMatchUpdate,
                                      writingTo: apiCache.matches.allFull)
     }
     
     func chooseMatchToShow(_ lhs: Match.Full, _ rhs: Match.Full) -> Match.Full {
-        switch (lhs.isFavorite(using: favorites.isFavorite(id:)),
-                rhs.isFavorite(using: favorites.isFavorite(id:))) {
+        switch (lhs.isFavorite(using: favoriteTeams.isFavorite(id:)),
+                rhs.isFavorite(using: favoriteTeams.isFavorite(id:))) {
         case (true, true), (false, false):
             return Match.endsLater(lhs, rhs)
         case (true, false):
@@ -67,11 +70,18 @@ extension Phone {
             .flatMap({ try? Match.Full.unpacked(from: $0) })
     }
     
-    var didReceiveUpdatedFavorites: Subscribe<Set<Team.ID>> {
+    var didReceiveUpdatedFavoriteTeams: Subscribe<Set<Team.ID>> {
         return didReceivePackage.proxy
-            .filter({ $0.kind == .favorites })
-            .flatMap({ try? FavoritesPackage.unpacked(from: $0) })
+            .filter({ $0.kind == .favorite_teams })
+            .flatMap({ try? FavoriteTeamsPackage.unpacked(from: $0) })
             .map({ $0.favs })
     }
     
+    var didReceiveUpdatedFavoriteMatches: Subscribe<Set<Match.ID>> {
+        return didReceivePackage.proxy
+            .filter({ $0.kind == .favorite_matches })
+            .flatMap({ try? FavoriteMatchesPackage.unpacked(from: $0) })
+            .map({ $0.favs })
+    }
+
 }

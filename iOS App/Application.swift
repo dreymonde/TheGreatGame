@@ -16,6 +16,7 @@ final class Application {
     let apiCache: APICache
     let images: Images
     let favoriteTeams: Favorites<Team.ID>
+    let favoriteMatches: Favorites<Match.ID>
     let tokens: DeviceTokens
     
     let watch: AppleWatch?
@@ -29,7 +30,9 @@ final class Application {
         self.images = Images.inSharedCachesDirectory()
         self.tokens = DeviceTokens()
         self.favoriteTeams = Application.makeFavorites(tokens: tokens)
-        self.watch = AppleWatch(favoriteTeams: favoriteTeams.registry.favoriteTeams)
+        self.favoriteMatches = Application.makeFavorites(tokens: tokens)
+        self.watch = AppleWatch(favoriteTeams: favoriteTeams.registry.favoriteTeams,
+                                favoriteMatches: favoriteMatches.registry.favoriteTeams)
         self.notifications = Notifications(application: UIApplication.shared)
         declare()
     }
@@ -37,8 +40,10 @@ final class Application {
     func declare() {
         tokens.declare(notifications: AppDelegate.didRegisterForRemoteNotificationsWithDeviceToken.proxy,
                        complication: watch?.pushKitReceiver.didRegisterWithToken.proxy ?? .empty())
-        watch?.declare(didUpdateFavorites: favoriteTeams.registry.didUpdateFavorites)
+        watch?.declare(didUpdateFavoriteTeams: favoriteTeams.registry.didUpdateFavorites,
+                       didUpdateFavoriteMatches: favoriteMatches.registry.didUpdateFavorites)
         favoriteTeams.declare()
+        favoriteMatches.declare()
     }
     
     static func makeAPI() -> API {
@@ -67,6 +72,18 @@ final class Application {
                                   consistencyKeepersStorage: keepersCache.asCache(),
                                   apiSubpath: "favorite-teams")
     }
+    
+    static func makeFavorites(tokens: DeviceTokens) -> Favorites<Match.ID> {
+        let keepersCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "matches-upload-keepers")
+        print(keepersCache.directoryURL)
+        return Favorites<Match.ID>(favoritesRegistry: FavoritesRegistry.inSharedDocumentsDirectory(),
+                                  tokens: tokens,
+                                  indicatorManager: .application,
+                                  shouldCheckUploadConsistency: AppDelegate.applicationDidBecomeActive.proxy.void().wait(seconds: 4.0),
+                                  consistencyKeepersStorage: keepersCache.asCache(),
+                                  apiSubpath: "favorite-matches")
+    }
+
     
     static func makeAPICache() -> APICache {
         let cachingDisabled = launchArgument(.isCachingDisabled)

@@ -16,35 +16,43 @@ public final class AppleWatch {
     internal let session: WatchSessionManager
     public let pushKitReceiver: PushKitReceiver
     
-    public init?(favoriteTeams: Retrieve<Set<Team.ID>>) {
-        guard let session = WatchSessionManager(makeActiveSession: { ActiveWatchSession.init(session: $0, favoriteTeams: favoriteTeams, sendage: $1) }) else {
+    public init?(favoriteTeams: Retrieve<Set<Team.ID>>, favoriteMatches: Retrieve<Set<Match.ID>>) {
+        guard let session = WatchSessionManager(favoriteTeams: favoriteTeams, favoriteMatches: favoriteMatches) else {
             return nil
         }
         self.session = session
         self.pushKitReceiver = PushKitReceiver()
     }
     
-    public func declare(didUpdateFavorites: Subscribe<Set<Team.ID>>) {
+    public func declare(didUpdateFavoriteTeams: Subscribe<Set<Team.ID>>, didUpdateFavoriteMatches: Subscribe<Set<Match.ID>>) {
         session.declare(complicationMatchUpdate: pushKitReceiver.didReceiveIncomingPush.proxy
             .adapting(with: ComplicationPusher.adapter))
-        session.feed(packages: didUpdateFavorites.map(FavoritesPackage.init))
+        session.feed(packages: didUpdateFavoriteTeams.map(FavoriteTeamsPackage.init))
+        session.feed(packages: didUpdateFavoriteMatches.map(FavoriteMatchesPackage.init))
     }
     
 }
 
 public final class WatchSessionManager : NSObject, WCSessionDelegate {
     
+    struct Sessions {
+        let favoriteTeams: WatchTransferSession<Team.ID>
+        let favoriteMatches: WatchTransferSession<Match.ID>
+    }
+    
+    let favoriteTeams: Retrieve<Set<Team.ID>>
+    let favoriteMatches: Retrieve<Set<Match.ID>>
+    
     let session = WCSession.default()
     
-    var activeSession: ActiveWatchSession? = nil
+    var activeSessios: Sessions?
     
-    let makeActiveSession: (WCSession, Subscribe<Set<Team.ID>>) -> ActiveWatchSession?
-    
-    internal init?(makeActiveSession: @escaping (WCSession, Subscribe<Set<Team.ID>>) -> ActiveWatchSession?) {
+    internal init?(favoriteTeams: Retrieve<Set<Team.ID>>, favoriteMatches: Retrieve<Set<Match.ID>>) {
         guard WCSession.isSupported() else {
             return nil
         }
-        self.makeActiveSession = makeActiveSession
+        self.favoriteMatches = favoriteMatches
+        self.favoriteTeams = favoriteTeams
         super.init()
         session.delegate = self
         session.activate()
@@ -91,10 +99,17 @@ public final class WatchSessionManager : NSObject, WCSessionDelegate {
 
 extension WatchSessionManager {
     
-    var didSendUpdatedFavorites: Subscribe<Set<Team.ID>> {
+    var didSendUpdatedFavoriteTeams: Subscribe<Set<Team.ID>> {
         return didSendPackage.proxy
-            .filter({ $0.kind == .favorites })
-            .flatMap({ try? FavoritesPackage.unpacked(from: $0) })
+            .filter({ $0.kind == .favorite_teams })
+            .flatMap({ try? FavoriteTeamsPackage.unpacked(from: $0) })
+            .map({ $0.favs })
+    }
+    
+    var didSendUpdatedFavoriteMatches: Subscribe<Set<Match.ID>> {
+        return didSendPackage.proxy
+            .filter({ $0.kind == .favorite_matches })
+            .flatMap({ try? FavoriteMatchesPackage.unpacked(from: $0) })
             .map({ $0.favs })
     }
     
@@ -123,14 +138,33 @@ extension WatchSessionManager {
         printWithContext()
     }
     
+    private func makeSessions() -> Sessions? {
+        guard let teams = WatchTransferSession<Team.ID>(session: session,
+                                                        provider: favoriteTeams,
+                                                        sendage: didSendUpdatedFavoriteTeams,
+                                                        name: "favorite-teams-sendings") else {
+                                                            return nil
+        }
+        guard let matches = WatchTransferSession<Match.ID>(session: session,
+                                                          provider: favoriteMatches,
+                                                          sendage: didSendUpdatedFavoriteMatches,
+                                                          name: "favorite-matches-sendings") else {
+                                                            return nil
+        }
+        return Sessions(favoriteTeams: teams, favoriteMatches: matches)
+    }
+    
     public func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         printWithContext("\(activationState.rawValue) ; \(error as Any)")
         if activationState == .activated {
-            if let newSession = makeActiveSession(session, didSendUpdatedFavorites) {
-                self.activeSession = newSession
-                feed(packages: newSession.uploadConsistencyKeeper.shouldUploadFavorites.proxy
-                    .map(FavoritesPackage.init))
-                newSession.start()
+            if let newSessions = self.makeSessions() {
+                self.activeSessios = newSessions
+                feed(packages: newSessions.favoriteTeams.uploadConsistencyKeeper.shouldUploadFavorites.proxy
+                    .map(FavoriteTeamsPackage.init))
+                feed(packages: newSessions.favoriteMatches.uploadConsistencyKeeper.shouldUploadFavorites.proxy
+                    .map(FavoriteMatchesPackage.init))
+                newSessions.favoriteTeams.start()
+                newSessions.favoriteMatches.start()
             } else {
                 printWithContext("Cannot create new active session")
             }
@@ -139,15 +173,14 @@ extension WatchSessionManager {
     
 }
 
-internal final class ActiveWatchSession {
+internal final class WatchTransferSession<IDType : IDProtocol> where IDType.RawValue == Int {
     
     let session: WCSession
     let directoryURL: URL
     let directoryURLCache: RawFileSystemCache
-    let watchInfo: Cache<Void, AppleWatchInfo>
-    let uploadConsistencyKeeper: UploadConsistencyKeeper<Set<Team.ID>>
+    let uploadConsistencyKeeper: UploadConsistencyKeeper<Set<IDType>>
     
-    init?(session: WCSession, favoriteTeams: Retrieve<Set<Team.ID>>, sendage: Subscribe<Set<Team.ID>>) {
+    init?(session: WCSession, provider: Retrieve<Set<IDType>>, sendage: Subscribe<Set<IDType>>, name: String) {
         guard session.activationState == .activated,
             let url = session.watchDirectoryURL else {
                 return nil
@@ -155,37 +188,18 @@ internal final class ActiveWatchSession {
         self.session = session
         self.directoryURL = url
         self.directoryURLCache = RawFileSystemCache(directoryURL: url, qos: .background)
-        let mapped = directoryURLCache
-            .mapPlistDictionary()
-            .mapMappable(of: AppleWatchInfo.self)
-            .singleKey(.init(validFileName: "watch-info.plist"))
-            .defaulting(to: .blank)
-        self.watchInfo = SingleElementMemoryCache().combined(with: mapped)
         let lastTransfer = directoryURLCache
             .mapJSONDictionary()
-            .mapBoxedSet(of: Team.ID.self)
-            .singleKey(.init(validFileName: "last-transfer.json"))
+            .mapBoxedSet(of: IDType.self)
+            .singleKey(.init(validFileName: "\(name).json"))
             .defaulting(to: [])
-        self.uploadConsistencyKeeper = UploadConsistencyKeeper(actual: favoriteTeams, lastUploaded: lastTransfer, name: "watch-transfers")
+        self.uploadConsistencyKeeper = UploadConsistencyKeeper(actual: provider, lastUploaded: lastTransfer, name: name)
         uploadConsistencyKeeper.declare(didUploadFavorites: sendage)
     }
     
     func start() {
         printWithContext("Starting new active session \(self)")
-        act()
         uploadConsistencyKeeper.check()
-    }
-    
-    private func act() {
-        watchInfo.retrieve { (result) in
-            let info = result.value!
-            if info.wasPairedBefore {
-                print("Was paired before")
-            } else {
-                print("First pair")
-                self.watchInfo.update({ $0.wasPairedBefore = true })
-            }
-        }
     }
     
 }

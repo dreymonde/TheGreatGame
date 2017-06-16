@@ -11,7 +11,7 @@ import TheGreatKit
 import Shallows
 import Alba
 
-final class Loggers {
+enum Loggers {
     
     static let cartographer: AlbaCartographer? = {
         #if DEBUG

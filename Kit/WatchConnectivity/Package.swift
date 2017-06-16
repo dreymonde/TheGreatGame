@@ -19,7 +19,8 @@ extension Connection {
     public struct Package {
         
         public enum Kind : String {
-            case favorites
+            case favorite_teams
+            case favorite_matches
             case complication_match_update
         }
         
@@ -77,7 +78,7 @@ extension Match.Full : AppleWatchPackable {
     
 }
 
-public struct FavoritesPackage {
+public struct FavoriteTeamsPackage {
     
     public let favs: Set<Team.ID>
     
@@ -87,14 +88,14 @@ public struct FavoritesPackage {
     
 }
 
-extension FavoritesPackage : AppleWatchPackable {
+extension FavoriteTeamsPackage : AppleWatchPackable {
     
     public enum MappingKeys : String, IndexPathElement {
         case favorites
     }
     
     public static var kind: Connection.Package.Kind {
-        return .favorites
+        return .favorite_teams
     }
     
     public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
@@ -106,3 +107,34 @@ extension FavoritesPackage : AppleWatchPackable {
     }
     
 }
+
+public struct FavoriteMatchesPackage {
+    
+    public let favs: Set<Match.ID>
+    
+    public init(_ favs: Set<Match.ID>) {
+        self.favs = favs
+    }
+    
+}
+
+extension FavoriteMatchesPackage : AppleWatchPackable {
+    
+    public enum MappingKeys : String, IndexPathElement {
+        case favorites
+    }
+    
+    public static var kind: Connection.Package.Kind {
+        return .favorite_matches
+    }
+    
+    public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
+        self.favs = Set(try mapper.map(from: .favorites))
+    }
+    
+    public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+        try mapper.map(Array(favs), to: .favorites)
+    }
+    
+}
+
