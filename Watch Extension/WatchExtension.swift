@@ -72,16 +72,12 @@ extension Phone {
     
     var didReceiveUpdatedFavoriteTeams: Subscribe<Set<Team.ID>> {
         return didReceivePackage.proxy
-            .filter({ $0.kind == .favorite_teams })
-            .flatMap({ try? FavoriteTeamsPackage.unpacked(from: $0) })
-            .map({ $0.favs })
+            .adapting(with: IDPackage.adapter)
     }
     
     var didReceiveUpdatedFavoriteMatches: Subscribe<Set<Match.ID>> {
         return didReceivePackage.proxy
-            .filter({ $0.kind == .favorite_matches })
-            .flatMap({ try? FavoriteMatchesPackage.unpacked(from: $0) })
-            .map({ $0.favs })
+            .adapting(with: IDPackage.adapter)
     }
 
 }

@@ -49,9 +49,13 @@ extension Connection.Package : Mappable {
     
 }
 
-public protocol AppleWatchPackable : Mappable {
+public protocol AppleWatchPackableElement  {
     
     static var kind: Connection.Package.Kind { get }
+    
+}
+
+public protocol AppleWatchPackable : AppleWatchPackableElement, Mappable {
     
     func pack() throws -> Connection.Package
     static func unpacked(from package: Connection.Package) throws -> Self
@@ -78,56 +82,55 @@ extension Match.Full : AppleWatchPackable {
     
 }
 
-public struct FavoriteTeamsPackage {
-    
-    public let favs: Set<Team.ID>
-    
-    public init(_ favs: Set<Team.ID>) {
-        self.favs = favs
-    }
-    
-}
-
-extension FavoriteTeamsPackage : AppleWatchPackable {
-    
-    public enum MappingKeys : String, IndexPathElement {
-        case favorites
-    }
+extension Team.ID : AppleWatchPackableElement {
     
     public static var kind: Connection.Package.Kind {
         return .favorite_teams
     }
     
-    public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
-        self.favs = Set(try mapper.map(from: .favorites))
-    }
-    
-    public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
-        try mapper.map(Array(favs), to: .favorites)
-    }
-    
 }
 
-public struct FavoriteMatchesPackage {
-    
-    public let favs: Set<Match.ID>
-    
-    public init(_ favs: Set<Match.ID>) {
-        self.favs = favs
-    }
-    
-}
-
-extension FavoriteMatchesPackage : AppleWatchPackable {
-    
-    public enum MappingKeys : String, IndexPathElement {
-        case favorites
-    }
+extension Match.ID : AppleWatchPackableElement {
     
     public static var kind: Connection.Package.Kind {
         return .favorite_matches
     }
     
+}
+
+public struct IDPackage<IDType : IDProtocol> : AppleWatchPackable where IDType : AppleWatchPackableElement {
+    
+    public static var kind: Connection.Package.Kind {
+        return IDType.kind
+    }
+    
+    public let favs: Set<IDType>
+    
+    public init(_ favs: Set<IDType>) {
+        self.favs = favs
+    }
+    
+}
+
+extension IDPackage {
+    
+    public static var adapter: AlbaAdapter<Connection.Package, Set<IDType>> {
+        return { proxy in
+            proxy
+                .filter({ $0.kind == IDType.kind })
+                .flatMap({ try? IDPackage.unpacked(from: $0) })
+                .map({ $0.favs })
+        }
+    }
+    
+}
+
+extension IDPackage : Mappable {
+    
+    public enum MappingKeys : String, IndexPathElement {
+        case favorites
+    }
+    
     public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.favs = Set(try mapper.map(from: .favorites))
     }
@@ -137,4 +140,3 @@ extension FavoriteMatchesPackage : AppleWatchPackable {
     }
     
 }
-

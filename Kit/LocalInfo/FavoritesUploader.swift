@@ -81,18 +81,12 @@ internal final class FavoritesUploader<IDType : IDProtocol> where IDType.RawValu
     
     let pusher: Cache<Void, FavoritesUpload<IDType>>
     
-    internal func declare(didUpdateFavorites: Subscribe<Set<IDType>>,
-                          shouldUpdate_notifications: Subscribe<Set<IDType>>,
-                          shouldUpdate_complication: Subscribe<Set<IDType>>) {
+    internal func declare(didUpdateFavorites: Subscribe<Set<IDType>>) {
         didUpdateFavorites
-            .flatSubscribe(self, with: { obj, event in obj.didUpdateFavorites(event, tokenType: .notifications); obj.didUpdateFavorites(event, tokenType: .complication) })
-        shouldUpdate_notifications
-            .flatSubscribe(self, with: { obj, event in obj.didUpdateFavorites(event, tokenType: .notifications) })
-        shouldUpdate_complication
-            .flatSubscribe(self, with: { obj, event in obj.didUpdateFavorites(event, tokenType: .complication) })
+            .flatSubscribe(self, with: { obj, event in obj.uploadFavorites(event, tokenType: .notifications); obj.uploadFavorites(event, tokenType: .complication) })
     }
     
-    internal func didUpdateFavorites(_ update: Set<IDType>, tokenType: TokenType) {
+    internal func uploadFavorites(_ update: Set<IDType>, tokenType: TokenType) {
         printWithContext()
         switch tokenType {
         case .notifications:

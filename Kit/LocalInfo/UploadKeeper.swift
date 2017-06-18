@@ -16,10 +16,13 @@ internal final class UploadConsistencyKeeper<Upload : Equatable> {
     let lastUploaded: Cache<Void, Upload>
     let name: String
     
-    init(actual: Retrieve<Upload>, lastUploaded: Cache<Void, Upload>, name: String) {
+    var reupload: (Upload) -> ()
+    
+    init(actual: Retrieve<Upload>, lastUploaded: Cache<Void, Upload>, name: String, reupload: @escaping (Upload) -> ()) {
         self.actual = actual
         self.lastUploaded = lastUploaded
         self.name = name
+        self.reupload = reupload
     }
     
     func declare(didUploadFavorites: Subscribe<Upload>) {
@@ -41,26 +44,24 @@ internal final class UploadConsistencyKeeper<Upload : Equatable> {
             let favors = value.0
             let lasts = value.1
             if lasts != favors {
-                self.shouldUploadFavorites.publish(favors)
+                self.reupload(favors)
             } else {
                 printWithContext("(uploads-\(name)) It was")
             }
         }
     }
-    
-    let shouldUploadFavorites = Publisher<Upload>(label: "FavoritesUploadKeeper.shouldUploadFavorites")
-    
+        
 }
 
-extension UploadConsistencyKeeper where Upload == Set<Team.ID> {
-    
-    convenience init(favorites: Retrieve<Set<Team.ID>>, diskCache: Cache<String, Data>) {
-        let last: Cache<Void, Set<Team.ID>> = diskCache
-            .mapJSONDictionary()
-            .mapBoxedSet()
-            .singleKey("last-uploaded-favorites-teams")
-            .defaulting(to: [])
-        self.init(actual: favorites, lastUploaded: last, name: "teams")
-    }
-    
-}
+//extension UploadConsistencyKeeper where Upload == Set<Team.ID> {
+//    
+//    convenience init(favorites: Retrieve<Set<Team.ID>>, diskCache: Cache<String, Data>) {
+//        let last: Cache<Void, Set<Team.ID>> = diskCache
+//            .mapJSONDictionary()
+//            .mapBoxedSet()
+//            .singleKey("last-uploaded-favorites-teams")
+//            .defaulting(to: [])
+//        self.init(actual: favorites, lastUploaded: last, name: "teams")
+//    }
+//    
+//}
