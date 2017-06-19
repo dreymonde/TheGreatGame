@@ -43,10 +43,10 @@ final class MatchCellFiller : CellFiller {
     typealias Content = Match.Compact
     
     let avenue: Avenue<URL, URL, UIImage>
-    let isFavorite: (Team.ID) -> Bool
+    let isFavorite: (Match.Compact) -> Bool
     let isAbsoluteTruth: () -> Bool
     
-    init(avenue: Avenue<URL, URL, UIImage>, isFavorite: @escaping (Team.ID) -> Bool, isAbsoluteTruth: @escaping () -> Bool) {
+    init(avenue: Avenue<URL, URL, UIImage>, isFavorite: @escaping (Match.Compact) -> Bool, isAbsoluteTruth: @escaping () -> Bool) {
         self.avenue = avenue
         self.isFavorite = isFavorite
         self.isAbsoluteTruth = isAbsoluteTruth
@@ -57,7 +57,7 @@ final class MatchCellFiller : CellFiller {
             avenue.prepareItem(at: match.home.badges.large)
             avenue.prepareItem(at: match.away.badges.large)
         }
-        if isFavorite(match.home.id) || isFavorite(match.away.id) {
+        if isFavorite(match) {
             cell.backgroundColor = UIColor(named: .favoriteBackground)
         } else {
             cell.backgroundColor = .white

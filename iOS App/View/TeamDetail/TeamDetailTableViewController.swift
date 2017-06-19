@@ -43,7 +43,10 @@ extension Match.Team {
     
 }
 
-class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshing, Showing {
+class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshing, Showing, WithFavoriteButton {
+    
+    // MARK: - Outlets
+    @IBOutlet weak var favoriteButton: UIButton!
     
     // MARK: - Data source
     var team: Team.Full?
@@ -55,6 +58,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     var makeMatchDetailVC: (Match.Compact) -> UIViewController = runtimeInject
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
     var isFavorite: () -> Bool = runtimeInject
+    var updateFavorite: (Bool) -> () = runtimeInject
 
     // MARK: - Services
     var mainBadgeAvenue: SymmetricalAvenue<URL, UIImage>!
@@ -97,6 +101,12 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
         resource.reload(connectingToIndicator: pullToRefreshActivities, completion: self.setup(with:source:))
     }
+    
+    @IBAction func didPressFavoriteButton(_ sender: UIButton) {
+        sender.isSelected = !sender.isSelected
+        updateFavorite(sender.isSelected)
+    }
+
 
     // MARK: - Table view data source
 
@@ -251,6 +261,10 @@ extension TeamDetailTableViewController {
     
     fileprivate func configure(_ navigationItem: UINavigationItem) {
         navigationItem.title = team?.name ?? preloadedTeam?.name
+    }
+    
+    fileprivate func configure(favoriteButton: UIButton) {
+        favoriteButton.isSelected = isFavorite()
     }
     
     fileprivate func configure(_ tableView: UITableView) {

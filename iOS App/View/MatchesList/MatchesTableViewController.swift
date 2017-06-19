@@ -20,8 +20,8 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
     // MARK: - Injections
     var resource: Resource<[Stage]>!
     var makeMatchDetailVC: (Match.Compact) -> UIViewController = runtimeInject
-    var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
-    var isFavorite: (Team.ID) -> Bool = runtimeInject
+    var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject    
+    var isFavorite: (Match.Compact) -> Bool = runtimeInject
 
     // MARK: - Services
     var avenue: SymmetricalAvenue<URL, UIImage>!

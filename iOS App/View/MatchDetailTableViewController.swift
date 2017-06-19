@@ -30,6 +30,9 @@ extension MatchProtocol {
 }
 
 class MatchDetailTableViewController: TableViewController, Refreshing {
+
+    // MARK: - Outlets
+    @IBOutlet weak var favoriteButton: UIButton!
     
     // MARK: - Data source
     var match: Match.Full?
@@ -38,6 +41,8 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
     var preloadedMatch: MatchDetailPreLoaded?
     var resource: Resource<Match.Full>!
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
+    var isFavorite: () -> Bool = runtimeInject
+    var updateFavorite: (Bool) -> () = runtimeInject
     
     // MARK: - Services
     var avenue: SymmetricalAvenue<URL, UIImage>!
@@ -50,6 +55,7 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
 
         configure(tableView)
         configure(navigationItem)
+        configure(favoriteButton: favoriteButton)
         
         self.resource.load(confirmation: tableView.reloadData, completion: self.setup(with:source:))
     }
@@ -69,6 +75,11 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
         resource.reload(connectingToIndicator: pullToRefreshActivities, completion: self.setup(with:source:))
     }
 
+    @IBAction func didPressFavoriteButton(_ sender: UIButton) {
+        sender.isSelected = !sender.isSelected
+        updateFavorite(sender.isSelected)
+    }
+    
     // MARK: - Table view data source
     
     let matchDetailSection = 0
@@ -149,6 +160,10 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
 extension MatchDetailTableViewController {
     
     // MARK: - Configurations
+    
+    fileprivate func configure(favoriteButton: UIButton) {
+        favoriteButton.isSelected = isFavorite()
+    }
     
     fileprivate func configure(_ tableView: UITableView) {
         tableView <- {

@@ -13,7 +13,11 @@ class TeamCompactTableViewCell: UITableViewCell {
     @IBOutlet weak var badgeImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var shortNameLabel: UILabel!
-    @IBOutlet weak var favoriteSwitch: UISwitch!
+    @IBOutlet weak var favoriteButton: UIButton! {
+        didSet {
+            favoriteButton.tintColor = UIColor(named: .navigationBackground)
+        }
+    }
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -25,9 +29,10 @@ class TeamCompactTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    
-    @IBAction private func switchValueDidChange(_ sender: UISwitch) {
-        onSwitch(sender.isOn)
+        
+    @IBAction func buttonDidTouchUpInside(_ sender: UIButton) {
+        sender.isSelected = !sender.isSelected
+        onSwitch(sender.isSelected)
     }
     
     var onSwitch: (Bool) -> () = { _ in }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -36,18 +36,19 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="SWE" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6qw-L0-lDb">
-                                <rect key="frame" x="111.5" y="17" width="119.5" height="16"/>
+                                <rect key="frame" x="111.5" y="17" width="143.5" height="16"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="l4r-GS-fB6">
-                                <rect key="frame" x="241" y="9.5" width="51" height="31"/>
-                                <color key="onTintColor" red="1" green="0.69019607839999997" blue="0.69019607839999997" alpha="1" colorSpace="calibratedRGB"/>
+                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mkt-MW-fbW">
+                                <rect key="frame" x="265" y="12.5" width="25" height="25"/>
+                                <state key="normal" image="Unfilled_Star"/>
+                                <state key="selected" image="Filled_Star"/>
                                 <connections>
-                                    <action selector="switchValueDidChange:" destination="KGk-i7-Jjw" eventType="valueChanged" id="t9q-tJ-9VJ"/>
+                                    <action selector="buttonDidTouchUpInside:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="mXT-Bd-1Qm"/>
                                 </connections>
-                            </switch>
+                            </button>
                         </subviews>
                     </stackView>
                 </subviews>
@@ -60,11 +61,15 @@
             </tableViewCellContentView>
             <connections>
                 <outlet property="badgeImageView" destination="74k-Ac-Ucy" id="aQh-V8-FBe"/>
-                <outlet property="favoriteSwitch" destination="l4r-GS-fB6" id="yNW-aN-ixd"/>
+                <outlet property="favoriteButton" destination="mkt-MW-fbW" id="fBB-cu-D9u"/>
                 <outlet property="nameLabel" destination="1FF-W2-90M" id="8Rk-oI-Zu6"/>
                 <outlet property="shortNameLabel" destination="6qw-L0-lDb" id="nQm-Vc-M0J"/>
             </connections>
             <point key="canvasLocation" x="34" y="67.5"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="Filled_Star" width="25" height="25"/>
+        <image name="Unfilled_Star" width="25" height="25"/>
+    </resources>
 </document>

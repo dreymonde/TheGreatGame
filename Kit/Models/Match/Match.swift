@@ -21,6 +21,14 @@ public protocol MatchProtocol {
 
 extension MatchProtocol {
     
+    public func isFavorite(isFavoriteMatch: (Match.ID) -> Bool, isFavoriteTeam: (Team.ID) -> Bool) -> Bool {
+        if isFavoriteMatch(self.id) {
+            return true
+        } else {
+            return isFavoriteTeam(home.id) || isFavoriteTeam(away.id)
+        }
+    }
+    
     public var teams: [Match.Team] {
         return [home, away]
     }

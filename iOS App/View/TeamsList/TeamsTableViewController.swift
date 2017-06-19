@@ -31,7 +31,7 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing, Sh
     
     // MARK: - Injections
     var resource: Resource<[Team.Compact]>!
-    var makeTeamDetailVC: (Team.Compact) -> UIViewController = runtimeInject
+    var makeTeamDetailVC: (Team.Compact, _ onFavorite: @escaping () -> ()) -> UIViewController = runtimeInject
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
     
     var isFavorite: (Team.ID) -> Bool = runtimeInject
@@ -113,7 +113,7 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing, Sh
         if !afterImageDownload {
             avenue.prepareItem(at: badgeURL)
         }
-        cell.favoriteSwitch.isOn = isFavorite(team.id)
+        cell.favoriteButton.isSelected = isFavorite(team.id)
         cell.nameLabel.text = team.name
         cell.shortNameLabel.text = team.shortName
         cell.badgeImageView.setImage(avenue.item(at: badgeURL), afterDownload: true)
@@ -135,7 +135,7 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing, Sh
     }
     
     fileprivate func teamDetailViewController(for team: Team.Compact) -> UIViewController {
-        return makeTeamDetailVC(team)
+        return makeTeamDetailVC(team, { self.tableView.reloadData() })
     }
 
 }

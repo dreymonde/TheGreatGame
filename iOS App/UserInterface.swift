@@ -51,6 +51,9 @@ final class UserInterface {
     }
     
     func start() {
+        
+//        UIButton.appearance().tintColor = UIColor(named: .navigationBackground)
+        
         let viewControllers = tabBarController.viewControllers?.flatMap({ $0 as? UINavigationController }).flatMap({ $0.viewControllers.first })
         let matchesList = viewControllers?.flatMap({ $0 as? MatchesTableViewController }).first
         inject(to: matchesList!)
@@ -70,16 +73,23 @@ final class UserInterface {
             $0.isFavorite = self.logic.favoriteTeams.registry.isFavorite(id:)
             $0.updateFavorite = { self.logic.favoriteTeams.registry.updateFavorite(id: $0, isFavorite: $1) }
             $0.makeAvenue = self.makeAvenue(forImageSize:)
-            $0.makeTeamDetailVC = { self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
+            $0.makeTeamDetailVC = { self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded(), onFavorite: $1) }
         }
+    }
+    
+    func isFavoriteMatch(_ match: Match.Compact) -> Bool {
+        return match.isFavorite(isFavoriteMatch: self.logic.favoriteMatches.registry.isFavorite,
+                                isFavoriteTeam: self.logic.favoriteTeams.registry.isFavorite)
     }
     
     func inject(to matchesList: MatchesTableViewController) {
         matchesList <- {
             $0.resource = self.resources.stages
-            $0.isFavorite = self.logic.favoriteTeams.registry.isFavorite(id:)
+            $0.isFavorite = isFavoriteMatch(_:)
             $0.makeAvenue = self.makeAvenue(forImageSize:)
-            $0.shouldReloadData = self.logic.favoriteTeams.registry.didUpdateFavorite.void()
+            let shouldReload = self.logic.favoriteTeams.registry.unitedDidUpdate.proxy.void()
+                .merged(with: self.logic.favoriteMatches.registry.unitedDidUpdate.proxy.void())
+            $0.shouldReloadData = shouldReload
             $0.makeMatchDetailVC = { self.matchDetailViewController(for: $0.id, preloaded: $0.preloaded()) }
         }
     }
@@ -92,13 +102,19 @@ final class UserInterface {
         }
     }
     
-    func teamDetailViewController(for teamID: Team.ID, preloaded: TeamDetailPreLoaded) -> TeamDetailTableViewController {
+    func teamDetailViewController(for teamID: Team.ID,
+                                  preloaded: TeamDetailPreLoaded,
+                                  onFavorite: @escaping () -> () = {  }) -> TeamDetailTableViewController {
         return Storyboard.Main.teamDetailTableViewController.instantiate() <- {
             $0.resource = self.resources.fullTeam(teamID)
             $0.isFavorite = { self.logic.favoriteTeams.registry.isFavorite(id: teamID) }
+            $0.updateFavorite = {
+                self.logic.favoriteTeams.registry.updateFavorite(id: teamID, isFavorite: $0)
+                onFavorite()
+            }
             $0.makeAvenue = self.makeAvenue(forImageSize:)
             $0.preloadedTeam = preloaded
-            $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
+            $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded(), onFavorite: onFavorite) }
             $0.makeMatchDetailVC = { self.matchDetailViewController(for: $0.id, preloaded: $0.preloaded()) }
         }
     }
@@ -108,6 +124,8 @@ final class UserInterface {
             $0.resource = self.resources.fullMatch(matchID)
             $0.makeAvenue = self.makeAvenue(forImageSize:)
             $0.preloadedMatch = preloaded
+            $0.isFavorite = { self.logic.favoriteMatches.registry.isFavorite(id: matchID) }
+            $0.updateFavorite = { self.logic.favoriteMatches.registry.updateFavorite(id: matchID, isFavorite: $0) }
         }
     }
     
