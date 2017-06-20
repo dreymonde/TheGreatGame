@@ -43,7 +43,7 @@ extension Match.Team {
     
 }
 
-class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshing, Showing, WithFavoriteButton {
+class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshing, Showing {
     
     // MARK: - Outlets
     @IBOutlet weak var favoriteButton: UIButton!
@@ -84,6 +84,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
         configure(smallBadges: smallBadgesAvenue)
         configure(mainBadge: mainBadgeAvenue)
         configure(navigationItem)
+        configure(favoriteButton: favoriteButton)
         self.resource.load(confirmation: tableView.reloadData, completion: self.setup(with:source:))
     }
     

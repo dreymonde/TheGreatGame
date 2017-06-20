@@ -96,7 +96,6 @@
 		7C13BC7A1ED854D000588F5F /* Jubilee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6261EBA1CB100F50EB2 /* Jubilee.swift */; };
 		7C13BC7B1ED854D300588F5F /* Jubilee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6261EBA1CB100F50EB2 /* Jubilee.swift */; };
 		7C18D68C1EF835FF001E4CB7 /* UIButton+Star.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C18D68B1EF835FF001E4CB7 /* UIButton+Star.swift */; };
-		7C18D68E1EF8426B001E4CB7 /* WithFavoriteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C18D68D1EF8426B001E4CB7 /* WithFavoriteButton.swift */; };
 		7C1D897F1EBF0D28006F7841 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1D897E1EBF0D28006F7841 /* API.swift */; };
 		7C1D89861EC0638D006F7841 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1D89851EC0638D006F7841 /* Functions.swift */; };
 		7C1D898A1EC0655A006F7841 /* TeamGroupTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1D89881EC0655A006F7841 /* TeamGroupTableViewCell.swift */; };
@@ -422,7 +421,6 @@
 		7C13BC751ED8523600588F5F /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		7C13BC781ED8529A00588F5F /* Phone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Phone.swift; sourceTree = "<group>"; };
 		7C18D68B1EF835FF001E4CB7 /* UIButton+Star.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Star.swift"; sourceTree = "<group>"; };
-		7C18D68D1EF8426B001E4CB7 /* WithFavoriteButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WithFavoriteButton.swift; sourceTree = "<group>"; };
 		7C1D897E1EBF0D28006F7841 /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		7C1D89851EC0638D006F7841 /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		7C1D89881EC0655A006F7841 /* TeamGroupTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamGroupTableViewCell.swift; sourceTree = "<group>"; };
@@ -954,7 +952,6 @@
 			children = (
 				7C1D898E1EC06981006F7841 /* Refreshing.swift */,
 				7CD8F22A1EF3CEAA0006F0A1 /* PeekAndPopping.swift */,
-				7C18D68D1EF8426B001E4CB7 /* WithFavoriteButton.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -1609,7 +1606,6 @@
 				7C1D89961EC07944006F7841 /* GroupsTableViewController.swift in Sources */,
 				7C7916F41EBB3D050070E6C5 /* Storyboards.swift in Sources */,
 				7CE2B7391ECC7D3200C7EC20 /* Vendor.swift in Sources */,
-				7C18D68E1EF8426B001E4CB7 /* WithFavoriteButton.swift in Sources */,
 				7C0EA6511EBA1E0C00F50EB2 /* Application.swift in Sources */,
 				7CF3D1741EBC838B00E86A91 /* MatchTableViewCell.swift in Sources */,
 				7CE2B73B1ECC7D4D00C7EC20 /* LaunchArguments.swift in Sources */,

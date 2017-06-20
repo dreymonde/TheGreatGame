@@ -51,9 +51,6 @@ final class UserInterface {
     }
     
     func start() {
-        
-//        UIButton.appearance().tintColor = UIColor(named: .navigationBackground)
-        
         let viewControllers = tabBarController.viewControllers?.flatMap({ $0 as? UINavigationController }).flatMap({ $0.viewControllers.first })
         let matchesList = viewControllers?.flatMap({ $0 as? MatchesTableViewController }).first
         inject(to: matchesList!)

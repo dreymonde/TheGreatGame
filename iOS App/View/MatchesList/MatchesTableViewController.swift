@@ -48,7 +48,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
     }
     
     func subscribe() {
-        shouldReloadData?.subscribe(self.tableView, with: UITableView.reloadData)
+        shouldReloadData?.flatSubscribe(self, with: { obj, _ in obj.tableView.reloadData() })
         shouldReloadData = nil
     }
     
