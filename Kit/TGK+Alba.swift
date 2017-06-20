@@ -19,14 +19,40 @@ extension Subscribe {
     
 }
 
-extension Subscribe {
+fileprivate extension Subscribe {
     
-    public func mainThread() -> Subscribe<Event> {
+    func _mainThread() -> Subscribe<Event> {
         return rawModify(subscribe: { (id, handler) in
             self.manual.subscribe(objectWith: id, with: { (event) in
                 DispatchQueue.main.async { handler(event) }
             })
         }, entry: ProxyPayload.Entry.custom("main-thread"))
+    }
+
+}
+
+public struct MainThreadSubscribe<Event> {
+    
+    public let underlying: Subscribe<Event>
+    
+    public init(_ proxy: Subscribe<Event>) {
+        self.underlying = proxy._mainThread()
+    }
+    
+    public func subscribe<Object>(_ object: Object, with producer: @escaping (Object) -> (Event) -> ()) where Object : AnyObject {
+        underlying.subscribe(object, with: producer)
+    }
+    
+    public func flatSubscribe<Object>(_ object: Object, with handler: @escaping (Object, Event) -> ()) where Object : AnyObject {
+        underlying.flatSubscribe(object, with: handler)
+    }
+    
+}
+
+extension Subscribe {
+    
+    public func mainThread() -> MainThreadSubscribe<Event> {
+        return MainThreadSubscribe(self)
     }
     
     public func signed(with identifier: ObjectIdentifier?) -> SignedSubscribe<Event> {

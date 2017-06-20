@@ -31,7 +31,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
     var matchCellFiller: MatchCellFiller!
     
     // MARK: - Connections
-    var shouldReloadData: Subscribe<Void>?
+    var shouldReloadData: MainThreadSubscribe<Void>?
     
     override func viewDidLoad() {
         super.viewDidLoad()

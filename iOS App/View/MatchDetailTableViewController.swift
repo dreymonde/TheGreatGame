@@ -60,6 +60,17 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
         self.resource.load(confirmation: tableView.reloadData, completion: self.setup(with:source:))
     }
     
+    override var previewActionItems: [UIPreviewActionItem] {
+        let favoriteAction = UIPreviewAction(title: isFavorite() ? "Unfavorite" : "Favorite", style: .default) { (action, controller) in
+            if let controller = controller as? MatchDetailTableViewController {
+                controller.updateFavorite(!controller.isFavorite())
+            } else {
+                fault("Wrong VC")
+            }
+        }
+        return [favoriteAction]
+    }
+    
     func setup(with match: Match.Full, source: Source) {
         self.match = match
         self.tableView.reloadData()

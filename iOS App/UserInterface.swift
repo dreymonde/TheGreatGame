@@ -86,7 +86,7 @@ final class UserInterface {
             $0.makeAvenue = self.makeAvenue(forImageSize:)
             let shouldReload = self.logic.favoriteTeams.registry.unitedDidUpdate.proxy.void()
                 .merged(with: self.logic.favoriteMatches.registry.unitedDidUpdate.proxy.void())
-            $0.shouldReloadData = shouldReload
+            $0.shouldReloadData = shouldReload.mainThread()
             $0.makeMatchDetailVC = { self.matchDetailViewController(for: $0.id, preloaded: $0.preloaded()) }
         }
     }
