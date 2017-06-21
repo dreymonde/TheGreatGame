@@ -17,6 +17,7 @@ final class Application {
     let images: Images
     let favoriteTeams: Favorites<Team.ID>
     let favoriteMatches: Favorites<Match.ID>
+    let unsubscribedMatches: Favorites<Match.ID>
     let tokens: DeviceTokens
     
     let watch: AppleWatch?
@@ -31,6 +32,7 @@ final class Application {
         self.tokens = DeviceTokens()
         self.favoriteTeams = Application.makeFavorites(tokens: tokens)
         self.favoriteMatches = Application.makeFavorites(tokens: tokens)
+        self.unsubscribedMatches = Application.makeUnsubscribes(tokens: tokens)
         self.watch = AppleWatch(favoriteTeams: favoriteTeams.registry.favoriteTeams,
                                 favoriteMatches: favoriteMatches.registry.favoriteTeams)
         self.notifications = Notifications(application: UIApplication.shared)
@@ -44,6 +46,7 @@ final class Application {
                        didUpdateFavoriteMatches: favoriteMatches.registry.didUpdateFavorites)
         favoriteTeams.declare()
         favoriteMatches.declare()
+        unsubscribedMatches.declare()
     }
     
     static func makeAPI() -> API {
@@ -65,7 +68,7 @@ final class Application {
     static func makeFavorites(tokens: DeviceTokens) -> Favorites<Team.ID> {
         let keepersCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "teams-upload-keepers")
         print(keepersCache.directoryURL)
-        return Favorites<Team.ID>(favoritesRegistry: FavoritesRegistry.inSharedDocumentsDirectory(),
+        return Favorites<Team.ID>(favoritesRegistry: FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteTeamsSubPath),
                                   tokens: tokens,
                                   indicatorManager: .application,
                                   shouldCheckUploadConsistency: AppDelegate.applicationDidBecomeActive.proxy.void().wait(seconds: 4.0),
@@ -76,14 +79,23 @@ final class Application {
     static func makeFavorites(tokens: DeviceTokens) -> Favorites<Match.ID> {
         let keepersCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "matches-upload-keepers")
         print(keepersCache.directoryURL)
-        return Favorites<Match.ID>(favoritesRegistry: FavoritesRegistry.inSharedDocumentsDirectory(),
-                                  tokens: tokens,
-                                  indicatorManager: .application,
-                                  shouldCheckUploadConsistency: AppDelegate.applicationDidBecomeActive.proxy.void().wait(seconds: 4.0),
-                                  consistencyKeepersStorage: keepersCache.asCache(),
-                                  apiSubpath: "favorite-matches")
+        return Favorites<Match.ID>(favoritesRegistry: FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteMatchesSubPath),
+                                   tokens: tokens,
+                                   indicatorManager: .application,
+                                   shouldCheckUploadConsistency: AppDelegate.applicationDidBecomeActive.proxy.void().wait(seconds: 4.0),
+                                   consistencyKeepersStorage: keepersCache.asCache(),
+                                   apiSubpath: "favorite-matches")
     }
 
+    static func makeUnsubscribes(tokens: DeviceTokens) -> Favorites<Match.ID> {
+        let keepersCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "matches-unsub-upload-keepers")
+        return Favorites<Match.ID>(favoritesRegistry: FavoritesRegistry.inSharedDocumentsDirectory(subpath: UnsubscribedMatchesSubPath),
+                                   tokens: tokens,
+                                   indicatorManager: .application,
+                                   shouldCheckUploadConsistency: AppDelegate.applicationDidBecomeActive.proxy.void().wait(seconds: 4.0),
+                                   consistencyKeepersStorage: keepersCache.asCache(),
+                                   apiSubpath: "unsubscribe")
+    }
     
     static func makeAPICache() -> APICache {
         let cachingDisabled = launchArgument(.isCachingDisabled)

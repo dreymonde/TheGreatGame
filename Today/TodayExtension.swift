@@ -13,7 +13,8 @@ import Shallows
 
 final class TodayExtension {
     
-    let favoriteTeams: FavoriteTeams
+    let favoriteTeams: FavoritesRegistry<Team.ID>
+    let favoriteMatches: FavoritesRegistry<Match.ID>
     let api: API
     let apiCache: APICache
     let images: Images
@@ -21,7 +22,8 @@ final class TodayExtension {
     init() {
         self.api = API.gitHub()
         self.apiCache = APICache.inSharedCachesDirectory()
-        self.favoriteTeams = FavoriteTeams.inSharedDocumentsDirectory()
+        self.favoriteTeams = FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteTeamsSubPath)
+        self.favoriteMatches = FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteMatchesSubPath)
         self.images = Images.inSharedCachesDirectory()
         self._provider = apiCache.matches.allFull
             .backed(by: api.matches.allFull, pullingFromBack: true)
@@ -38,14 +40,9 @@ final class TodayExtension {
     
     func relevanceFilter() -> (Match.Full) -> Bool {
         return { match in
-            return match.isFavorite(using: self.favoriteTeams.isFavorite(id:))
+            return match.isFavorite(isFavoriteMatch: self.favoriteMatches.isFavorite(id:),
+                                    isFavoriteTeam: self.favoriteTeams.isFavorite(id:))
         }
-    }
-    
-    func relevantMatches(from matches: [Match.Full]) -> [Match.Full] {
-        return matches.filter({ (match) -> Bool in
-            return match.isFavorite(using: favoriteTeams.isFavorite(id:))
-        })
     }
     
 }

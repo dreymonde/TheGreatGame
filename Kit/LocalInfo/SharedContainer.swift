@@ -57,7 +57,9 @@ extension HardStoring {
     }
     
     public static func inSharedDocumentsDirectory(subpath: String = Self.preferredSubPath) -> Configurable {
-        return Self.withDiskCache(FileSystemCache.inSharedContainer(subpath: .documents(appending: subpath), qos: .userInitiated).asCache())
+        let diskCache = FileSystemCache.inSharedContainer(subpath: .documents(appending: subpath), qos: .userInitiated)
+        print(diskCache.directoryURL)
+        return Self.withDiskCache(diskCache.asCache())
     }
     
     

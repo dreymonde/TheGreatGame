@@ -12,10 +12,14 @@ import Alba
 
 public typealias FavoriteTeams = FavoritesRegistry<Team.ID>
 
+public let FavoriteTeamsSubPath = "favorite-teams"
+public let FavoriteMatchesSubPath = "favorite-matches"
+public let UnsubscribedMatchesSubPath = "unsub-matches"
+
 public final class FavoritesRegistry<IDType : IDProtocol> : Storing where IDType.RawValue == Int {
     
     public static var preferredSubPath: String {
-        return "favorite-teams"
+        return "wrong"
     }
     
     fileprivate let full_favoriteTeams: Cache<Void, Set<IDType>>
@@ -32,7 +36,7 @@ public final class FavoritesRegistry<IDType : IDProtocol> : Storing where IDType
         let fileSystemTeams = diskCache
             .renaming(to: "favorites-disk")
             .mapJSONDictionary()
-            .singleKey("favorite-teams")
+            .singleKey("favorites")
             .mapBoxedSet(of: IDType.self)
             .defaulting(to: [])
         let memoryCache = MemoryCache<Int, Set<IDType>>().singleKey(0)

@@ -32,9 +32,7 @@ final class UserInterface {
     
     func subscribe() {
         logic.notifications.didReceiveNotificationResponse.proxy
-            .filter({ $0.action == .open })
-            .flatMap({ try? Match.Full(from: $0.notification.content) })
-            .subscribe(self, with: UserInterface.openMatch)
+            .subscribe(self, with: UserInterface.handleNotificationResponse)
     }
     
     func prefetch() {
@@ -124,6 +122,24 @@ final class UserInterface {
             $0.isFavorite = { self.logic.favoriteMatches.registry.isFavorite(id: matchID) }
             $0.updateFavorite = { self.logic.favoriteMatches.registry.updateFavorite(id: matchID, isFavorite: $0) }
         }
+    }
+    
+    func handleNotificationResponse(_ notificationResponse: NotificationResponse) {
+        guard let match = try? Match.Full(from: notificationResponse.notification.content) else {
+            fault("Not match")
+            return
+        }
+        switch notificationResponse.action {
+        case .open:
+            openMatch(match: match)
+        case .unsubscribe:
+            unsubscribe(from: match)
+        }
+    }
+    
+    func unsubscribe(from match: Match.Full) {
+        printWithContext("Unsubscribing")
+        logic.unsubscribedMatches.registry.updateFavorite(id: match.id, isFavorite: true)
     }
     
     func openMatch(match: Match.Full) {

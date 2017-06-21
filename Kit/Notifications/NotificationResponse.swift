@@ -19,15 +19,20 @@ public struct NotificationResponse {
 public enum NotificationAction {
     
     case open
+    case unsubscribe
     
     public init?(actionIdentifier: String) {
         switch actionIdentifier {
         case UNNotificationDefaultActionIdentifier:
             self = .open
+        case NotificationAction.unsubscribeIdentifier:
+            self = .unsubscribe
         default:
             return nil
         }
     }
+    
+    static let unsubscribeIdentifier = "unsubscribe"
     
 }
 
