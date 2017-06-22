@@ -131,7 +131,7 @@ final class UserInterface {
         }
         switch notificationResponse.action {
         case .open:
-            openMatch(match: match)
+            showMatch(match)
         case .unsubscribe:
             unsubscribe(from: match)
         }
@@ -142,7 +142,7 @@ final class UserInterface {
         logic.unsubscribedMatches.registry.updateFavorite(id: match.id, isFavorite: true)
     }
     
-    func openMatch(match: Match.Full) {
+    func showMatch(_ match: Match.Full) {
         let vc = matchDetailViewController(for: match.id, preloaded: match.preloaded())
         if let selected = tabBarController.selectedViewController {
             selected.show(vc, sender: selected)

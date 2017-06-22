@@ -86,7 +86,7 @@ public enum Match {
     public struct Event {
         
         public enum Kind : String {
-            case start, goalHome, goalAway, end
+            case start, goalHome, goalAway, end, info
         }
         
         public let kind: Kind

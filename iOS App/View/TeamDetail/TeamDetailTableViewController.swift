@@ -88,6 +88,17 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
         self.resource.load(confirmation: tableView.reloadData, completion: self.setup(with:source:))
     }
     
+    override var previewActionItems: [UIPreviewActionItem] {
+        let favoriteAction = UIPreviewAction(title: isFavorite() ? "Unfavorite" : "Favorite", style: .default) { (action, controller) in
+            if let controller = controller as? TeamDetailTableViewController {
+                controller.updateFavorite(!controller.isFavorite())
+            } else {
+                fault("Wrong VC")
+            }
+        }
+        return [favoriteAction]
+    }
+    
     func setup(with team: Team.Full, source: Source) {
         self.team = team
         self.tableView.reloadData()

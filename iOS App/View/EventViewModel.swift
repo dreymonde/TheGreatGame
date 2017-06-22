@@ -20,7 +20,12 @@ struct EventViewModel {
 extension Match.Event {
     
     func viewModel(names: (home: String, away: String)) -> EventViewModel {
-        let minute = "\(self.minute)'"
+        let minute: String = {
+            if case .info = kind {
+                return ""
+            }
+            return "\(self.minute)"
+        }()
         let title: String = {
             switch kind {
             case .start:
@@ -31,6 +36,8 @@ extension Match.Event {
                 return "Goal for \(names.away)!"
             case .end:
                 return "The game has ended"
+            case .info:
+                return ""
             }
         }()
         return EventViewModel(minute: minute, title: title, text: text)
