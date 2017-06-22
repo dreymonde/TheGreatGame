@@ -67,7 +67,7 @@ final class MatchCellFiller : CellFiller {
         } else {
             cell.scoreTimeLabel.textColor = .gray
         }
-        cell.scoreTimeLabel.text = match.score?.string ?? "-:-"
+        cell.scoreTimeLabel.text = match.scoreString()
         cell.homeTeamNameLabel.text = match.home.name
         cell.awayTeamNameLabel.text = match.away.name
         cell.homeBadgeImageView.setImage(avenue.item(at: match.home.badges.large), afterDownload: afterImageDownload)

@@ -49,7 +49,7 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
         }
         avenue.prepareItem(at: match.home.badges.large)
         avenue.prepareItem(at: match.away.badges.large)
-        scoreLabel.text = match.score?.demo_string ?? "-:-"
+        scoreLabel.text = match.scoreString()
         homeLabel.text = match.home.shortName
         awayLabel.text = match.away.shortName
         homeBadgeImageView.setImage(avenue.item(at: match.home.badges.large), afterDownload: afterImageDownload)

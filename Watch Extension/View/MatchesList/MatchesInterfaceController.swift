@@ -107,7 +107,7 @@ class MatchesInterfaceController: WKInterfaceController {
     func configure(_ cell: MatchCellController, with match: Match.Full, forRowAt index: Int) {
         avenue.prepareItem(at: match.home.badges.large)
         avenue.prepareItem(at: match.away.badges.large)
-        cell.scoreLabel.setText(match.score?.demo_string ?? "-:-")
+        cell.scoreLabel.setText(match.scoreString())
         cell.homeBadgeImage.setImage(avenue.item(at: match.home.badges.large))
         cell.awayBadgeImage.setImage(avenue.item(at: match.away.badges.large))
         configureProgressSeparator(cell.minutesPassedSeparator, with: match)

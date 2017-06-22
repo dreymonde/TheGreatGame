@@ -144,7 +144,7 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
 //        cell.selectionStyle = .none
         if let match = match {
             cell.homeTeamNameLabel.text = match.home.name
-            cell.scoreLabel.text = match.score?.demo_string ?? "-:-"
+            cell.scoreLabel.text = match.scoreString()
             cell.awayTeamLabel.text = match.away.name
         } else if let preloaded = preloadedMatch {
             cell.homeTeamNameLabel.text = preloaded.homeTeamName

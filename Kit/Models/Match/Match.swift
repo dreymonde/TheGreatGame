@@ -19,6 +19,11 @@ public protocol MatchProtocol {
     
 }
 
+let formatter = DateFormatter() <- {
+    $0.dateStyle = .none
+    $0.timeStyle = .short
+}
+
 extension MatchProtocol {
     
     public func isFavorite(isFavoriteMatch: (Match.ID) -> Bool, isFavoriteTeam: (Team.ID) -> Bool) -> Bool {
@@ -41,6 +46,15 @@ extension MatchProtocol {
         let completeInterval = endDate.timeIntervalSince(date)
         let progressInterval = Date().timeIntervalSince(date)
         return progressInterval / completeInterval
+    }
+    
+    public func scoreString() -> String {
+        return score?.demo_string ?? "-:-"
+//        if let score = score {
+//            return score.demo_string
+//        } else {
+//            return formatter.string(from: date)
+//        }
     }
     
 }
