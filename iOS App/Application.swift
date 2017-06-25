@@ -33,8 +33,8 @@ final class Application {
         self.favoriteTeams = Application.makeFavorites(tokens: tokens)
         self.favoriteMatches = Application.makeFavorites(tokens: tokens)
         self.unsubscribedMatches = Application.makeUnsubscribes(tokens: tokens)
-        self.watch = AppleWatch(favoriteTeams: favoriteTeams.registry.favoriteTeams,
-                                favoriteMatches: favoriteMatches.registry.favoriteTeams)
+        self.watch = AppleWatch(favoriteTeams: favoriteTeams.registry.favorites,
+                                favoriteMatches: favoriteMatches.registry.favorites)
         self.notifications = Notifications(application: UIApplication.shared)
         declare()
     }
@@ -65,13 +65,17 @@ final class Application {
         }
     }
     
+    static let shouldCheckUploadConsistency = AppDelegate.applicationDidBecomeActive.proxy
+        .void()
+        .wait(seconds: 4.0)
+    
     static func makeFavorites(tokens: DeviceTokens) -> Favorites<Team.ID> {
         let keepersCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "teams-upload-keepers")
         print(keepersCache.directoryURL)
         return Favorites<Team.ID>(favoritesRegistry: FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteTeamsSubPath),
                                   tokens: tokens,
                                   indicatorManager: .application,
-                                  shouldCheckUploadConsistency: AppDelegate.applicationDidBecomeActive.proxy.void().wait(seconds: 4.0),
+                                  shouldCheckUploadConsistency: shouldCheckUploadConsistency,
                                   consistencyKeepersStorage: keepersCache.asCache(),
                                   apiSubpath: "favorite-teams")
     }
@@ -82,7 +86,7 @@ final class Application {
         return Favorites<Match.ID>(favoritesRegistry: FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteMatchesSubPath),
                                    tokens: tokens,
                                    indicatorManager: .application,
-                                   shouldCheckUploadConsistency: AppDelegate.applicationDidBecomeActive.proxy.void().wait(seconds: 4.0),
+                                   shouldCheckUploadConsistency: shouldCheckUploadConsistency,
                                    consistencyKeepersStorage: keepersCache.asCache(),
                                    apiSubpath: "favorite-matches")
     }
@@ -92,7 +96,7 @@ final class Application {
         return Favorites<Match.ID>(favoritesRegistry: FavoritesRegistry.inSharedDocumentsDirectory(subpath: UnsubscribedMatchesSubPath),
                                    tokens: tokens,
                                    indicatorManager: .application,
-                                   shouldCheckUploadConsistency: AppDelegate.applicationDidBecomeActive.proxy.void().wait(seconds: 4.0),
+                                   shouldCheckUploadConsistency: shouldCheckUploadConsistency,
                                    consistencyKeepersStorage: keepersCache.asCache(),
                                    apiSubpath: "unsubscribe")
     }

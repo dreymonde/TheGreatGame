@@ -22,15 +22,15 @@ public final class FavoritesRegistry<IDType : IDProtocol> : Storing where IDType
         return "wrong"
     }
     
-    fileprivate let full_favoriteTeams: Cache<Void, Set<IDType>>
+    fileprivate let full_favorites: Cache<Void, Set<IDType>>
     
-    public let favoriteTeams: Retrieve<Set<IDType>>
+    public let favorites: Retrieve<Set<IDType>>
     
     public var all: Set<IDType> {
-        return try! favoriteTeams.makeSyncCache().retrieve()
+        return try! favorites.makeSyncCache().retrieve()
     }
     
-    private lazy var favoriteTeamsSync: ReadOnlySyncCache<Void, Set<IDType>> = self.favoriteTeams.makeSyncCache()
+    private lazy var favoriteTeamsSync: ReadOnlySyncCache<Void, Set<IDType>> = self.favorites.makeSyncCache()
     
     public init(diskCache: Cache<String, Data>) {
         let fileSystemTeams = diskCache
@@ -40,8 +40,8 @@ public final class FavoritesRegistry<IDType : IDProtocol> : Storing where IDType
             .mapBoxedSet(of: IDType.self)
             .defaulting(to: [])
         let memoryCache = MemoryCache<Int, Set<IDType>>().singleKey(0)
-        self.full_favoriteTeams = memoryCache.combined(with: fileSystemTeams).serial()
-        self.favoriteTeams = full_favoriteTeams.asReadOnlyCache()
+        self.full_favorites = memoryCache.combined(with: fileSystemTeams).serial()
+        self.favorites = full_favorites.asReadOnlyCache()
     }
     
     public struct Update {
@@ -67,7 +67,7 @@ public final class FavoritesRegistry<IDType : IDProtocol> : Storing where IDType
     
     
     public func updateFavorite(id: IDType, isFavorite: Bool) {
-        full_favoriteTeams.update({ favs in
+        full_favorites.update({ favs in
             if isFavorite {
                 favs.insert(id)
             } else {
@@ -85,7 +85,7 @@ public final class FavoritesRegistry<IDType : IDProtocol> : Storing where IDType
     public func replace(with updated: Set<IDType>) {
         let existing = try! favoriteTeamsSync.retrieve()
         let diff = existing.symmetricDifference(updated)
-        full_favoriteTeams.set(updated) { (result) in
+        full_favorites.set(updated) { (result) in
             if result.isSuccess {
                 let updates = diff.map({ Favorites.Change.init(id: $0, isFavorite: updated.contains($0)) })
                 let united = Update(changes: updates, all: updated)

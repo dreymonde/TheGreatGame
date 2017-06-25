@@ -178,11 +178,14 @@
 		7CAAEFB91EC36B3900427D7E /* CombinedRefreshing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAAEFB81EC36B3900427D7E /* CombinedRefreshing.swift */; };
 		7CAAEFBB1EC36E1A00427D7E /* Sourceful.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAAEFBA1EC36E1A00427D7E /* Sourceful.swift */; };
 		7CCD25C61EDD7AE300F3C5CB /* SingleElementMemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C357ED71ED442D300CFCF3B /* SingleElementMemoryCache.swift */; };
-		7CCD25C71EDDCB2400F3C5CB /* Favorites.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA2136D1ECEFA0A00F088DD /* Favorites.swift */; };
 		7CCD25C91EDDCF3F00F3C5CB /* ComplicationReloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD25C81EDDCF3F00F3C5CB /* ComplicationReloader.swift */; };
 		7CCD25CB1EDEA23900F3C5CB /* ComplicationPusher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD25CA1EDEA23900F3C5CB /* ComplicationPusher.swift */; };
 		7CCD25D01EDEBE5700F3C5CB /* PushNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD25CF1EDEBE5700F3C5CB /* PushNotification.swift */; };
 		7CCD25D11EDEBE5700F3C5CB /* PushNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD25CF1EDEBE5700F3C5CB /* PushNotification.swift */; };
+		7CD0B7CD1F0006FB0039EAF8 /* Favorites.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA2136D1ECEFA0A00F088DD /* Favorites.swift */; };
+		7CD0B7CF1F00098A0039EAF8 /* URLSessionPush.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD0B7CE1F00098A0039EAF8 /* URLSessionPush.swift */; };
+		7CD0B7D01F00098A0039EAF8 /* URLSessionPush.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD0B7CE1F00098A0039EAF8 /* URLSessionPush.swift */; };
+		7CD0B7D21F0009CA0039EAF8 /* TokenUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD0B7D11F0009CA0039EAF8 /* TokenUploader.swift */; };
 		7CD8F2261EF2D64A0006F0A1 /* AlbaGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD8F2251EF2D64A0006F0A1 /* AlbaGraph.swift */; };
 		7CD8F2271EF2D64A0006F0A1 /* AlbaGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD8F2251EF2D64A0006F0A1 /* AlbaGraph.swift */; };
 		7CD8F2291EF2D6FD0006F0A1 /* Loggers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD8F2281EF2D6FD0006F0A1 /* Loggers.swift */; };
@@ -487,6 +490,8 @@
 		7CCD25CA1EDEA23900F3C5CB /* ComplicationPusher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplicationPusher.swift; sourceTree = "<group>"; };
 		7CCD25CC1EDEB1BA00F3C5CB /* Watch Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Watch Extension.entitlements"; sourceTree = "<group>"; };
 		7CCD25CF1EDEBE5700F3C5CB /* PushNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PushNotification.swift; path = ../PushNotification.swift; sourceTree = "<group>"; };
+		7CD0B7CE1F00098A0039EAF8 /* URLSessionPush.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionPush.swift; sourceTree = "<group>"; };
+		7CD0B7D11F0009CA0039EAF8 /* TokenUploader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenUploader.swift; sourceTree = "<group>"; };
 		7CD8F2251EF2D64A0006F0A1 /* AlbaGraph.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbaGraph.swift; sourceTree = "<group>"; };
 		7CD8F2281EF2D6FD0006F0A1 /* Loggers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Loggers.swift; sourceTree = "<group>"; };
 		7CD8F22A1EF3CEAA0006F0A1 /* PeekAndPopping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeekAndPopping.swift; sourceTree = "<group>"; };
@@ -1075,6 +1080,7 @@
 				BE1713C31EEFE79800CFB448 /* FavoritesUploader.swift */,
 				BE461ACD1EF026D40035AE11 /* UploadKeeper.swift */,
 				BE461AD01EF027330035AE11 /* FavoritesRegistry.swift */,
+				7CD0B7CE1F00098A0039EAF8 /* URLSessionPush.swift */,
 			);
 			path = LocalInfo;
 			sourceTree = "<group>";
@@ -1109,6 +1115,7 @@
 				7CCD25C81EDDCF3F00F3C5CB /* ComplicationReloader.swift */,
 				7CCD25CA1EDEA23900F3C5CB /* ComplicationPusher.swift */,
 				BE1713C01EEF428A00CFB448 /* ComplicationTemplate.swift */,
+				7CD0B7D11F0009CA0039EAF8 /* TokenUploader.swift */,
 			);
 			path = Complication;
 			sourceTree = "<group>";
@@ -1652,6 +1659,7 @@
 				7CAAEFBB1EC36E1A00427D7E /* Sourceful.swift in Sources */,
 				7C0EA64D1EBA1D1E00F50EB2 /* CocoaMapper.swift in Sources */,
 				7CF3D17B1EBC879300E86A91 /* Match.swift in Sources */,
+				7CD0B7D21F0009CA0039EAF8 /* TokenUploader.swift in Sources */,
 				7CA542031EDAB74000B4D1BD /* Resources.swift in Sources */,
 				7C7916E41EBB15B20070E6C5 /* AvenuesExtensions.swift in Sources */,
 				BE461AD11EF027330035AE11 /* FavoritesRegistry.swift in Sources */,
@@ -1668,6 +1676,7 @@
 				BE461ACE1EF026D40035AE11 /* UploadKeeper.swift in Sources */,
 				7C1D89861EC0638D006F7841 /* Functions.swift in Sources */,
 				7C1D89911EC07362006F7841 /* ImageCache.swift in Sources */,
+				7CD0B7CF1F00098A0039EAF8 /* URLSessionPush.swift in Sources */,
 				7CA2136E1ECEFA0A00F088DD /* Favorites.swift in Sources */,
 				7C0EA65B1EBA1F0200F50EB2 /* Editioned.swift in Sources */,
 				7C7916F01EBB37910070E6C5 /* TeamFull.swift in Sources */,
@@ -1767,12 +1776,13 @@
 				7C6AA1741ED878E9003F2388 /* Groups.swift in Sources */,
 				7C6AA1731ED878E9003F2388 /* Matches.swift in Sources */,
 				7C13BC661ED84B4C00588F5F /* Match.swift in Sources */,
-				7CCD25C71EDDCB2400F3C5CB /* Favorites.swift in Sources */,
 				7C13BC641ED84B3D00588F5F /* Mappable.swift in Sources */,
 				BE461ACF1EF026D40035AE11 /* UploadKeeper.swift in Sources */,
 				7C6AA17D1ED879F9003F2388 /* Avenues+Shallows.swift in Sources */,
 				7CA541FF1EDAB65200B4D1BD /* Shallows+ActivityIndicator.swift in Sources */,
 				BEB5C4321EEF0790005A4065 /* NotificationsReceiver.swift in Sources */,
+				7CD0B7D01F00098A0039EAF8 /* URLSessionPush.swift in Sources */,
+				7CD0B7CD1F0006FB0039EAF8 /* Favorites.swift in Sources */,
 				7C13BC621ED84B3D00588F5F /* OutMapper.swift in Sources */,
 				BE1713C21EEF428A00CFB448 /* ComplicationTemplate.swift in Sources */,
 				7C13BC5D1ED84B3D00588F5F /* InMap.swift in Sources */,
