@@ -106,13 +106,16 @@ final class Application {
     }
     
     static func makeTokenUploader(getToken: Retrieve<PushToken>) -> TokenUploader {
+        let fakeToken = PushToken(Data(repeating: 0, count: 1))
+        
         let keeperesCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "pushkit-token-upload-keeper")
             .mapValues(transformIn: PushToken.init,
                        transformOut: { $0.rawToken })
             .singleKey("uploaded-token")
-            .defaulting(to: PushToken(Data(repeating: 0, count: 1)))
+            .defaulting(to: fakeToken)
         
-        return TokenUploader(pusher: DevCache.failing(),
+        let fakeUpload = TokenUpload(deviceIdentifier: UIDevice.current.identifierForVendor!, token: fakeToken)
+        return TokenUploader(pusher: DevCache.successing(with: fakeUpload),
                              getDeviceIdentifier: { UIDevice.current.identifierForVendor },
                              consistencyKeepersLastUpload: keeperesCache,
                              getToken: getToken)

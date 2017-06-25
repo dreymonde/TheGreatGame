@@ -56,6 +56,11 @@ public struct TokenUpload : Equatable {
     let deviceIdentifier: UUID
     let token: PushToken
     
+    public init(deviceIdentifier: UUID, token: PushToken) {
+        self.deviceIdentifier = deviceIdentifier
+        self.token = token
+    }
+    
     public static func == (lhs: TokenUpload, rhs: TokenUpload) -> Bool {
         return lhs.deviceIdentifier == rhs.deviceIdentifier && lhs.token.rawToken == rhs.token.rawToken
     }
