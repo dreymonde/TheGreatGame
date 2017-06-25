@@ -19,6 +19,7 @@ final class Application {
     let favoriteMatches: Favorites<Match.ID>
     let unsubscribedMatches: Favorites<Match.ID>
     let tokens: DeviceTokens
+    let pushKitTokenUploader: TokenUploader
     
     let watch: AppleWatch?
     let notifications: Notifications
@@ -33,6 +34,7 @@ final class Application {
         self.favoriteTeams = Application.makeFavorites(tokens: tokens)
         self.favoriteMatches = Application.makeFavorites(tokens: tokens)
         self.unsubscribedMatches = Application.makeUnsubscribes(tokens: tokens)
+        self.pushKitTokenUploader = Application.makeTokenUploader(getToken: tokens.getComplication)
         self.watch = AppleWatch(favoriteTeams: favoriteTeams.registry.favorites,
                                 favoriteMatches: favoriteMatches.registry.favorites)
         self.notifications = Notifications(application: UIApplication.shared)
@@ -47,6 +49,8 @@ final class Application {
         favoriteTeams.declare()
         favoriteMatches.declare()
         unsubscribedMatches.declare()
+        let pushKitTokenConsistency = watch?.pushKitReceiver.didRegisterWithToken.proxy.void() ?? .empty()
+        pushKitTokenUploader.declare(shouldCheckUploadConsistency: pushKitTokenConsistency)
     }
     
     static func makeAPI() -> API {
@@ -99,6 +103,19 @@ final class Application {
                                    shouldCheckUploadConsistency: shouldCheckUploadConsistency,
                                    consistencyKeepersStorage: keepersCache.asCache(),
                                    apiSubpath: "unsubscribe")
+    }
+    
+    static func makeTokenUploader(getToken: Retrieve<PushToken>) -> TokenUploader {
+        let keeperesCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "pushkit-token-upload-keeper")
+            .mapValues(transformIn: PushToken.init,
+                       transformOut: { $0.rawToken })
+            .singleKey("uploaded-token")
+            .defaulting(to: PushToken(Data(repeating: 0, count: 1)))
+        
+        return TokenUploader(pusher: DevCache.failing(),
+                             getDeviceIdentifier: { UIDevice.current.identifierForVendor },
+                             consistencyKeepersLastUpload: keeperesCache,
+                             getToken: getToken)
     }
     
     static func makeAPICache() -> APICache {

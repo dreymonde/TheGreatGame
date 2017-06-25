@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct PushToken {
+public struct PushToken : Equatable {
     
     public let rawToken: Data
     public var string: String {
@@ -17,6 +17,10 @@ public struct PushToken {
     
     public init(_ token: Data) {
         self.rawToken = token
+    }
+    
+    public static func == (lhs: PushToken, rhs: PushToken) -> Bool {
+        return lhs.rawToken == rhs.rawToken
     }
     
 }
