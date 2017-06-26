@@ -19,7 +19,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
     
     // MARK: - Injections
     var resource: Resource<[Stage]>!
-    var makeMatchDetailVC: (Match.Compact) -> UIViewController = runtimeInject
+    var makeMatchDetailVC: (Match.Compact, String) -> UIViewController = runtimeInject
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject    
     var isFavorite: (Match.Compact) -> Bool = runtimeInject
 
@@ -133,7 +133,8 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
     }
     
     func viewController(for indexPath: IndexPath) -> UIViewController? {
-        return makeMatchDetailVC(stages[indexPath.section].matches[indexPath.row])
+        let stage = stages[indexPath.section]
+        return makeMatchDetailVC(stage.matches[indexPath.row], stage.title)
     }
     
 }

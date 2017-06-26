@@ -58,6 +58,7 @@ extension Team.Compact : Mappable {
         case id
         case rank
         case badges
+        case summary
     }
     
     public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {

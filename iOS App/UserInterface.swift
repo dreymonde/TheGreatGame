@@ -85,7 +85,11 @@ final class UserInterface {
             let shouldReload = self.logic.favoriteTeams.registry.unitedDidUpdate.proxy.void()
                 .merged(with: self.logic.favoriteMatches.registry.unitedDidUpdate.proxy.void())
             $0.shouldReloadData = shouldReload.mainThread()
-            $0.makeMatchDetailVC = { self.matchDetailViewController(for: $0.id, preloaded: $0.preloaded()) }
+            $0.makeMatchDetailVC = { match, stageTitle in
+                var preloaded = match.preloaded()
+                preloaded.stageTitle = stageTitle
+                return self.matchDetailViewController(for: match.id, preloaded: preloaded)
+            }
         }
     }
     
@@ -118,6 +122,7 @@ final class UserInterface {
         return Storyboard.Main.matchDetailTableViewController.instantiate() <- {
             $0.resource = self.resources.fullMatch(matchID)
             $0.makeAvenue = self.makeAvenue(forImageSize:)
+            $0.makeTeamDetailVC = { self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
             $0.preloadedMatch = preloaded
             $0.isFavorite = { self.logic.favoriteMatches.registry.isFavorite(id: matchID) }
             $0.updateFavorite = { self.logic.favoriteMatches.registry.updateFavorite(id: matchID, isFavorite: $0) }

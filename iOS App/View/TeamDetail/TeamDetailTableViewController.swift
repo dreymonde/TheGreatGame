@@ -16,13 +16,14 @@ struct TeamDetailPreLoaded {
     let name: String?
     let shortName: String?
     let badges: Team.Badges?
+    let summary: String?
     
 }
 
 extension Team.Compact {
     
     func preLoaded() -> TeamDetailPreLoaded {
-        return TeamDetailPreLoaded(name: self.name, shortName: self.shortName, badges: self.badges)
+        return TeamDetailPreLoaded(name: self.name, shortName: self.shortName, badges: self.badges, summary: nil)
     }
     
 }
@@ -30,7 +31,7 @@ extension Team.Compact {
 extension Group.Team {
     
     func preLoaded() -> TeamDetailPreLoaded {
-        return TeamDetailPreLoaded(name: self.name, shortName: nil, badges: self.badges)
+        return TeamDetailPreLoaded(name: self.name, shortName: nil, badges: self.badges, summary: nil)
     }
     
 }
@@ -38,7 +39,7 @@ extension Group.Team {
 extension Match.Team {
     
     func preLoaded() -> TeamDetailPreLoaded {
-        return TeamDetailPreLoaded(name: self.name, shortName: self.shortName, badges: self.badges)
+        return TeamDetailPreLoaded(name: self.name, shortName: self.shortName, badges: self.badges, summary: nil)
     }
     
 }
@@ -218,8 +219,10 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
             mainBadgeAvenue.prepareItem(at: team.badges.flag)
             cell.nameLabel.text = team.name
             cell.badgeImageView.image = mainBadgeAvenue.item(at: team.badges.flag)
+            cell.teamSummaryLabel.text = team.summary
         } else if let preloaded = preloadedTeam {
             cell.nameLabel.text = preloaded.name
+            cell.teamSummaryLabel.text = preloaded.summary
             if let badgeURL = preloaded.badges?.flag {
                 mainBadgeAvenue.prepareItem(at: badgeURL)
                 cell.badgeImageView.image = mainBadgeAvenue.item(at: badgeURL)

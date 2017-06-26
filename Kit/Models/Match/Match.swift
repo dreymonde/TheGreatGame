@@ -107,6 +107,12 @@ public enum Match {
         public let text: String
         public let minute: Int
         
+        public init(kind: Kind, text: String, minute: Int) {
+            self.kind = kind
+            self.text = text
+            self.minute = minute
+        }
+        
     }
     
     public struct Team {
@@ -199,7 +205,7 @@ public enum Match {
 extension Match.Team : Mappable {
     
     public enum MappingKeys : String, IndexPathElement {
-        case id, name, badges, short_name
+        case id, name, badges, short_name, summary
     }
     
     public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {

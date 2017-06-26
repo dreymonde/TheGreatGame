@@ -12,6 +12,7 @@ class TeamDetailInfoTableViewCell: UITableViewCell {
     
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var badgeImageView: UIImageView!
+    @IBOutlet weak var teamSummaryLabel: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()

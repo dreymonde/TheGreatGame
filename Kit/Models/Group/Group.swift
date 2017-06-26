@@ -37,7 +37,7 @@ public struct Groups {
 extension Group.Team : Mappable {
     
     public enum MappingKeys : String, IndexPathElement {
-        case id, position, name, points, badges
+        case id, position, name, points, badges, summary
     }
     
     public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {

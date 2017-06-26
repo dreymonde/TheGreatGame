@@ -13,23 +13,45 @@ import Avenues
 
 struct MatchDetailPreLoaded {
     
-    let homeTeamName: String?
-    let homeTeamShortName: String?
-    let score: Match.Score?
-    let awayTeamName: String?
-    let awayTeamShortName: String?
+    var home: Match.Team?
+    var score: Match.Score?
+    var away: Match.Team?
+    var stageTitle: String?
+    var location: String?
+    var date: Date?
     
 }
 
 extension MatchProtocol {
     
     func preloaded() -> MatchDetailPreLoaded {
-        return MatchDetailPreLoaded(homeTeamName: home.name, homeTeamShortName: home.shortName, score: score, awayTeamName: away.name, awayTeamShortName: away.shortName)
+        return MatchDetailPreLoaded(home: self.home, score: self.score, away: self.away, stageTitle: nil, location: nil, date: self.date)
+    }
+    
+}
+
+extension Match.Full {
+    
+    func preloaded() -> MatchDetailPreLoaded {
+        return MatchDetailPreLoaded(home: self.home, score: self.score, away: self.away, stageTitle: self.stageTitle, location: self.location, date: self.date)
+    }
+    
+}
+
+extension Match.Compact {
+    
+    func preloaded() -> MatchDetailPreLoaded {
+        return MatchDetailPreLoaded(home: self.home, score: self.score, away: self.away, stageTitle: nil, location: self.location, date: self.date)
     }
     
 }
 
 class MatchDetailTableViewController: TableViewController, Refreshing {
+    
+    static let dateFormatter = DateFormatter() <- {
+        $0.timeStyle = .short
+        $0.setLocalizedDateFormatFromTemplate("MMMMd" + $0.dateFormat)
+    }
 
     // MARK: - Outlets
     @IBOutlet weak var favoriteButton: UIButton!
@@ -41,6 +63,7 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
     var preloadedMatch: MatchDetailPreLoaded?
     var resource: Resource<Match.Full>!
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
+    var makeTeamDetailVC: (Match.Team) -> UIViewController = runtimeInject
     var isFavorite: () -> Bool = runtimeInject
     var updateFavorite: (Bool) -> () = runtimeInject
     
@@ -76,9 +99,17 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
     }
     
     func setup(with match: Match.Full, source: Source) {
-        self.match = match
+        self.match = addingLocationEvent(location: match.location, to: match)
         self.tableView.reloadData()
         self.configure(navigationItem)
+    }
+    
+    private func addingLocationEvent(location: String, to match: Match.Full) -> Match.Full {
+        let locationEvent = Match.Event.init(kind: .info,
+                                             text: "Location: \(location)", minute: -100)
+        var copy = match
+        copy.events.insert(locationEvent, at: 0)
+        return copy
     }
 
     override func didReceiveMemoryWarning() {
@@ -152,31 +183,56 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
     }
     
     func configureMatchDetailCell(_ cell: MatchDetailTableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
-//        cell.selectionStyle = .none
-        
+        cell.selectionStyle = .none
         if let match = match {
             
-            badgeAvenue.prepareItem(at: match.home.badges.large)
-            badgeAvenue.prepareItem(at: match.away.badges.large)
-            flagAvenue.prepareItem(at: match.home.badges.flag)
-            flagAvenue.prepareItem(at: match.away.badges.flag)
+            prepareBadges(for: match.home)
+            prepareBadges(for: match.away)
             
             cell.homeTeamNameLabel.text = match.home.name
             cell.scoreLabel.text = match.scoreString()
             cell.awayTeamLabel.text = match.away.name
             cell.stageTitleLabel.text = match.stageTitle
+            cell.dateLabel.text = MatchDetailTableViewController.dateFormatter.string(from: match.date)
             
             cell.homeFlagImageView.setImage(flagAvenue.item(at: match.home.badges.flag), afterDownload: afterImageDownload)
             cell.awayFlagImageView.setImage(flagAvenue.item(at: match.away.badges.flag), afterDownload: afterImageDownload)
             
             cell.homeBadgeImageView.setImage(badgeAvenue.item(at: match.home.badges.large), afterDownload: afterImageDownload)
             cell.awayBadgeImageView.setImage(badgeAvenue.item(at: match.away.badges.large), afterDownload: afterImageDownload)
+            
+            cell.onHomeBadgeTap = { [unowned self] in
+                let vc = self.makeTeamDetailVC(match.home)
+                self.show(vc, sender: self)
+            }
+            cell.onAwayBadgeTap = { [unowned self] in
+                let vc = self.makeTeamDetailVC(match.away)
+                self.show(vc, sender: self)
+            }
+            
         } else if let preloaded = preloadedMatch {
-            cell.homeTeamNameLabel.text = preloaded.homeTeamName
+            if let home = preloaded.home {
+                prepareBadges(for: home)
+                cell.homeFlagImageView.setImage(flagAvenue.item(at: home.badges.flag), afterDownload: afterImageDownload)
+                cell.homeBadgeImageView.setImage(badgeAvenue.item(at: home.badges.large), afterDownload: afterImageDownload)
+            }
+            if let away = preloaded.away {
+                prepareBadges(for: away)
+                cell.awayFlagImageView.setImage(flagAvenue.item(at: away.badges.flag), afterDownload: afterImageDownload)
+                cell.awayBadgeImageView.setImage(badgeAvenue.item(at: away.badges.large), afterDownload: afterImageDownload)
+            }
+            cell.homeTeamNameLabel.text = preloaded.home?.name
             cell.scoreLabel.text = preloaded.score?.demo_string ?? "-:-"
-            cell.awayTeamLabel.text = preloaded.awayTeamName
+            cell.awayTeamLabel.text = preloaded.away?.name
+            cell.stageTitleLabel.text = preloaded.stageTitle ?? "Stage"
+            cell.dateLabel.text = preloaded.date.map(MatchDetailTableViewController.dateFormatter.string(from:)) ?? "Date"
         }
         cell.scoreLabel.textColor = resource.isAbsoluteTruth ? .black : .gray
+    }
+    
+    private func prepareBadges(for team: Match.Team) {
+        badgeAvenue.prepareItem(at: team.badges.large)
+        flagAvenue.prepareItem(at: team.badges.flag)
     }
     
     func configureEventCell(_ cell: MatchEventTableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
@@ -237,7 +293,7 @@ extension MatchProtocol {
 extension MatchDetailPreLoaded {
     
     fileprivate var title: String {
-        return "\(homeTeamShortName ?? "") : \(awayTeamShortName ?? "")"
+        return "\(home?.shortName ?? "") : \(away?.shortName ?? "")"
     }
     
 }

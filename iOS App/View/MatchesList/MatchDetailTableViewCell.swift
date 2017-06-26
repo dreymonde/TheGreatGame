@@ -20,9 +20,29 @@ class MatchDetailTableViewCell: UITableViewCell {
     @IBOutlet weak var awayFlagImageView: UIImageView!
     
     @IBOutlet weak var stageTitleLabel: UILabel!
+    @IBOutlet weak var dateLabel: UILabel!
+    
+    var onHomeBadgeTap: () -> () = { }
+    
+    func didTapHomeBadge(_ sender: UITapGestureRecognizer) {
+        onHomeBadgeTap()
+    }
+    
+    var onAwayBadgeTap: () -> () = { }
+    
+    func didTapAwayBadge(_ sender: UITapGestureRecognizer) {
+        onAwayBadgeTap()
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        let homeBadgeGesture = UITapGestureRecognizer(target: self, action: #selector(didTapHomeBadge(_:)))
+        homeBadgeImageView.addGestureRecognizer(homeBadgeGesture)
+        
+        let awayBadgeGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAwayBadge(_:)))
+        awayBadgeImageView.addGestureRecognizer(awayBadgeGesture)
+        
         // Initialization code
     }
 
