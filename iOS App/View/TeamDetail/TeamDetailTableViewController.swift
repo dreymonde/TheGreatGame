@@ -215,12 +215,12 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     func configureTeamDetailsCell(_ cell: TeamDetailInfoTableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
         cell.selectionStyle = .none
         if let team = team {
-            mainBadgeAvenue.prepareItem(at: team.badges.large)
+            mainBadgeAvenue.prepareItem(at: team.badges.flag)
             cell.nameLabel.text = team.name
-            cell.badgeImageView.image = mainBadgeAvenue.item(at: team.badges.large)
+            cell.badgeImageView.image = mainBadgeAvenue.item(at: team.badges.flag)
         } else if let preloaded = preloadedTeam {
             cell.nameLabel.text = preloaded.name
-            if let badgeURL = preloaded.badges?.large {
+            if let badgeURL = preloaded.badges?.flag {
                 mainBadgeAvenue.prepareItem(at: badgeURL)
                 cell.badgeImageView.image = mainBadgeAvenue.item(at: badgeURL)
             }

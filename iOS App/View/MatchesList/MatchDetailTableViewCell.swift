@@ -14,6 +14,13 @@ class MatchDetailTableViewCell: UITableViewCell {
     @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var awayTeamLabel: UILabel!
 
+    @IBOutlet weak var homeBadgeImageView: UIImageView!
+    @IBOutlet weak var homeFlagImageView: UIImageView!
+    @IBOutlet weak var awayBadgeImageView: UIImageView!
+    @IBOutlet weak var awayFlagImageView: UIImageView!
+    
+    @IBOutlet weak var stageTitleLabel: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

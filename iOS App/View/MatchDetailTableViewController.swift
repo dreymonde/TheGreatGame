@@ -45,16 +45,20 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
     var updateFavorite: (Bool) -> () = runtimeInject
     
     // MARK: - Services
-    var avenue: SymmetricalAvenue<URL, UIImage>!
+    var badgeAvenue: SymmetricalAvenue<URL, UIImage>!
+    var flagAvenue: SymmetricalAvenue<URL, UIImage>!
     var pullToRefreshActivities: NetworkActivityIndicatorManager!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.avenue = makeAvenue(CGSize(width: 50, height: 50))
+        self.badgeAvenue = makeAvenue(CGSize(width: 80, height: 80))
+        self.flagAvenue = makeAvenue(CGSize(width: 30, height: 15))
         self.pullToRefreshActivities = make()
 
         configure(tableView)
         configure(navigationItem)
+        configure(badgeAvenue)
+        configure(flagAvenue)
         configure(favoriteButton: favoriteButton)
         
         self.resource.load(confirmation: tableView.reloadData, completion: self.setup(with:source:))
@@ -113,6 +117,13 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
     
     let matchDetailReuseIdentifier = "MatchDetailMatch"
     let matchEventReuseIdentifier = "MatchDetailEvent"
+    
+    func didFetchImage(with url: URL) {
+        let matchDetailIndexPath = IndexPath(row: 0, section: 0)
+        if let matchDetail = tableView.cellForRow(at: matchDetailIndexPath) {
+            configureCell(matchDetail, forRowAt: matchDetailIndexPath, afterImageDownload: true)
+        }
+    }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: UITableViewCell = {
@@ -142,10 +153,24 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
     
     func configureMatchDetailCell(_ cell: MatchDetailTableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
 //        cell.selectionStyle = .none
+        
         if let match = match {
+            
+            badgeAvenue.prepareItem(at: match.home.badges.large)
+            badgeAvenue.prepareItem(at: match.away.badges.large)
+            flagAvenue.prepareItem(at: match.home.badges.flag)
+            flagAvenue.prepareItem(at: match.away.badges.flag)
+            
             cell.homeTeamNameLabel.text = match.home.name
             cell.scoreLabel.text = match.scoreString()
             cell.awayTeamLabel.text = match.away.name
+            cell.stageTitleLabel.text = match.stageTitle
+            
+            cell.homeFlagImageView.setImage(flagAvenue.item(at: match.home.badges.flag), afterDownload: afterImageDownload)
+            cell.awayFlagImageView.setImage(flagAvenue.item(at: match.away.badges.flag), afterDownload: afterImageDownload)
+            
+            cell.homeBadgeImageView.setImage(badgeAvenue.item(at: match.home.badges.large), afterDownload: afterImageDownload)
+            cell.awayBadgeImageView.setImage(badgeAvenue.item(at: match.away.badges.large), afterDownload: afterImageDownload)
         } else if let preloaded = preloadedMatch {
             cell.homeTeamNameLabel.text = preloaded.homeTeamName
             cell.scoreLabel.text = preloaded.score?.demo_string ?? "-:-"
@@ -182,6 +207,16 @@ extension MatchDetailTableViewController {
             $0.register(UINib.init(nibName: "MatchEventTableViewCell", bundle: nil), forCellReuseIdentifier: matchEventReuseIdentifier)
             $0.estimatedRowHeight = 70
             $0.rowHeight = UITableViewAutomaticDimension
+        }
+    }
+    
+    fileprivate func configure(_ avenue: Avenue<URL, URL, UIImage>) {
+        avenue.onStateChange = { [weak self] url in
+            assert(Thread.isMainThread)
+            self?.didFetchImage(with: url)
+        }
+        avenue.onError = {
+            print($0)
         }
     }
     
