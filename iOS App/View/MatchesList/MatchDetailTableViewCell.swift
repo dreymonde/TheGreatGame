@@ -21,6 +21,7 @@ class MatchDetailTableViewCell: UITableViewCell {
     
     @IBOutlet weak var stageTitleLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var minuteLabel: UILabel!
     
     var onHomeBadgeTap: () -> () = { }
     

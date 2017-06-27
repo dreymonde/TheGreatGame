@@ -10,9 +10,21 @@ import UIKit
 
 class MatchEventTableViewCell: UITableViewCell {
     
+    @IBOutlet private weak var stackView: UIStackView!
+    
     @IBOutlet weak var minuteLabel: UILabel!
     @IBOutlet weak var eventTitleLabel: UILabel!
     @IBOutlet weak var eventTextLabel: UILabel!
+    
+    func setText(_ text: String?, on label: UILabel) {
+        if let text = text, text.characters.count != 0 {
+            label.text = text
+            stackView.addArrangedSubview(label)
+        } else {
+            label.text = nil
+            stackView.removeArrangedSubview(label)
+        }
+    }
 
     override func awakeFromNib() {
         super.awakeFromNib()

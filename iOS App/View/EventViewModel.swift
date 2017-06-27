@@ -12,7 +12,7 @@ import TheGreatKit
 struct EventViewModel {
     
     let minute: String
-    let title: String
+    let title: String?
     let text: String
     
 }
@@ -24,20 +24,24 @@ extension Match.Event {
             if case .info = kind {
                 return ""
             }
-            return "\(self.minute)"
+            return "\(self.matchMinute)"
         }()
-        let title: String = {
+        let title: String? = {
             switch kind {
             case .start:
                 return "Start of the game"
-            case .goalHome:
+            case .goal_home:
                 return "Goal for \(names.home)!"
-            case .goalAway:
+            case .goal_away:
                 return "Goal for \(names.away)!"
+            case .halftime_start:
+                return "End of the first half"
+            case .halftime_end:
+                return "Start of the second half"
             case .end:
                 return "The game has ended"
             case .info:
-                return ""
+                return nil
             }
         }()
         return EventViewModel(minute: minute, title: title, text: text)

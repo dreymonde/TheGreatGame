@@ -19,20 +19,20 @@
                                     <items>
                                         <label alignment="left" numberOfLines="0" id="OmK-E5-Cmp">
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <fontDescription key="font" style="UICTFontTextStyleSubhead"/>
+                                            <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
                                         </label>
                                         <imageView alignment="right" verticalAlignment="center" image="Activity" initiallyAnimated="NO" animationDuration="1" id="901-Rv-deI"/>
                                     </items>
                                 </group>
                                 <label alignment="left" numberOfLines="0" id="vg5-2X-Sa1">
                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                    <fontDescription key="font" type="system" pointSize="12"/>
+                                    <fontDescription key="font" style="UICTFontTextStyleSubhead"/>
                                 </label>
                             </items>
                         </group>
                         <table alignment="left" id="hn5-On-7gI">
                             <items>
-                                <tableRow identifier="MatchCompact" id="wpz-Oj-LWN" customClass="MatchCellController" customModule="Watch_Extension">
+                                <tableRow identifier="MatchCompact" selectable="NO" id="wpz-Oj-LWN" customClass="MatchCellController" customModule="Watch_Extension">
                                     <group key="rootItem" width="1" height="50" alignment="left" layout="vertical" id="gO6-0v-mp6">
                                         <items>
                                             <group width="1" alignment="left" verticalAlignment="center" id="pCD-GA-pOh">
@@ -50,6 +50,7 @@
                                             </separator>
                                         </items>
                                         <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
+                                        <variation key="device=watch42mm" height="65"/>
                                     </group>
                                     <connections>
                                         <outlet property="awayBadgeImage" destination="7nt-yr-fy6" id="fjZ-5P-oe4"/>
@@ -107,4 +108,5 @@
             <point key="canvasLocation" x="468" y="643"/>
         </scene>
     </scenes>
+    <color key="tintColor" red="0.88235294117647056" green="0.34509803921568627" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
 </document>

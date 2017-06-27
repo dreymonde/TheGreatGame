@@ -19,9 +19,14 @@ public protocol MatchProtocol {
     
 }
 
-let formatter = DateFormatter() <- {
-    $0.dateStyle = .none
-    $0.timeStyle = .short
+let shortTimeDateFormatter = DateFormatter() <- {
+    $0.setLocalizedDateFormatFromTemplate("Hmm")
+}
+
+extension String {
+    fileprivate func twoLine() -> String {
+        return self.components(separatedBy: ":").joined(separator: "\n")
+    }
 }
 
 extension MatchProtocol {
@@ -55,6 +60,14 @@ extension MatchProtocol {
 //        } else {
 //            return formatter.string(from: date)
 //        }
+    }
+    
+    public func scoreOrTimeString() -> String {
+        if let score = score {
+            return score.demo_string
+        } else {
+            return shortTimeDateFormatter.string(from: date)
+        }
     }
     
 }
@@ -100,17 +113,19 @@ public enum Match {
     public struct Event {
         
         public enum Kind : String {
-            case start, goalHome, goalAway, end, info
+            case start, goal_home, goal_away, end, info, halftime_start, halftime_end
         }
         
         public let kind: Kind
         public let text: String
-        public let minute: Int
+        public let realMinute: Int
+        public let matchMinute: Int
         
-        public init(kind: Kind, text: String, minute: Int) {
+        public init(kind: Kind, text: String, realMinute: Int, matchMinute: Int) {
             self.kind = kind
             self.text = text
-            self.minute = minute
+            self.realMinute = realMinute
+            self.matchMinute = matchMinute
         }
         
     }
@@ -150,8 +165,8 @@ public enum Match {
             guard events.contains(where: { $0.kind == .start }) else {
                 return nil
             }
-            let goalsHome = events.filter({ $0.kind == .goalHome }).count
-            let goalsAway = events.filter({ $0.kind == .goalAway }).count
+            let goalsHome = events.filter({ $0.kind == .goal_home }).count
+            let goalsAway = events.filter({ $0.kind == .goal_away }).count
             return Score(home: goalsHome, away: goalsAway)
         }
         
@@ -163,12 +178,12 @@ public enum Match {
             return copy
         }
         
-        public func date(afterMinutesFromStart minutes: Int) -> Date {
-            return self.date.addingTimeInterval(TimeInterval(60 * minutes))
+        public func date(afterRealMinutesFromStart realMinutes: Int) -> Date {
+            return self.date.addingTimeInterval(TimeInterval(60 * realMinutes))
         }
         
-        public func snapshot(beforeMinute minute: Int) -> Full {
-            let eventsBeforeMinute = events.filter({ $0.minute <= minute })
+        public func snapshot(beforeRealMinute realMinute: Int) -> Full {
+            let eventsBeforeMinute = events.filter({ $0.realMinute <= realMinute })
             return Full(id: self.id,
                         home: self.home,
                         away: self.away,
@@ -182,12 +197,12 @@ public enum Match {
         
         public func allSnapshots() -> [(match: Full, minute: Int)] {
             return events.map({ (event) in
-                return (self.snapshot(beforeMinute: event.minute), minute: event.minute)
+                return (self.snapshot(beforeRealMinute: event.realMinute), minute: event.realMinute)
             })
         }
         
         public func notStartedSnapshot() -> Full {
-            return snapshot(beforeMinute: -1)
+            return snapshot(beforeRealMinute: -1)
         }
         
         public var isEnded: Bool {
@@ -196,6 +211,41 @@ public enum Match {
         
         public var isStarted: Bool {
             return events.contains(where: { $0.kind == .start })
+        }
+        
+        public var isInHalfTime: Bool {
+            return isFirstHalfEnded && !isSecondHalf
+        }
+        
+        public var isSecondHalf: Bool {
+            return events.contains(where: { $0.kind == .halftime_end })
+        }
+        
+        public var isFirstHalf: Bool {
+            return !isFirstHalfEnded
+        }
+        
+        public var isFirstHalfEnded: Bool {
+            return events.contains(where: { $0.kind == .halftime_start })
+        }
+        
+        public func minuteOrStateString() -> String? {
+            if !isStarted {
+                return nil
+            }
+            if isEnded {
+                return "FT"
+            }
+            if isInHalfTime {
+                return "HT"
+            }
+            if let lastEvent = events.last {
+                let dateOfLastEvent = self.date(afterRealMinutesFromStart: lastEvent.realMinute)
+                let intervalAfter = Int(Date().timeIntervalSince(dateOfLastEvent))
+                return "\(lastEvent.matchMinute + intervalAfter)'"
+            } else {
+                return nil
+            }
         }
         
     }
@@ -245,19 +295,21 @@ extension Match.Score : Mappable {
 extension Match.Event : Mappable {
     
     public enum MappingKeys : String, IndexPathElement {
-        case type, text, minute
+        case type, text, real_minute, match_minute
     }
     
     public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
         self.kind = try mapper.map(from: .type)
         self.text = try mapper.map(from: .text)
-        self.minute = try mapper.map(from: .minute)
+        self.realMinute = try mapper.map(from: .real_minute)
+        self.matchMinute = try mapper.map(from: .match_minute)
     }
     
     public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.kind, to: .type)
         try mapper.map(self.text, to: .text)
-        try mapper.map(self.minute, to: .minute)
+        try mapper.map(self.realMinute, to: .real_minute)
+        try mapper.map(self.matchMinute, to: .match_minute)
     }
     
 }

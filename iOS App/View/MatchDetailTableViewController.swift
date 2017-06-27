@@ -99,17 +99,9 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
     }
     
     func setup(with match: Match.Full, source: Source) {
-        self.match = addingLocationEvent(location: match.location, to: match)
+        self.match = match
         self.tableView.reloadData()
         self.configure(navigationItem)
-    }
-    
-    private func addingLocationEvent(location: String, to match: Match.Full) -> Match.Full {
-        let locationEvent = Match.Event.init(kind: .info,
-                                             text: "Location: \(location)", minute: -100)
-        var copy = match
-        copy.events.insert(locationEvent, at: 0)
-        return copy
     }
 
     override func didReceiveMemoryWarning() {
@@ -194,6 +186,7 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
             cell.awayTeamLabel.text = match.away.name
             cell.stageTitleLabel.text = match.stageTitle
             cell.dateLabel.text = MatchDetailTableViewController.dateFormatter.string(from: match.date)
+            cell.minuteLabel.text = match.minuteOrStateString()
             
             cell.homeFlagImageView.setImage(flagAvenue.item(at: match.home.badges.flag), afterDownload: afterImageDownload)
             cell.awayFlagImageView.setImage(flagAvenue.item(at: match.away.badges.flag), afterDownload: afterImageDownload)
@@ -225,6 +218,7 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
             cell.scoreLabel.text = preloaded.score?.demo_string ?? "-:-"
             cell.awayTeamLabel.text = preloaded.away?.name
             cell.stageTitleLabel.text = preloaded.stageTitle ?? "Stage"
+            cell.minuteLabel.text = nil
             cell.dateLabel.text = preloaded.date.map(MatchDetailTableViewController.dateFormatter.string(from:)) ?? "Date"
         }
         cell.scoreLabel.textColor = resource.isAbsoluteTruth ? .black : .gray
@@ -243,7 +237,8 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
         }
         let eventViewModel = match.events.reversed()[indexPath.row].viewModel(in: match)
         cell.eventTextLabel.text = eventViewModel.text
-        cell.eventTitleLabel.text = eventViewModel.title
+        cell.setText(eventViewModel.title, on: cell.eventTitleLabel)
+        cell.setText(eventViewModel.text, on: cell.eventTextLabel)
         cell.minuteLabel.text = eventViewModel.minute
     }
 

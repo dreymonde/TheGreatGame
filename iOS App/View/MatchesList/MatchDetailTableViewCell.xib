@@ -100,12 +100,20 @@
                             </stackView>
                         </subviews>
                     </stackView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="68'" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Ho-Sx-X8E">
+                        <rect key="frame" x="171.5" y="171" width="19.5" height="16"/>
+                        <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="3Ho-Sx-X8E" firstAttribute="top" secondItem="DKR-hb-hin" secondAttribute="bottom" constant="-2.5" id="0GT-C4-IcZ"/>
                     <constraint firstItem="Ofj-k7-u3O" firstAttribute="top" secondItem="A1G-On-sxH" secondAttribute="bottom" constant="10" id="287-Rf-7mj"/>
                     <constraint firstItem="DKR-hb-hin" firstAttribute="leading" secondItem="eEx-rY-9Z3" secondAttribute="trailing" constant="10" id="FjJ-bW-d2B"/>
                     <constraint firstItem="DKR-hb-hin" firstAttribute="centerY" secondItem="eEx-rY-9Z3" secondAttribute="centerY" id="Jyt-Jw-7SG"/>
                     <constraint firstItem="Ofj-k7-u3O" firstAttribute="leading" secondItem="DKR-hb-hin" secondAttribute="trailing" constant="10" id="Ll2-IP-H2B"/>
+                    <constraint firstItem="3Ho-Sx-X8E" firstAttribute="centerX" secondItem="DKR-hb-hin" secondAttribute="centerX" id="QMZ-1R-Z1c"/>
                     <constraint firstItem="X5c-gz-g0f" firstAttribute="leading" secondItem="eEx-rY-9Z3" secondAttribute="leading" constant="-15" id="WoW-kR-msV"/>
                     <constraint firstItem="A1G-On-sxH" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="Zcz-Rm-QaG"/>
                     <constraint firstItem="DKR-hb-hin" firstAttribute="centerX" secondItem="zUE-9f-8Vb" secondAttribute="centerX" id="eM0-fI-LdG"/>
@@ -124,6 +132,7 @@
                 <outlet property="homeBadgeImageView" destination="eEx-rY-9Z3" id="Aq7-Bo-kJ9"/>
                 <outlet property="homeFlagImageView" destination="xZi-9T-yEg" id="dRq-ex-DKw"/>
                 <outlet property="homeTeamNameLabel" destination="WQM-TT-ZNt" id="IQ5-pC-cnV"/>
+                <outlet property="minuteLabel" destination="3Ho-Sx-X8E" id="3lH-lt-glv"/>
                 <outlet property="scoreLabel" destination="DKR-hb-hin" id="YVQ-Eh-MM0"/>
                 <outlet property="stageTitleLabel" destination="zUE-9f-8Vb" id="W2I-7B-Xzz"/>
             </connections>

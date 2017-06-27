@@ -125,7 +125,7 @@ internal extension Sequence where Iterator.Element == Match.Full {
             let beforeStart = ComplicationDataSource.MatchSnapshot.init(match: match.notStartedSnapshot(), timelineDate: assumeSortedTimelineDate(for: match))
             let otherSnapshots = match.allSnapshots()
                 .map({ ComplicationDataSource.MatchSnapshot(match: $0.match,
-                                                            timelineDate: $0.match.date(afterMinutesFromStart: $0.minute)) })
+                                                            timelineDate: $0.match.date(afterRealMinutesFromStart: $0.minute)) })
             var all = [beforeStart]
             all.append(contentsOf: otherSnapshots)
             return all
