@@ -39,10 +39,10 @@ func fault(_ info: Any) {
 }
 
 func printWithContext(_ string: String? = nil, file: String = #file, line: UInt = #line, function: StaticString = #function) {
-//    #if DEBUG
+    #if DEBUG
         let str = string != nil ? " --> \(string!)" : ""
         print("\((file as NSString).lastPathComponent): \(function): \(line)\(str)")
-//    #endif
+    #endif
 }
 
 func logged<T>(_ value: T, _ message: String) -> T {

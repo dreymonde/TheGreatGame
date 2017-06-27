@@ -22,9 +22,9 @@ enum Loggers {
     }()
     
     static func start() {
-        Alba.InformBureau.isEnabled = true
-        Alba.InformBureau.Logger.enable()
         #if DEBUG
+            Alba.InformBureau.isEnabled = true
+            Alba.InformBureau.Logger.enable()
             cartographer?.enable()
         #endif
     }

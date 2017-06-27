@@ -13,6 +13,8 @@ import TheGreatKit
 
 final class TemplateProducer {
     
+    let tintColor = UIColor.init(named: .navigationBackground)
+    
     func template(for match: Match.Full, aforetime: Bool, family: CLKComplicationFamily) -> CLKComplicationTemplate? {
         return producer(for: family)(match, aforetime)
     }
@@ -44,12 +46,14 @@ final class TemplateProducer {
             let shortText = "\(match.home.shortName.firstTwoChars()) \(score.demo_string) \(match.away.shortName.firstTwoChars())"
             return CLKComplicationTemplateUtilitarianSmallFlat() <- {
                 $0.textProvider = CLKSimpleTextProvider(text: text, shortText: shortText)
+                $0.tintColor = tintColor
             }
         } else {
             let oneline = shortestOneLineMatchTextProvider(match: match)
             let date = textProvider(for: match.date, aforetime: aforetime)
             return CLKComplicationTemplateUtilitarianSmallFlat() <- {
                 $0.textProvider = CLKTextProvider(byJoining: oneline, andProvider: date, with: " ")
+                $0.tintColor = tintColor
             }
         }
     }
@@ -63,12 +67,14 @@ final class TemplateProducer {
             let shortText = "\(match.home.shortName.firstTwoChars()) \(score.demo_string) \(match.away.shortName.firstTwoChars())"
             return CLKComplicationTemplateUtilitarianLargeFlat() <- {
                 $0.textProvider = CLKSimpleTextProvider(text: text, shortText: shortText)
+                $0.tintColor = tintColor
             }
         } else {
             let oneline = oneLineMatchTextProvider(match: match)
             let date = textProvider(for: match.date, aforetime: aforetime)
             return CLKComplicationTemplateUtilitarianLargeFlat() <- {
                 $0.textProvider = CLKTextProvider(byJoining: oneline, andProvider: date, with: " ")
+                $0.tintColor = tintColor
             }
         }
     }
@@ -78,11 +84,13 @@ final class TemplateProducer {
             return CLKComplicationTemplateCircularSmallStackText() <- {
                 $0.line1TextProvider = shortestOneLineMatchTextProvider(match: match)
                 $0.line2TextProvider = scoreTextProvider(score)
+                $0.tintColor = tintColor
             }
         } else {
             return CLKComplicationTemplateCircularSmallStackText() <- {
                 $0.line1TextProvider = shortestOneLineMatchTextProvider(match: match)
                 $0.line2TextProvider = textProvider(for: match.date, aforetime: aforetime)
+                $0.tintColor = tintColor
             }
         }
     }
@@ -94,11 +102,13 @@ final class TemplateProducer {
                 $0.row2Column1TextProvider = CLKSimpleTextProvider(text: match.away.shortName)
                 $0.row1Column2TextProvider = scoreTextProvider(score.home)
                 $0.row2Column2TextProvider = scoreTextProvider(score.away)
+                $0.tintColor = tintColor
             }
         } else {
             return CLKComplicationTemplateExtraLargeStackText() <- {
                 $0.line1TextProvider = shortestOneLineMatchTextProvider(match: match)
                 $0.line2TextProvider = textProvider(for: match.date, aforetime: aforetime)
+                $0.tintColor = tintColor
             }
         }
     }
@@ -110,11 +120,13 @@ final class TemplateProducer {
                 $0.row2Column1TextProvider = CLKSimpleTextProvider(text: match.away.shortName)
                 $0.row1Column2TextProvider = scoreTextProvider(score.home)
                 $0.row2Column2TextProvider = scoreTextProvider(score.away)
+                $0.tintColor = tintColor
             }
         } else {
             return CLKComplicationTemplateModularSmallStackText() <- {
                 $0.line1TextProvider = shortestOneLineMatchTextProvider(match: match)
                 $0.line2TextProvider = textProvider(for: match.date, aforetime: aforetime)
+                $0.tintColor = tintColor
             }
         }
     }
@@ -127,12 +139,14 @@ final class TemplateProducer {
                 $0.row2Column1TextProvider = CLKSimpleTextProvider(text: match.away.name)
                 $0.row1Column2TextProvider = scoreTextProvider(score.home)
                 $0.row2Column2TextProvider = scoreTextProvider(score.away)
+                $0.tintColor = tintColor
             }
         } else {
             return CLKComplicationTemplateModularLargeStandardBody() <- {
                 $0.headerTextProvider = longestOneLineMatchTextProvider(match: match)
                 $0.body1TextProvider = CLKSimpleTextProvider(text: match.stageTitle)
                 $0.body2TextProvider = textProvider(for: match.date, aforetime: aforetime)
+                $0.tintColor = tintColor
             }
         }
     }
