@@ -66,6 +66,9 @@ final class Application {
         case .heroku:
             printWithContext("Using the-great-game-ruby.herokuapp.com as a server (Heroku)")
             return API.heroku()
+        case .digitalOcean:
+            printWithContext("Using Digital Ocean droplet as a content server")
+            return API.digitalOcean()
         }
     }
     

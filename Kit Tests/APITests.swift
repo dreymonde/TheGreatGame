@@ -48,7 +48,7 @@ class APITests: XCTestCase {
         let api = MatchesAPI.macBookSteve()
         let matches = try api.allFull.mapValues({ $0.content.matches }).makeSyncCache().retrieve()
         let ned_nor = try matches.first.unwrap()
-        let cut = ned_nor.snapshot(beforeMinute: 14)
+        let cut = ned_nor.snapshot(beforeRealMinute: 14)
         dump(cut)
         XCTAssertEqual(try cut.score.unwrap().home, 1)
     }
@@ -56,6 +56,11 @@ class APITests: XCTestCase {
     func testStages() throws {
         let api = MatchesAPI.gitHub(networkCache: APITests.testingNetworkCache)
         let stages = try api.stages.mapValues({ $0.content }).makeSyncCache().retrieve()
+    }
+    
+    func testAPI() throws {
+        let api = MatchesAPI.digitalOcean()
+        
     }
     
 }

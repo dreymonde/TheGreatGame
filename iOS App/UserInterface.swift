@@ -42,6 +42,7 @@ final class UserInterface {
     
     func prefetchFavorites() {
         logic.favoriteTeams.registry.all.forEach({ self.resources.fullTeam($0).prefetch() })
+        logic.favoriteMatches.registry.all.forEach({ self.resources.fullMatch($0).prefetch() })
     }
     
     var tabBarController: UITabBarController! {

@@ -39,6 +39,13 @@ extension APIProvider {
         return Self(dataProvider: subcache)
     }
     
+    public static func digitalOcean(networkCache: ReadOnlyCache<URL, Data> = Self.makeUrlSessionCache()) -> Self {
+        let baseURLString = "http://storage.thegreatgame.world/content/"
+        let subcache: ReadOnlyCache<String, Data> = networkCache
+            .mapKeys({ try URL.init(string: baseURLString + $0).unwrap() })
+        return Self(dataProvider: subcache)
+    }
+    
     public static func gitHub(urlSession: URLSession) -> Self {
         let sessionCache = Self.makeUrlSessionCache(from: urlSession)
         return Self.gitHub(networkCache: sessionCache)
