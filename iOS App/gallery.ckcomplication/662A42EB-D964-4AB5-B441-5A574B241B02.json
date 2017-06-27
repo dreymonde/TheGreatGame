@@ -1,0 +1,15 @@
+{
+  "tintColor" : {
+    "green" : 0.3647059,
+    "red" : 0.7529412,
+    "alpha" : 1,
+    "blue" : 0.3647059
+  },
+  "class" : "CLKComplicationTemplateUtilitarianLargeFlat",
+  "textProvider" : {
+    "shortText" : "GE 1:1 SW",
+    "class" : "CLKSimpleTextProvider",
+    "text" : "GER 1:1 SWE"
+  },
+  "version" : 30000
+}

@@ -9,6 +9,12 @@
   },
   "column2Alignment" : 0,
   "highlightColumn2" : false,
+  "tintColor" : {
+    "green" : 0.3647059,
+    "red" : 0.7529412,
+    "alpha" : 1,
+    "blue" : 0.3647059
+  },
   "class" : "CLKComplicationTemplateExtraLargeColumnsText",
   "row2Column1TextProvider" : {
     "class" : "CLKSimpleTextProvider",

@@ -8,18 +8,21 @@
     "text" : "1"
   },
   "column2Alignment" : 0,
-  "headerTextProvider" : {
-    "class" : "CLKSimpleTextProvider",
-    "text" : "Group Stage"
+  "highlightColumn2" : false,
+  "tintColor" : {
+    "green" : 0.3647059,
+    "red" : 0.7529412,
+    "alpha" : 1,
+    "blue" : 0.3647059
   },
-  "class" : "CLKComplicationTemplateModularLargeTable",
+  "class" : "CLKComplicationTemplateModularSmallColumnsText",
   "row2Column1TextProvider" : {
     "class" : "CLKSimpleTextProvider",
-    "text" : "Sweden"
+    "text" : "SWE"
   },
   "row1Column1TextProvider" : {
     "class" : "CLKSimpleTextProvider",
-    "text" : "Germany"
+    "text" : "GER"
   },
   "version" : 30000
 }
