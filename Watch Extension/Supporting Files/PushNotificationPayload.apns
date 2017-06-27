@@ -1,9 +1,10 @@
 {
     "aps": {
         "alert": {
-            "title": "Goal!"
+            "title": "Goal!",
+            "body": "Goal by Norway?"
         },
-        "category": "myCategory"
+        "category": "nan"
     },
     
     "content": {

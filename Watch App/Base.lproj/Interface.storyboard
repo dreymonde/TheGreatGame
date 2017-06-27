@@ -45,7 +45,7 @@
                                                 </items>
                                                 <edgeInsets key="margins" left="10" right="10" top="0.0" bottom="0.0"/>
                                             </group>
-                                            <separator width="0.29999999999999999" alignment="left" verticalAlignment="bottom" id="qUs-Ex-RaG">
+                                            <separator width="1" alignment="left" verticalAlignment="bottom" id="qUs-Ex-RaG">
                                                 <color key="color" red="0.70196078429999997" green="0.99215686270000003" blue="0.74509803919999995" alpha="1" colorSpace="calibratedRGB"/>
                                             </separator>
                                         </items>
@@ -76,36 +76,6 @@
                 </controller>
             </objects>
             <point key="canvasLocation" x="220" y="345"/>
-        </scene>
-        <!--Static Notification Interface Controller-->
-        <scene sceneID="AEw-b0-oYE">
-            <objects>
-                <notificationController id="YCC-NB-fut">
-                    <items>
-                        <label alignment="left" text="Alert Label" id="IdU-wH-bcW"/>
-                    </items>
-                    <notificationCategory key="notificationCategory" identifier="myCategory" id="JfB-70-Muf"/>
-                    <connections>
-                        <outlet property="notificationAlertLabel" destination="IdU-wH-bcW" id="JKC-fr-R95"/>
-                        <segue destination="4sK-HA-Art" kind="relationship" relationship="dynamicNotificationInterface" id="kXh-Jw-8B1"/>
-                    </connections>
-                </notificationController>
-            </objects>
-            <point key="canvasLocation" x="220" y="643"/>
-        </scene>
-        <!--Notification Controller-->
-        <scene sceneID="ZPc-GJ-vnh">
-            <objects>
-                <controller id="4sK-HA-Art" customClass="NotificationController" customModule="Watch" customModuleProvider="target">
-                    <items>
-                        <label height="73" alignment="center" verticalAlignment="center" text="Sweden 1:0 Norway" numberOfLines="0" id="Q8N-9h-ro7"/>
-                    </items>
-                    <connections>
-                        <outlet property="testLabel" destination="Q8N-9h-ro7" id="sV1-zW-6la"/>
-                    </connections>
-                </controller>
-            </objects>
-            <point key="canvasLocation" x="468" y="643"/>
         </scene>
     </scenes>
     <color key="tintColor" red="0.88235294117647056" green="0.34509803921568627" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>

@@ -254,7 +254,7 @@ public enum Match {
             }
             if let lastEvent = events.last {
                 let dateOfLastEvent = self.date(afterRealMinutesFromStart: lastEvent.realMinute)
-                let intervalAfter = Int(Date().timeIntervalSince(dateOfLastEvent))
+                let intervalAfter = Int(Date().timeIntervalSince(dateOfLastEvent) / 60)
                 return "\(lastEvent.matchMinute + intervalAfter)'"
             } else {
                 return nil

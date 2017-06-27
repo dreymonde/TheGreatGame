@@ -121,12 +121,14 @@ class MatchesInterfaceController: WKInterfaceController {
     func configureProgressSeparator(_ separator: WKInterfaceSeparator, with match: Match.Full) {
         if match.isEnded {
             separator.setRelativeWidth(1.0, withAdjustment: 0)
-            separator.setColor(.green)
+            let finishedColor = UIColor(red: 46 / 255, green: 204 / 255, blue: 113 / 255, alpha: 1.0)
+            separator.setColor(finishedColor)
         } else if !match.isStarted {
             separator.setRelativeWidth(0.0, withAdjustment: 0)
         } else {
             separator.setRelativeWidth(CGFloat(match.progress()), withAdjustment: 0)
-            separator.setColor(.blue)
+            let inProcessColor = UIColor(red: 52 / 255, green: 152 / 255, blue: 219 / 255, alpha: 1.0)
+            separator.setColor(inProcessColor)
         }
     }
     
