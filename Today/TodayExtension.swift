@@ -20,7 +20,10 @@ final class TodayExtension {
     let images: Images
     
     init() {
-        self.api = API.gitHub()
+        
+        ShallowsLog.isEnabled = true
+        
+        self.api = API.digitalOcean()
         self.apiCache = APICache.inSharedCachesDirectory()
         self.favoriteTeams = FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteTeamsSubPath)
         self.favoriteMatches = FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteMatchesSubPath)

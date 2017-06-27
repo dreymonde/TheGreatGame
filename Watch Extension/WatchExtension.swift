@@ -30,8 +30,7 @@ final class WatchExtension {
         ShallowsLog.isEnabled = true
         self.phone = Phone()
         self.images = Images.inLocalCachesDirectory(subpath: "dev-3-images")
-        self.api = API.gitHub(urlSession: URLSession.init(configuration: .default))
-//        self.api = API.macBookSteve()
+        self.api = API.digitalOcean()
         self.apiCache = APICache.inLocalCachesDirectory()
         self.favoriteTeams = FavoritesRegistry.inLocalDocumentsDirectory()
         self.favoriteMatches = FavoritesRegistry.inLocalDocumentsDirectory()

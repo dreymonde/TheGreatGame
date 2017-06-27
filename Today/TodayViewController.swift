@@ -14,11 +14,19 @@ import TheGreatKit
 
 class TodayViewController: UIViewController, NCWidgetProviding {
     
+    static let dateFormatter = DateFormatter() <- {
+        $0.timeStyle = .short
+        $0.setLocalizedDateFormatFromTemplate("MMMMd" + $0.dateFormat)
+    }
+    
     @IBOutlet weak var homeBadgeImageView: UIImageView!
     @IBOutlet weak var awayBadgeImageView: UIImageView!
 
     @IBOutlet weak var homeNameLabel: UILabel!
     @IBOutlet weak var awayNameLabel: UILabel!
+    
+    @IBOutlet weak var scoreLabel: UILabel!
+    @IBOutlet weak var stageTitle: UILabel!
     
     let todayExtension = TodayExtension()
     
@@ -49,6 +57,8 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     func setup(with match: Match.Full, afterDownload: Bool) {
         self.homeNameLabel.text = match.home.shortName
         self.awayNameLabel.text = match.away.shortName
+        self.scoreLabel.text = match.score?.demo_string ?? "-:-"
+        self.stageTitle.text = TodayViewController.dateFormatter.string(from: match.date)
         avenue.prepareItem(at: match.home.badges.large)
         avenue.prepareItem(at: match.away.badges.large)
         self.homeBadgeImageView.setImage(avenue.item(at: match.home.badges.large), afterDownload: false)
@@ -66,6 +76,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
                     self.setup(with: mostRelevant, afterDownload: false)
                 }
             } else {
+                fault("No matches?")
                 self.completion?(.failed)
             }
         }

@@ -41,9 +41,9 @@ extension APIProvider {
     }
     
     public static func digitalOcean(networkCache: ReadOnlyCache<URL, Data> = Self.makeUrlSessionCache()) -> Self {
-        let baseURLString = "http://storage.thegreatgame.world/content/"
+        let baseURL = Server.digitalOceanStorageBaseURL
         let subcache: ReadOnlyCache<String, Data> = networkCache
-            .mapKeys({ try URL.init(string: baseURLString + $0).unwrap() })
+            .mapKeys({ baseURL.appendingPathComponent($0) })
             .renaming(to: "digital-ocean-droplet")
         return Self(dataProvider: subcache)
     }
