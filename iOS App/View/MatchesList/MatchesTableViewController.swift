@@ -12,6 +12,10 @@ import Shallows
 import Avenues
 import Alba
 
+let monthAndDayFormatter = DateFormatter() <- {
+    $0.setLocalizedDateFormatFromTemplate("MMMMd")
+}
+
 class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, Showing {
     
     // MARK: - Data source
@@ -40,6 +44,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
         configure(tableView)
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
         self.matchCellFiller = MatchCellFiller(avenue: avenue,
+                                               scoreMode: .timeOnly,
                                                isFavorite: { [unowned self] in self.isFavorite($0) },
                                                isAbsoluteTruth: { [unowned self] in self.resource.isAbsoluteTruth })
         configure(avenue)
@@ -105,7 +110,10 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return stages[section].title
+        let stage = stages[section]
+        let stageDate = stage.matches.first?.date
+        let stageDateString = stageDate.map(monthAndDayFormatter.string(from:)) ?? "NO DATE"
+        return "\(stage.title)\n\(stageDateString)"
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

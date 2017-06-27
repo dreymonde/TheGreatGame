@@ -13,6 +13,10 @@ enum Server : String {
     case heroku
     case digitalOcean = "digital-ocean"
     case macBookSteve = "macbook-steve"
+    
+    static let digitalOceanStorageBaseURL = URL(string: "http://storage.thegreatgame.world/content")!
+    static let digitalOceanAPIBaseURL = URL(string: "http://storage.thegreatgame.world")!
+    
 }
 
 extension LaunchArgumentKey {

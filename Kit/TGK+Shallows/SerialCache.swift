@@ -17,6 +17,14 @@ extension CacheProtocol {
     
 }
 
+extension ReadOnlyCache {
+    
+    public func renaming(to newName: String) -> ReadOnlyCache<Key, Value> {
+        return ReadOnlyCache(cacheName: newName, retrieve: self.retrieve)
+    }
+    
+}
+
 extension CacheProtocol {
     
     public func serial() -> Cache<Key, Value> {

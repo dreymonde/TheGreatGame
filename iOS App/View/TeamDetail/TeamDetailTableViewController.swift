@@ -75,6 +75,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
         self.smallBadgesAvenue = makeAvenue(CGSize(width: 30, height: 30))
         self.mainBadgeAvenue = makeAvenue(CGSize(width: 50, height: 50))
         self.matchCellFiller = MatchCellFiller(avenue: smallBadgesAvenue,
+                                               scoreMode: .dateAndTime,
                                                isFavorite: { _ in return false },
                                                isAbsoluteTruth: { [unowned self] in self.resource.isAbsoluteTruth })
         self.teamGroupCellFiller = TeamGroupCellFiller(avenue: smallBadgesAvenue,

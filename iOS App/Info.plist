@@ -37,6 +37,13 @@
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
+			<key>api.thegreatgame.world</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
 			<key>storage.thegreatgame.world</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>

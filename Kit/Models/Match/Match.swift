@@ -20,7 +20,12 @@ public protocol MatchProtocol {
 }
 
 let shortTimeDateFormatter = DateFormatter() <- {
-    $0.setLocalizedDateFormatFromTemplate("Hmm")
+    $0.timeStyle = .short
+    $0.dateStyle = .none
+}
+
+let shortDateDateFormatter = DateFormatter() <- {
+    $0.setLocalizedDateFormatFromTemplate("MMMd")
 }
 
 extension String {
@@ -67,6 +72,14 @@ extension MatchProtocol {
             return score.demo_string
         } else {
             return shortTimeDateFormatter.string(from: date)
+        }
+    }
+    
+    public func scoreOrDateString() -> String {
+        if let score = score {
+            return score.demo_string
+        } else {
+            return "\(shortDateDateFormatter.string(from: date))\n\(shortTimeDateFormatter.string(from: date))"
         }
     }
     

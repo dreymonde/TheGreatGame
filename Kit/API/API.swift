@@ -36,6 +36,7 @@ extension APIProvider {
         let baseURL = URL(string: "https://the-great-game-ruby.herokuapp.com")!
         let subcache: ReadOnlyCache<String, Data> = networkCache
             .mapKeys({ URL.init(string: $0, relativeTo: baseURL)! })
+            .renaming(to: "heroku-server")
         return Self(dataProvider: subcache)
     }
     
@@ -43,6 +44,7 @@ extension APIProvider {
         let baseURLString = "http://storage.thegreatgame.world/content/"
         let subcache: ReadOnlyCache<String, Data> = networkCache
             .mapKeys({ try URL.init(string: baseURLString + $0).unwrap() })
+            .renaming(to: "digital-ocean-droplet")
         return Self(dataProvider: subcache)
     }
     
@@ -61,8 +63,8 @@ extension APIProvider {
         return Self(dataProvider: cache)
     }
     
-    internal static func makeUrlSessionCache(from session: URLSession = .init(configuration: .default)) -> ReadOnlyCache<URL, Data> {
-        return URLSession(configuration: .default)
+    public static func makeUrlSessionCache(from session: URLSession = .init(configuration: .ephemeral)) -> ReadOnlyCache<URL, Data> {
+        return session
             .asReadOnlyCache()
             .droppingResponse()
             .usingURLKeys()

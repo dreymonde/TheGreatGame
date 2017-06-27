@@ -38,7 +38,7 @@
                                             <group width="1" alignment="left" verticalAlignment="center" id="pCD-GA-pOh">
                                                 <items>
                                                     <imageView width="32" height="32" alignment="left" verticalAlignment="center" id="OVm-rs-KXT"/>
-                                                    <label alignment="center" verticalAlignment="center" text="-:-" id="ULF-4F-fKL">
+                                                    <label alignment="center" verticalAlignment="center" text="-:-" textAlignment="center" numberOfLines="0" id="ULF-4F-fKL">
                                                         <fontDescription key="font" style="UICTFontTextStyleHeadline"/>
                                                     </label>
                                                     <imageView width="32" height="32" alignment="right" verticalAlignment="center" id="7nt-yr-fy6"/>

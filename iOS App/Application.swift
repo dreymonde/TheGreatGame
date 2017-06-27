@@ -54,7 +54,7 @@ final class Application {
     }
     
     static func makeAPI() -> API {
-        let server = launchArgument(.server) ?? .github
+        let server = launchArgument(.server) ?? .digitalOcean
         switch server {
         case .github:
             let urlSession = URLSession(configuration: .default)
@@ -76,15 +76,16 @@ final class Application {
         .void()
         .wait(seconds: 4.0)
     
+    static let uploadCache = upload(forURL: Server.digitalOceanAPIBaseURL)
+    
     static func makeFavorites(tokens: DeviceTokens) -> Favorites<Team.ID> {
         let keepersCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "teams-upload-keepers")
         print(keepersCache.directoryURL)
         return Favorites<Team.ID>(favoritesRegistry: FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteTeamsSubPath),
                                   tokens: tokens,
-                                  indicatorManager: .application,
                                   shouldCheckUploadConsistency: shouldCheckUploadConsistency,
                                   consistencyKeepersStorage: keepersCache.asCache(),
-                                  apiSubpath: "favorite-teams")
+                                  upload: uploadCache.singleKey("favorite-teams"))
     }
     
     static func makeFavorites(tokens: DeviceTokens) -> Favorites<Match.ID> {
@@ -92,35 +93,34 @@ final class Application {
         print(keepersCache.directoryURL)
         return Favorites<Match.ID>(favoritesRegistry: FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteMatchesSubPath),
                                    tokens: tokens,
-                                   indicatorManager: .application,
                                    shouldCheckUploadConsistency: shouldCheckUploadConsistency,
                                    consistencyKeepersStorage: keepersCache.asCache(),
-                                   apiSubpath: "favorite-matches")
+                                   upload: uploadCache.singleKey("favorite-matches"))
     }
 
     static func makeUnsubscribes(tokens: DeviceTokens) -> Favorites<Match.ID> {
         let keepersCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "matches-unsub-upload-keepers")
         return Favorites<Match.ID>(favoritesRegistry: FavoritesRegistry.inSharedDocumentsDirectory(subpath: UnsubscribedMatchesSubPath),
                                    tokens: tokens,
-                                   indicatorManager: .application,
                                    shouldCheckUploadConsistency: shouldCheckUploadConsistency,
                                    consistencyKeepersStorage: keepersCache.asCache(),
-                                   apiSubpath: "unsubscribe")
+                                   upload: uploadCache.singleKey("unsubscribe"))
     }
     
     static func makeTokenUploader(getToken: Retrieve<PushToken>) -> TokenUploader {
         let fakeToken = PushToken(Data(repeating: 0, count: 1))
         
-        let keeperesCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "pushkit-token-upload-keeper")
+        let keepersCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "pushkit-token-upload-keeper")
             .mapValues(transformIn: PushToken.init,
                        transformOut: { $0.rawToken })
             .singleKey("uploaded-token")
             .defaulting(to: fakeToken)
         
-        let fakeUpload = TokenUpload(deviceIdentifier: UIDevice.current.identifierForVendor!, token: fakeToken)
-        return TokenUploader(pusher: DevCache.successing(with: fakeUpload),
+        let pusher = uploadCache.singleKey("pushkit-token")
+        
+        return TokenUploader(pusher: TokenUploader.adapt(pusher: pusher),
                              getDeviceIdentifier: { UIDevice.current.identifierForVendor },
-                             consistencyKeepersLastUpload: keeperesCache,
+                             consistencyKeepersLastUpload: keepersCache,
                              getToken: getToken)
     }
     

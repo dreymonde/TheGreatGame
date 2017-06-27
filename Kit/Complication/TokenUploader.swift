@@ -27,6 +27,12 @@ public final class TokenUploader {
         consistencyKeeper.declare(didUploadFavorites: self.didUploadToken.proxy.map({ $0.token }))
     }
     
+    public static func adapt(pusher: Cache<Void, Data>) -> Cache<Void, TokenUpload> {
+        return pusher
+            .mapJSONDictionary()
+            .mapMappable()
+    }
+    
     public func declare(shouldCheckUploadConsistency: Subscribe<Void>) {
         consistencyKeeper.check(listeningTo: shouldCheckUploadConsistency)
     }
@@ -67,10 +73,18 @@ public struct TokenUpload : Equatable {
     
 }
 
-extension TokenUpload : OutMappable {
+extension TokenUpload : Mappable {
     
     public enum MappingKeys : String, IndexPathElement {
         case device_identifier, token
+    }
+    
+    public enum InMappingError : Error {
+        case outMapOnly
+    }
+    
+    public init<Source>(mapper: InMapper<Source, MappingKeys>) throws where Source : InMap {
+        throw InMappingError.outMapOnly
     }
     
     public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {

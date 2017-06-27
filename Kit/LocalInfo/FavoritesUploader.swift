@@ -15,14 +15,18 @@ internal final class FavoritesUploader<IDType : IDProtocol> where IDType.RawValu
     let getNotificationsToken: Retrieve<PushToken>
     let getDeviceIdentifier: () -> UUID?
     
-    init(pusher: Cache<Void, Data>,
+    init(pusher: Cache<Void, FavoritesUpload<IDType>>,
          getNotificationsToken: Retrieve<PushToken>,
          getDeviceIdentifier: @escaping () -> UUID?) {
         self.pusher = pusher
-            .mapJSONDictionary()
-            .mapMappable()
         self.getNotificationsToken = getNotificationsToken
         self.getDeviceIdentifier = getDeviceIdentifier
+    }
+    
+    internal static func adapt(pusher: Cache<Void, Data>) -> Cache<Void, FavoritesUpload<IDType>> {
+        return pusher
+            .mapJSONDictionary()
+            .mapMappable()
     }
     
     let pusher: Cache<Void, FavoritesUpload<IDType>>

@@ -58,15 +58,11 @@ public final class Favorites<IDType : IDProtocol> where IDType.RawValue == Int {
         
         public convenience init(favoritesRegistry: FavoritesRegistry<IDType>,
                                 tokens: DeviceTokens,
-                                indicatorManager: NetworkActivityIndicatorManager,
                                 shouldCheckUploadConsistency: Subscribe<Void>,
                                 consistencyKeepersStorage: Cache<String, Data>,
-                                apiSubpath: String) {
+                                upload: Cache<Void, Data>) {
             let favs = favoritesRegistry.favorites
-            let pusher = PUSHer(urlSession: URLSession.init(configuration: .default))
-                .singleKey(URL.init(string: "https://the-great-game-ruby.herokuapp.com/\(apiSubpath)")!)
-                .connectingNetworkActivityIndicator(manager: indicatorManager)
-            let uploader = FavoritesUploader<IDType>(pusher: pusher,
+            let uploader = FavoritesUploader<IDType>(pusher: FavoritesUploader.adapt(pusher: upload),
                                                      getNotificationsToken: tokens.getNotification,
                                                      getDeviceIdentifier: { UIDevice.current.identifierForVendor })
             let keeper = Favorites.makeKeeper(diskCache: consistencyKeepersStorage, favorites: favs, uploader: uploader)
@@ -77,6 +73,12 @@ public final class Favorites<IDType : IDProtocol> where IDType.RawValue == Int {
         }
         
     }
+    
+    public func upload(forURL url: URL) -> Cache<String, Data> {
+        return PUSHer(urlSession: URLSession.init(configuration: .default))
+            .mapKeys({ url.appendingPathComponent($0) })
+    }
+
     
 #endif
 
