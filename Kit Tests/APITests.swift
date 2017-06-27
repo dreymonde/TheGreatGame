@@ -28,13 +28,13 @@ class APITests: XCTestCase {
     }
     
     func testAllTeams() throws {
-        let api = TeamsAPI.gitHub(networkCache: APITests.testingNetworkCache)
+        let api = TeamsAPI.digitalOcean(networkCache: APITests.testingNetworkCache)
         let teams = try api.all.mapValues({ $0.content.teams }).makeSyncCache().retrieve()
         XCTAssertEqual(teams.count, 16)
     }
     
     func testTeamID1() throws {
-        let api = TeamsAPI.gitHub(networkCache: APITests.testingNetworkCache)
+        let api = TeamsAPI.digitalOcean(networkCache: APITests.testingNetworkCache)
         let team1 = try api.fullTeam.mapValues({ $0.content }).makeSyncCache().retrieve(forKey: Team.ID(rawValue: 1)!)
         print(team1)
         XCTAssertEqual(team1.name, "Sweden")
@@ -45,22 +45,12 @@ class APITests: XCTestCase {
     }
     
     func testAllMatchesFull() throws {
-        let api = MatchesAPI.macBookSteve()
+        let api = MatchesAPI.digitalOcean()
         let matches = try api.allFull.mapValues({ $0.content.matches }).makeSyncCache().retrieve()
         let ned_nor = try matches.first.unwrap()
         let cut = ned_nor.snapshot(beforeRealMinute: 14)
         dump(cut)
         XCTAssertEqual(try cut.score.unwrap().home, 1)
-    }
-    
-    func testStages() throws {
-        let api = MatchesAPI.gitHub(networkCache: APITests.testingNetworkCache)
-        let stages = try api.stages.mapValues({ $0.content }).makeSyncCache().retrieve()
-    }
-    
-    func testAPI() throws {
-        let api = MatchesAPI.digitalOcean()
-        
     }
     
 }

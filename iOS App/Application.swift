@@ -49,7 +49,7 @@ final class Application {
         favoriteTeams.declare()
         favoriteMatches.declare()
         unsubscribedMatches.declare()
-        let pushKitTokenConsistency = watch?.pushKitReceiver.didRegisterWithToken.proxy.void() ?? .empty()
+        let pushKitTokenConsistency = tokens.didUpdateComplicationToken.proxy.void()
         pushKitTokenUploader.declare(shouldCheckUploadConsistency: pushKitTokenConsistency)
     }
     
@@ -77,6 +77,7 @@ final class Application {
         .wait(seconds: 4.0)
     
     static let uploadCache = upload(forURL: Server.digitalOceanAPIBaseURL)
+        .connectingNetworkActivityIndicator(manager: .application)
     
     static func makeFavorites(tokens: DeviceTokens) -> Favorites<Team.ID> {
         let keepersCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "teams-upload-keepers")

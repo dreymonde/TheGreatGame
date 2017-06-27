@@ -9,11 +9,7 @@
 import UIKit
 
 extension UIButton {
-    
-    static func star() -> UIButton {
-        later
-    }
-    
+        
     func asStarButton() {
         let emptyStarImage = #imageLiteral(resourceName: "Unfilled_Star")
         let fullStarImage = #imageLiteral(resourceName: "Filled_Star")

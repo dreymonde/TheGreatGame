@@ -22,18 +22,5 @@ class UploadTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
-    
-    func testSome() {
-        let fakeToken = Data.init(repeating: 4, count: 8)
-        let uploader = FavoritesUploader<Team.ID>(rollback: jprint,
-                                                  getNotificationsToken: { PushToken(fakeToken) },
-                                                  getComplicationToken: { nil })
-        let pub = Publisher<(FavoriteTeams.Update, Set<Team.ID>)>(label: "test")
-        uploader.declare(didUpdateFavorites: pub.proxy)
-        let ids = Set([1, 3, 10].flatMap(Team.ID.init))
-        let update = FavoriteTeams.Update.init(id: ids.first!, isFavorite: true)
-        pub.publish((update, ids))
-        RunLoop.current.run()
-    }
-    
+        
 }

@@ -54,7 +54,7 @@ extension APIProvider {
     }
     
     public static func macBookSteve() -> Self {
-        let directory = "/Users/oleg/Development/TheGreatGame/Storage" <* URL.init(fileURLWithPath:)
+        let directory = "/Users/oleg/Development/TheGreatGame/Storage/content" <* URL.init(fileURLWithPath:)
         let rawFS = RawFileSystemCache(directoryURL: directory)
             .mapKeys(RawFileSystemCache.FileName.init)
         let cache = rawFS

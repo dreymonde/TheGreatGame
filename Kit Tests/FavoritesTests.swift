@@ -60,10 +60,10 @@ class FavoritesTests: XCTestCase {
     func testFavorites() throws {
         let fs = FileSystemCache.inDirectory(.cachesDirectory, appending: "fav-tests-1")
         let favs = FavoriteTeams(diskCache: fs.asCache())
-        let waiter = favs.didUpdateFavorite.proxy.makeWaiter()
+        let waiter = favs.didUpdateFavorite.makeWaiter()
         favs.updateFavorite(id: Team.ID(rawValue: 1)!, isFavorite: true)
         waiter.wait()
-        let sync = favs.favoriteTeams.makeSyncCache()
+        let sync = favs.favorites.makeSyncCache()
         let withID1 = try sync.retrieve()
         XCTAssertEqual(withID1, [Team.ID.init(rawValue: 1)!])
         do { try FileManager.default.removeItem(at: fs.directoryURL) } catch {  }
@@ -72,11 +72,11 @@ class FavoritesTests: XCTestCase {
     func testGetMatches() throws {
         let fs = FileSystemCache.inDirectory(.cachesDirectory, appending: "fav-tests-2")
         let favs = FavoriteTeams(diskCache: fs.asCache())
-        let waiter = favs.didUpdateFavorite.proxy.makeWaiter()
+        let waiter = favs.didUpdateFavorite.makeWaiter()
         favs.updateFavorite(id: Team.ID(rawValue: 1)!, isFavorite: true)
         waiter.wait()
-        let favsIDs = try favs.favoriteTeams.makeSyncCache().retrieve()
-        let api = API.macBookSteve().matches.all.mapValues({ $0.content.matches }).makeSyncCache()
+        let favsIDs = try favs.favorites.makeSyncCache().retrieve()
+        let api = API.digitalOcean().matches.all.mapValues({ $0.content.matches }).makeSyncCache()
         let matches = try api.retrieve().filter({ favsIDs.contains($0.home.id) || favsIDs.contains($0.away.id) })
         dump(matches.mostRelevant()!)
         do { try FileManager.default.removeItem(at: fs.directoryURL) } catch {  }

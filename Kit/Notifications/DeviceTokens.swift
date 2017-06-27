@@ -42,12 +42,17 @@ public final class DeviceTokens {
         complication.subscribe(self, with: DeviceTokens.updateComplicationToken)
     }
     
+    public let didUpdateNotificationsToken = Publisher<PushToken>(label: "DeviceTokens.didUpdateNotificationsToken")
+    public let didUpdateComplicationToken = Publisher<PushToken>(label: "DeviceTokens.didUpdateComplicationToken")
+    
     func updateNotificationsToken(_ token: PushToken) {
         self.notifications.write(token)
+        didUpdateNotificationsToken.publish(token)
     }
     
     func updateComplicationToken(_ token: PushToken) {
         self.complication.write(token)
+        didUpdateComplicationToken.publish(token)
     }
     
 }

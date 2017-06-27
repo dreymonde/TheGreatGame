@@ -30,7 +30,7 @@ internal final class NotificationAuthorizer {
     
     private func setCategories() {
         let unsubscribe = UNNotificationAction(identifier: NotificationAction.unsubscribeIdentifier,
-                                               title: "Unsubscribe".unlocalized,
+                                               title: "Unsubscribe",
                                                options: [])
         let match_update = UNNotificationCategory(identifier: "match-update",
                                                   actions: [unsubscribe],
