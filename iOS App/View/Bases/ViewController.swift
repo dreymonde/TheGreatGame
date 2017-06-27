@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import TheGreatKit
 
 class ViewController : UIViewController {
     
@@ -14,4 +15,19 @@ class ViewController : UIViewController {
         print("Deinit \(self)")
     }
     
+}
+
+extension UIViewController {
+    
+    func presentText(_ text: String) {
+        let alert = UIAlertController(title: nil,
+                                      message: "Marking a team as favorite enables push notifications. It also gives priority for the games of this team for Today widget and Apple Watch complication.",
+                                      preferredStyle: .alert)
+        let ok = UIAlertAction(title: "OK",
+                               style: .default,
+                               handler: nil)
+        alert.addAction(ok)
+        self.present(alert, animated: true)
+    }
+        
 }
