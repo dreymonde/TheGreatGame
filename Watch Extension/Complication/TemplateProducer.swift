@@ -46,6 +46,7 @@ final class TemplateProducer {
             let shortText = "\(match.home.shortName.firstTwoChars()) \(score.demo_string) \(match.away.shortName.firstTwoChars())"
             return CLKComplicationTemplateUtilitarianSmallFlat() <- {
                 $0.textProvider = CLKSimpleTextProvider(text: text, shortText: shortText)
+                $0.imageProvider = imageProvider(forSize: ._18)
                 $0.tintColor = tintColor
             }
         } else {
@@ -53,6 +54,7 @@ final class TemplateProducer {
             let date = textProvider(for: match.date, aforetime: aforetime)
             return CLKComplicationTemplateUtilitarianSmallFlat() <- {
                 $0.textProvider = CLKTextProvider(byJoining: oneline, andProvider: date, with: " ")
+                $0.imageProvider = imageProvider(forSize: ._18)
                 $0.tintColor = tintColor
             }
         }
@@ -67,6 +69,7 @@ final class TemplateProducer {
             let shortText = "\(match.home.shortName.firstTwoChars()) \(score.demo_string) \(match.away.shortName.firstTwoChars())"
             return CLKComplicationTemplateUtilitarianLargeFlat() <- {
                 $0.textProvider = CLKSimpleTextProvider(text: text, shortText: shortText)
+                $0.imageProvider = imageProvider(forSize: ._18)
                 $0.tintColor = tintColor
             }
         } else {
@@ -74,6 +77,7 @@ final class TemplateProducer {
             let date = textProvider(for: match.date, aforetime: aforetime)
             return CLKComplicationTemplateUtilitarianLargeFlat() <- {
                 $0.textProvider = CLKTextProvider(byJoining: oneline, andProvider: date, with: " ")
+                $0.imageProvider = imageProvider(forSize: ._18)
                 $0.tintColor = tintColor
             }
         }
@@ -175,6 +179,22 @@ final class TemplateProducer {
         let text = "\(match.home.shortName.firstTwoChars()):\(match.away.shortName.firstTwoChars())"
         let homeOnly = "\(match.home.shortName)"
         return CLKSimpleTextProvider(text: text, shortText: homeOnly)
+    }
+    
+    private enum ImageSize38 {
+        case _18
+    }
+    
+    private func imageProvider(forSize size: ImageSize38) -> CLKImageProvider {
+        switch size {
+        case ._18:
+            let bound = WKInterfaceDevice.current().screenBounds
+            if bound.width > 136.0 {
+                return CLKImageProvider(onePieceImage: #imageLiteral(resourceName: "compicon40"))
+            } else {
+                return CLKImageProvider(onePieceImage: #imageLiteral(resourceName: "compicon36"))
+            }
+        }
     }
     
     private func textProvider(for date: Date, aforetime: Bool) -> CLKTextProvider {
