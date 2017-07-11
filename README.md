@@ -1,4 +1,6 @@
-# TheGreatGame
+# Women's Football 2017 / The Great Game
+
+![Banner](https://cdn-images-1.medium.com/max/2000/1*7kmZoypYXBAPP00OAI2I_A.png)
 
 Open-source first-class iOS app dedicated to Women’s Euro 2017 (Work in progress)
 
