@@ -14,6 +14,16 @@
 			<key>orderHint</key>
 			<integer>3</integer>
 		</dict>
+		<key>Match Notification.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>9</integer>
+		</dict>
+		<key>MatchNotification.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>8</integer>
+		</dict>
 		<key>Peer Distribute.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -73,6 +83,11 @@
 			<true/>
 		</dict>
 		<key>7C13BC461ED84AF300588F5F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>7C489C711F164C68001875E5</key>
 		<dict>
 			<key>primary</key>
 			<true/>

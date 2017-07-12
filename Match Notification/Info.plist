@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Notification</string>
+	<string>Match Notification</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -19,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
-	<string>5</string>
+	<string>1</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionAttributes</key>
@@ -27,7 +27,7 @@
 			<key>UNNotificationExtensionCategory</key>
 			<string>match-update</string>
 			<key>UNNotificationExtensionDefaultContentHidden</key>
-			<true/>
+			<false/>
 			<key>UNNotificationExtensionInitialContentSizeRatio</key>
 			<real>0.313</real>
 		</dict>

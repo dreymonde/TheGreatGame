@@ -121,6 +121,12 @@
 		7C3AEFAF1EF28D3600CE576A /* MatchEventTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3AEFAD1EF28D3600CE576A /* MatchEventTableViewCell.swift */; };
 		7C3AEFB01EF28D3600CE576A /* MatchEventTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C3AEFAE1EF28D3600CE576A /* MatchEventTableViewCell.xib */; };
 		7C3AEFB21EF28FE900CE576A /* EventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3AEFB11EF28FE900CE576A /* EventViewModel.swift */; };
+		7C489C731F164C68001875E5 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CF7DF8A1EEC6430004F0A73 /* UserNotifications.framework */; };
+		7C489C741F164C68001875E5 /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CF7DF8C1EEC6430004F0A73 /* UserNotificationsUI.framework */; };
+		7C489C771F164C68001875E5 /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C489C761F164C68001875E5 /* NotificationViewController.swift */; };
+		7C489C7E1F164C68001875E5 /* Match Notification.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 7C489C721F164C68001875E5 /* Match Notification.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		7C489C841F164C88001875E5 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7C489C821F164C88001875E5 /* MainInterface.storyboard */; };
+		7C489C851F164C8C001875E5 /* Jubilee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6261EBA1CB100F50EB2 /* Jubilee.swift */; };
 		7C6AA1701ED86F73003F2388 /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6AA16F1ED86F73003F2388 /* Cell.swift */; };
 		7C6AA1711ED878E9003F2388 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1D897E1EBF0D28006F7841 /* API.swift */; };
 		7C6AA1721ED878E9003F2388 /* Teams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6551EBA1ECB00F50EB2 /* Teams.swift */; };
@@ -273,6 +279,13 @@
 			remoteGlobalIDString = 7C13BC461ED84AF300588F5F;
 			remoteInfo = "TheGreatKit-Watch";
 		};
+		7C489C7C1F164C68001875E5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7C0EA5CF1EBA1B3400F50EB2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7C489C711F164C68001875E5;
+			remoteInfo = "Match Notification";
+		};
 		7CA213831ECF3F9A00F088DD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7C0EA5CF1EBA1B3400F50EB2 /* Project object */;
@@ -333,6 +346,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				7C489C7E1F164C68001875E5 /* Match Notification.appex in Embed App Extensions */,
 				7CA213851ECF3F9A00F088DD /* GameToday.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
@@ -437,6 +451,10 @@
 		7C3AEFAD1EF28D3600CE576A /* MatchEventTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchEventTableViewCell.swift; sourceTree = "<group>"; };
 		7C3AEFAE1EF28D3600CE576A /* MatchEventTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MatchEventTableViewCell.xib; sourceTree = "<group>"; };
 		7C3AEFB11EF28FE900CE576A /* EventViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventViewModel.swift; sourceTree = "<group>"; };
+		7C489C721F164C68001875E5 /* Match Notification.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Match Notification.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7C489C761F164C68001875E5 /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
+		7C489C7B1F164C68001875E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7C489C831F164C88001875E5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		7C6AA16F1ED86F73003F2388 /* Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
 		7C6AA1791ED87995003F2388 /* MatchCellController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchCellController.swift; sourceTree = "<group>"; };
 		7C6B36BD1EBCA88100FC17F9 /* Matches.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Matches.swift; sourceTree = "<group>"; };
@@ -495,10 +513,6 @@
 		7CF3D1791EBC873700E86A91 /* Match.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
 		7CF7DF8A1EEC6430004F0A73 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		7CF7DF8C1EEC6430004F0A73 /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
-		7CF7DF8F1EEC6430004F0A73 /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
-		7CF7DF921EEC6430004F0A73 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
-		7CF7DF941EEC6430004F0A73 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7CF7DFA01EEC6BEA004F0A73 /* Notification.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Notification.entitlements; sourceTree = "<group>"; };
 		BE1713C01EEF428A00CFB448 /* ComplicationTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplicationTemplate.swift; sourceTree = "<group>"; };
 		BE1713C31EEFE79800CFB448 /* FavoritesUploader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesUploader.swift; sourceTree = "<group>"; };
 		BE1713C61EEFED1100CFB448 /* UploadTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadTests.swift; sourceTree = "<group>"; };
@@ -569,6 +583,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7C489C6F1F164C68001875E5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7C489C741F164C68001875E5 /* UserNotificationsUI.framework in Frameworks */,
+				7C489C731F164C68001875E5 /* UserNotifications.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7CA213761ECF3F9A00F088DD /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -592,7 +615,7 @@
 				7C0EA5D91EBA1B3500F50EB2 /* iOS App */,
 				7C0EA5EE1EBA1B3500F50EB2 /* iOS Tests */,
 				7CA2137C1ECF3F9A00F088DD /* Today */,
-				7CF7DF8E1EEC6430004F0A73 /* Notification */,
+				7C489C751F164C68001875E5 /* Match Notification */,
 				7C0EA6081EBA1C9000F50EB2 /* Kit */,
 				7C0EA6151EBA1C9000F50EB2 /* Kit Tests */,
 				7C13BC131ED8498300588F5F /* Watch App */,
@@ -614,6 +637,7 @@
 				7C13BC121ED8498300588F5F /* Watch.app */,
 				7C13BC1E1ED8498300588F5F /* Watch Extension.appex */,
 				7C13BC471ED84AF300588F5F /* TheGreatKit.framework */,
+				7C489C721F164C68001875E5 /* Match Notification.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -995,6 +1019,16 @@
 			name = MatchDetail;
 			sourceTree = "<group>";
 		};
+		7C489C751F164C68001875E5 /* Match Notification */ = {
+			isa = PBXGroup;
+			children = (
+				7C489C761F164C68001875E5 /* NotificationViewController.swift */,
+				7C489C821F164C88001875E5 /* MainInterface.storyboard */,
+				7C489C7B1F164C68001875E5 /* Info.plist */,
+			);
+			path = "Match Notification";
+			sourceTree = "<group>";
+		};
 		7C6AA1781ED87976003F2388 /* MatchesList */ = {
 			isa = PBXGroup;
 			children = (
@@ -1114,17 +1148,6 @@
 			path = Match;
 			sourceTree = "<group>";
 		};
-		7CF7DF8E1EEC6430004F0A73 /* Notification */ = {
-			isa = PBXGroup;
-			children = (
-				7CF7DFA01EEC6BEA004F0A73 /* Notification.entitlements */,
-				7CF7DF8F1EEC6430004F0A73 /* NotificationViewController.swift */,
-				7CF7DF911EEC6430004F0A73 /* MainInterface.storyboard */,
-				7CF7DF941EEC6430004F0A73 /* Info.plist */,
-			);
-			path = Notification;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1166,6 +1189,7 @@
 				7C0EA61B1EBA1C9000F50EB2 /* PBXTargetDependency */,
 				7CA213841ECF3F9A00F088DD /* PBXTargetDependency */,
 				7C13BC311ED8498300588F5F /* PBXTargetDependency */,
+				7C489C7D1F164C68001875E5 /* PBXTargetDependency */,
 			);
 			name = TheGreatGame;
 			productName = TheGreatGame;
@@ -1282,6 +1306,23 @@
 			productReference = 7C13BC471ED84AF300588F5F /* TheGreatKit.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		7C489C711F164C68001875E5 /* Match Notification */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7C489C7F1F164C68001875E5 /* Build configuration list for PBXNativeTarget "Match Notification" */;
+			buildPhases = (
+				7C489C6E1F164C68001875E5 /* Sources */,
+				7C489C6F1F164C68001875E5 /* Frameworks */,
+				7C489C701F164C68001875E5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Match Notification";
+			productName = "Match Notification";
+			productReference = 7C489C721F164C68001875E5 /* Match Notification.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		7CA213781ECF3F9A00F088DD /* GameToday */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7CA213861ECF3F9A00F088DD /* Build configuration list for PBXNativeTarget "GameToday" */;
@@ -1372,6 +1413,11 @@
 						DevelopmentTeam = 8E9Y56P64W;
 						ProvisioningStyle = Automatic;
 					};
+					7C489C711F164C68001875E5 = {
+						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = 8E9Y56P64W;
+						ProvisioningStyle = Automatic;
+					};
 					7CA213781ECF3F9A00F088DD = {
 						CreatedOnToolsVersion = 8.3.2;
 						DevelopmentTeam = 8E9Y56P64W;
@@ -1405,6 +1451,7 @@
 				7CA213781ECF3F9A00F088DD /* GameToday */,
 				7C13BC111ED8498300588F5F /* Watch */,
 				7C13BC1D1ED8498300588F5F /* Watch Extension */,
+				7C489C711F164C68001875E5 /* Match Notification */,
 			);
 		};
 /* End PBXProject section */
@@ -1470,6 +1517,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7C489C701F164C68001875E5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7C489C841F164C88001875E5 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1746,6 +1801,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7C489C6E1F164C68001875E5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7C489C851F164C8C001875E5 /* Jubilee.swift in Sources */,
+				7C489C771F164C68001875E5 /* NotificationViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7CA213751ECF3F9A00F088DD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1794,6 +1858,11 @@
 			target = 7C13BC461ED84AF300588F5F /* TheGreatKit-Watch */;
 			targetProxy = 7C13BC4C1ED84AF400588F5F /* PBXContainerItemProxy */;
 		};
+		7C489C7D1F164C68001875E5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7C489C711F164C68001875E5 /* Match Notification */;
+			targetProxy = 7C489C7C1F164C68001875E5 /* PBXContainerItemProxy */;
+		};
 		7CA213841ECF3F9A00F088DD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 7CA213781ECF3F9A00F088DD /* GameToday */;
@@ -1829,19 +1898,18 @@
 			path = .;
 			sourceTree = "<group>";
 		};
+		7C489C821F164C88001875E5 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7C489C831F164C88001875E5 /* Base */,
+			);
+			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
 		7CA2137F1ECF3F9A00F088DD /* MainInterface.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				7CA213801ECF3F9A00F088DD /* Base */,
-			);
-			name = MainInterface.storyboard;
-			path = .;
-			sourceTree = "<group>";
-		};
-		7CF7DF911EEC6430004F0A73 /* MainInterface.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				7CF7DF921EEC6430004F0A73 /* Base */,
 			);
 			name = MainInterface.storyboard;
 			path = .;
@@ -2260,6 +2328,34 @@
 			};
 			name = Release;
 		};
+		7C489C801F164C68001875E5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = 8E9Y56P64W;
+				INFOPLIST_FILE = "Match Notification/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatGame.Match-Notification";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		7C489C811F164C68001875E5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = 8E9Y56P64W;
+				INFOPLIST_FILE = "Match Notification/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatGame.Match-Notification";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
 		7CA213871ECF3F9A00F088DD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2372,6 +2468,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		7C489C7F1F164C68001875E5 /* Build configuration list for PBXNativeTarget "Match Notification" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7C489C801F164C68001875E5 /* Debug */,
+				7C489C811F164C68001875E5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		7CA213861ECF3F9A00F088DD /* Build configuration list for PBXNativeTarget "GameToday" */ = {
 			isa = XCConfigurationList;
