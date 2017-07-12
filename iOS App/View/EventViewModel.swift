@@ -7,19 +7,18 @@
 //
 
 import Foundation
-import TheGreatKit
 
-struct EventViewModel {
+public struct EventViewModel {
     
-    let minute: String
-    let title: String?
-    let text: String
+    public let minute: String
+    public let title: String?
+    public let text: String
     
 }
 
 extension Match.Event {
     
-    func viewModel(names: (home: String, away: String)) -> EventViewModel {
+    public func viewModel(names: (home: String, away: String)) -> EventViewModel {
         let minute: String = {
             if case .info = kind {
                 return ""
@@ -51,7 +50,7 @@ extension Match.Event {
 
 extension Match.Event {
     
-    func viewModel<Match : MatchProtocol>(in match: Match) -> EventViewModel {
+    public func viewModel<Match : MatchProtocol>(in match: Match) -> EventViewModel {
         return self.viewModel(names: (home: match.home.name, away: match.away.name))
     }
     
