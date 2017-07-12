@@ -54,11 +54,11 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
         scoreLabel.text = match.scoreString()
         homeLabel.text = match.home.shortName
         awayLabel.text = match.away.shortName
-        if let lastEvent = match.events.last {
-            let vm = lastEvent.viewModel(in: match)
-//            eventLabel.text = vm.text
-//            minuteLabel.text = vm.minute
-        }
+//        if let lastEvent = match.events.last {
+//            let vm = lastEvent.viewModel(in: match)
+////            eventLabel.text = vm.text
+////            minuteLabel.text = vm.minute
+//        }
         homeBadgeImageView.setImage(avenue.item(at: match.home.badges.large), afterDownload: afterImageDownload)
         awayBadgeImageView.setImage(avenue.item(at: match.away.badges.large), afterDownload: afterImageDownload)
     }
