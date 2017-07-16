@@ -33,6 +33,8 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     var showingMatch: Match.Full?
     
     var avenue: SymmetricalAvenue<URL, UIImage>!
+    
+    var lastConfirmedSource: Source = .memory
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,7 +42,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         self.avenue = todayExtension.images.makeNotSizedAvenue()
         avenue.onStateChange = { _ in
             if let match = self.showingMatch {
-                self.setup(with: match, afterDownload: true)
+                self.setup(with: match, afterDownload: true, source: self.lastConfirmedSource)
             }
         }
         avenue.onError = { _ in
@@ -54,7 +56,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         update()
     }
     
-    func setup(with match: Match.Full, afterDownload: Bool) {
+    func setup(with match: Match.Full, afterDownload: Bool, source: Source) {
         self.homeNameLabel.text = match.home.shortName
         self.awayNameLabel.text = match.away.shortName
         self.scoreLabel.text = match.score?.demo_string ?? "-:-"
@@ -63,23 +65,24 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         avenue.prepareItem(at: match.away.badges.large)
         self.homeBadgeImageView.setImage(avenue.item(at: match.home.badges.large), afterDownload: false)
         self.awayBadgeImageView.setImage(avenue.item(at: match.away.badges.large), afterDownload: false)
-        if let _ = avenue.item(at: match.home.badges.large), let _ = avenue.item(at: match.away.badges.large) {
+        if source.isAbsoluteTruth, let _ = avenue.item(at: match.home.badges.large), let _ = avenue.item(at: match.away.badges.large) {
             self.completion?(.newData)
         }
     }
     
     func update() {
-        todayExtension.provider.retrieve { (result) in
-            if let matches = result.value {
-                if let mostRelevant = matches.mostRelevant() {
-                    self.showingMatch = mostRelevant
-                    self.setup(with: mostRelevant, afterDownload: false)
-                }
+        
+        todayExtension.resource.load { (matches, source) in
+            if let mostRelevant = matches.mostRelevant() {
+                self.showingMatch = mostRelevant
+                self.lastConfirmedSource = source
+                self.setup(with: mostRelevant, afterDownload: false, source: source)
             } else {
                 fault("No matches?")
                 self.completion?(.failed)
             }
         }
+        
     }
     
     override func didReceiveMemoryWarning() {

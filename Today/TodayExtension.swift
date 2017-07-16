@@ -28,17 +28,17 @@ final class TodayExtension {
         self.favoriteTeams = FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteTeamsSubPath)
         self.favoriteMatches = FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteMatchesSubPath)
         self.images = Images.inSharedCachesDirectory()
-        self._provider = apiCache.matches.allFull
-            .backed(by: api.matches.allFull, pullingFromBack: true)
-            .asReadOnlyCache()
-            .mapValues({ $0.content.matches })
-            .mainThread()
+        
+        self._resource = Resource<FullMatches>(local: apiCache.matches.allFull,
+                                              remote: api.matches.allFull,
+                                              networkActivity: .none)
+            .map({ $0.matches })
     }
     
-    private let _provider: Retrieve<[Match.Full]>
+    let _resource: Resource<[Match.Full]>
     
-    lazy var provider: Retrieve<[Match.Full]> = {
-        return self._provider.mapValues({ $0.filter(self.relevanceFilter()) })
+    lazy var resource: Resource<[Match.Full]> = {
+        return self._resource.map({ $0.filter(self.relevanceFilter()) })
     }()
     
     func relevanceFilter() -> (Match.Full) -> Bool {
