@@ -85,11 +85,19 @@ extension MatchProtocol {
     
 }
 
+public extension TimeInterval {
+    
+    public static func minutes(_ minutes: Double) -> TimeInterval {
+        return 60 * minutes
+    }
+    
+}
+
 public enum Match {
     
-    public static let duration = TimeInterval(60 * 100)
-    public static let durationAndAftermath = TimeInterval(60 * 130)
-    public static let aftermath = TimeInterval(60 * 30)
+    public static let duration = TimeInterval.minutes(100)
+    public static let durationAndAftermath = TimeInterval.minutes(130)
+    public static let aftermath = TimeInterval.minutes(20)
     
     public struct ID : RawRepresentable, Hashable, IDProtocol {
         
