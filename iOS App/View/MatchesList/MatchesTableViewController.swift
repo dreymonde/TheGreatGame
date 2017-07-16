@@ -58,6 +58,11 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
     }
     
     fileprivate func indexPathOfMostRelevantMatch(from stages: [Stage]) -> IndexPath {
+        let timeIntervalSinceNow: (Stage) -> TimeInterval = { abs(($0.matches.first?.date ?? Date.distantFuture).timeIntervalSinceNow) }
+        let zipped = zip(stages, stages.indices)
+        if let min = zipped.min(by: { timeIntervalSinceNow($0.0) < timeIntervalSinceNow($1.0) }) {
+            return IndexPath.start(ofSection: min.1)
+        }
         return IndexPath.start(ofSection: 0)
     }
     
@@ -70,7 +75,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
         } else {
             self.stages = stages
             tableView.reloadData()
-//            tableView.scrollToRow(at: mostRecent, at: .top, animated: false)
+            tableView.scrollToRow(at: mostRecent, at: .top, animated: false)
         }
     }
     

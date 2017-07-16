@@ -46,7 +46,7 @@ final class TemplateProducer {
             let shortText = "\(match.home.shortName.firstTwoChars()) \(score.demo_string) \(match.away.shortName.firstTwoChars())"
             return CLKComplicationTemplateUtilitarianSmallFlat() <- {
                 $0.textProvider = CLKSimpleTextProvider(text: text, shortText: shortText)
-                $0.imageProvider = imageProvider(forSize: ._18)
+                //$0.imageProvider = imageProvider(forSize: ._18)
                 $0.tintColor = tintColor
             }
         } else {
@@ -54,7 +54,7 @@ final class TemplateProducer {
             let date = textProvider(for: match.date, aforetime: aforetime)
             return CLKComplicationTemplateUtilitarianSmallFlat() <- {
                 $0.textProvider = CLKTextProvider(byJoining: oneline, andProvider: date, with: " ")
-                $0.imageProvider = imageProvider(forSize: ._18)
+                //$0.imageProvider = imageProvider(forSize: ._18)
                 $0.tintColor = tintColor
             }
         }

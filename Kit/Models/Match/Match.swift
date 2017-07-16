@@ -209,7 +209,7 @@ public enum Match {
         }
         
         public func allSnapshots() -> [(match: Full, minute: Int)] {
-            return events.map({ (event) in
+            return events.filter({  }).map({ (event) in
                 return (self.snapshot(beforeRealMinute: event.realMinute), minute: event.realMinute)
             })
         }

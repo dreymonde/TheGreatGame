@@ -8,10 +8,10 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="12029"/>
     </dependencies>
     <scenes>
-        <!--Euro 2017-->
+        <!--MatchesInterfaceController-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller identifier="MatchesInterfaceController" title="Euro 2017" id="AgC-eL-Hgc" customClass="MatchesInterfaceController" customModule="Watch_Extension">
+                <controller identifier="MatchesInterfaceController" id="AgC-eL-Hgc" customClass="MatchesInterfaceController" customModule="Watch_Extension">
                     <items>
                         <group width="1" alignment="left" layout="vertical" spacing="0.0" id="PrF-pI-ryW">
                             <items>
