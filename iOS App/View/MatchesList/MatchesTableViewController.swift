@@ -35,6 +35,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
     var matchCellFiller: MatchCellFiller!
     
     // MARK: - Connections
+    var shouldReloadTable: MainThreadSubscribe<Void>?
     var shouldReloadData: MainThreadSubscribe<Void>?
     
     override func viewDidLoad() {
@@ -53,7 +54,9 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
     }
     
     func subscribe() {
-        shouldReloadData?.flatSubscribe(self, with: { obj, _ in obj.tableView.reloadData() })
+        shouldReloadTable?.flatSubscribe(self, with: { obj, _ in obj.tableView.reloadData() })
+        shouldReloadTable = nil
+        shouldReloadData?.subscribe(self, with: MatchesTableViewController.reload)
         shouldReloadData = nil
     }
     
@@ -85,6 +88,10 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
     }
     
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
+        self.reload()
+    }
+    
+    func reload() {
         resource.reload(connectingToIndicator: pullToRefreshActivities, completion: reloadData(stages:source:))
     }
     

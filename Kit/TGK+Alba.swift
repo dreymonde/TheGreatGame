@@ -28,6 +28,10 @@ fileprivate extension Subscribe {
             })
         }, entry: ProxyPayload.Entry.custom("main-thread"))
     }
+    
+    func _assumeMainThread() -> Subscribe<Event> {
+        return interrupted(with: { _ in assert(Thread.isMainThread, "(ALBA) NOT on main thread, although was promised to be.") })
+    }
 
 }
 
@@ -37,6 +41,14 @@ public struct MainThreadSubscribe<Event> {
     
     public init(_ proxy: Subscribe<Event>) {
         self.underlying = proxy._mainThread()
+    }
+    
+    private init(alreadyOnMainThread: Subscribe<Event>) {
+        self.underlying = alreadyOnMainThread._assumeMainThread()
+    }
+    
+    public static func alreadyOnMainThread(_ proxy: Subscribe<Event>) -> MainThreadSubscribe<Event> {
+        return MainThreadSubscribe<Event>(alreadyOnMainThread: proxy)
     }
     
     public func subscribe<Object>(_ object: Object, with producer: @escaping (Object) -> (Event) -> ()) where Object : AnyObject {
@@ -53,6 +65,10 @@ extension Subscribe {
     
     public func mainThread() -> MainThreadSubscribe<Event> {
         return MainThreadSubscribe(self)
+    }
+    
+    public func alreadyOnMainThread() -> MainThreadSubscribe<Event> {
+        return MainThreadSubscribe.alreadyOnMainThread(self)
     }
     
     public func signed(with identifier: ObjectIdentifier?) -> SignedSubscribe<Event> {

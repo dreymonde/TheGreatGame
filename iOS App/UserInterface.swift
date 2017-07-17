@@ -11,6 +11,11 @@ import Shallows
 import TheGreatKit
 import Avenues
 
+fileprivate let updateAfterActive = AppDelegate.applicationDidBecomeActive.proxy
+    .void()
+    .wait(seconds: 0.5)
+    .alreadyOnMainThread()
+
 final class UserInterface {
     
     fileprivate let window: UIWindow
@@ -83,9 +88,10 @@ final class UserInterface {
             $0.resource = self.resources.stages
             $0.isFavorite = isFavoriteMatch(_:)
             $0.makeAvenue = self.makeAvenue(forImageSize:)
-            let shouldReload = self.logic.favoriteTeams.registry.unitedDidUpdate.proxy.void()
+            let shouldReloadTable = self.logic.favoriteTeams.registry.unitedDidUpdate.proxy.void()
                 .merged(with: self.logic.favoriteMatches.registry.unitedDidUpdate.proxy.void())
-            $0.shouldReloadData = shouldReload.mainThread()
+            $0.shouldReloadTable = shouldReloadTable.mainThread()
+            $0.shouldReloadData = updateAfterActive
             $0.makeMatchDetailVC = { match, stageTitle in
                 var preloaded = match.preloaded()
                 preloaded.stageTitle = stageTitle
@@ -127,6 +133,7 @@ final class UserInterface {
             $0.preloadedMatch = preloaded
             $0.isFavorite = { self.logic.favoriteMatches.registry.isFavorite(id: matchID) }
             $0.updateFavorite = { self.logic.favoriteMatches.registry.updateFavorite(id: matchID, isFavorite: $0) }
+            $0.shouldReloadData = updateAfterActive
         }
     }
     

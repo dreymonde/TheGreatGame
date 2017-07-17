@@ -71,6 +71,9 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
     var badgeAvenue: SymmetricalAvenue<URL, UIImage>!
     var flagAvenue: SymmetricalAvenue<URL, UIImage>!
     var pullToRefreshActivities: NetworkActivityIndicatorManager!
+    
+    // MARK: - Connections
+    var shouldReloadData: MainThreadSubscribe<Void>?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,7 +87,13 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
         configure(flagAvenue)
         configure(favoriteButton: favoriteButton)
         
+        self.subscribe()
         self.resource.load(confirmation: tableView.reloadData, completion: self.setup(with:source:))
+    }
+    
+    func subscribe() {
+        shouldReloadData?.subscribe(self, with: MatchDetailTableViewController.reload)
+        shouldReloadData = nil
     }
     
     override var previewActionItems: [UIPreviewActionItem] {
@@ -110,6 +119,10 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
     }
     
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
+        reload()
+    }
+    
+    func reload() {
         resource.reload(connectingToIndicator: pullToRefreshActivities, completion: self.setup(with:source:))
     }
 
