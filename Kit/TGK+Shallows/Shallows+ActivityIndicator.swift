@@ -14,11 +14,11 @@ extension ReadOnlyCache {
     
     public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicatorManager) -> ReadOnlyCache<Key, Value> {
         return ReadOnlyCache.init(cacheName: self.cacheName, retrieve: { (key, completion) in
+            manager.increment()
             self.retrieve(forKey: key, completion: { (result) in
                 manager.decrement()
                 completion(result)
             })
-            manager.increment()
         })
     }
     
@@ -28,13 +28,13 @@ extension ReadOnlyCache where Value : HasSource {
     
     public func sourceful_connectingNetworkActivityIndicator(manager: NetworkActivityIndicatorManager) -> ReadOnlyCache<Key, Value> {
         return ReadOnlyCache.init(cacheName: self.cacheName, retrieve: { (key, completion) in
+            manager.increment()
             self.retrieve(forKey: key, completion: { (result) in
                 if result.isLastRequest {
                     manager.decrement()
                 }
                 completion(result)
             })
-            manager.increment()
         })
     }
     

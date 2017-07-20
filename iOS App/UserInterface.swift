@@ -71,7 +71,7 @@ final class UserInterface {
     
     func openTestMatch() {
         let match = Storyboard.Main.matchDetailTableViewController.instantiate() <- {
-            let url = Bundle.main.url(forResource: "match", withExtension: "json")!
+            let url = Bundle.main.url(forResource: "match-test", withExtension: "json")!
             let data = try! Data.init(contentsOf: url)
             let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String : Any]
             let match = try! Editioned<Match.Full>(from: json)

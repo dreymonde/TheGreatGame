@@ -23,7 +23,6 @@ enum Loggers {
     
     static func start() {
         #if DEBUG
-            NetworkActivityIndicatorManager.isLogEnabled = true
             Alba.InformBureau.isEnabled = true
             Alba.InformBureau.Logger.enable()
             cartographer?.enable()
