@@ -189,6 +189,7 @@
 		7CAAEFB91EC36B3900427D7E /* CombinedRefreshing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAAEFB81EC36B3900427D7E /* CombinedRefreshing.swift */; };
 		7CAAEFBB1EC36E1A00427D7E /* Sourceful.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAAEFBA1EC36E1A00427D7E /* Sourceful.swift */; };
 		7CAB303D1F20F14C00E65429 /* gallery.ckcomplication in Resources */ = {isa = PBXBuildFile; fileRef = 7CAB303C1F20F14C00E65429 /* gallery.ckcomplication */; };
+		7CAB303F1F210F4D00E65429 /* EventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAB303E1F210F4D00E65429 /* EventTests.swift */; };
 		7CCD25C61EDD7AE300F3C5CB /* SingleElementMemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C357ED71ED442D300CFCF3B /* SingleElementMemoryCache.swift */; };
 		7CCD25C91EDDCF3F00F3C5CB /* ComplicationReloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD25C81EDDCF3F00F3C5CB /* ComplicationReloader.swift */; };
 		7CCD25CB1EDEA23900F3C5CB /* ComplicationPusher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD25CA1EDEA23900F3C5CB /* ComplicationPusher.swift */; };
@@ -498,6 +499,7 @@
 		7CAAEFB81EC36B3900427D7E /* CombinedRefreshing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CombinedRefreshing.swift; sourceTree = "<group>"; };
 		7CAAEFBA1EC36E1A00427D7E /* Sourceful.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sourceful.swift; sourceTree = "<group>"; };
 		7CAB303C1F20F14C00E65429 /* gallery.ckcomplication */ = {isa = PBXFileReference; lastKnownFileType = folder; path = gallery.ckcomplication; sourceTree = "<group>"; };
+		7CAB303E1F210F4D00E65429 /* EventTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTests.swift; sourceTree = "<group>"; };
 		7CCD25C81EDDCF3F00F3C5CB /* ComplicationReloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplicationReloader.swift; sourceTree = "<group>"; };
 		7CCD25CA1EDEA23900F3C5CB /* ComplicationPusher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplicationPusher.swift; sourceTree = "<group>"; };
 		7CCD25CC1EDEB1BA00F3C5CB /* Watch Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Watch Extension.entitlements"; sourceTree = "<group>"; };
@@ -737,6 +739,7 @@
 				7C357ED51ED4408C00CFCF3B /* APICacheTests.swift */,
 				7CA542101EDB157B00B4D1BD /* ComplicationDataSourceTests.swift */,
 				BE1713C61EEFED1100CFB448 /* UploadTests.swift */,
+				7CAB303E1F210F4D00E65429 /* EventTests.swift */,
 			);
 			path = "Kit Tests";
 			sourceTree = "<group>";
@@ -1730,6 +1733,7 @@
 				BE1713C71EEFED1100CFB448 /* UploadTests.swift in Sources */,
 				7C0EA6171EBA1C9000F50EB2 /* TheGreatKitTests.swift in Sources */,
 				7CA542111EDB157B00B4D1BD /* ComplicationDataSourceTests.swift in Sources */,
+				7CAB303F1F210F4D00E65429 /* EventTests.swift in Sources */,
 				7C7916DF1EBB12250070E6C5 /* NetworkActivityIndicatorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

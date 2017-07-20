@@ -51,7 +51,7 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
         }
         avenue.prepareItem(at: match.home.badges.large)
         avenue.prepareItem(at: match.away.badges.large)
-        scoreLabel.text = match.scoreString()
+        scoreLabel.text = match.scoreOrPenaltyString()
         homeLabel.text = match.home.shortName
         awayLabel.text = match.away.shortName
 //        if let lastEvent = match.events.last {

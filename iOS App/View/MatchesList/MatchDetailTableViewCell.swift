@@ -23,6 +23,8 @@ class MatchDetailTableViewCell: UITableViewCell {
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var minuteLabel: UILabel!
     
+    @IBOutlet weak var penaltyLabel: UILabel!
+    
     var onHomeBadgeTap: () -> () = { }
     
     func didTapHomeBadge(_ sender: UITapGestureRecognizer) {

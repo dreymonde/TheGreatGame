@@ -195,11 +195,22 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
             prepareBadges(for: match.away)
             
             cell.homeTeamNameLabel.text = match.home.name
-            cell.scoreLabel.text = match.scoreString()
+            cell.scoreLabel.text = match.scoreOrPenaltyString()
             cell.awayTeamLabel.text = match.away.name
             cell.stageTitleLabel.text = match.stageTitle
             cell.dateLabel.text = MatchDetailTableViewController.dateFormatter.string(from: match.date)
-            cell.minuteLabel.text = match.minuteOrStateString()
+            
+            if match.penalties != nil {
+                cell.penaltyLabel.isHidden = false
+                var text = "(\(match.onlyMainTimeScoreString()))"
+                if match.isEnded {
+                    text.append(", FT")
+                }
+                cell.minuteLabel.text = text
+            } else {
+                cell.penaltyLabel.isHidden = true
+                cell.minuteLabel.text = match.minuteOrStateString()
+            }
             
             cell.homeFlagImageView.setImage(flagAvenue.item(at: match.home.badges.flag), afterDownload: afterImageDownload)
             cell.awayFlagImageView.setImage(flagAvenue.item(at: match.away.badges.flag), afterDownload: afterImageDownload)

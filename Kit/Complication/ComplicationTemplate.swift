@@ -71,7 +71,7 @@ public final class ComplicationTemplate {
     
     private func makeMatch(teams: (Match.Team, Match.Team), score: (Int, Int)?) -> Match.Full {
         let scorescore = score.map({ Match.Score.init(home: $0.0, away: $0.1) })
-        return Match.Full(id: Match.ID.init(rawValue: -1)!, home: teams.0, away: teams.1, date: Date(), endDate: Date().addingTimeInterval(60 * 120), location: "Netherlands", stageTitle: "Group Stage", score: scorescore, events: [])
+        return Match.Full(id: Match.ID.init(rawValue: -1)!, home: teams.0, away: teams.1, date: Date(), endDate: Date().addingTimeInterval(60 * 120), location: "Netherlands", stageTitle: "Group Stage", score: scorescore, penalties: nil, events: [])
     }
     
 }

@@ -16,6 +16,7 @@ public protocol MatchProtocol {
     var date: Date { get }
     var endDate: Date { get }
     var score: Match.Score? { get }
+    var penalties: Match.Score? { get }
     
 }
 
@@ -58,13 +59,17 @@ extension MatchProtocol {
         return progressInterval / completeInterval
     }
     
-    public func scoreString() -> String {
-        return score?.demo_string ?? "-:-"
+    public func scoreOrPenaltyString() -> String {
+        return penalties?.demo_string ?? score?.demo_string ?? "-:-"
 //        if let score = score {
 //            return score.demo_string
 //        } else {
 //            return formatter.string(from: date)
 //        }
+    }
+    
+    public func onlyMainTimeScoreString() -> String {
+        return score?.demo_string ?? "-:-"
     }
     
     public func scoreOrTimeString() -> String {
@@ -125,6 +130,7 @@ public enum Match {
         public let home: Int
         public let away: Int
         
+        @available(*, deprecated)
         public var demo_string: String {
             return "\(home):\(away)"
         }
@@ -135,6 +141,8 @@ public enum Match {
         
         public enum Kind : String {
             case start, goal_home, goal_away, end, info, halftime_start, halftime_end
+            case end_and_extra, extra_start, penalties
+            case pen_goal_home, pen_goal_away, pen_miss_home, pen_miss_away
         }
         
         public let kind: Kind
@@ -143,10 +151,61 @@ public enum Match {
         public let matchMinute: Int
         
         public init(kind: Kind, text: String, realMinute: Int, matchMinute: Int) {
-            self.kind = kind
-            self.text = text
+            if let extra = Event.analyze(text, kind: kind) {
+                self.kind = extra.0
+                self.text = extra.1
+            } else {
+                self.kind = kind
+                self.text = text
+            }
             self.realMinute = realMinute
             self.matchMinute = matchMinute
+        }
+        
+        internal enum Additional {
+            static let endAndExtra = "FE"
+            static let extraTimeStart = "ET"
+            static let penalties = "PS"
+            static let penGoalHome = "PH"
+            static let penGoalAway = "PA"
+            static let penHomeMiss = "MH"
+            static let penAwayMiss = "MA"
+        }
+        
+        internal static func analyze(_ text: String, kind: Kind) -> (Kind, String)? {
+            if text.hasPrefix(Additional.endAndExtra), kind == .halftime_start {
+                let cut = cutAdditional(from: text)
+                return (.end_and_extra, cut)
+            }
+            if text.hasPrefix(Additional.extraTimeStart), kind == .halftime_end {
+                let cut = cutAdditional(from: text)
+                return (.extra_start, cut)
+            }
+            if text.hasPrefix(Additional.penalties), kind == .halftime_start {
+                let cut = cutAdditional(from: text)
+                return (.penalties, cut)
+            }
+            if text.hasPrefix(Additional.penGoalHome), kind == .info {
+                let cut = cutAdditional(from: text)
+                return (.pen_goal_home, cut)
+            }
+            if text.hasPrefix(Additional.penGoalAway), kind == .info {
+                let cut = cutAdditional(from: text)
+                return (.pen_goal_away, cut)
+            }
+            if text.hasPrefix(Additional.penHomeMiss), kind == .info {
+                let cut = cutAdditional(from: text)
+                return (.pen_miss_home, cut)
+            }
+            if text.hasPrefix(Additional.penAwayMiss), kind == .info {
+                let cut = cutAdditional(from: text)
+                return (.pen_miss_away, cut)
+            }
+            return nil
+        }
+        
+        internal static func cutAdditional(from text: String) -> String {
+            return text.substring(from: text.index(text.startIndex, offsetBy: 2))
         }
         
     }
@@ -167,6 +226,7 @@ public enum Match {
         public let endDate: Date
         public let location: String
         public let score: Score?
+        public let penalties: Match.Score?
         
     }
     
@@ -180,6 +240,7 @@ public enum Match {
         public let location: String
         public let stageTitle: String
         public var score: Score?
+        public var penalties: Match.Score?
         public var events: [Event]
         
         public static func reevaluateScore(from events: [Event]) -> Score? {
@@ -189,6 +250,15 @@ public enum Match {
             let goalsHome = events.filter({ $0.kind == .goal_home }).count
             let goalsAway = events.filter({ $0.kind == .goal_away }).count
             return Score(home: goalsHome, away: goalsAway)
+        }
+        
+        public static func reevaluatePenalties(from events: [Event]) -> Score? {
+            guard events.contains(eventOfKind: .penalties) else {
+                return nil
+            }
+            let pensHome = events.filter({ $0.kind == .pen_goal_home }).count
+            let pensAway = events.filter({ $0.kind == .pen_goal_away }).count
+            return Score(home: pensHome, away: pensAway)
         }
         
         public func withUnpredictableScore() -> Full {
@@ -213,6 +283,7 @@ public enum Match {
                         location: location,
                         stageTitle: stageTitle,
                         score: Full.reevaluateScore(from: eventsBeforeMinute),
+                        penalties: Full.reevaluatePenalties(from: eventsBeforeMinute),
                         events: eventsBeforeMinute)
         }
         
@@ -226,20 +297,28 @@ public enum Match {
             return snapshot(beforeRealMinute: -1)
         }
         
+        public var isFullTime: Bool {
+            return isEnded || events.contains(eventOfKind: .end_and_extra)
+        }
+        
         public var isEnded: Bool {
-            return events.contains(where: { $0.kind == .end })
+            return events.contains(eventOfKind: .end)
         }
         
         public var isStarted: Bool {
-            return events.contains(where: { $0.kind == .start })
+            return events.contains(eventOfKind: .start)
         }
         
         public var isInHalfTime: Bool {
-            return isFirstHalfEnded && !isSecondHalf
+            return (isFirstHalfEnded && !isMainHalfTimeEnded) || (isExtraTimeAppointed && !isExtraTime && !isEnded && !isPenaltiesAppointed)
         }
         
         public var isSecondHalf: Bool {
-            return events.contains(where: { $0.kind == .halftime_end })
+            return isMainHalfTimeEnded && !isFullTime
+        }
+        
+        public var isMainHalfTimeEnded: Bool {
+            return events.contains(eventOfKind: .halftime_end)
         }
         
         public var isFirstHalf: Bool {
@@ -247,7 +326,23 @@ public enum Match {
         }
         
         public var isFirstHalfEnded: Bool {
-            return events.contains(where: { $0.kind == .halftime_start })
+            return events.contains(eventOfKind: .halftime_start)
+        }
+        
+        public var isExtraTimeAppointed: Bool {
+            return events.contains(eventOfKind: .end_and_extra)
+        }
+        
+        public var isExtraTime: Bool {
+            return events.contains(eventOfKind: .extra_start) && !isEnded && !isPenaltiesAppointed
+        }
+        
+        public var isExtraTimeEnded: Bool {
+            return isPenaltiesAppointed || isEnded
+        }
+        
+        public var isPenaltiesAppointed: Bool {
+            return events.contains(eventOfKind: .penalties)
         }
         
         public func minuteOrStateString() -> String {
@@ -263,12 +358,24 @@ public enum Match {
             if let lastEvent = events.last {
                 let dateOfLastEvent = self.date(afterRealMinutesFromStart: lastEvent.realMinute)
                 let intervalAfter = Int(Date().timeIntervalSince(dateOfLastEvent) / 60)
-                return "\(lastEvent.matchMinute + intervalAfter)'"
+                var string = "\(lastEvent.matchMinute + intervalAfter)'"
+                if isExtraTimeAppointed {
+                    string.append(" ET")
+                }
+                return string
             } else {
                 return " "
             }
         }
         
+    }
+    
+}
+
+extension Sequence where Iterator.Element == Match.Event {
+    
+    func contains(eventOfKind kind: Match.Event.Kind) -> Bool {
+        return contains(where: { $0.kind == kind })
     }
     
 }
@@ -320,10 +427,11 @@ extension Match.Event : Mappable {
     }
     
     public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
-        self.kind = try mapper.map(from: .type)
-        self.text = try mapper.map(from: .text)
-        self.realMinute = try mapper.map(from: .real_minute)
-        self.matchMinute = try mapper.map(from: .match_minute)
+        let kind = try mapper.map(from: .type) as Kind
+        let text = try mapper.map(from: .text) as String
+        let realMinute = try mapper.map(from: .real_minute) as Int
+        let matchMinute = try mapper.map(from: .match_minute) as Int
+        self.init(kind: kind, text: text, realMinute: realMinute, matchMinute: matchMinute)
     }
     
     public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
@@ -338,7 +446,7 @@ extension Match.Event : Mappable {
 extension Match.Compact : Mappable {
     
     public enum MappingKeys : String, IndexPathElement {
-        case id, home, away, date, endDate, location, score
+        case id, home, away, date, endDate, location, score, penalties
     }
     
     public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
@@ -349,6 +457,7 @@ extension Match.Compact : Mappable {
         self.endDate = try mapper.map(from: .endDate)
         self.location = try mapper.map(from: .location)
         self.score = try? mapper.map(from: .score)
+        self.penalties = try? mapper.map(from: .penalties)
     }
     
     public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
@@ -361,6 +470,9 @@ extension Match.Compact : Mappable {
         if let score = self.score {
             try mapper.map(score, to: .score)
         }
+        if let pens = self.penalties {
+            try mapper.map(pens, to: .penalties)
+        }
     }
     
 }
@@ -368,7 +480,7 @@ extension Match.Compact : Mappable {
 extension Match.Full : Mappable {
     
     public enum MappingKeys : String, IndexPathElement {
-        case id, home, away, date, endDate, location, score, events, stage_title
+        case id, home, away, date, endDate, location, score, events, stage_title, penalties
     }
     
     public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
@@ -381,6 +493,7 @@ extension Match.Full : Mappable {
         self.stageTitle = try mapper.map(from: .stage_title)
         self.events = try mapper.map(from: .events)
         self.score = try? mapper.map(from: .score)
+        self.penalties = try? mapper.map(from: .penalties)
     }
     
     public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
@@ -394,6 +507,9 @@ extension Match.Full : Mappable {
         try mapper.map(self.events, to: .events)
         if let score = self.score {
             try mapper.map(score, to: .score)
+        }
+        if let pens = self.penalties {
+            try mapper.map(pens, to: .penalties)
         }
     }
     
