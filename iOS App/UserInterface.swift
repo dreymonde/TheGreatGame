@@ -62,6 +62,27 @@ final class UserInterface {
         inject(to: teamsList!)
         let groupsList = viewControllers?.flatMap({ $0 as? GroupsTableViewController }).first
         inject(to: groupsList!)
+        if launchArgument(.openTestMatch) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                self.openTestMatch()
+            }
+        }
+    }
+    
+    func openTestMatch() {
+        let match = Storyboard.Main.matchDetailTableViewController.instantiate() <- {
+            let url = Bundle.main.url(forResource: "match", withExtension: "json")!
+            let data = try! Data.init(contentsOf: url)
+            let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String : Any]
+            let match = try! Editioned<Match.Full>(from: json)
+            let resource = Resource.testValue(match.content, networkActivity: .none)
+            $0.resource = resource
+            $0.makeAvenue = self.makeAvenue(forImageSize:)
+            $0.makeTeamDetailVC = { _ in return UIViewController() }
+            $0.isFavorite = { _ in return false }
+            $0.updateFavorite = { _ in }
+        }
+        show(match)
     }
     
     private func makeAvenue(forImageSize imageSize: CGSize) -> Avenue<URL, URL, UIImage> {
@@ -157,8 +178,14 @@ final class UserInterface {
     
     func showMatch(_ match: Match.Full) {
         let vc = matchDetailViewController(for: match.id, preloaded: match.preloaded())
+        show(vc)
+    }
+    
+    func show(_ viewController: UIViewController) {
         if let selected = tabBarController.selectedViewController {
-            selected.show(vc, sender: selected)
+            selected.show(viewController, sender: selected)
+        } else {
+            fault("No selected?")
         }
     }
     

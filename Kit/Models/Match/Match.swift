@@ -250,9 +250,9 @@ public enum Match {
             return events.contains(where: { $0.kind == .halftime_start })
         }
         
-        public func minuteOrStateString() -> String? {
+        public func minuteOrStateString() -> String {
             if !isStarted {
-                return nil
+                return " "
             }
             if isEnded {
                 return "FT"
@@ -265,7 +265,7 @@ public enum Match {
                 let intervalAfter = Int(Date().timeIntervalSince(dateOfLastEvent) / 60)
                 return "\(lastEvent.matchMinute + intervalAfter)'"
             } else {
-                return nil
+                return " "
             }
         }
         

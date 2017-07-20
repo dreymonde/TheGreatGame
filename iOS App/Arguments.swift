@@ -18,4 +18,8 @@ extension LaunchArgumentKey {
         return LaunchArgumentKey<Server>("server".bundled)
     }
     
+    static var openTestMatch: LaunchArgumentKey<Bool> {
+        return LaunchArgumentKey<Bool>("open-test-match".bundled)
+    }
+    
 }

@@ -1,0 +1,66 @@
+{
+  "content" : {
+    "location" : "Rat Verlegh Stadion, Breda",
+    "score" : {
+      "away" : 0,
+      "home" : 0
+    },
+    "id" : 4,
+    "stage_title" : "Group B, leg 1",
+    "endDate" : 1500323700,
+    "away" : {
+      "name" : "Liverpool",
+      "id" : 1,
+      "short_name" : "LIV",
+      "badges" : {
+        "flag" : "https:\/\/upload.wikimedia.org\/wikipedia\/en\/thumb\/b\/be\/Flag_of_England.svg\/800px-Flag_of_England.svg.png",
+        "large" : "https:\/\/upload.wikimedia.org\/wikipedia\/en\/thumb\/0\/0c\/Liverpool_FC.svg\/444px-Liverpool_FC.svg.png"
+      },
+      "badge_url" : "https:\/\/upload.wikimedia.org\/wikipedia\/en\/3\/35\/Sweden_national_football_team_logo.png"
+    },
+    "date" : 1500317100,
+    "home" : {
+      "name" : "Metalist 1925",
+      "id" : 3,
+      "short_name" : "MET",
+      "badges" : {
+        "flag" : "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Flag_of_Ukraine.svg/640px-Flag_of_Ukraine.svg.png",
+        "large" : "https:\/\/raw.githubusercontent.com\/dreymonde\/thegreatgame-badges\/master\/NEW_LOGO_FCMK1925.png"
+      },
+      "badge_url" : "https:\/\/upload.wikimedia.org\/wikipedia\/en\/thumb\/e\/e5\/DFBWomen.svg\/401px-DFBWomen.svg.png"
+    },
+    "events" : [
+      {
+        "match_minute" : -2,
+        "type" : "info",
+        "text" : "Location: Rat Verlegh Stadion, Breda",
+        "real_minute" : -2
+      },
+      {
+        "match_minute" : 0,
+        "type" : "start",
+        "text" : "This is gonna be huge. Germany vs Sweden, starting now",
+        "real_minute" : 2
+      },
+      {
+        "match_minute" : 46,
+        "type" : "halftime_start",
+        "text" : "Half-time. 0:0 so far",
+        "real_minute" : 46
+      },
+      {
+        "match_minute" : 45,
+        "type" : "halftime_end",
+        "text" : "45 minutes to go",
+        "real_minute" : 62
+      },
+      {
+        "match_minute" : 93,
+        "type" : "end",
+        "text" : "Full time. 0:0",
+        "real_minute" : 110
+      }
+    ]
+  },
+  "edition" : 350
+}

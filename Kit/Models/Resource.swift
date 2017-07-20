@@ -136,6 +136,16 @@ extension Resource where Value : Mappable {
 
 extension Resource {
     
+    public static func testValue(_ value: Value, networkActivity manager: NetworkActivityIndicatorManager) -> Resource<Value> {
+        let suc = DevCache.successing(with: value) as Cache<Void, Value>
+        let relevant = suc.asReadOnlyCache().mapValues({ Relevant.init(valueIfRelevant: $0, source: Source.server, lastRelevant: $0) })
+        return Resource(provider: relevant, local: suc.asReadOnlyCache(), networkActivity: manager, value: nil)
+    }
+    
+}
+
+extension Resource {
+    
     public func map<OtherValue>(_ transform: @escaping (Value) -> OtherValue) -> Resource<OtherValue> {
         return Resource<OtherValue>(provider: provider.mapValues({ $0.map(transform) }),
                                     local: local.mapValues(transform),
