@@ -11,11 +11,5 @@
     "class" : "CLKSimpleTextProvider",
     "text" : "GER 1:1 SWE"
   },
-  "version" : 30000,
-  "imageProvider" : {
-    "onePieceImage" : {
-      "file name" : "11709DAF-8101-4E1F-9C53-BDE43D5CA0B3.png",
-      "scale" : 2
-    }
-  }
+  "version" : 30000
 }

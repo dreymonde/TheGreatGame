@@ -5,7 +5,7 @@
     "alpha" : 1,
     "blue" : 0.3647059
   },
-  "class" : "CLKComplicationTemplateUtilitarianSmallFlat",
+  "class" : "CLKComplicationTemplateUtilitarianLargeFlat",
   "textProvider" : {
     "shortText" : "GE 1:1 SW",
     "class" : "CLKSimpleTextProvider",
@@ -14,7 +14,7 @@
   "version" : 30000,
   "imageProvider" : {
     "onePieceImage" : {
-      "file name" : "90EC0E47-E3BE-45A9-851D-952F71DC8D63.png",
+      "file name" : "C2C09FEE-6F2E-4FDD-8DFB-E363011E00BD.png",
       "scale" : 2
     }
   }

@@ -130,7 +130,6 @@
 		7C489C871F164D75001875E5 /* Avenues.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C0EA5FD1EBA1C3100F50EB2 /* Avenues.framework */; };
 		7C489C891F16515A001875E5 /* EventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3AEFB11EF28FE900CE576A /* EventViewModel.swift */; };
 		7C489C8A1F16515B001875E5 /* EventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3AEFB11EF28FE900CE576A /* EventViewModel.swift */; };
-		7C489C8C1F1653D4001875E5 /* gallery.ckcomplication in Resources */ = {isa = PBXBuildFile; fileRef = 7C489C8B1F1653D4001875E5 /* gallery.ckcomplication */; };
 		7C6AA1701ED86F73003F2388 /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6AA16F1ED86F73003F2388 /* Cell.swift */; };
 		7C6AA1711ED878E9003F2388 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1D897E1EBF0D28006F7841 /* API.swift */; };
 		7C6AA1721ED878E9003F2388 /* Teams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EA6551EBA1ECB00F50EB2 /* Teams.swift */; };
@@ -189,6 +188,7 @@
 		7CA542171EDB27FB00B4D1BD /* CLKTextProvider+CLKTextProviderCombine.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CA542161EDB27FB00B4D1BD /* CLKTextProvider+CLKTextProviderCombine.m */; };
 		7CAAEFB91EC36B3900427D7E /* CombinedRefreshing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAAEFB81EC36B3900427D7E /* CombinedRefreshing.swift */; };
 		7CAAEFBB1EC36E1A00427D7E /* Sourceful.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAAEFBA1EC36E1A00427D7E /* Sourceful.swift */; };
+		7CAB303D1F20F14C00E65429 /* gallery.ckcomplication in Resources */ = {isa = PBXBuildFile; fileRef = 7CAB303C1F20F14C00E65429 /* gallery.ckcomplication */; };
 		7CCD25C61EDD7AE300F3C5CB /* SingleElementMemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C357ED71ED442D300CFCF3B /* SingleElementMemoryCache.swift */; };
 		7CCD25C91EDDCF3F00F3C5CB /* ComplicationReloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD25C81EDDCF3F00F3C5CB /* ComplicationReloader.swift */; };
 		7CCD25CB1EDEA23900F3C5CB /* ComplicationPusher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD25CA1EDEA23900F3C5CB /* ComplicationPusher.swift */; };
@@ -460,7 +460,6 @@
 		7C489C7B1F164C68001875E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7C489C831F164C88001875E5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		7C489C881F16501D001875E5 /* Match Notification.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Match Notification.entitlements"; sourceTree = "<group>"; };
-		7C489C8B1F1653D4001875E5 /* gallery.ckcomplication */ = {isa = PBXFileReference; lastKnownFileType = folder; path = gallery.ckcomplication; sourceTree = "<group>"; };
 		7C6AA16F1ED86F73003F2388 /* Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
 		7C6AA1791ED87995003F2388 /* MatchCellController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchCellController.swift; sourceTree = "<group>"; };
 		7C6B36BD1EBCA88100FC17F9 /* Matches.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Matches.swift; sourceTree = "<group>"; };
@@ -498,6 +497,7 @@
 		7CA542161EDB27FB00B4D1BD /* CLKTextProvider+CLKTextProviderCombine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CLKTextProvider+CLKTextProviderCombine.m"; sourceTree = "<group>"; };
 		7CAAEFB81EC36B3900427D7E /* CombinedRefreshing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CombinedRefreshing.swift; sourceTree = "<group>"; };
 		7CAAEFBA1EC36E1A00427D7E /* Sourceful.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sourceful.swift; sourceTree = "<group>"; };
+		7CAB303C1F20F14C00E65429 /* gallery.ckcomplication */ = {isa = PBXFileReference; lastKnownFileType = folder; path = gallery.ckcomplication; sourceTree = "<group>"; };
 		7CCD25C81EDDCF3F00F3C5CB /* ComplicationReloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplicationReloader.swift; sourceTree = "<group>"; };
 		7CCD25CA1EDEA23900F3C5CB /* ComplicationPusher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplicationPusher.swift; sourceTree = "<group>"; };
 		7CCD25CC1EDEB1BA00F3C5CB /* Watch Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Watch Extension.entitlements"; sourceTree = "<group>"; };
@@ -653,7 +653,7 @@
 		7C0EA5D91EBA1B3500F50EB2 /* iOS App */ = {
 			isa = PBXGroup;
 			children = (
-				7C489C8B1F1653D4001875E5 /* gallery.ckcomplication */,
+				7CAB303C1F20F14C00E65429 /* gallery.ckcomplication */,
 				7C1E663E1EBB5651003AF505 /* Colors.json */,
 				7C7916F21EBB3D050070E6C5 /* Generated */,
 				7C0EA65E1EBA53F100F50EB2 /* View */,
@@ -1480,11 +1480,11 @@
 				7C1D898B1EC0655A006F7841 /* TeamGroupTableViewCell.xib in Resources */,
 				7C109D281EC1D5AB00523376 /* TeamDetailInfoTableViewCell.xib in Resources */,
 				7C0EA5E51EBA1B3500F50EB2 /* LaunchScreen.storyboard in Resources */,
+				7CAB303D1F20F14C00E65429 /* gallery.ckcomplication in Resources */,
 				7C1E663F1EBB5651003AF505 /* Colors.json in Resources */,
 				7C3AEFB01EF28D3600CE576A /* MatchEventTableViewCell.xib in Resources */,
 				7C0EA5E21EBA1B3500F50EB2 /* Assets.xcassets in Resources */,
 				7C0EA6641EBA542E00F50EB2 /* TeamCompactTableViewCell.xib in Resources */,
-				7C489C8C1F1653D4001875E5 /* gallery.ckcomplication in Resources */,
 				7CF3D1751EBC838B00E86A91 /* MatchTableViewCell.xib in Resources */,
 				7CEC1BF61F1E7FA70008DF4C /* match-test.json in Resources */,
 				7C0EA5E01EBA1B3500F50EB2 /* Main.storyboard in Resources */,
