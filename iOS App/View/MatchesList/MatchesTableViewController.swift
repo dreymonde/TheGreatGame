@@ -50,7 +50,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
                                                isAbsoluteTruth: { [unowned self] in self.resource.isAbsoluteTruth })
         configure(avenue)
         self.pullToRefreshActivities = make()
-        self.resource.load(confirmation: tableView.reloadData, completion: reloadData(stages:source:))
+        self.resource.load(confirmation: tableView.reloadData, completion: { self.reloadData(stages: $0, source: $1, scrollToRecent: true) })
     }
     
     func subscribe() {
@@ -69,16 +69,20 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
         return IndexPath.start(ofSection: 0)
     }
     
-    fileprivate func reloadData(stages: [Stage], source: Source) {
+    fileprivate func reloadData(stages: [Stage], source: Source, scrollToRecent: Bool) {
         let mostRecent = indexPathOfMostRelevantMatch(from: stages)
         if self.stages.isEmpty && source.isAbsoluteTruth {
             self.stages = stages
             tableView.insertSections(IndexSet.init(integersIn: 0 ... stages.count - 1), with: UITableViewRowAnimation.top)
-            tableView.scrollToRow(at: mostRecent, at: .top, animated: false)
+            if scrollToRecent {
+                tableView.scrollToRow(at: mostRecent, at: .top, animated: false)
+            }
         } else {
             self.stages = stages
             tableView.reloadData()
-            tableView.scrollToRow(at: mostRecent, at: .top, animated: false)
+            if scrollToRecent {
+                tableView.scrollToRow(at: mostRecent, at: .top, animated: false)
+            }
         }
     }
     
@@ -92,7 +96,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
     }
     
     func reload() {
-        resource.reload(connectingToIndicator: pullToRefreshActivities, completion: reloadData(stages:source:))
+        resource.reload(connectingToIndicator: pullToRefreshActivities, completion: { self.reloadData(stages: $0, source: $1, scrollToRecent: false) })
     }
     
     func didFetchImage(with url: URL) {
