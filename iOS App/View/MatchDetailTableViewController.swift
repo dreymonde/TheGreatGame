@@ -239,7 +239,7 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
                 cell.awayBadgeImageView.setImage(badgeAvenue.item(at: away.badges.large), afterDownload: afterImageDownload)
             }
             cell.homeTeamNameLabel.text = preloaded.home?.name
-            cell.scoreLabel.text = preloaded.score?.demo_string ?? "-:-"
+            cell.scoreLabel.text = preloaded.score?.string ?? "-:-"
             cell.awayTeamLabel.text = preloaded.away?.name
             cell.stageTitleLabel.text = preloaded.stageTitle ?? "Stage"
             cell.minuteLabel.text = nil

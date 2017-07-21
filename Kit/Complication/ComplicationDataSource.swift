@@ -122,10 +122,11 @@ internal extension Sequence where Iterator.Element == Match.Full {
     
     func snapshots() -> [ComplicationDataSource.MatchSnapshot] {
         var allMatchesSnapshots = flatMap({ (match) -> [ComplicationDataSource.MatchSnapshot] in
-            let beforeStart = ComplicationDataSource.MatchSnapshot.init(match: match.notStartedSnapshot(), timelineDate: assumeSortedTimelineDate(for: match))
+            let minTimelineDate = assumeSortedTimelineDate(for: match)
+            let beforeStart = ComplicationDataSource.MatchSnapshot.init(match: match.notStartedSnapshot(), timelineDate: minTimelineDate)
             let otherSnapshots = match.allSnapshots()
                 .map({ ComplicationDataSource.MatchSnapshot(match: $0.match,
-                                                            timelineDate: $0.match.date(afterRealMinutesFromStart: $0.minute)) })
+                                                            timelineDate: Swift.max($0.match.date(afterRealMinutesFromStart: $0.minute), minTimelineDate)) })
             var all = [beforeStart]
             all.append(contentsOf: otherSnapshots)
             return all
@@ -133,7 +134,7 @@ internal extension Sequence where Iterator.Element == Match.Full {
         if let first = allMatchesSnapshots.first {
             let aforetime = first <- {
                 $0.aforetime = true
-                $0.timelineDate = Date().startOfSameDay()
+                $0.timelineDate = Date(timeIntervalSince1970: 1498949847)
             }
             allMatchesSnapshots.insert(aforetime, at: 0)
         }

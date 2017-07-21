@@ -46,6 +46,8 @@ class MatchTableViewCell: UITableViewCell {
     @IBOutlet weak var awayTeamNameLabel: UILabel!
     @IBOutlet weak var awayBadgeImageView: UIImageView!
     
+    @IBOutlet weak var penaltyLabel: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -111,6 +113,7 @@ final class MatchCellFiller : CellFiller {
         cell.awayTeamNameLabel.text = match.away.name
         cell.homeBadgeImageView.setImage(avenue.item(at: match.home.badges.large), afterDownload: afterImageDownload)
         cell.awayBadgeImageView.setImage(avenue.item(at: match.away.badges.large), afterDownload: afterImageDownload)
+        cell.penaltyLabel.isHidden = (match.penalties == nil)
     }
     
 }

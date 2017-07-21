@@ -59,7 +59,10 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     func setup(with match: Match.Full, afterDownload: Bool, source: Source) {
         self.homeNameLabel.text = match.home.shortName
         self.awayNameLabel.text = match.away.shortName
-        self.scoreLabel.text = match.score?.demo_string ?? "-:-"
+        self.scoreLabel.text = match.scoreOrPenaltyString()
+        if match.isPenaltiesAppointed {
+            self.scoreLabel.text?.append(" PEN")
+        }
         self.stageTitle.text = TodayViewController.dateFormatter.string(from: match.date)
         avenue.prepareItem(at: match.home.badges.large)
         avenue.prepareItem(at: match.away.badges.large)

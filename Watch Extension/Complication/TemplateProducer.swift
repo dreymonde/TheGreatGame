@@ -41,9 +41,14 @@ final class TemplateProducer {
     }
     
     private func utilitarianSmallTemplate(for match: Match.Full, aforetime: Bool) -> CLKComplicationTemplate? {
-        if let score = match.score {
-            let text = "\(match.home.shortName) \(score.demo_string) \(match.away.shortName)"
-            let shortText = "\(match.home.shortName.firstTwoChars()) \(score.demo_string) \(match.away.shortName.firstTwoChars())"
+        if match.score != nil {
+            let appendPenalty: (inout String) -> () = {
+                if match.isPenaltiesAppointed {
+                    $0.append(" P")
+                }
+            }
+            let text = "\(match.home.shortName) \(match.scoreOrPenaltyString()) \(match.away.shortName)" <- appendPenalty
+            let shortText = "\(match.home.shortestName) \(match.scoreOrPenaltyString()) \(match.away.shortestName)" <- appendPenalty
             return CLKComplicationTemplateUtilitarianSmallFlat() <- {
                 $0.textProvider = CLKSimpleTextProvider(text: text, shortText: shortText)
                 //$0.imageProvider = imageProvider(forSize: ._18)
@@ -61,12 +66,30 @@ final class TemplateProducer {
     }
     
     private func utilitarianLargeTemplate(for match: Match.Full, aforetime: Bool) -> CLKComplicationTemplate? {
-        if let score = match.score {
-            var text = "\(match.home.shortName) \(score.demo_string) \(match.away.shortName)"
-            if match.isEnded {
-                text.append(" (FT)")
+        if match.score != nil {
+            let text = "\(match.home.shortName) \(match.scoreOrPenaltyString()) \(match.away.shortName)" <- {
+                if match.isEnded {
+                    if match.isPenaltiesAppointed {
+                        $0.append(" P (FT)")
+                    } else {
+                        $0.append(" (FT)")
+                    }
+                }
+                if match.isInHalfTime {
+                    $0.append(" (HT)")
+                }
+                if match.isExtraTime {
+                    $0.append(" ET")
+                }
+                if match.isPenalties {
+                    $0.append(" PEN")
+                }
             }
-            let shortText = "\(match.home.shortName.firstTwoChars()) \(score.demo_string) \(match.away.shortName.firstTwoChars())"
+            let shortText = "\(match.home.shortestName) \(match.scoreOrPenaltyString()) \(match.away.shortestName)" <- {
+                if match.isPenalties {
+                    $0.append(" P")
+                }
+            }
             return CLKComplicationTemplateUtilitarianLargeFlat() <- {
                 $0.textProvider = CLKSimpleTextProvider(text: text, shortText: shortText)
                 $0.imageProvider = imageProvider(forSize: ._18)
@@ -84,10 +107,10 @@ final class TemplateProducer {
     }
     
     private func circularSmallTemplate(for match: Match.Full, aforetime: Bool) -> CLKComplicationTemplate? {
-        if let score = match.score {
+        if match.score != nil {
             return CLKComplicationTemplateCircularSmallStackText() <- {
                 $0.line1TextProvider = shortestOneLineMatchTextProvider(match: match)
-                $0.line2TextProvider = scoreTextProvider(score)
+                $0.line2TextProvider = scoreTextProvider(in: match)
                 $0.tintColor = tintColor
             }
         } else {
@@ -101,11 +124,15 @@ final class TemplateProducer {
     
     private func extraLargeTemplate(for match: Match.Full, aforetime: Bool) -> CLKComplicationTemplate? {
         if let score = match.score {
+            var displayScore: Match.Score = score
+            if match.isPenaltiesAppointed {
+                displayScore = match.penalties ?? score
+            }
             return CLKComplicationTemplateExtraLargeColumnsText() <- {
                 $0.row1Column1TextProvider = CLKSimpleTextProvider(text: match.home.shortName)
                 $0.row2Column1TextProvider = CLKSimpleTextProvider(text: match.away.shortName)
-                $0.row1Column2TextProvider = scoreTextProvider(score.home)
-                $0.row2Column2TextProvider = scoreTextProvider(score.away)
+                $0.row1Column2TextProvider = scoreTextProvider(displayScore.home)
+                $0.row2Column2TextProvider = scoreTextProvider(displayScore.away)
                 $0.tintColor = tintColor
             }
         } else {
@@ -119,11 +146,15 @@ final class TemplateProducer {
     
     private func modularSmallTemplate(for match: Match.Full, aforetime: Bool) -> CLKComplicationTemplate? {
         if let score = match.score {
+            var displayScore: Match.Score = score
+            if match.isPenaltiesAppointed {
+                displayScore = match.penalties ?? score
+            }
             return CLKComplicationTemplateModularSmallColumnsText() <- {
                 $0.row1Column1TextProvider = CLKSimpleTextProvider(text: match.home.shortName)
                 $0.row2Column1TextProvider = CLKSimpleTextProvider(text: match.away.shortName)
-                $0.row1Column2TextProvider = scoreTextProvider(score.home)
-                $0.row2Column2TextProvider = scoreTextProvider(score.away)
+                $0.row1Column2TextProvider = scoreTextProvider(displayScore.home)
+                $0.row2Column2TextProvider = scoreTextProvider(displayScore.away)
                 $0.tintColor = tintColor
             }
         } else {
@@ -137,12 +168,16 @@ final class TemplateProducer {
     
     private func modularLargeTemplate(for match: Match.Full, aforetime: Bool) -> CLKComplicationTemplate? {
         if let score = match.score {
+            var displayScore: Match.Score = score
+            if match.isPenaltiesAppointed {
+                displayScore = match.penalties ?? score
+            }
             return CLKComplicationTemplateModularLargeTable() <- {
-                $0.headerTextProvider = CLKSimpleTextProvider(text: match.events.last?.text ?? match.stageTitle)
+                $0.headerTextProvider = CLKSimpleTextProvider(text: matchState(match))
                 $0.row1Column1TextProvider = CLKSimpleTextProvider(text: match.home.name)
                 $0.row2Column1TextProvider = CLKSimpleTextProvider(text: match.away.name)
-                $0.row1Column2TextProvider = scoreTextProvider(score.home)
-                $0.row2Column2TextProvider = scoreTextProvider(score.away)
+                $0.row1Column2TextProvider = scoreTextProvider(displayScore.home)
+                $0.row2Column2TextProvider = scoreTextProvider(displayScore.away)
                 $0.tintColor = tintColor
             }
         } else {
@@ -155,8 +190,29 @@ final class TemplateProducer {
         }
     }
     
-    private func scoreTextProvider(_ score: Match.Score) -> CLKSimpleTextProvider {
-        return CLKSimpleTextProvider(text: score.demo_string)
+    private func matchState(_ match: Match.Full) -> String {
+        if match.isInHalfTime {
+            return "Half-time"
+        }
+        if match.isExtraTime {
+            return "Extra time"
+        }
+        if match.isPenalties {
+            return "PEN " + (match.events.last?.text ?? "Penalties")
+        }
+        if match.isEnded {
+            return "(FT) " + (match.events.last?.text ?? "")
+        }
+        return match.events.last?.text ?? "Live"
+    }
+    
+    private func scoreTextProvider(in match: Match.Full) -> CLKSimpleTextProvider {
+        let scoreString = match.scoreOrPenaltyString() <- {
+            if match.isPenaltiesAppointed {
+                $0.append(" P")
+            }
+        }
+        return CLKSimpleTextProvider(text: scoreString)
     }
     
     private func scoreTextProvider(_ score: Int) -> CLKSimpleTextProvider {
@@ -171,12 +227,12 @@ final class TemplateProducer {
     
     private func oneLineMatchTextProvider(match: Match.Full) -> CLKSimpleTextProvider {
         let text = "\(match.home.shortName):\(match.away.shortName)"
-        let shortText = "\(match.home.shortName.firstTwoChars()):\(match.away.shortName.firstTwoChars())"
+        let shortText = "\(match.home.shortestName):\(match.away.shortestName)"
         return CLKSimpleTextProvider(text: text, shortText: shortText)
     }
     
     private func shortestOneLineMatchTextProvider(match: Match.Full) -> CLKSimpleTextProvider {
-        let text = "\(match.home.shortName.firstTwoChars()):\(match.away.shortName.firstTwoChars())"
+        let text = "\(match.home.shortestName):\(match.away.shortestName)"
         let homeOnly = "\(match.home.shortName)"
         return CLKSimpleTextProvider(text: text, shortText: homeOnly)
     }
@@ -207,12 +263,3 @@ final class TemplateProducer {
     }
     
 }
-
-extension String {
-    
-    fileprivate func firstTwoChars() -> String {
-        return substring(to: index(startIndex, offsetBy: 2))
-    }
-    
-}
-

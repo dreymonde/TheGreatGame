@@ -11,13 +11,15 @@ import Foundation
 fileprivate struct TeamsNames {
     let homeLong: String
     let homeShort: String
+    let homeShortest: String
     let awayLong: String
     let awayShort: String
+    let awayShortest: String
 }
 
-fileprivate func names(_ homeLong: String, _ homeShort: String,
-                            _ awayLong: String, _ awayShort: String) -> TeamsNames {
-    return TeamsNames(homeLong: homeLong, homeShort: homeShort, awayLong: awayLong, awayShort: awayShort)
+fileprivate func names(_ homeLong: String, _ homeShort: String, _ homeShortest: String,
+                       _ awayLong: String, _ awayShort: String, _ awayShortest: String) -> TeamsNames {
+    return TeamsNames(homeLong: homeLong, homeShort: homeShort, homeShortest: homeShortest, awayLong: awayLong, awayShort: awayShort, awayShortest: awayShortest)
 }
 
 public final class ComplicationTemplate {
@@ -41,31 +43,31 @@ public final class ComplicationTemplate {
     private func teamsNames(forRegionCode regionCode: String) -> TeamsNames? {
         switch regionCode {
         case "RU", "UA", "BY":
-            return names("Russia", "RUS", "Germany", "GER")
+            return names("Russia", "RUS", "RU", "Germany", "GER", "DE")
         case "DE":
-            return names("Germany", "GER", "Sweden", "SWE")
+            return names("Germany", "GER", "DE", "Sweden", "SWE", "SE")
         case "NL":
-            return names("Netherlands", "NED", "Belgium", "BEL")
+            return names("Netherlands", "NED", "NL", "Belgium", "BEL", "BE")
         case "BE":
-            return names("Belgium", "BEL", "Netherlands", "NED")
+            return names("Belgium", "BEL", "BE", "Netherlands", "NED", "NL")
         case "NO":
-            return names("Norway", "NOR", "Netherlands", "NED")
+            return names("Norway", "NOR", "NO", "Netherlands", "NED", "NL")
         case "DK":
-            return names("Denmark", "DEN", "Norway", "NOR")
+            return names("Denmark", "DEN", "DK", "Norway", "NOR", "NO")
         default:
             return nil
         }
     }
     
     private func makeDefaultPlaceholderMatch() -> Match.Full {
-        let home = Match.Team(id: Team.ID.init(rawValue: -1)!, name: "Germany", shortName: "GER", badges: badges)
-        let away = Match.Team(id: Team.ID.init(rawValue: -1)!, name: "Sweden", shortName: "SWE", badges: badges)
+        let home = Match.Team(id: Team.ID.init(rawValue: -1)!, name: "Germany", shortName: "GER", shortestName: "GE", badges: badges)
+        let away = Match.Team(id: Team.ID.init(rawValue: -1)!, name: "Sweden", shortName: "SWE", shortestName: "SE", badges: badges)
         return makeMatch(teams: (home, away), score: (1, 1))
     }
     
     private func makePlaceholderMatch(with names: TeamsNames) -> Match.Full {
-        let home = Match.Team(id: Team.ID.init(rawValue: -1)!, name: names.homeLong, shortName: names.homeShort, badges: badges)
-        let away = Match.Team(id: Team.ID.init(rawValue: -1)!, name: names.awayLong, shortName: names.awayShort, badges: badges)
+        let home = Match.Team(id: Team.ID.init(rawValue: -1)!, name: names.homeLong, shortName: names.homeShort, shortestName: names.homeShortest, badges: badges)
+        let away = Match.Team(id: Team.ID.init(rawValue: -1)!, name: names.awayLong, shortName: names.awayShort, shortestName: names.awayShortest, badges: badges)
         return makeMatch(teams: (home, away), score: (2, 0))
     }
     

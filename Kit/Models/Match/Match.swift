@@ -60,7 +60,7 @@ extension MatchProtocol {
     }
     
     public func scoreOrPenaltyString() -> String {
-        return penalties?.demo_string ?? score?.demo_string ?? "-:-"
+        return penalties?.string ?? score?.string ?? "-:-"
 //        if let score = score {
 //            return score.demo_string
 //        } else {
@@ -69,12 +69,12 @@ extension MatchProtocol {
     }
     
     public func onlyMainTimeScoreString() -> String {
-        return score?.demo_string ?? "-:-"
+        return score?.string ?? "-:-"
     }
     
     public func scoreOrTimeString() -> String {
-        if let score = score {
-            return score.demo_string
+        if score != nil {
+            return scoreOrPenaltyString()
         } else {
             return shortTimeDateFormatter.string(from: date)
         }
@@ -82,7 +82,7 @@ extension MatchProtocol {
     
     public func scoreOrDateString() -> String {
         if let score = score {
-            return score.demo_string
+            return score.string
         } else {
             return "\(shortDateDateFormatter.string(from: date))\n\(shortTimeDateFormatter.string(from: date))"
         }
@@ -130,8 +130,17 @@ public enum Match {
         public let home: Int
         public let away: Int
         
+        public init(home: Int, away: Int) {
+            self.home = home
+            self.away = away
+        }
+        
         @available(*, deprecated)
         public var demo_string: String {
+            return "\(home):\(away)"
+        }
+        
+        public var string: String {
             return "\(home):\(away)"
         }
         
@@ -214,6 +223,7 @@ public enum Match {
         public let id: TheGreatKit.Team.ID
         public let name: String
         public let shortName: String
+        public let shortestName: String
         public let badges: TheGreatKit.Team.Badges
     }
     
@@ -225,8 +235,8 @@ public enum Match {
         public let date: Date
         public let endDate: Date
         public let location: String
-        public let score: Score?
-        public let penalties: Match.Score?
+        public var score: Score?
+        public var penalties: Match.Score?
         
     }
     
@@ -301,6 +311,10 @@ public enum Match {
             return isEnded || events.contains(eventOfKind: .end_and_extra)
         }
         
+        public var isOn: Bool {
+            return isStarted && !isEnded
+        }
+        
         public var isEnded: Bool {
             return events.contains(eventOfKind: .end)
         }
@@ -334,7 +348,7 @@ public enum Match {
         }
         
         public var isExtraTime: Bool {
-            return events.contains(eventOfKind: .extra_start) && !isEnded && !isPenaltiesAppointed
+            return events.contains(eventOfKind: .extra_start) && !isExtraTimeEnded
         }
         
         public var isExtraTimeEnded: Bool {
@@ -343,6 +357,10 @@ public enum Match {
         
         public var isPenaltiesAppointed: Bool {
             return events.contains(eventOfKind: .penalties)
+        }
+        
+        public var isPenalties: Bool {
+            return isPenaltiesAppointed && !isEnded
         }
         
         public func minuteOrStateString() -> String {
@@ -383,7 +401,7 @@ extension Sequence where Iterator.Element == Match.Event {
 extension Match.Team : Mappable {
     
     public enum MappingKeys : String, IndexPathElement {
-        case id, name, badges, short_name, summary
+        case id, name, badges, short_name, shortest_name, summary
     }
     
     public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
@@ -391,6 +409,7 @@ extension Match.Team : Mappable {
         self.name = try mapper.map(from: .name)
         self.badges = try mapper.map(from: .badges)
         self.shortName = try mapper.map(from: .short_name)
+        self.shortestName = try mapper.map(from: .shortest_name)
     }
     
     public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
@@ -398,6 +417,7 @@ extension Match.Team : Mappable {
         try mapper.map(self.name, to: .name)
         try mapper.map(self.badges, to: .badges)
         try mapper.map(self.shortName, to: .short_name)
+        try mapper.map(self.shortestName, to: .shortest_name)
     }
     
 }

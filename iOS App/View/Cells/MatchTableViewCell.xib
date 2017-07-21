@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -51,6 +51,12 @@
                             <constraint firstAttribute="width" constant="30" id="tOP-Yr-QUt"/>
                         </constraints>
                     </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PEN" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vG7-kJ-Gln">
+                        <rect key="frame" x="149.5" y="3.5" width="22" height="13.5"/>
+                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstItem="93r-83-7nd" firstAttribute="leading" secondItem="Bff-AQ-nNX" secondAttribute="trailing" constant="5" id="7tF-Z3-phO"/>
@@ -64,6 +70,8 @@
                     <constraint firstItem="RdQ-gR-GOe" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="cX7-bo-wxx"/>
                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="93r-83-7nd" secondAttribute="bottom" constant="10" id="hgt-gv-FQi"/>
                     <constraint firstItem="aar-fq-6su" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="o2j-eJ-lnZ"/>
+                    <constraint firstItem="vG7-kJ-Gln" firstAttribute="centerX" secondItem="RdQ-gR-GOe" secondAttribute="centerX" id="sDF-x9-oWZ"/>
+                    <constraint firstItem="RdQ-gR-GOe" firstAttribute="top" secondItem="vG7-kJ-Gln" secondAttribute="bottom" constant="-3" id="szw-vH-Psm"/>
                     <constraint firstAttribute="trailing" secondItem="93r-83-7nd" secondAttribute="trailing" constant="10" id="wVq-Kz-eC5"/>
                     <constraint firstItem="B2o-J5-goJ" firstAttribute="leading" secondItem="aar-fq-6su" secondAttribute="trailing" constant="5" id="xcx-UK-c2c"/>
                     <constraint firstItem="Bff-AQ-nNX" firstAttribute="leading" secondItem="RdQ-gR-GOe" secondAttribute="trailing" constant="10" id="ygv-Ph-rBr"/>
@@ -75,6 +83,7 @@
                 <outlet property="awayTeamNameLabel" destination="Bff-AQ-nNX" id="htd-Mj-ZOH"/>
                 <outlet property="homeBadgeImageView" destination="aar-fq-6su" id="rg0-fT-0DB"/>
                 <outlet property="homeTeamNameLabel" destination="B2o-J5-goJ" id="dFB-8r-qj0"/>
+                <outlet property="penaltyLabel" destination="vG7-kJ-Gln" id="VJo-Dz-0pw"/>
                 <outlet property="scoreTimeLabel" destination="RdQ-gR-GOe" id="Iiv-Aq-9KE"/>
             </connections>
             <point key="canvasLocation" x="34" y="72"/>

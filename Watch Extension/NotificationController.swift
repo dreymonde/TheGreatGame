@@ -41,7 +41,7 @@ class NotificationController: WKUserNotificationInterfaceController {
             return
         }
         let match = push.content
-        self.testLabel.setText("\(match.home.name) \(match.score?.demo_string ?? "VS") \(match.away.name)")
+        self.testLabel.setText("\(match.home.name) \(match.score?.string ?? "VS") \(match.away.name)")
         // After populating your dynamic notification interface call the completion block.
         completionHandler(.custom)
     }

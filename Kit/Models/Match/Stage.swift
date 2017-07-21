@@ -11,7 +11,7 @@ import Foundation
 public struct Stage {
     
     public let title: String
-    public let matches: [Match.Compact]
+    public var matches: [Match.Compact]
     
 }
 
