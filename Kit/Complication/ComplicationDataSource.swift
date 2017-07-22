@@ -49,8 +49,7 @@ public final class ComplicationDataSource {
         matches.retrieve { (result) in
             if let matches = result.value {
                 let matchesAfter = matches.snapshots().after(date)
-                let realLimit = min(limit, matchesAfter.count)
-                completion(Array(matchesAfter.prefix(upTo: realLimit)))
+                completion(Array(matchesAfter.prefix(limit)))
             } else {
                 completion(nil)
             }
@@ -72,8 +71,7 @@ public final class ComplicationDataSource {
         matches.retrieve { (result) in
             if let matches = result.value {
                 let matchesBefore = matches.snapshots().before(date)
-                let realLimit = min(limit, matchesBefore.count)
-                completion(Array(matchesBefore.prefix(upTo: realLimit)))
+                completion(Array(matchesBefore.suffix(limit)))
             } else {
                 completion(nil)
             }
