@@ -32,24 +32,23 @@ public final class ComplicationReloader {
 
 extension ComplicationReloader {
     
-    public func consume(didUpdateFavorite: Subscribe<Favorites<Team.ID>.Change>, matches: Retrieve<[Match.Full]>) {
-        didUpdateFavorite.flatSubscribe(self, with: { $0.didUpdateFavorite($1, matches: matches) })
+    public func consume(didUpdateFavoriteTeams: Subscribe<Favorites<Team.ID>.Change>, didUpdateFavoriteMatches: Subscribe<Favorites<Match.ID>.Change>) {
+        didUpdateFavoriteTeams.flatSubscribe(self, with: { $0.didUpdateFavorite($1) })
+        didUpdateFavoriteMatches.flatSubscribe(self, with: { $0.didUpdateFavorite($1) })
     }
     
     public func consume(complicationMatchUpdate: Subscribe<Match.Full>, writingTo matches: Cache<Void, Editioned<FullMatches>>) {
         complicationMatchUpdate.flatSubscribe(self, with: { $0.complicationMatchUpdate($1, matchesCache: matches) })
     }
     
-    fileprivate func didUpdateFavorite(_ update: Favorites<Team.ID>.Change, matches: Retrieve<[Match.Full]>) {
-        matches.mapValues({ $0.filter({ Calendar.autoupdatingCurrent.isDateInToday($0.date) }) }).retrieve { (result) in
-            if let gamesToday = result.value {
-                let idsToday = Set(gamesToday.flatMap({ $0.teams.map({ $0.id }) }))
-                if idsToday.contains(update.id) {
-                    printWithContext("Updated team is playing today, reloading complication")
-                    self.reloadComplications()
-                }
-            }
-        }
+    fileprivate func didUpdateFavorite(_ update: Favorites<Team.ID>.Change) {
+        printWithContext("Reloading complication")
+        self.reloadComplications()
+    }
+    
+    fileprivate func didUpdateFavorite(_ update: Favorites<Match.ID>.Change) {
+        printWithContext("Reloaing complication")
+        self.reloadComplications()
     }
     
     fileprivate func complicationMatchUpdate(_ match: Match.Full, matchesCache: Cache<Void, Editioned<FullMatches>>) {

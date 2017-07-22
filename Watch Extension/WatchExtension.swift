@@ -41,8 +41,7 @@ final class WatchExtension {
     func declare() {
         phone.didReceiveUpdatedFavoriteTeams.subscribe(self.favoriteTeams, with: FavoritesRegistry.replace)
         phone.didReceiveUpdatedFavoriteMatches.subscribe(self.favoriteMatches, with: FavoritesRegistry.replace)
-        complicationReloader.consume(didUpdateFavorite: self.favoriteTeams.didUpdateFavorite,
-                                     matches: apiCache.matches.allFull.backed(by: api.matches.allFull).asReadOnlyCache().mapValues({ $0.content.matches }))
+        complicationReloader.consume(didUpdateFavoriteTeams: self.favoriteTeams.didUpdateFavorite, didUpdateFavoriteMatches: self.favoriteMatches.didUpdateFavorite)
         complicationReloader.consume(complicationMatchUpdate: self.phone.didReceiveComplicationMatchUpdate,
                                      writingTo: apiCache.matches.allFull)
     }
