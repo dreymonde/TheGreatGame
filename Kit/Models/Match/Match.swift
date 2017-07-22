@@ -172,13 +172,13 @@ public enum Match {
         }
         
         internal enum Additional {
-            static let endAndExtra = "FE"
-            static let extraTimeStart = "ET"
-            static let penalties = "PS"
-            static let penGoalHome = "PH"
-            static let penGoalAway = "PA"
-            static let penHomeMiss = "MH"
-            static let penAwayMiss = "MA"
+            static let endAndExtra = "FE "
+            static let extraTimeStart = "ET "
+            static let penalties = "PS "
+            static let penGoalHome = "PH "
+            static let penGoalAway = "PA "
+            static let penHomeMiss = "MH "
+            static let penAwayMiss = "MA "
         }
         
         internal static func analyze(_ text: String, kind: Kind) -> (Kind, String)? {
@@ -214,7 +214,7 @@ public enum Match {
         }
         
         internal static func cutAdditional(from text: String) -> String {
-            return text.substring(from: text.index(text.startIndex, offsetBy: 2))
+            return text.substring(from: text.index(text.startIndex, offsetBy: 3))
         }
         
     }
