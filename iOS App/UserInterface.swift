@@ -14,7 +14,7 @@ import Avenues
 fileprivate let updateAfterActive = AppDelegate.applicationDidBecomeActive.proxy
     .void()
     .wait(seconds: 0.5)
-    .alreadyOnMainThread()
+    .mainThread()
 
 final class UserInterface {
     
