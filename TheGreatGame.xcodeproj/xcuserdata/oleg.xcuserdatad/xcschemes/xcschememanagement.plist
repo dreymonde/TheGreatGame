@@ -19,11 +19,6 @@
 			<key>orderHint</key>
 			<integer>9</integer>
 		</dict>
-		<key>MatchNotification.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>8</integer>
-		</dict>
 		<key>Peer Distribute.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
