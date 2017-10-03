@@ -23,7 +23,7 @@ class ComplicationDataSourceTests: XCTestCase {
     }
     
     func testAfter() throws {
-        let api = API.digitalOcean()
+        let api = API.gitHub()
         let allMatches = api.matches.allFull.mapValues({ $0.content.matches }).makeSyncCache()
         let dateComps = DateComponents(calendar: nil, timeZone: TimeZone.init(identifier: "Europe/Amsterdam"), era: nil, year: 2017, month: 7, day: 21, hour: 21, minute: 0, second: 0, nanosecond: nil, weekday: nil, weekdayOrdinal: nil, quarter: nil, weekOfMonth: nil, weekOfYear: nil, yearForWeekOfYear: nil)
         let date = try Calendar.current.date(from: dateComps).unwrap()

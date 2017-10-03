@@ -23,7 +23,7 @@ final class TodayExtension {
         
         ShallowsLog.isEnabled = true
         
-        self.api = API.digitalOcean()
+        self.api = API.gitHub()
         self.apiCache = APICache.inSharedCachesDirectory()
         self.favoriteTeams = FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteTeamsSubPath)
         self.favoriteMatches = FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteMatchesSubPath)

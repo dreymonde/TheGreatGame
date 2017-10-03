@@ -45,7 +45,7 @@ class APITests: XCTestCase {
     }
     
     func testAllMatchesFull() throws {
-        let api = MatchesAPI.digitalOcean()
+        let api = MatchesAPI.gitHub()
         let matches = try api.allFull.mapValues({ $0.content.matches }).makeSyncCache().retrieve()
         let ned_nor = try matches.first.unwrap()
         let cut = ned_nor.snapshot(beforeRealMinute: 14)

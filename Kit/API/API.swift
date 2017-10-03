@@ -28,7 +28,8 @@ internal protocol APICachePoint {
 extension APIProvider {
     
     public static func gitHub(networkCache: ReadOnlyCache<URL, Data> = Self.makeUrlSessionCache()) -> Self {
-        let gitRepo = GitHubRepo.theGreatGameStorage(networkCache: networkCache)
+        let gitRepo: ReadOnlyCache<APIPath, Data> = GitHubRepo.theGreatGameStorage(networkCache: networkCache).asReadOnlyCache()
+            .mapKeys({ return "content" + $0 })
         return Self(dataProvider: gitRepo.asReadOnlyCache())
     }
     

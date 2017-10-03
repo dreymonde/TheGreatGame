@@ -46,8 +46,10 @@ internal final class NotificationAuthorizer {
                 return
             }
             if authorized {
-                self.registerForRemote()
-                self.didAuthorize.publish()
+                DispatchQueue.main.async {
+                    self.registerForRemote()
+                    self.didAuthorize.publish()
+                }
             }
         }
     }
