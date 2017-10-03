@@ -64,7 +64,7 @@ struct ViewControllerResource<Scene : StoryboardSceneType, ViewController : UIVi
 }
 
 {# This is where the generation begins, this code depends on what you have in your Storyboards #}
-enum {{sceneEnumName}} {
+enum Storyboard {
   {% for storyboard in storyboards %}
   {% set storyboardName %}{{storyboard.name|swiftIdentifier|escapeReservedKeywords}}{% endset %}
   {% if storyboard.scenes %}
@@ -114,7 +114,7 @@ enum {{sceneEnumName}} {
   {% endfor %}
 }
 
-enum {{segueEnumName}} {
+enum Segue {
   {% for storyboard in storyboards %}{% if storyboard.segues %}
   enum {{storyboard.name|swiftIdentifier|escapeReservedKeywords}}: String, StoryboardSegueType {
     {% for segue in storyboard.segues %}

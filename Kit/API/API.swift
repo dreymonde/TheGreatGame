@@ -11,7 +11,7 @@ import Shallows
 
 public protocol APIProvider {
     
-    init(dataProvider: ReadOnlyCache<String, Data>)
+    init(dataProvider: ReadOnlyCache<APIPath, Data>)
     
 }
 
@@ -21,7 +21,7 @@ internal protocol APIPoint : APIProvider {
 
 internal protocol APICachePoint {
     
-    init(dataProvider: Cache<String, Data>)
+    init(dataProvider: Cache<APIPath, Data>)
     
 }
 
@@ -34,17 +34,13 @@ extension APIProvider {
     
     public static func heroku(networkCache: ReadOnlyCache<URL, Data> = Self.makeUrlSessionCache()) -> Self {
         let baseURL = URL(string: "https://the-great-game-ruby.herokuapp.com")!
-        let subcache: ReadOnlyCache<String, Data> = networkCache
-            .mapKeys({ URL.init(string: $0, relativeTo: baseURL)! })
-            .renaming(to: "heroku-server")
+        let subcache: ReadOnlyCache<APIPath, Data> = WebAPI(networkProvider: networkCache, baseURL: baseURL).asReadOnlyCache()
         return Self(dataProvider: subcache)
     }
     
     public static func digitalOcean(networkCache: ReadOnlyCache<URL, Data> = Self.makeUrlSessionCache()) -> Self {
         let baseURL = Server.digitalOceanStorageBaseURL
-        let subcache: ReadOnlyCache<String, Data> = networkCache
-            .mapKeys({ baseURL.appendingPathComponent($0) })
-            .renaming(to: "digital-ocean-droplet")
+        let subcache: ReadOnlyCache<APIPath, Data> = WebAPI(networkProvider: networkCache, baseURL: baseURL).asReadOnlyCache()
         return Self(dataProvider: subcache)
     }
     
@@ -55,8 +51,8 @@ extension APIProvider {
     
     public static func macBookSteve() -> Self {
         let directory = URL(fileURLWithPath: "/Users/oleg/Development/TheGreatGame/Storage/content")
-        let rawFS = RawFileSystemCache(directoryURL: directory)
-            .mapKeys(RawFileSystemCache.FileName.init)
+        let rawFS: Cache<APIPath, Data> = RawFileSystemCache(directoryURL: directory)
+            .mapKeys({ RawFileSystemCache.FileName.init(validFileName: Filename(rawValue: $0.rawValue)) })
         let cache = rawFS
             .asReadOnlyCache()
             .latency(ofInterval: 1.0)
@@ -84,7 +80,7 @@ public final class API : APIProvider {
         self.groups = groups
     }
     
-    public convenience init(dataProvider: ReadOnlyCache<String, Data>) {
+    public convenience init(dataProvider: ReadOnlyCache<APIPath, Data>) {
         let teamsAPI = TeamsAPI.init(dataProvider: dataProvider)
         let matchesAPI = MatchesAPI.init(dataProvider: dataProvider)
         let groupsAPI = GroupsAPI.init(dataProvider: dataProvider)
@@ -109,10 +105,11 @@ public final class APICache : Storing {
         self.groups = groups
     }
     
-    public convenience init(diskCache cache: Cache<String, Data>) {
-        self.init(teams: TeamsAPICache.init(dataProvider: cache),
-                  matches: MatchesAPICache.init(dataProvider: cache),
-                  groups: GroupsAPICache.init(dataProvider: cache))
+    public convenience init(diskCache cache: Cache<Filename, Data>) {
+        let apiPathCache: Cache<APIPath, Data> = cache.mapKeys({ Filename(rawValue: $0.rawValue) })
+        self.init(teams: TeamsAPICache.init(dataProvider: apiPathCache),
+                  matches: MatchesAPICache.init(dataProvider: apiPathCache),
+                  groups: GroupsAPICache.init(dataProvider: apiPathCache))
     }
 
 }

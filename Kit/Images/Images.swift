@@ -30,9 +30,9 @@ public final class Images : Storing {
     fileprivate let imageFetchingSession = URLSession(configuration: .default)
     fileprivate let diskCache: Cache<URL, UIImage>
     
-    public init(diskCache: Cache<String, Data>) {
+    public init(diskCache: Cache<Filename, Data>) {
         self.diskCache = diskCache
-            .mapKeys({ $0.absoluteString })
+            .mapKeys({ Filename(rawValue: $0.absoluteString) })
             .mapImage()
     }
     

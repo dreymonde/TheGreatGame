@@ -96,7 +96,7 @@ enum Storyboard {
   }
 }
 
-enum StoryboardSegue {
+enum Segue {
   enum Main: String, StoryboardSegueType {
     case __Unused = "<#unused#>"
     case __Unused2 = "<#unused-2#>"

@@ -32,7 +32,7 @@ public final class FavoritesRegistry<IDType : IDProtocol> : Storing where IDType
     
     private lazy var favoriteTeamsSync: ReadOnlySyncCache<Void, Set<IDType>> = self.favorites.makeSyncCache()
     
-    public init(diskCache: Cache<String, Data>) {
+    public init(diskCache: Cache<Filename, Data>) {
         let fileSystemTeams = diskCache
             .renaming(to: "favorites-disk")
             .mapJSONDictionary()

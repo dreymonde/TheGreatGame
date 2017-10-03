@@ -9,67 +9,23 @@
 import Foundation
 import Shallows
 
-extension URLSession : ReadableCacheProtocol {
-    
-    public enum Key {
-        case url(URL)
-        case urlRequest(URLRequest)
-    }
-    
-    public enum CacheError : Error {
-        case taskError(Error)
-        case responseIsNotHTTP(URLResponse?)
-        case noData
-    }
-    
-    public func retrieve(forKey request: Key, completion: @escaping (Result<(HTTPURLResponse, Data)>) -> ()) {
-        let completion: (Data?, URLResponse?, Error?) -> () = { (data, response, error) in
-            if let error = error {
-                completion(.failure(CacheError.taskError(error)))
-                return
-            }
-            guard let httpResponse = response as? HTTPURLResponse else {
-                completion(.failure(CacheError.responseIsNotHTTP(response)))
-                return
-            }
-            guard let data = data else {
-                completion(.failure(CacheError.noData))
-                return
-            }
-            completion(.success(httpResponse, data))
-        }
-        let task: URLSessionTask
-        switch request {
-        case .url(let url):
-            task = self.dataTask(with: url, completionHandler: completion)
-        case .urlRequest(let request):
-            task = self.dataTask(with: request, completionHandler: completion)
-        }
-        task.resume()
-    }
-    
-}
-
 public final class GitHubRepo : ReadableCacheProtocol {
-    
-    public typealias Key = String
-    public typealias Value = Data
     
     public static let apiBase = URL(string: "https://api.github.com/repos/")!
     
-    private let internalCache: ReadOnlyCache<String, Data>
+    private let internalCache: ReadOnlyCache<APIPath, Data>
     
     public init(owner: String, repo: String, networkCache: ReadOnlyCache<URL, Data>) {
         let base = GitHubRepo.apiBase.appendingPathComponent("\(owner)/\(repo)/").appendingPathComponent("contents/")
         print("GitHub repo base:", base)
         self.internalCache = networkCache
             .mapJSONDictionary()
-            .mapKeys({ base.appendingPathComponent($0) })
+            .mapKeys({ base.appendingPath($0) })
             .mapMappable(of: GitHubContentAPIResponse.self)
             .mapValues({ try $0.contentData.unwrap() })
     }
     
-    public func retrieve(forKey key: String, completion: @escaping (Result<Data>) -> ()) {
+    public func retrieve(forKey key: APIPath, completion: @escaping (Result<Data>) -> ()) {
         internalCache.retrieve(forKey: key, completion: completion)
     }
     
@@ -110,26 +66,6 @@ extension GitHubContentAPIResponse : InMappable {
     init<Source>(mapper: InMapper<Source, MappingKeys>) throws where Source : InMap {
         self.content = try mapper.map(from: .content)
         self.encoding = try mapper.map(from: .encoding)
-    }
-    
-}
-
-extension ReadOnlyCache where Key == URLSession.Key {
-    
-    public func usingURLKeys() -> ReadOnlyCache<URL, Value> {
-        return mapKeys({ .url($0) })
-    }
-    
-    public func usingURLRequestKeys() -> ReadOnlyCache<URLRequest, Value> {
-        return mapKeys({ .urlRequest($0) })
-    }
-    
-}
-
-extension ReadOnlyCache where Value == (HTTPURLResponse, Data) {
-    
-    public func droppingResponse() -> ReadOnlyCache<Key, Data> {
-        return mapValues({ $0.1 })
     }
     
 }

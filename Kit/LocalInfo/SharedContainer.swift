@@ -15,20 +15,28 @@ public protocol HardStoring {
     
     associatedtype Configurable
     
-    static func withDiskCache(_ diskCache: Cache<String, Data>) -> Configurable
+    static func withDiskCache(_ diskCache: Cache<Filename, Data>) -> Configurable
     
 }
 
 public protocol Storing : HardStoring {
     
-    init(diskCache: Cache<String, Data>)
+    init(diskCache: Cache<Filename, Data>)
     
 }
 
 extension Storing {
     
-    public static func withDiskCache(_ diskCache: Cache<String, Data>) -> Self {
+    public static func withDiskCache(_ diskCache: Cache<Filename, Data>) -> Self {
         return Self.init(diskCache: diskCache)
+    }
+    
+}
+
+extension Filename : Hashable {
+    
+    public var hashValue: Int {
+        return rawValue.hashValue
     }
     
 }
@@ -40,7 +48,7 @@ extension HardStoring {
     }
     
     public static func inMemory() -> Configurable {
-        return Self.withDiskCache(MemoryCache<String, Data>().asCache())
+        return Self.withDiskCache(MemoryCache<Filename, Data>().asCache())
     }
     
     public static func inLocalCachesDirectory(subpath: String = Self.preferredSubPath) -> Configurable {

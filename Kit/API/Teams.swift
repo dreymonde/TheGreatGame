@@ -11,15 +11,15 @@ import Foundation
 
 public struct TeamsEndpoint {
     
-    public let path: String
+    public let path: APIPath
     
-    init(path: String) {
-        self.path = "teams/\(path)"
+    init(path: APIPath) {
+        self.path = "teams" + path
     }
     
     public static let all = TeamsEndpoint(path: "all.json")
     public static func fullTeam(withID id: Team.ID) -> TeamsEndpoint {
-        return TeamsEndpoint(path: "\(id.rawID).json")
+        return TeamsEndpoint(path: APIPath(rawValue: "\(id.rawID).json"))
     }
     
 }
@@ -30,9 +30,9 @@ public final class TeamsAPI : APIPoint {
     public let all: Retrieve<Editioned<Teams>>
     public let fullTeam: ReadOnlyCache<Team.ID, Editioned<Team.Full>>
     
-    private let dataProvider: ReadOnlyCache<String, Data>
+    private let dataProvider: ReadOnlyCache<APIPath, Data>
     
-    public init(dataProvider: ReadOnlyCache<String, Data>) {
+    public init(dataProvider: ReadOnlyCache<APIPath, Data>) {
         self.dataProvider = dataProvider
         self.provider = dataProvider
             .mapJSONDictionary()
@@ -53,9 +53,9 @@ public final class TeamsAPICache : APICachePoint {
     public let all: Cache<Void, Editioned<Teams>>
     public let fullTeam: Cache<Team.ID, Editioned<Team.Full>>
     
-    private let dataProvider: Cache<String, Data>
+    private let dataProvider: Cache<APIPath, Data>
     
-    public init(dataProvider: Cache<String, Data>) {
+    public init(dataProvider: Cache<APIPath, Data>) {
         self.dataProvider = dataProvider
         self.provider = dataProvider
             .mapJSONDictionary()

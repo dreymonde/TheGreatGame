@@ -11,16 +11,16 @@ import Shallows
 
 public struct MatchesEndpoint {
     
-    public let path: String
+    public let path: APIPath
     
-    init(path: String) {
-        self.path = "matches/\(path)"
+    init(path: APIPath) {
+        self.path = "matches" + path
     }
     
     public static let all = MatchesEndpoint(path: "all.json")
     public static let allFull = MatchesEndpoint(path: "all-full.json")
     public static func fullMatch(withID id: Match.ID) -> MatchesEndpoint {
-        return MatchesEndpoint(path: "\(id.rawID).json")
+        return MatchesEndpoint(path: APIPath(rawValue: "\(id.rawID).json"))
     }
     public static let stages = MatchesEndpoint(path: "stages.json")
     
@@ -34,9 +34,9 @@ public final class MatchesAPI : APIPoint {
     public let stages: Retrieve<Editioned<Stages>>
     public let fullMatch: ReadOnlyCache<Match.ID, Editioned<Match.Full>>
     
-    private let dataProvider: ReadOnlyCache<String, Data>
+    private let dataProvider: ReadOnlyCache<APIPath, Data>
     
-    public init(dataProvider: ReadOnlyCache<String, Data>) {
+    public init(dataProvider: ReadOnlyCache<APIPath, Data>) {
         self.dataProvider = dataProvider
         self.provider = dataProvider
             .mapJSONDictionary()
@@ -65,9 +65,9 @@ public final class MatchesAPICache : APICachePoint {
     public let stages: Cache<Void, Editioned<Stages>>
     public let fullMatch: Cache<Match.ID, Editioned<Match.Full>>
     
-    private let dataProvider: Cache<String, Data>
+    private let dataProvider: Cache<APIPath, Data>
     
-    init(dataProvider: Cache<String, Data>) {
+    init(dataProvider: Cache<APIPath, Data>) {
         self.dataProvider = dataProvider
         self.provider = dataProvider
             .mapJSONDictionary()
