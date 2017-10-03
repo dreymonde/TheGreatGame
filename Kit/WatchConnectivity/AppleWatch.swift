@@ -93,7 +93,7 @@ public final class AppleWatch {
 
 public final class WatchSessionManager : NSObject, WCSessionDelegate {
     
-    let session = WCSession.default()
+    let session = WCSession.default
     
     internal init?(_ flag: UInt8) {
         guard WCSession.isSupported() else {

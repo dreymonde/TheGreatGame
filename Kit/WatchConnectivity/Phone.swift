@@ -12,7 +12,7 @@ import Alba
 
 public final class Phone : NSObject, WCSessionDelegate {
     
-    let session = WCSession.default()
+    let session = WCSession.default
     
     public override init() {
         super.init()
