@@ -27,13 +27,13 @@ class MatchDetailTableViewCell: UITableViewCell {
     
     var onHomeBadgeTap: () -> () = { }
     
-    func didTapHomeBadge(_ sender: UITapGestureRecognizer) {
+    @objc func didTapHomeBadge(_ sender: UITapGestureRecognizer) {
         onHomeBadgeTap()
     }
     
     var onAwayBadgeTap: () -> () = { }
     
-    func didTapAwayBadge(_ sender: UITapGestureRecognizer) {
+    @objc func didTapAwayBadge(_ sender: UITapGestureRecognizer) {
         onAwayBadgeTap()
     }
     

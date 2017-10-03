@@ -79,7 +79,7 @@ final class UserInterface {
             $0.resource = resource
             $0.makeAvenue = self.makeAvenue(forImageSize:)
             $0.makeTeamDetailVC = { _ in return UIViewController() }
-            $0.isFavorite = { _ in return false }
+            $0.isFavorite = { return false }
             $0.updateFavorite = { _ in }
         }
         show(match)

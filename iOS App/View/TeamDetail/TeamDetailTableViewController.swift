@@ -298,7 +298,6 @@ extension TeamDetailTableViewController {
             assert(Thread.isMainThread)
             self?.didFetchImage(with: url)
         }
-        avenue.onError = jprint
     }
     
     fileprivate func configure(mainBadge avenue: SymmetricalAvenue<URL, UIImage>) {
@@ -306,7 +305,6 @@ extension TeamDetailTableViewController {
             assert(Thread.isMainThread)
             self?.didFetchMainBadge()
         }
-        avenue.onError = jprint
     }
     
 }

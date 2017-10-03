@@ -47,8 +47,10 @@ final class TemplateProducer {
                     $0.append(" P")
                 }
             }
-            let text = "\(match.home.shortName) \(match.scoreOrPenaltyString()) \(match.away.shortName)" <- appendPenalty
-            let shortText = "\(match.home.shortestName) \(match.scoreOrPenaltyString()) \(match.away.shortestName)" <- appendPenalty
+            var text = "\(match.home.shortName) \(match.scoreOrPenaltyString()) \(match.away.shortName)"
+            appendPenalty(&text)
+            var shortText = "\(match.home.shortestName) \(match.scoreOrPenaltyString()) \(match.away.shortestName)"
+            appendPenalty(&shortText)
             return CLKComplicationTemplateUtilitarianSmallFlat() <- {
                 $0.textProvider = CLKSimpleTextProvider(text: text, shortText: shortText)
                 //$0.imageProvider = imageProvider(forSize: ._18)
@@ -67,29 +69,29 @@ final class TemplateProducer {
     
     private func utilitarianLargeTemplate(for match: Match.Full, aforetime: Bool) -> CLKComplicationTemplate? {
         if match.score != nil {
-            let text = "\(match.home.shortName) \(match.scoreOrPenaltyString()) \(match.away.shortName)" <- {
-                if match.isEnded {
-                    if match.isPenaltiesAppointed {
-                        $0.append(" P (FT)")
-                    } else {
-                        $0.append(" (FT)")
-                    }
-                }
-                if match.isInHalfTime {
-                    $0.append(" (HT)")
-                }
-                if match.isExtraTime {
-                    $0.append(" ET")
-                }
-                if match.isPenalties {
-                    $0.append(" PEN")
+            var s = "\(match.home.shortName) \(match.scoreOrPenaltyString()) \(match.away.shortName)"
+            if match.isEnded {
+                if match.isPenaltiesAppointed {
+                    s.append(" P (FT)")
+                } else {
+                    s.append(" (FT)")
                 }
             }
-            let shortText = "\(match.home.shortestName) \(match.scoreOrPenaltyString()) \(match.away.shortestName)" <- {
-                if match.isPenalties {
-                    $0.append(" P")
-                }
+            if match.isInHalfTime {
+                s.append(" (HT)")
             }
+            if match.isExtraTime {
+                s.append(" ET")
+            }
+            if match.isPenalties {
+                s.append(" PEN")
+            }
+            let text = s
+            var shs = "\(match.home.shortestName) \(match.scoreOrPenaltyString()) \(match.away.shortestName)"
+            if match.isPenalties {
+                shs.append(" P")
+            }
+            let shortText = shs
             return CLKComplicationTemplateUtilitarianLargeFlat() <- {
                 $0.textProvider = CLKSimpleTextProvider(text: text, shortText: shortText)
                 $0.imageProvider = imageProvider(forSize: ._18)
@@ -207,10 +209,9 @@ final class TemplateProducer {
     }
     
     private func scoreTextProvider(in match: Match.Full) -> CLKSimpleTextProvider {
-        let scoreString = match.scoreOrPenaltyString() <- {
-            if match.isPenaltiesAppointed {
-                $0.append(" P")
-            }
+        var scoreString = match.scoreOrPenaltyString()
+        if match.isPenaltiesAppointed {
+            scoreString.append(" P")
         }
         return CLKSimpleTextProvider(text: scoreString)
     }

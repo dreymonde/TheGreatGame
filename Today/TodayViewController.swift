@@ -45,7 +45,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
                 self.setup(with: match, afterDownload: true, source: self.lastConfirmedSource)
             }
         }
-        avenue.onError = { _ in
+        avenue.onError = { _,_  in
             self.completion?(.failed)
         }
         // Do any additional setup after loading the view from its nib.

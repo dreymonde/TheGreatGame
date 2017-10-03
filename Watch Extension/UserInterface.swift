@@ -24,7 +24,7 @@ final class UserInterface {
     }
     
     func preloadFullMatches() {
-        matches.load(completion: { _ in printWithContext("Loaded full matches") })
+        matches.load(completion: { _,_ in printWithContext("Loaded full matches") })
     }
     
     func makeContext(for contr: MatchesInterfaceController.Type) -> MatchesInterfaceController.Context {

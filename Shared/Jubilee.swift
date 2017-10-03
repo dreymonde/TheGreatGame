@@ -67,6 +67,14 @@ func runtimeInject<In, Out>(_ input: In) -> Out {
     fatalError("Should inject")
 }
 
+func runtimeInject<In1, In2, Out>(_ input: In1, _ input2: In2) -> Out {
+    fatalError("Should inject")
+}
+
+func runtimeInject<Out>() -> Out {
+    fatalError("Should inject")
+}
+
 public extension String {
     
     #if DEBUG

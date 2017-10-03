@@ -148,8 +148,8 @@ extension TeamsTableViewController {
             assert(Thread.isMainThread)
             self?.didFetchImage(with: url)
         }
-        avenue.onError = {
-            print($0)
+        avenue.onError = { er,_ in
+            print(er)
         }
     }
     
