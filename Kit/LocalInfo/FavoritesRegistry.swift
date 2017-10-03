@@ -129,11 +129,11 @@ extension FavoritesBox : Mappable {
         case values
     }
     
-    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
+    init<Source>(mapper: InMapper<Source, MappingKeys>) throws {
         self.all = try mapper.map(from: .values)
     }
     
-    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+    func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.all, to: .values)
     }
     

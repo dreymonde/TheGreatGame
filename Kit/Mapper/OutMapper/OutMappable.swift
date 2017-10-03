@@ -8,13 +8,13 @@ public protocol OutMappable {
     /// - parameter mapper: wraps the actual structured data instance.
     ///
     /// - throws: `OutMapperError`.
-    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws
+    func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws
     
 }
 
 public protocol BasicOutMappable {
     
-    func outMap<Destination : OutMap>(mapper: inout BasicOutMapper<Destination>) throws
+    func outMap<Destination>(mapper: inout BasicOutMapper<Destination>) throws
     
 }
 
@@ -32,7 +32,7 @@ public protocol OutMappableWithContext {
     /// - parameter mapper: wraps the actual structured data instance.
     ///
     /// - throws: `OutMapperError`
-    func outMap<Destination : OutMap>(mapper: inout ContextualOutMapper<Destination, MappingKeys, MappingContext>) throws
+    func outMap<Destination>(mapper: inout ContextualOutMapper<Destination, MappingKeys, MappingContext>) throws
     
 }
 

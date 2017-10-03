@@ -37,12 +37,12 @@ extension Connection.Package : Mappable {
         case kind, content
     }
     
-    public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
+    public init<Source>(mapper: InMapper<Source, MappingKeys>) throws {
         self.kind = try mapper.map(from: .kind)
         self.content = try mapper.unsafe_map(from: .content)
     }
     
-    public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+    public func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.kind, to: .kind)
         try mapper.unsafe_map(self.content, to: .content)
     }
@@ -131,11 +131,11 @@ extension IDPackage : Mappable {
         case favorites
     }
     
-    public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
+    public init<Source>(mapper: InMapper<Source, MappingKeys>) throws {
         self.favs = Set(try mapper.map(from: .favorites))
     }
     
-    public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+    public func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(Array(favs), to: .favorites)
     }
     

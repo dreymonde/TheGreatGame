@@ -63,7 +63,7 @@ extension GitHubContentAPIResponse : InMappable {
         case content, encoding
     }
     
-    init<Source>(mapper: InMapper<Source, MappingKeys>) throws where Source : InMap {
+    init<Source>(mapper: InMapper<Source, MappingKeys>) throws {
         self.content = try mapper.map(from: .content)
         self.encoding = try mapper.map(from: .encoding)
     }

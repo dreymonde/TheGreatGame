@@ -40,14 +40,14 @@ extension Group.Team : Mappable {
         case id, position, name, points, badges, summary
     }
     
-    public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
+    public init<Source>(mapper: InMapper<Source, MappingKeys>) throws {
         self.id = try mapper.map(from: .id)
         self.name = try mapper.map(from: .name)
         self.points = try mapper.map(from: .points)
         self.badges = try mapper.map(from: .badges)
     }
     
-    public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+    public func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.id, to: .id)
         try mapper.map(self.name, to: .name)
         try mapper.map(self.points, to: .points)
@@ -62,12 +62,12 @@ extension Group.Compact : Mappable {
         case title, teams
     }
     
-    public init<Source>(mapper: InMapper<Source, MappingKeys>) throws where Source : InMap {
+    public init<Source>(mapper: InMapper<Source, MappingKeys>) throws {
         self.title = try mapper.map(from: .title)
         self.teams = try mapper.map(from: .teams)
     }
     
-    public func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws where Destination : OutMap {
+    public func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.title, to: .title)
         try mapper.map(self.teams, to: .teams)
     }
@@ -80,11 +80,11 @@ extension Groups : Mappable {
         case groups
     }
     
-    public init<Source>(mapper: InMapper<Source, MappingKeys>) throws where Source : InMap {
+    public init<Source>(mapper: InMapper<Source, MappingKeys>) throws {
         self.groups = try mapper.map(from: .groups)
     }
     
-    public func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws where Destination : OutMap {
+    public func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.groups, to: .groups)
     }
     

@@ -86,11 +86,11 @@ extension RawPushNotification : Mappable {
         case aps, content
     }
     
-    public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
+    public init<Source>(mapper: InMapper<Source, MappingKeys>) throws {
         self.content = try mapper.unsafe_map(from: .content)
     }
     
-    public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+    public func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.unsafe_map(self.content, to: .content)
     }
     

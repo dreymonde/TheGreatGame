@@ -48,7 +48,7 @@ public final class SingleElementMemoryCache<Value> : CacheProtocol {
     
     public func set(_ value: Value, forKey key: Void, completion: @escaping (Result<Void>) -> ()) {
         self.value = value
-        completion(.success())
+        completion(.success)
     }
     
 }

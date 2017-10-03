@@ -214,7 +214,7 @@ public enum Match {
         }
         
         internal static func cutAdditional(from text: String) -> String {
-            return text.substring(from: text.index(text.startIndex, offsetBy: 3))
+            return String(text[text.index(text.startIndex, offsetBy: 3)...])
         }
         
     }
@@ -404,7 +404,7 @@ extension Match.Team : Mappable {
         case id, name, badges, short_name, shortest_name, summary
     }
     
-    public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
+    public init<Source>(mapper: InMapper<Source, MappingKeys>) throws {
         self.id = try mapper.map(from: .id)
         self.name = try mapper.map(from: .name)
         self.badges = try mapper.map(from: .badges)
@@ -412,7 +412,7 @@ extension Match.Team : Mappable {
         self.shortestName = try mapper.map(from: .shortest_name)
     }
     
-    public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+    public func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.id, to: .id)
         try mapper.map(self.name, to: .name)
         try mapper.map(self.badges, to: .badges)
@@ -428,12 +428,12 @@ extension Match.Score : Mappable {
         case home, away
     }
     
-    public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
+    public init<Source>(mapper: InMapper<Source, MappingKeys>) throws {
         self.home = try mapper.map(from: .home)
         self.away = try mapper.map(from: .away)
     }
     
-    public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+    public func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.home, to: .home)
         try mapper.map(self.away, to: .away)
     }
@@ -446,7 +446,7 @@ extension Match.Event : Mappable {
         case type, text, real_minute, match_minute
     }
     
-    public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
+    public init<Source>(mapper: InMapper<Source, MappingKeys>) throws {
         let kind = try mapper.map(from: .type) as Kind
         let text = try mapper.map(from: .text) as String
         let realMinute = try mapper.map(from: .real_minute) as Int
@@ -454,7 +454,7 @@ extension Match.Event : Mappable {
         self.init(kind: kind, text: text, realMinute: realMinute, matchMinute: matchMinute)
     }
     
-    public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+    public func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.kind, to: .type)
         try mapper.map(self.text, to: .text)
         try mapper.map(self.realMinute, to: .real_minute)
@@ -469,7 +469,7 @@ extension Match.Compact : Mappable {
         case id, home, away, date, endDate, location, score, penalties
     }
     
-    public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
+    public init<Source>(mapper: InMapper<Source, MappingKeys>) throws {
         self.id = try mapper.map(from: .id)
         self.home = try mapper.map(from: .home)
         self.away = try mapper.map(from: .away)
@@ -480,7 +480,7 @@ extension Match.Compact : Mappable {
         self.penalties = try? mapper.map(from: .penalties)
     }
     
-    public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+    public func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.id, to: .id)
         try mapper.map(self.home, to: .home)
         try mapper.map(self.away, to: .away)
@@ -503,7 +503,7 @@ extension Match.Full : Mappable {
         case id, home, away, date, endDate, location, score, events, stage_title, penalties
     }
     
-    public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
+    public init<Source>(mapper: InMapper<Source, MappingKeys>) throws {
         self.id = try mapper.map(from: .id)
         self.home = try mapper.map(from: .home)
         self.away = try mapper.map(from: .away)
@@ -516,7 +516,7 @@ extension Match.Full : Mappable {
         self.penalties = try? mapper.map(from: .penalties)
     }
     
-    public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+    public func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.id, to: .id)
         try mapper.map(self.home, to: .home)
         try mapper.map(self.away, to: .away)
@@ -547,11 +547,11 @@ extension Matches : Mappable {
         case matches
     }
     
-    public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
+    public init<Source>(mapper: InMapper<Source, MappingKeys>) throws {
         self.matches = try mapper.map(from: .matches)
     }
     
-    public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+    public func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.matches, to: .matches)
     }
     
@@ -573,11 +573,11 @@ extension FullMatches : Mappable {
         case matches
     }
     
-    public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
+    public init<Source>(mapper: InMapper<Source, MappingKeys>) throws {
         self.matches = try mapper.map(from: .matches)
     }
     
-    public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+    public func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.matches, to: .matches)
     }
     

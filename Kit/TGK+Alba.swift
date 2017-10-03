@@ -19,6 +19,14 @@ extension Subscribe {
     
 }
 
+extension PublisherProtocol where Event == Void {
+    
+    public func publish() {
+        self.publish(())
+    }
+    
+}
+
 fileprivate extension Subscribe {
     
     func _mainThread() -> Subscribe<Event> {

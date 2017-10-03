@@ -151,7 +151,7 @@ extension AlbaGraph : OutMappable {
     
     typealias MappingKeys = String
     
-    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, String>) throws {
+    func outMap<Destination>(mapper: inout OutMapper<Destination, String>) throws {
         for (publisher, subscribers) in connections {
             try mapper.map(subscribers, to: publisher)
         }

@@ -5,13 +5,13 @@ public protocol InMappable {
     associatedtype MappingKeys : IndexPathElement
     
     /// Creates instance from instance of `Source` packed into mapper with type-specific `MappingKeys`.
-    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws
+    init<Source>(mapper: InMapper<Source, MappingKeys>) throws
     
 }
 
 public protocol BasicInMappable {
     
-    init<Source : InMap>(mapper: BasicInMapper<Source>) throws
+    init<Source>(mapper: BasicInMapper<Source>) throws
     
 }
 
@@ -22,7 +22,7 @@ public protocol InMappableWithContext {
     associatedtype MappingKeys: IndexPathElement
     
     /// Creates instance from instance of `Source` packed into contextual mapper with type-specific `MappingKeys`.
-    init<Source : InMap>(mapper: ContextualInMapper<Source, MappingKeys, MappingContext>) throws
+    init<Source>(mapper: ContextualInMapper<Source, MappingKeys, MappingContext>) throws
     
 }
 

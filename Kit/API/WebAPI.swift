@@ -55,7 +55,7 @@ extension URLSession : ReadableCacheProtocol {
                 completion(.failure(CacheError.noData))
                 return
             }
-            completion(.success(httpResponse, data))
+            completion(.success((httpResponse, data)))
         }
         let task: URLSessionTask
         switch request {

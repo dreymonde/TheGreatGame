@@ -83,11 +83,11 @@ extension TokenUpload : Mappable {
         case outMapOnly
     }
     
-    public init<Source>(mapper: InMapper<Source, MappingKeys>) throws where Source : InMap {
+    public init<Source>(mapper: InMapper<Source, MappingKeys>) throws {
         throw InMappingError.outMapOnly
     }
     
-    public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+    public func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.deviceIdentifier.uuidString, to: .device_identifier)
         try mapper.map(self.token.string, to: .token)
     }

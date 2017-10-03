@@ -33,12 +33,12 @@ public enum EditionedMappingKeys : String, IndexPathElement {
 
 extension Editioned : Mappable {
     
-    public init<Source : InMap>(mapper: InMapper<Source, EditionedMappingKeys>) throws {
+    public init<Source>(mapper: InMapper<Source, EditionedMappingKeys>) throws {
         self.edition = try mapper.map(from: .edition)
         self.content = try mapper.map(from: .content)
     }
     
-    public func outMap<Destination>(mapper: inout OutMapper<Destination, EditionedMappingKeys>) throws where Destination : OutMap {
+    public func outMap<Destination>(mapper: inout OutMapper<Destination, EditionedMappingKeys>) throws {
         try mapper.map(self.edition, to: .edition)
         try mapper.map(self.content, to: .content)
     }

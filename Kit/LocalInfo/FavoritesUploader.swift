@@ -85,11 +85,11 @@ extension FavoritesUpload : Mappable {
         case token, favorites, device_identifier
     }
     
-    init<Source>(mapper: InMapper<Source, MappingKeys>) throws where Source : InMap {
+    init<Source>(mapper: InMapper<Source, MappingKeys>) throws {
         throw MapError.outOnly
     }
     
-    func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws where Destination : OutMap {
+    func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.deviceIdentifier.uuidString, to: .device_identifier)
         try mapper.map(self.token.string, to: .token)
         try mapper.map(Array(self.favorites), to: .favorites)

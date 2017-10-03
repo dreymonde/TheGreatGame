@@ -21,12 +21,12 @@ extension Stage : Mappable {
         case title, matches
     }
     
-    public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
+    public init<Source>(mapper: InMapper<Source, MappingKeys>) throws {
         self.title = try mapper.map(from: .title)
         self.matches = try mapper.map(from: .matches)
     }
     
-    public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+    public func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.title, to: .title)
         try mapper.map(self.matches, to: .matches)
     }
@@ -45,11 +45,11 @@ extension Stages : Mappable {
         case stages
     }
     
-    public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
+    public init<Source>(mapper: InMapper<Source, MappingKeys>) throws {
         self.stages = try mapper.map(from: .stages)
     }
     
-    public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+    public func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.stages, to: .stages)
     }
     

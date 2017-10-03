@@ -244,12 +244,12 @@ extension AppleWatchInfo : Mappable {
         case was_paired_before, sent_initial_favorites
     }
     
-    init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
+    init<Source>(mapper: InMapper<Source, MappingKeys>) throws {
         self.wasPairedBefore = try mapper.map(from: .was_paired_before)
         self.sentInitialFavorites = try mapper.map(from: .sent_initial_favorites)
     }
     
-    func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+    func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.wasPairedBefore, to: .was_paired_before)
         try mapper.map(self.sentInitialFavorites, to: .sent_initial_favorites)
     }

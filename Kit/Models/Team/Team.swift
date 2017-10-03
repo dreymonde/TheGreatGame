@@ -61,7 +61,7 @@ extension Team.Compact : Mappable {
         case summary
     }
     
-    public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
+    public init<Source>(mapper: InMapper<Source, MappingKeys>) throws {
         self.name = try mapper.map(from: .name)
         self.shortName = try mapper.map(from: .short_name)
         self.id = try mapper.map(from: .id)
@@ -69,7 +69,7 @@ extension Team.Compact : Mappable {
         self.badges = try mapper.map(from: .badges)
     }
     
-    public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+    public func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.name, to: .name)
         try mapper.map(self.shortName, to: .short_name)
         try mapper.map(self.id, to: .id)
@@ -91,11 +91,11 @@ extension Teams : Mappable {
         case teams
     }
     
-    public init<Source : InMap>(mapper: InMapper<Source, MappingKeys>) throws {
+    public init<Source>(mapper: InMapper<Source, MappingKeys>) throws {
         self.teams = try mapper.map(from: .teams)
     }
     
-    public func outMap<Destination : OutMap>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
+    public func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.teams, to: .teams)
     }
     

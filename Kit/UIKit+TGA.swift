@@ -52,9 +52,9 @@ extension UIFont {
 extension UIFontDescriptor {
     
     fileprivate func monospacedNumbers() -> UIFontDescriptor {
-        let featureSettings = [UIFontFeatureTypeIdentifierKey: kNumberSpacingType,
-                               UIFontFeatureSelectorIdentifierKey: kMonospacedNumbersSelector]
-        return self.addingAttributes([UIFontDescriptorFeatureSettingsAttribute: [featureSettings]])
+        let featureSettings = [UIFontDescriptor.FeatureKey.featureIdentifier: kNumberSpacingType,
+                               UIFontDescriptor.FeatureKey.typeIdentifier: kMonospacedNumbersSelector]
+        return self.addingAttributes([UIFontDescriptor.AttributeName.featureSettings: [featureSettings]])
     }
     
 }

@@ -130,9 +130,9 @@ internal extension Sequence where Iterator.Element == Match.Full {
             return all
         })
         if let first = allMatchesSnapshots.first {
-            let aforetime = first <- {
-                $0.aforetime = true
-                $0.timelineDate = Date(timeIntervalSince1970: 1498949847)
+            let aforetime = modified(first) { (f: inout ComplicationDataSource.MatchSnapshot) in
+                f.aforetime = true
+                f.timelineDate = Date(timeIntervalSince1970: 1498949847)
             }
             allMatchesSnapshots.insert(aforetime, at: 0)
         }

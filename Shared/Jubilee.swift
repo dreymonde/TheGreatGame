@@ -17,7 +17,7 @@ public func apply<T, V>(to value: T, _ function: (T) -> V) -> V {
 
 infix operator <-
 
-func <- <T>(value: T, modify: (inout T) -> Void) -> T {
+func modified<T>(_ value: T, modify: (inout T) -> Void) -> T {
     var copy = value
     modify(&copy)
     return copy
