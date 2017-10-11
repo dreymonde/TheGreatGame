@@ -24,7 +24,7 @@ public final class TokenUploader {
         self.getDeviceIdentifier = getDeviceIdentifier
         self.consistencyKeeper = UploadConsistencyKeeper<PushToken>(actual: getToken, lastUploaded: consistencyKeepersLastUpload, name: "token-uploader-consistency-keeper", reupload: { _ in })
         consistencyKeeper.reupload = self.upload(token:)
-        consistencyKeeper.declare(didUploadFavorites: self.didUploadToken.proxy.map({ $0.token }))
+        consistencyKeeper.subscribeTo(didUploadFavorites: self.didUploadToken.proxy.map({ $0.token }))
     }
     
     public static func adapt(pusher: Cache<Void, Data>) -> Cache<Void, TokenUpload> {
@@ -33,7 +33,7 @@ public final class TokenUploader {
             .mapMappable()
     }
     
-    public func declare(shouldCheckUploadConsistency: Subscribe<Void>) {
+    public func subscribeTo(shouldCheckUploadConsistency: Subscribe<Void>) {
         consistencyKeeper.check(listeningTo: shouldCheckUploadConsistency)
     }
     

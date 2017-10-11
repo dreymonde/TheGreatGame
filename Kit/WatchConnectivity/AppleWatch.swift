@@ -38,12 +38,12 @@ public final class AppleWatch {
         self.pushKitReceiver = PushKitReceiver()
     }
     
-    public func declare(didUpdateFavoriteTeams: Subscribe<Set<Team.ID>>, didUpdateFavoriteMatches: Subscribe<Set<Match.ID>>) {
+    public func subscribeTo(didUpdateFavoriteTeams: Subscribe<Set<Team.ID>>, didUpdateFavoriteMatches: Subscribe<Set<Match.ID>>) {
         sessionManager.activationDidComplete.proxy.subscribe(self, with: AppleWatch.updateSessions)
         let push = pushKitReceiver.didReceiveIncomingPush.proxy
             .adapting(with: ComplicationPusher.adapter)
             .flatMap({ try? $0.pack() })
-        sessionManager.declare(userInfo: self.sendPackage.proxy,
+        sessionManager.subscribeTo(userInfo: self.sendPackage.proxy,
                                complicationUserInfo: push)
         didUpdateFavoriteTeams.subscribe(self, with: AppleWatch.favoriteTeamsDidUpdate)
         didUpdateFavoriteMatches.subscribe(self, with: AppleWatch.favoriteMatchesDidUpdate)
@@ -104,7 +104,7 @@ public final class WatchSessionManager : NSObject, WCSessionDelegate {
         session.activate()
     }
     
-    func declare(userInfo: Subscribe<Package>,
+    func subscribeTo(userInfo: Subscribe<Package>,
                  complicationUserInfo: Subscribe<Package>) {
         userInfo.subscribe(self, with: WatchSessionManager.send)
         complicationUserInfo.subscribe(self, with: WatchSessionManager.sendComplicationUserInfo)
@@ -208,7 +208,7 @@ internal final class WatchTransferSession<IDType : IDProtocol> where IDType.RawV
             .defaulting(to: [])
         self.uploadConsistencyKeeper = UploadConsistencyKeeper(actual: provider, lastUploaded: lastTransfer, name: name, reupload: performTransfer)
         self.performTransfer = performTransfer
-        uploadConsistencyKeeper.declare(didUploadFavorites: sendage)
+        uploadConsistencyKeeper.subscribeTo(didUploadFavorites: sendage)
     }
     
     func start() {

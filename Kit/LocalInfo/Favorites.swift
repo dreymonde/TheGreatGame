@@ -45,9 +45,9 @@ public final class Favorites<IDType : IDProtocol> where IDType.RawValue == Int {
         shouldCheckUploadConsistency.subscribe(uploadConsistencyKeeper, with: UploadConsistencyKeeper.check)
     }
     
-    public func declare() {
-        self.uploadConsistencyKeeper.declare(didUploadFavorites: uploader.didUploadFavorites.proxy.map({ $0.favorites }))
-        self.uploader.declare(didUpdateFavorites: registry.unitedDidUpdate.proxy.map({ $0.favorites }))
+    public func subscribe() {
+        self.uploadConsistencyKeeper.subscribeTo(didUploadFavorites: uploader.didUploadFavorites.proxy.map({ $0.favorites }))
+        self.uploader.subscribeTo(didUpdateFavorites: registry.unitedDidUpdate.proxy.map({ $0.favorites }))
     }
     
 }

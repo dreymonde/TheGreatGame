@@ -31,7 +31,7 @@ internal final class FavoritesUploader<IDType : IDProtocol> where IDType.RawValu
     
     let pusher: Cache<Void, FavoritesUpload<IDType>>
     
-    internal func declare(didUpdateFavorites: Subscribe<Set<IDType>>) {
+    internal func subscribeTo(didUpdateFavorites: Subscribe<Set<IDType>>) {
         didUpdateFavorites.subscribe(self, with: FavoritesUploader.uploadFavorites)
     }
     

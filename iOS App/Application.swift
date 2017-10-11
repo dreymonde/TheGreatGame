@@ -38,19 +38,19 @@ final class Application {
         self.watch = AppleWatch(favoriteTeams: favoriteTeams.registry.favorites,
                                 favoriteMatches: favoriteMatches.registry.favorites)
         self.notifications = Notifications(application: UIApplication.shared)
-        declare()
+        subscribe()
     }
     
-    func declare() {
-        tokens.declare(notifications: AppDelegate.didRegisterForRemoteNotificationsWithDeviceToken.proxy,
+    func subscribe() {
+        tokens.subscribeTo(notifications: AppDelegate.didRegisterForRemoteNotificationsWithDeviceToken.proxy,
                        complication: watch?.pushKitReceiver.didRegisterWithToken.proxy ?? .empty())
-        watch?.declare(didUpdateFavoriteTeams: favoriteTeams.registry.didUpdateFavorites,
+        watch?.subscribeTo(didUpdateFavoriteTeams: favoriteTeams.registry.didUpdateFavorites,
                        didUpdateFavoriteMatches: favoriteMatches.registry.didUpdateFavorites)
-        favoriteTeams.declare()
-        favoriteMatches.declare()
-        unsubscribedMatches.declare()
+        favoriteTeams.subscribe()
+        favoriteMatches.subscribe()
+        unsubscribedMatches.subscribe()
         let pushKitTokenConsistency = tokens.didUpdateComplicationToken.proxy.void()
-        pushKitTokenUploader.declare(shouldCheckUploadConsistency: pushKitTokenConsistency)
+        pushKitTokenUploader.subscribeTo(shouldCheckUploadConsistency: pushKitTokenConsistency)
     }
     
     static func makeAPI() -> API {

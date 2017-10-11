@@ -37,7 +37,7 @@ public final class DeviceTokens {
         })
     }
     
-    public func declare(notifications: Subscribe<PushToken>, complication: Subscribe<PushToken>) {
+    public func subscribeTo(notifications: Subscribe<PushToken>, complication: Subscribe<PushToken>) {
         notifications.subscribe(self, with: DeviceTokens.updateNotificationsToken)
         complication.subscribe(self, with: DeviceTokens.updateComplicationToken)
     }

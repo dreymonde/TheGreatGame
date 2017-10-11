@@ -35,10 +35,10 @@ final class WatchExtension {
         self.favoriteTeams = FavoritesRegistry.inLocalDocumentsDirectory()
         self.favoriteMatches = FavoritesRegistry.inLocalDocumentsDirectory()
         self.complicationReloader = ComplicationReloader()
-        declare()
+        subscribe()
     }
     
-    func declare() {
+    func subscribe() {
         phone.didReceiveUpdatedFavoriteTeams.subscribe(self.favoriteTeams, with: FavoritesRegistry.replace)
         phone.didReceiveUpdatedFavoriteMatches.subscribe(self.favoriteMatches, with: FavoritesRegistry.replace)
         complicationReloader.consume(didUpdateFavoriteTeams: self.favoriteTeams.didUpdateFavorite, didUpdateFavoriteMatches: self.favoriteMatches.didUpdateFavorite)
