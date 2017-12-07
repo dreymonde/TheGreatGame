@@ -54,7 +54,7 @@ final class Application {
     }
     
     static func makeAPI() -> API {
-        let server = launchArgument(.server) ?? .github
+        let server = launchArgument(.server) ?? .digitalOcean
         switch server {
         case .github:
             let urlSession = URLSession(configuration: .default)

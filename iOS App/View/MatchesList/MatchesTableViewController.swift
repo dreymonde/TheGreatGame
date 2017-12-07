@@ -50,7 +50,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
                                                isAbsoluteTruth: { [unowned self] in self.resource.isAbsoluteTruth })
         configure(avenue)
         self.pullToRefreshActivities = make()
-        self.resource.load(confirmation: tableView.reloadData, completion: { self.reloadData(stages: $0, source: $1, scrollToRecent: true) })
+        self.resource.load(confirmation: tableView.reloadData, onError: displayNetworkUpdateError, completion: { self.reloadData(stages: $0, source: $1, scrollToRecent: true) })
     }
     
     func subscribe() {
@@ -70,6 +70,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
     }
     
     fileprivate func reloadData(stages: [Stage], source: Source, scrollToRecent: Bool) {
+        hideNetworkUpdateError()
         let mostRecent = indexPathOfMostRelevantMatch(from: stages)
         if self.stages.isEmpty && source.isAbsoluteTruth {
             self.stages = stages
@@ -96,7 +97,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
     }
     
     func reload() {
-        resource.reload(connectingToIndicator: pullToRefreshActivities, completion: { self.reloadData(stages: $0, source: $1, scrollToRecent: false) })
+        resource.reload(connectingToIndicator: pullToRefreshActivities, onError: displayNetworkUpdateError, completion: { self.reloadData(stages: $0, source: $1, scrollToRecent: false) })
     }
     
     func didFetchImage(with url: URL) {

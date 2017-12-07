@@ -13,5 +13,15 @@ class TableViewController : UITableViewController {
     deinit {
         print("Deinit \(self)")
     }
+    
+    let networkErrorDisplayer = NetworkErrorDisplayer()
+    
+    func displayNetworkUpdateError(error: Error) {
+        networkErrorDisplayer.displayError(on: self)
+    }
+    
+    func hideNetworkUpdateError() {
+        networkErrorDisplayer.hideError(on: self)
+    }
         
 }

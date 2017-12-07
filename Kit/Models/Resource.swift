@@ -56,17 +56,27 @@ public final class Resource<Value> : Prefetchable {
         self.provider = self.provider.sourceful_connectingNetworkActivityIndicator(manager: activityIndicator)
     }
     
+    @available(*, deprecated, message: "Use fallible method instead")
     public func load(confirmation: @escaping () -> () = { }, completion: @escaping (Value, Source) -> ()) {
+        self.load(confirmation: confirmation, onError: { _ in print("UNIMPLEMENTED") }, completion: completion)
+    }
+    
+    public func load(confirmation: @escaping () -> () = { },
+                     onError: @escaping (Error) -> (),
+                     completion: @escaping (Value, Source) -> ()) {
         if let prefetched = getValue() {
             printWithContext("Completing with previously prefetched")
             completion(prefetched, .memory)
         }
         provider.retrieve { (result) in
-            self.handle(result, confirmation: confirmation, with: completion)
+            self.handle(result, confirmation: confirmation, errorHandling: onError, with: completion)
         }
     }
     
-    private func handle(_ result: Result<Relevant<Value>>, confirmation: @escaping () -> (), with completion: @escaping (Value, Source) -> ()) {
+    private func handle(_ result: Result<Relevant<Value>>,
+                        confirmation: @escaping () -> (),
+                        errorHandling: @escaping (Error) -> (),
+                        with completion: @escaping (Value, Source) -> ()) {
         assert(Thread.isMainThread)
         switch result {
         case .success(let value):
@@ -80,15 +90,21 @@ public final class Resource<Value> : Prefetchable {
             }
         case .failure(let error):
             print("Error loading \(self):", error)
+            errorHandling(error)
         }
     }
     
+    @available(*, deprecated, message: "Use fallible method instead")
     public func reload(connectingToIndicator indicator: NetworkActivityIndicatorManager, completion: @escaping (Value, Source) -> ()) {
+        self.reload(connectingToIndicator: indicator, onError: { _ in }, completion: completion)
+    }
+    
+    public func reload(connectingToIndicator indicator: NetworkActivityIndicatorManager, onError: @escaping (Error) -> (), completion: @escaping (Value, Source) -> ()) {
         indicator.increment()
         provider.retrieve { (result) in
             if result.isLastRequest {
                 indicator.decrement()
-                self.handle(result, confirmation: { }, with: completion)
+                self.handle(result, confirmation: { }, errorHandling: onError, with: completion)
             }
         }
     }

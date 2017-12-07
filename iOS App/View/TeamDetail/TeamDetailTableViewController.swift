@@ -87,7 +87,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
         configure(mainBadge: mainBadgeAvenue)
         configure(navigationItem)
         configure(favoriteButton: favoriteButton)
-        self.resource.load(confirmation: tableView.reloadData, completion: self.setup(with:source:))
+        self.resource.load(confirmation: tableView.reloadData, onError: displayNetworkUpdateError, completion: self.setup(with:source:))
     }
     
     override var previewActionItems: [UIPreviewActionItem] {
@@ -102,6 +102,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     }
     
     func setup(with team: Team.Full, source: Source) {
+        hideNetworkUpdateError()
         self.team = team
         self.tableView.reloadData()
         self.configure(self.navigationItem)
@@ -113,7 +114,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     }
     
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
-        resource.reload(connectingToIndicator: pullToRefreshActivities, completion: self.setup(with:source:))
+        resource.reload(connectingToIndicator: pullToRefreshActivities, onError: displayNetworkUpdateError, completion: self.setup(with:source:))
     }
     
     @IBAction func didPressFavoriteButton(_ sender: UIButton) {

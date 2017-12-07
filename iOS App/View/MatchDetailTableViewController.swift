@@ -88,7 +88,9 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
         configure(favoriteButton: favoriteButton)
         
         self.subscribe()
-        self.resource.load(confirmation: tableView.reloadData, completion: self.setup(with:source:))
+        self.resource.load(confirmation: tableView.reloadData,
+                           onError: displayNetworkUpdateError,
+                           completion: self.setup(with:source:))
     }
     
     func subscribe() {
@@ -108,6 +110,7 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
     }
     
     func setup(with match: Match.Full, source: Source) {
+        hideNetworkUpdateError()
         self.match = match
         self.tableView.reloadData()
         self.configure(navigationItem)
@@ -123,7 +126,7 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
     }
     
     func reload() {
-        resource.reload(connectingToIndicator: pullToRefreshActivities, completion: self.setup(with:source:))
+        resource.reload(connectingToIndicator: pullToRefreshActivities, onError: displayNetworkUpdateError, completion: self.setup(with:source:))
     }
 
     @IBAction func didPressFavoriteButton(_ sender: UIButton) {
