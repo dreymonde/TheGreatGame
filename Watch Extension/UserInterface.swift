@@ -33,7 +33,7 @@ final class UserInterface {
             if let firstUpcoming = allUpcoming.min(by: { $0.date < $1.date }) {
                 return all.filter({ Calendar.autoupdatingCurrent.isDate($0.date, inSameDayAs: firstUpcoming.date) })
             }
-            return []
+            return all.last.map({ [$0 ]}) ?? []
         }
         return MatchesInterfaceController.Context(resource: relevantMatches,
                                                   makeAvenue: logic.images.makeDoubleCachedAvenue(forImageSize:))

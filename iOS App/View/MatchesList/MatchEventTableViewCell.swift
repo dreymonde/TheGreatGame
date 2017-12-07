@@ -17,7 +17,7 @@ class MatchEventTableViewCell: UITableViewCell {
     @IBOutlet weak var eventTextLabel: UILabel!
     
     func setText(_ text: String?, on label: UILabel) {
-        if let text = text, text.characters.count != 0 {
+        if let text = text, text.count != 0 {
             label.text = text
             stackView.addArrangedSubview(label)
         } else {
