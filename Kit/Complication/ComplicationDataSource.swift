@@ -40,9 +40,7 @@ public final class ComplicationDataSource {
     }
     
     public func timelineEndDate(completion: @escaping (Date?) -> ()) {
-        matches.mapValues({ try $0.endOfLastMatch().unwrap() }).retrieve { (result) in
-            completion(result.value?.addingTimeInterval(86400))
-        }
+        completion(Date.distantFuture)
     }
     
     public func matches(after date: Date, limit: Int, completion: @escaping ([MatchSnapshot]?) -> ()) {

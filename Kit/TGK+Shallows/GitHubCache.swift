@@ -9,6 +9,32 @@
 import Foundation
 import Shallows
 
+public final class GitHubRawFilesRepo : ReadableCacheProtocol {
+    
+    public static let apiBase = URL(string: "https://raw.githubusercontent.com/")!
+    
+    private let internalCache: ReadOnlyCache<APIPath, Data>
+    
+    public init(owner: String, repo: String, networkCache: ReadOnlyCache<URL, Data>) {
+        let base = GitHubRawFilesRepo.apiBase.appendingPath(APIPath.init(components: [owner, repo, "master", "content"]))
+        self.internalCache = networkCache
+            .mapKeys(to: APIPath.self, { path in base.appendingPath(path) })
+    }
+    
+    public func retrieve(forKey key: APIPath, completion: @escaping (Result<Data>) -> ()) {
+        internalCache.retrieve(forKey: key, completion: completion)
+    }
+    
+}
+
+extension GitHubRawFilesRepo {
+    
+    public static func theGreatGameStorage(networkCache: ReadOnlyCache<URL, Data>) -> GitHubRawFilesRepo {
+        return GitHubRawFilesRepo(owner: "dreymonde", repo: "thegreatgame-storage", networkCache: networkCache)
+    }
+    
+}
+
 public final class GitHubRepo : ReadableCacheProtocol {
     
     public static let apiBase = URL(string: "https://api.github.com/repos/")!

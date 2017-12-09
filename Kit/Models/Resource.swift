@@ -56,7 +56,6 @@ public final class Resource<Value> : Prefetchable {
         self.provider = self.provider.sourceful_connectingNetworkActivityIndicator(manager: activityIndicator)
     }
     
-    @available(*, deprecated, message: "Use fallible method instead")
     public func load(confirmation: @escaping () -> () = { }, completion: @escaping (Value, Source) -> ()) {
         self.load(confirmation: confirmation, onError: { _ in print("UNIMPLEMENTED") }, completion: completion)
     }
@@ -94,7 +93,6 @@ public final class Resource<Value> : Prefetchable {
         }
     }
     
-    @available(*, deprecated, message: "Use fallible method instead")
     public func reload(connectingToIndicator indicator: NetworkActivityIndicatorManager, completion: @escaping (Value, Source) -> ()) {
         self.reload(connectingToIndicator: indicator, onError: { _ in }, completion: completion)
     }

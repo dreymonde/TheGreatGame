@@ -8,25 +8,19 @@
 
 import Foundation
 import UIKit
+import TheGreatKit
 
 protocol NetworkErrorDisplaying { }
 
 extension NetworkErrorDisplaying where Self : UIViewController {
     
+    func displayError() {
+        self.navigationItem.prompt = "Update failed. The information can be irrelevant."
+    }
     
+    func hideError() {
+        self.navigationItem.prompt = nil
+    }
     
 }
 
-final class NetworkErrorDisplayer {
-    
-    init() { }
-    
-    func displayError(on viewController: UIViewController) {
-        viewController.navigationItem.prompt = "Update failed. The information can be irrelevant."
-    }
-    
-    func hideError(on viewController: UIViewController) {
-        viewController.navigationItem.prompt = nil
-    }
-    
-}

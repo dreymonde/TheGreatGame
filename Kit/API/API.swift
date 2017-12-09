@@ -30,7 +30,12 @@ extension APIProvider {
     public static func gitHub(networkCache: ReadOnlyCache<URL, Data> = Self.makeUrlSessionCache()) -> Self {
         let gitRepo: ReadOnlyCache<APIPath, Data> = GitHubRepo.theGreatGameStorage(networkCache: networkCache).asReadOnlyCache()
             .mapKeys({ return "content" + $0 })
-        return Self(dataProvider: gitRepo.asReadOnlyCache())
+        return Self(dataProvider: gitRepo)
+    }
+    
+    public static func gitHubRaw(networkCache: ReadOnlyCache<URL, Data> = Self.makeUrlSessionCache()) -> Self {
+        let gitRawRepo: ReadOnlyCache<APIPath, Data> = GitHubRawFilesRepo.theGreatGameStorage(networkCache: networkCache).asReadOnlyCache()
+        return Self(dataProvider: gitRawRepo)
     }
     
     public static func heroku(networkCache: ReadOnlyCache<URL, Data> = Self.makeUrlSessionCache()) -> Self {

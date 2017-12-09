@@ -54,12 +54,14 @@ final class Application {
     }
     
     static func makeAPI() -> API {
-        let server = launchArgument(.server) ?? .digitalOcean
+        let server = Server.production
         switch server {
         case .github:
-            let urlSession = URLSession(configuration: .default)
             printWithContext("Using github as a server")
-            return API.gitHub(urlSession: urlSession)
+            return API.gitHub()
+        case .githubRaw:
+            printWithContext("Using github raw file system as a server")
+            return API.gitHubRaw()
         case .macBookSteve:
             printWithContext("Using this MacBook as a server")
             return API.macBookSteve()

@@ -1246,6 +1246,7 @@
 				7C0EA6031EBA1C9000F50EB2 /* Frameworks */,
 				7C0EA6041EBA1C9000F50EB2 /* Headers */,
 				7C0EA6051EBA1C9000F50EB2 /* Resources */,
+				BEF912561FDC69E800340B76 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1622,6 +1623,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if which swiftgen >/dev/null; then\nswiftgen storyboards \"$PROJECT_DIR/iOS App\" -p \"$PROJECT_DIR/Resources/storyboards-lyft.stencil\" > \"$PROJECT_DIR/iOS App/Generated/Storyboards.swift\"\nswiftgen colors -t swift3 \"$PROJECT_DIR/iOS App/Colors.json\" --output \"$PROJECT_DIR/iOS App/Generated/Colors.swift\"\nelse\necho \"warning: SwiftGen not installed, download it from https://github.com/AliSoftware/SwiftGen\"\nfi";
+		};
+		BEF912561FDC69E800340B76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Alba.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Shallows.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Avenues.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
 		};
 /* End PBXShellScriptBuildPhase section */
 
