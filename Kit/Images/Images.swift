@@ -25,7 +25,9 @@ public final class Images : Storing {
         return "image-cache-10"
     }
     
-    internal var caches: [Int : Storage<URL, UIImage>] = [:]
+    internal enum SideSize { }
+    
+    internal var caches: [IntType<SideSize> : Storage<URL, UIImage>] = [:]
     
     fileprivate let imageFetchingSession = URLSession(configuration: .default)
     fileprivate let diskCache: Cache<URL, UIImage>
@@ -41,7 +43,7 @@ public final class Images : Storing {
     }
         
     public func imageCache(forSize side: CGFloat) -> Storage<URL, UIImage> {
-        let intside = Int(side)
+        let intside = IntType<SideSize>(Int(side))
         if let existing = caches[intside] {
             return existing
         } else {

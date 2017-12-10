@@ -21,6 +21,24 @@ public func rethrowing<In, Out>(_ block: @escaping (In) throws -> Out,
     }
 }
 
+public struct IntType<Meaning> : Hashable {
+    
+    public var hashValue: Int {
+        return int.hashValue
+    }
+    
+    public static func ==(lhs: IntType<Meaning>, rhs: IntType<Meaning>) -> Bool {
+        return lhs.int == rhs.int
+    }
+    
+    public let int: Int
+    
+    public init(_ int: Int) {
+        self.int = int
+    }
+    
+}
+
 public final class LazyDictionary<Key : Hashable, Value> {
     
     let create: (Key) -> Value
