@@ -130,6 +130,7 @@
 		7C489C871F164D75001875E5 /* Avenues.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C0EA5FD1EBA1C3100F50EB2 /* Avenues.framework */; };
 		7C489C891F16515A001875E5 /* EventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3AEFB11EF28FE900CE576A /* EventViewModel.swift */; };
 		7C489C8A1F16515B001875E5 /* EventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3AEFB11EF28FE900CE576A /* EventViewModel.swift */; };
+		7C529D861FDD8CDC00516EC8 /* Whisper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C529D851FDD8CDB00516EC8 /* Whisper.framework */; };
 		7C541CFE1F3C6AE600C8E581 /* APIPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C541CFD1F3C6AE600C8E581 /* APIPath.swift */; };
 		7C541CFF1F3C6AE600C8E581 /* APIPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C541CFD1F3C6AE600C8E581 /* APIPath.swift */; };
 		7C541D011F3C6B0700C8E581 /* WebAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C541D001F3C6B0700C8E581 /* WebAPI.swift */; };
@@ -466,6 +467,8 @@
 		7C489C7B1F164C68001875E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7C489C831F164C88001875E5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		7C489C881F16501D001875E5 /* Match Notification.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Match Notification.entitlements"; sourceTree = "<group>"; };
+		7C529D841FDD8C5C00516EC8 /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
+		7C529D851FDD8CDB00516EC8 /* Whisper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Whisper.framework; path = Carthage/Build/iOS/Whisper.framework; sourceTree = "<group>"; };
 		7C541CFD1F3C6AE600C8E581 /* APIPath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIPath.swift; sourceTree = "<group>"; };
 		7C541D001F3C6B0700C8E581 /* WebAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebAPI.swift; sourceTree = "<group>"; };
 		7C6AA16F1ED86F73003F2388 /* Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
@@ -549,6 +552,7 @@
 				7C0EA61C1EBA1C9000F50EB2 /* TheGreatKit.framework in Frameworks */,
 				7C0EA6001EBA1C3100F50EB2 /* Avenues.framework in Frameworks */,
 				7C0EA6011EBA1C3100F50EB2 /* Shallows.framework in Frameworks */,
+				7C529D861FDD8CDC00516EC8 /* Whisper.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -627,6 +631,7 @@
 		7C0EA5CE1EBA1B3400F50EB2 = {
 			isa = PBXGroup;
 			children = (
+				7C529D841FDD8C5C00516EC8 /* Cartfile */,
 				7CA2138B1ECF3FB500F088DD /* GameToday.entitlements */,
 				7C109EC31EC1DDC200523376 /* TheGreatGame.entitlements */,
 				7C0EA6251EBA1CA300F50EB2 /* Shared */,
@@ -694,6 +699,7 @@
 		7C0EA5FB1EBA1C3100F50EB2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7C529D851FDD8CDB00516EC8 /* Whisper.framework */,
 				7C13BC541ED84B0D00588F5F /* Alba.framework */,
 				7C13BC551ED84B0D00588F5F /* Avenues.framework */,
 				7C13BC561ED84B0D00588F5F /* Shallows.framework */,
@@ -1584,6 +1590,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Alba.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Shallows.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Avenues.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Whisper.framework",
 			);
 			name = "Carthage Copy Frameworks";
 			outputPaths = (

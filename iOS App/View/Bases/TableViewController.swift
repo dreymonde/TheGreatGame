@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import TheGreatKit
 
 class TableViewController : UITableViewController {
     
@@ -24,6 +25,18 @@ extension TableViewController : NetworkErrorDisplaying {
     
     func hideNetworkUpdateError() {
         hideError()
+    }
+    
+}
+
+extension TableViewController : ErrorStateDelegate {
+    
+    func errorDidOccur(_ error: Error) {
+        displayNetworkUpdateError(error: error)
+    }
+    
+    func errorDidNotOccur() {
+        hideNetworkUpdateError()
     }
     
 }

@@ -46,11 +46,11 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
         self.matchCellFiller = MatchCellFiller(avenue: avenue,
                                                scoreMode: .timeOnly,
-                                               isFavorite: { [unowned self] in self.isFavorite($0) },
-                                               isAbsoluteTruth: { [unowned self] in self.resource.isAbsoluteTruth })
+                                               isFavorite: { [unowned self] in self.isFavorite($0) })
         configure(avenue)
         self.pullToRefreshActivities = make()
-        self.resource.load(confirmation: tableView.reloadData, onError: displayNetworkUpdateError, completion: { self.reloadData(stages: $0, source: $1, scrollToRecent: true) })
+        self.resource.load(errorDelegate: self,
+                           completion: { self.reloadData(stages: $0, source: $1, scrollToRecent: true) })
     }
     
     func subscribe() {
@@ -70,7 +70,6 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
     }
     
     fileprivate func reloadData(stages: [Stage], source: Source, scrollToRecent: Bool) {
-        hideNetworkUpdateError()
         let mostRecent = indexPathOfMostRelevantMatch(from: stages)
         if self.stages.isEmpty && source.isAbsoluteTruth {
             self.stages = stages
@@ -97,7 +96,9 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
     }
     
     func reload() {
-        resource.reload(connectingToIndicator: pullToRefreshActivities, onError: displayNetworkUpdateError, completion: { self.reloadData(stages: $0, source: $1, scrollToRecent: false) })
+        resource.reload(connectingToIndicator: pullToRefreshActivities,
+                        errorDelegate: self,
+                        completion: { self.reloadData(stages: $0, source: $1, scrollToRecent: false) })
     }
     
     func didFetchImage(with url: URL) {

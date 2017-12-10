@@ -88,8 +88,7 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
         configure(favoriteButton: favoriteButton)
         
         self.subscribe()
-        self.resource.load(confirmation: tableView.reloadData,
-                           onError: displayNetworkUpdateError,
+        self.resource.load(errorDelegate: self,
                            completion: self.setup(with:source:))
     }
     
@@ -110,7 +109,6 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
     }
     
     func setup(with match: Match.Full, source: Source) {
-        hideNetworkUpdateError()
         self.match = match
         self.tableView.reloadData()
         self.configure(navigationItem)
@@ -126,7 +124,9 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
     }
     
     func reload() {
-        resource.reload(connectingToIndicator: pullToRefreshActivities, onError: displayNetworkUpdateError, completion: self.setup(with:source:))
+        resource.reload(connectingToIndicator: pullToRefreshActivities,
+                        errorDelegate: self,
+                        completion: self.setup(with:source:))
     }
 
     @IBAction func didPressFavoriteButton(_ sender: UIButton) {
@@ -248,7 +248,7 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
             cell.minuteLabel.text = nil
             cell.dateLabel.text = preloaded.date.map(MatchDetailTableViewController.dateFormatter.string(from:)) ?? "Date"
         }
-        cell.scoreLabel.textColor = resource.isAbsoluteTruth ? .black : .gray
+        cell.scoreLabel.textColor = .black
     }
     
     private func prepareBadges(for team: Match.Team) {

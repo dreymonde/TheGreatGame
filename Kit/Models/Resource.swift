@@ -15,6 +15,13 @@ public protocol Prefetchable {
     
 }
 
+public protocol ErrorStateDelegate : class {
+    
+    func errorDidOccur(_ error: Error)
+    func errorDidNotOccur()
+    
+}
+
 public final class Resource<Value> : Prefetchable {
     
     fileprivate var value: Value?
@@ -25,9 +32,9 @@ public final class Resource<Value> : Prefetchable {
     fileprivate let manager: NetworkActivityIndicatorManager
     
     public init(provider: Retrieve<Relevant<Value>>,
-         local: Retrieve<Value> = .empty(),
-         networkActivity manager: NetworkActivityIndicatorManager,
-         value: Value? = nil) {
+                local: Retrieve<Value> = .empty(),
+                networkActivity manager: NetworkActivityIndicatorManager,
+                value: Value? = nil) {
         self.manager = manager
         self.provider = provider
             .sourceful_connectingNetworkActivityIndicator(manager: manager)
@@ -56,74 +63,57 @@ public final class Resource<Value> : Prefetchable {
         self.provider = self.provider.sourceful_connectingNetworkActivityIndicator(manager: activityIndicator)
     }
     
-    public func load(confirmation: @escaping () -> () = { }, completion: @escaping (Value, Source) -> ()) {
-        self.load(confirmation: confirmation, onError: { _ in print("UNIMPLEMENTED") }, completion: completion)
+    public func load(completion: @escaping (Value, Source) -> ()) {
+        self.load(errorDelegate: UnimplementedErrorStateDelegate.shared, completion: completion)
     }
     
-    public func load(confirmation: @escaping () -> () = { },
-                     onError: @escaping (Error) -> (),
+    public func load(errorDelegate: ErrorStateDelegate,
                      completion: @escaping (Value, Source) -> ()) {
         if let prefetched = getValue() {
             printWithContext("Completing with previously prefetched")
             completion(prefetched, .memory)
         }
         provider.retrieve { (result) in
-            self.handle(result, confirmation: confirmation, errorHandling: onError, with: completion)
+            self.handle(result, errorDelegate: errorDelegate, with: completion)
         }
     }
     
     private func handle(_ result: Result<Relevant<Value>>,
-                        confirmation: @escaping () -> (),
-                        errorHandling: @escaping (Error) -> (),
+                        errorDelegate: ErrorStateDelegate,
                         with completion: @escaping (Value, Source) -> ()) {
         assert(Thread.isMainThread)
         switch result {
         case .success(let value):
             self.isAbsoluteTruth = value.source.isAbsoluteTruth
+            if value.source.isAbsoluteTruth {
+                errorDelegate.errorDidNotOccur()
+            }
             print("\(Value.self) relevance confirmed with:", value.source)
             if let relevant = value.valueIfRelevant {
                 self.value = relevant
                 completion(relevant, value.source)
-            } else if value.source.isAbsoluteTruth {
-                confirmation()
             }
         case .failure(let error):
             print("Error loading \(self):", error)
-            errorHandling(error)
+            errorDelegate.errorDidOccur(error)
         }
     }
     
-    public func reload(connectingToIndicator indicator: NetworkActivityIndicatorManager, completion: @escaping (Value, Source) -> ()) {
-        self.reload(connectingToIndicator: indicator, onError: { _ in }, completion: completion)
+    public func reload(connectingToIndicator indicator: NetworkActivityIndicatorManager,
+                       completion: @escaping (Value, Source) -> ()) {
+        self.reload(connectingToIndicator: indicator,
+                    errorDelegate: UnimplementedErrorStateDelegate.shared,
+                    completion: completion)
     }
     
-    public func reload(connectingToIndicator indicator: NetworkActivityIndicatorManager, onError: @escaping (Error) -> (), completion: @escaping (Value, Source) -> ()) {
+    public func reload(connectingToIndicator indicator: NetworkActivityIndicatorManager,
+                       errorDelegate: ErrorStateDelegate,
+                       completion: @escaping (Value, Source) -> ()) {
         indicator.increment()
         provider.retrieve { (result) in
             if result.isLastRequest {
                 indicator.decrement()
-                self.handle(result, confirmation: { }, errorHandling: onError, with: completion)
-            }
-        }
-    }
-    
-}
-
-public final class Local<Value> {
-    
-    private let provider: Retrieve<Value>
-    private var value: Value?
-    
-    public init(provider: Retrieve<Value>) {
-        self.provider = provider
-            .mainThread()
-    }
-    
-    public func retrieve(_ completion: @escaping (Value) -> ()) {
-        provider.retrieve { (result) in
-            assert(Thread.isMainThread)
-            if let value = result.value {
-                completion(value)
+                self.handle(result, errorDelegate: errorDelegate, with: completion)
             }
         }
     }
@@ -133,9 +123,9 @@ public final class Local<Value> {
 extension Resource where Value : Mappable {
     
     public convenience init(local: Cache<Void, Editioned<Value>>,
-                     remote: Retrieve<Editioned<Value>>,
-                     networkActivity manager: NetworkActivityIndicatorManager,
-                     value: Value? = nil) {
+                            remote: Retrieve<Editioned<Value>>,
+                            networkActivity manager: NetworkActivityIndicatorManager,
+                            value: Value? = nil) {
         let prov = local.withSource(.disk).combinedRefreshing(with: remote.withSource(.server),
                                                               isMoreRecent: { $0.value.isMoreRecent(than: $1.value) })
             .mapValues({ $0.map({ $0.content }) })
@@ -144,7 +134,7 @@ extension Resource where Value : Mappable {
             .mapValues({ $0.content })
         self.init(provider: prov, local: loc, networkActivity: manager, value: value)
     }
-
+    
     
 }
 
@@ -166,5 +156,19 @@ extension Resource {
                                     networkActivity: self.manager,
                                     value: value.map(transform))
     }
+    
+}
+
+fileprivate class UnimplementedErrorStateDelegate : ErrorStateDelegate {
+    
+    func errorDidOccur(_ error: Error) {
+        printWithContext("Unimplemented")
+    }
+    
+    func errorDidNotOccur() {
+        printWithContext("Unimplemented")
+    }
+    
+    static let shared = UnimplementedErrorStateDelegate()
     
 }

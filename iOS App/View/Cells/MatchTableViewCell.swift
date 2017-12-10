@@ -82,13 +82,13 @@ final class MatchCellFiller : CellFiller {
     
     let avenue: Avenue<URL, URL, UIImage>
     let isFavorite: (Match.Compact) -> Bool
-    let isAbsoluteTruth: () -> Bool
     let scoreMode: ScoreMode
     
-    init(avenue: Avenue<URL, URL, UIImage>, scoreMode: ScoreMode, isFavorite: @escaping (Match.Compact) -> Bool, isAbsoluteTruth: @escaping () -> Bool) {
+    init(avenue: Avenue<URL, URL, UIImage>,
+         scoreMode: ScoreMode,
+         isFavorite: @escaping (Match.Compact) -> Bool) {
         self.avenue = avenue
         self.isFavorite = isFavorite
-        self.isAbsoluteTruth = isAbsoluteTruth
         self.scoreMode = scoreMode
     }
     
@@ -102,11 +102,7 @@ final class MatchCellFiller : CellFiller {
         } else {
             cell.backgroundColor = .white
         }
-        if isAbsoluteTruth() {
-            cell.scoreTimeLabel.textColor = .black
-        } else {
-            cell.scoreTimeLabel.textColor = .gray
-        }
+        cell.scoreTimeLabel.textColor = .black
         cell.scoreTimeLabel.text = scoreMode == .timeOnly ? match.scoreOrTimeString() : match.scoreOrDateString()
         cell.scoreLabelMode = match.score == nil ? scoreMode.labelMode : .score
         cell.homeTeamNameLabel.text = match.home.name

@@ -65,7 +65,7 @@ extension APIProvider {
         return Self(dataProvider: cache)
     }
     
-    public static func makeUrlSessionCache(from session: URLSession = .init(configuration: .default)) -> ReadOnlyCache<URL, Data> {
+    public static func makeUrlSessionCache(from session: URLSession = .init(configuration: .ephemeral)) -> ReadOnlyCache<URL, Data> {
         return session
             .asReadOnlyCache()
             .droppingResponse()

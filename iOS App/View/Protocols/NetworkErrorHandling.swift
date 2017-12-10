@@ -9,18 +9,39 @@
 import Foundation
 import UIKit
 import TheGreatKit
+import Whisper
 
 protocol NetworkErrorDisplaying { }
+
+fileprivate var alreadyShowingError = false
+
+func enter(on condition: Bool, modifying value: inout Bool, action: @escaping () -> ()) {
+    if value == condition {
+        action()
+        value = !value
+    }
+}
 
 extension NetworkErrorDisplaying where Self : UIViewController {
     
     func displayError() {
-        self.navigationItem.prompt = "Update failed. The information can be irrelevant."
+        assert(Thread.isMainThread)
+        printWithContext()
+        let message = Murmur(title: "Offline mode. The information can be irrelevant.", backgroundColor: UIColor.init(named: .errorMessageBackground), titleColor: .white)
+        if !alreadyShowingError {
+            Whisper.show(whistle: message, action: .show(5))
+            alreadyShowingError = true
+        }
     }
     
     func hideError() {
-        self.navigationItem.prompt = nil
+        assert(Thread.isMainThread)
+        printWithContext()
+        let message = Murmur(title: "Online!", backgroundColor: UIColor.init(named: .onlineMessageBackground), titleColor: .white)
+        if alreadyShowingError {
+            Whisper.show(whistle: message, action: .show(5))
+            alreadyShowingError = false
+        }
     }
     
 }
-

@@ -29,12 +29,18 @@ struct ColorName {
   let rgbaValue: UInt32
   var color: Color { return Color(named: self) }
 
+  /// <span style="display:block;width:3em;height:2em;border:1px solid black;background:#c0392b"></span>
+  /// Alpha: 100% <br/> (0xc0392bff)
+  static let errorMessageBackground = ColorName(rgbaValue: 0xc0392bff)
   /// <span style="display:block;width:3em;height:2em;border:1px solid black;background:#ffffcc"></span>
   /// Alpha: 100% <br/> (0xffffccff)
   static let favoriteBackground = ColorName(rgbaValue: 0xffffccff)
   /// <span style="display:block;width:3em;height:2em;border:1px solid black;background:#c05d5d"></span>
   /// Alpha: 100% <br/> (0xc05d5dff)
   static let navigationBackground = ColorName(rgbaValue: 0xc05d5dff)
+  /// <span style="display:block;width:3em;height:2em;border:1px solid black;background:#27ae60"></span>
+  /// Alpha: 100% <br/> (0x27ae60ff)
+  static let onlineMessageBackground = ColorName(rgbaValue: 0x27ae60ff)
 }
 // swiftlint:enable identifier_name line_length type_body_length
 

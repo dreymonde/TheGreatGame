@@ -76,10 +76,8 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
         self.mainBadgeAvenue = makeAvenue(CGSize(width: 50, height: 50))
         self.matchCellFiller = MatchCellFiller(avenue: smallBadgesAvenue,
                                                scoreMode: .dateAndTime,
-                                               isFavorite: { _ in return false },
-                                               isAbsoluteTruth: { [unowned self] in self.resource.isAbsoluteTruth })
-        self.teamGroupCellFiller = TeamGroupCellFiller(avenue: smallBadgesAvenue,
-                                                       isAbsoluteTruth: { [unowned self] in self.resource.isAbsoluteTruth })
+                                               isFavorite: { _ in return false })
+        self.teamGroupCellFiller = TeamGroupCellFiller(avenue: smallBadgesAvenue)
         self.pullToRefreshActivities = make()
         registerForPeekAndPop()
         configure(tableView)
@@ -87,7 +85,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
         configure(mainBadge: mainBadgeAvenue)
         configure(navigationItem)
         configure(favoriteButton: favoriteButton)
-        self.resource.load(confirmation: tableView.reloadData, onError: displayNetworkUpdateError, completion: self.setup(with:source:))
+        self.resource.load(errorDelegate: self, completion: self.setup(with:source:))
     }
     
     override var previewActionItems: [UIPreviewActionItem] {
@@ -102,7 +100,6 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     }
     
     func setup(with team: Team.Full, source: Source) {
-        hideNetworkUpdateError()
         self.team = team
         self.tableView.reloadData()
         self.configure(self.navigationItem)
@@ -114,7 +111,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     }
     
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
-        resource.reload(connectingToIndicator: pullToRefreshActivities, onError: displayNetworkUpdateError, completion: self.setup(with:source:))
+        resource.reload(connectingToIndicator: pullToRefreshActivities, errorDelegate: self, completion: self.setup(with:source:))
     }
     
     @IBAction func didPressFavoriteButton(_ sender: UIButton) {

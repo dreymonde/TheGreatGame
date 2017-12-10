@@ -48,11 +48,10 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing, Sh
         self.pullToRefreshActivities = make()
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
         configure(avenue)
-        self.resource.load(onError: displayNetworkUpdateError, completion: reloadData(with:source:))
+        self.resource.load(errorDelegate: self, completion: reloadData(with:source:))
     }
     
     fileprivate func reloadData(with teams: [Team.Compact], source: Source) {
-        hideNetworkUpdateError()
         if self.teams.isEmpty && source.isAbsoluteTruth {
             self.teams = teams
             let ips = teams.indices.map({ IndexPath.init(row: $0, section: 0) })
@@ -70,7 +69,7 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing, Sh
     
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
         resource.reload(connectingToIndicator: pullToRefreshActivities,
-                        onError: displayNetworkUpdateError,
+                        errorDelegate: self,
                         completion: self.reloadData(with:source:))
     }
     

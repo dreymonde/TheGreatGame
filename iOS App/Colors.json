@@ -1,4 +1,6 @@
 {
     "NavigationBackground" : "#c05d5d",
     "FavoriteBackground"   : "#FFFFCC",
+    "ErrorMessageBackground": "#c0392b",
+    "OnlineMessageBackground": "#27ae60"
 }

@@ -32,16 +32,14 @@ class GroupsTableViewController: TheGreatGame.TableViewController, Refreshing {
         super.viewDidLoad()
         configure(tableView)
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
-        self.teamGroupCellFiller = TeamGroupCellFiller(avenue: avenue,
-                                                       isAbsoluteTruth: { [unowned self] in self.resource.isAbsoluteTruth })
+        self.teamGroupCellFiller = TeamGroupCellFiller(avenue: avenue)
         configure(avenue)
         self.pullToRefreshActivities = make()
         registerFor3DTouch()
-        resource.load(onError: displayNetworkUpdateError, completion: reloadData(with:source:))
+        resource.load(errorDelegate: self, completion: reloadData(with:source:))
     }
     
     fileprivate func reloadData(with groups: [Group.Compact], source: Source) {
-        hideNetworkUpdateError()
         if self.groups.isEmpty && source.isAbsoluteTruth {
             self.groups = groups
             tableView.insertSections(IndexSet.init(integersIn: 0 ... groups.count - 1), with: UITableViewRowAnimation.top)
@@ -57,7 +55,9 @@ class GroupsTableViewController: TheGreatGame.TableViewController, Refreshing {
     }
     
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
-        resource.reload(connectingToIndicator: pullToRefreshActivities, onError: displayNetworkUpdateError, completion: reloadData(with:source:))
+        resource.reload(connectingToIndicator: pullToRefreshActivities,
+                        errorDelegate: self,
+                        completion: reloadData(with:source:))
     }
     
     func didFetchImage(with url: URL) {
