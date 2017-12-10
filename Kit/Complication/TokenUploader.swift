@@ -13,10 +13,10 @@ import Alba
 public final class TokenUploader {
     
     let getDeviceIdentifier: () -> UUID?
-    let pusher: Cache<Void, TokenUpload>
+    let pusher: WriteOnlyCache<Void, TokenUpload>
     let consistencyKeeper: UploadConsistencyKeeper<PushToken>
     
-    public init(pusher: Cache<Void, TokenUpload>,
+    public init(pusher: WriteOnlyCache<Void, TokenUpload>,
                 getDeviceIdentifier: @escaping () -> UUID?,
                 consistencyKeepersLastUpload: Cache<Void, PushToken>,
                 getToken: Retrieve<PushToken>) {
@@ -27,7 +27,7 @@ public final class TokenUploader {
         consistencyKeeper.subscribeTo(didUploadFavorites: self.didUploadToken.proxy.map({ $0.token }))
     }
     
-    public static func adapt(pusher: Cache<Void, Data>) -> Cache<Void, TokenUpload> {
+    public static func adapt(pusher: WriteOnlyCache<Void, Data>) -> WriteOnlyCache<Void, TokenUpload> {
         return pusher
             .mapJSONDictionary()
             .mapMappable()

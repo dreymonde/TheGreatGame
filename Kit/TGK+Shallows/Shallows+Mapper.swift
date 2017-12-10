@@ -26,6 +26,14 @@ extension ReadOnlyCache where Value == [String : Any] {
     
 }
 
+extension WriteOnlyCache where Value == [String : Any] {
+    
+    public func mapMappable<T : OutMappable>(of type: T.Type = T.self) -> WriteOnlyCache<Key, T> {
+        return mapValues({ try $0.map() })
+    }
+    
+}
+
 extension ReadOnlyCache {
     
     func mapKeys<OtherKey>(to type: OtherKey.Type, _ transform: @escaping (OtherKey) throws -> Key) -> ReadOnlyCache<OtherKey, Value> {

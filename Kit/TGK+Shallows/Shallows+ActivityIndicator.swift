@@ -24,6 +24,20 @@ extension ReadOnlyCache {
     
 }
 
+extension WriteOnlyCache {
+    
+    public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicatorManager) -> WriteOnlyCache<Key, Value> {
+        return WriteOnlyCache.init(cacheName: self.cacheName, set: { (value, key, completion) in
+            manager.increment()
+            self.set(value, forKey: key, completion: { (result) in
+                manager.decrement()
+                completion(result)
+            })
+        })
+    }
+    
+}
+
 extension ReadOnlyCache where Value : HasSource {
     
     public func sourceful_connectingNetworkActivityIndicator(manager: NetworkActivityIndicatorManager) -> ReadOnlyCache<Key, Value> {

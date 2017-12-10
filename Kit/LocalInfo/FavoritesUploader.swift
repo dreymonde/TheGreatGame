@@ -15,7 +15,7 @@ internal final class FavoritesUploader<IDType : IDProtocol> where IDType.RawValu
     let getNotificationsToken: Retrieve<PushToken>
     let getDeviceIdentifier: () -> UUID?
     
-    init(pusher: Cache<Void, FavoritesUpload<IDType>>,
+    init(pusher: WriteOnlyCache<Void, FavoritesUpload<IDType>>,
          getNotificationsToken: Retrieve<PushToken>,
          getDeviceIdentifier: @escaping () -> UUID?) {
         self.pusher = pusher
@@ -23,13 +23,13 @@ internal final class FavoritesUploader<IDType : IDProtocol> where IDType.RawValu
         self.getDeviceIdentifier = getDeviceIdentifier
     }
     
-    internal static func adapt(pusher: Cache<Void, Data>) -> Cache<Void, FavoritesUpload<IDType>> {
+    internal static func adapt(pusher: WriteOnlyCache<Void, Data>) -> WriteOnlyCache<Void, FavoritesUpload<IDType>> {
         return pusher
             .mapJSONDictionary()
             .mapMappable()
     }
     
-    let pusher: Cache<Void, FavoritesUpload<IDType>>
+    let pusher: WriteOnlyCache<Void, FavoritesUpload<IDType>>
     
     internal func subscribeTo(didUpdateFavorites: Subscribe<Set<IDType>>) {
         didUpdateFavorites.subscribe(self, with: FavoritesUploader.uploadFavorites)

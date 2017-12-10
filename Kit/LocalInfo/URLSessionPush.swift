@@ -9,7 +9,7 @@
 import Foundation
 import Shallows
 
-final class PUSHer : CacheProtocol {
+final class PUSHer : WritableCacheProtocol {
     
     typealias Key = URL
     typealias Value = Data
@@ -27,11 +27,7 @@ final class PUSHer : CacheProtocol {
         case clientError(Swift.Error)
         case noData
     }
-    
-    func retrieve(forKey key: URL, completion: @escaping (Result<Data>) -> ()) {
-        completion(Result.failure(Error.writeOnly))
-    }
-    
+        
     func set(_ value: Data, forKey key: URL, completion: @escaping (Result<Void>) -> ()) {
         var request = URLRequest(url: key)
         request.httpMethod = "POST"

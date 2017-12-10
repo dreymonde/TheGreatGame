@@ -60,7 +60,7 @@ public final class Favorites<IDType : IDProtocol> where IDType.RawValue == Int {
                                 tokens: DeviceTokens,
                                 shouldCheckUploadConsistency: Subscribe<Void>,
                                 consistencyKeepersStorage: Cache<Filename, Data>,
-                                upload: Cache<Void, Data>) {
+                                upload: WriteOnlyCache<Void, Data>) {
             let favs = favoritesRegistry.favorites
             let uploader = FavoritesUploader<IDType>(pusher: FavoritesUploader.adapt(pusher: upload),
                                                      getNotificationsToken: tokens.getNotification,
@@ -74,8 +74,9 @@ public final class Favorites<IDType : IDProtocol> where IDType.RawValue == Int {
         
     }
     
-    public func upload(forURL url: URL) -> Cache<String, Data> {
+    public func upload(forURL url: URL) -> WriteOnlyCache<String, Data> {
         return PUSHer(urlSession: URLSession.init(configuration: .default))
+            .asWriteOnlyCache()
             .mapKeys({ url.appendingPathComponent($0) })
     }
 
