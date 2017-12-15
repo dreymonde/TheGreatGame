@@ -22,10 +22,15 @@ public final class TeamsCompactModel {
             .mapMappable(of: [Team.Compact].self)
             .memoryCached()
             .singleKey("teams-compact-db")
+            .defaulting(to: [])
     }
     
     public var access: Retrieve<[Team.Compact]> {
         return teamsCompact.asReadOnlyStorage()
+    }
+    
+    public func getAll() -> [Team.Compact] {
+        return try! access.makeSyncStorage().retrieve()
     }
     
     public func update(with newValue: [Team.Compact]) {

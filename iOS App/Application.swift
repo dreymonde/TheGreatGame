@@ -25,7 +25,7 @@ final class Application {
     let notifications: Notifications
     
     init() {
-        Loggers.start()
+        //Loggers.start()
         
         self.api = Application.makeAPI()
         self.apiCache = Application.makeAPICache()

@@ -89,9 +89,20 @@ final class UserInterface {
         return logic.images.makeAvenue(forImageSize: imageSize, activityIndicator: .application)
     }
     
+//    let teamsDB = TeamsCompactModel(diskStorage: FileSystemStorage.inSharedContainer(subpath: FileSystemSubPath.documents(appending: "teams-db-1"), qos: .default).asStorage())
+    let teamsDB = TeamsCompactModel(diskStorage: MemoryStorage().asStorage())
+    
     func inject(to teamsList: TeamsTableViewController) {
         teamsList <- {
-            $0.resource = self.resources.teams
+            $0.teams = teamsDB.getAll()
+            $0.fireUpdate = { delegate in
+                self.logic.api.teams.all.retrieve(completion: { (result) in
+                    if let value = result.value?.content.teams {
+                        self.teamsDB.update(with: value)
+                    }
+                })
+            }
+            $0.teamsDidUpdate = teamsDB.didUpdate.proxy.mainThread()
             $0.isFavorite = self.logic.favoriteTeams.registry.isFavorite(id:)
             $0.updateFavorite = { self.logic.favoriteTeams.registry.updateFavorite(id: $0, isFavorite: $1) }
             $0.makeAvenue = self.makeAvenue(forImageSize:)

@@ -30,7 +30,7 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing, Sh
     var teams: [Team.Compact] = []
     
     // MARK: - Injections
-    var resource: Resource<[Team.Compact]>!
+    var fireUpdate: (ErrorStateDelegate) -> () = runtimeInject
     var makeTeamDetailVC: (Team.Compact, _ onFavorite: @escaping () -> ()) -> UIViewController = runtimeInject
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
     
@@ -41,25 +41,29 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing, Sh
     var avenue: SymmetricalAvenue<URL, UIImage>!
     var pullToRefreshActivities: NetworkActivityIndicatorManager!
     
+    // MARK: - Connections
+    var teamsDidUpdate: MainThreadSubscribe<[Team.Compact]>?
+    
     override func viewDidLoad() {
+        printWithContext(teams.count.description + " teams cached")
         super.viewDidLoad()
         registerForPeekAndPop()
+        self.subscribe()
         configure(tableView)
         self.pullToRefreshActivities = make()
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
         configure(avenue)
-        self.resource.load(errorDelegate: self, completion: reloadData(with:source:))
+        self.fireUpdate(self)
     }
     
-    fileprivate func reloadData(with teams: [Team.Compact], source: Source) {
-        if self.teams.isEmpty && source.isAbsoluteTruth {
-            self.teams = teams
-            let ips = teams.indices.map({ IndexPath.init(row: $0, section: 0) })
-            tableView.insertRows(at: ips, with: UITableViewRowAnimation.automatic)
-        } else {
-            self.teams = teams
-            tableView.reloadData()
-        }
+    func subscribe() {
+        teamsDidUpdate?.subscribe(self, with: TeamsTableViewController.reloadData)
+        teamsDidUpdate = nil
+    }
+    
+    fileprivate func reloadData(with teams: [Team.Compact]) {
+        self.teams = teams
+        tableView.reloadData()
     }
     
     override func didReceiveMemoryWarning() {
@@ -68,9 +72,7 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing, Sh
     }
     
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
-        resource.reload(connectingToIndicator: pullToRefreshActivities,
-                        errorDelegate: self,
-                        completion: self.reloadData(with:source:))
+        fireUpdate(self)
     }
     
     func didFetchImage(with url: URL) {
