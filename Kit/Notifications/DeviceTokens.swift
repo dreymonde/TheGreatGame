@@ -19,7 +19,7 @@ public final class DeviceTokens {
     public private(set) var getComplication: Retrieve<PushToken>!
     
     public init() {
-        self.getNotification = Retrieve<PushToken>(cacheName: "retrieve-notif", retrieve: { (_, completion) in
+        self.getNotification = Retrieve<PushToken>(storageName: "retrieve-notif", retrieve: { (_, completion) in
             do {
                 let val = try self.notifications.read().unwrap()
                 completion(.success(val))
@@ -27,7 +27,7 @@ public final class DeviceTokens {
                 completion(.failure(error))
             }
         })
-        self.getComplication = Retrieve<PushToken>(cacheName: "retrieve-compl", retrieve: { (_, completion) in
+        self.getComplication = Retrieve<PushToken>(storageName: "retrieve-compl", retrieve: { (_, completion) in
             do {
                 let val = try self.complication.read().unwrap()
                 completion(.success(val))

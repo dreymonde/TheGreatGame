@@ -9,34 +9,34 @@
 import Foundation
 import Shallows
 
-extension CacheProtocol where Value == [String : Any] {
+extension StorageProtocol where Value == [String : Any] {
     
-    public func mapMappable<T : Mappable>(of type: T.Type = T.self) -> Cache<Key, T> {
+    public func mapMappable<T : Mappable>(of type: T.Type = T.self) -> Storage<Key, T> {
         return mapValues(transformIn: T.init(from:),
                          transformOut: { try $0.map() })
     }
     
 }
 
-extension ReadOnlyCache where Value == [String : Any] {
+extension ReadOnlyStorage where Value == [String : Any] {
     
-    public func mapMappable<T : InMappable>(of type: T.Type = T.self) -> ReadOnlyCache<Key, T> {
+    public func mapMappable<T : InMappable>(of type: T.Type = T.self) -> ReadOnlyStorage<Key, T> {
         return mapValues(T.init(from:))
     }
     
 }
 
-extension WriteOnlyCache where Value == [String : Any] {
+extension WriteOnlyStorage where Value == [String : Any] {
     
-    public func mapMappable<T : OutMappable>(of type: T.Type = T.self) -> WriteOnlyCache<Key, T> {
+    public func mapMappable<T : OutMappable>(of type: T.Type = T.self) -> WriteOnlyStorage<Key, T> {
         return mapValues({ try $0.map() })
     }
     
 }
 
-extension ReadOnlyCache {
+extension ReadOnlyStorage {
     
-    func mapKeys<OtherKey>(to type: OtherKey.Type, _ transform: @escaping (OtherKey) throws -> Key) -> ReadOnlyCache<OtherKey, Value> {
+    func mapKeys<OtherKey>(to type: OtherKey.Type, _ transform: @escaping (OtherKey) throws -> Key) -> ReadOnlyStorage<OtherKey, Value> {
         return mapKeys(transform)
     }
     

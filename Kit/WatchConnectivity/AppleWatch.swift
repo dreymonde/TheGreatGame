@@ -188,7 +188,7 @@ extension WatchSessionManager {
 internal final class WatchTransferSession<IDType : IDProtocol> where IDType.RawValue == Int {
     
     let directoryURL: URL
-    let directoryURLCache: RawFileSystemCache
+    let directoryURLCache: RawFileSystemStorage
     
     private let uploadConsistencyKeeper: UploadConsistencyKeeper<Set<IDType>>
     
@@ -200,7 +200,7 @@ internal final class WatchTransferSession<IDType : IDProtocol> where IDType.RawV
         }
         let url = activation.watchDirectoryURL
         self.directoryURL = url
-        self.directoryURLCache = RawFileSystemCache(directoryURL: url, qos: .background)
+        self.directoryURLCache = RawFileSystemStorage(directoryURL: url, qos: .background)
         let lastTransfer = directoryURLCache
             .mapJSONDictionary()
             .mapBoxedSet(of: IDType.self)

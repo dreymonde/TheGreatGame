@@ -23,12 +23,12 @@ public struct GroupsEndpoint {
 
 public final class GroupsAPI : APIPoint {
     
-    public let provider: ReadOnlyCache<GroupsEndpoint, [String : Any]>
+    public let provider: ReadOnlyStorage<GroupsEndpoint, [String : Any]>
     public let all: Retrieve<Editioned<Groups>>
     
-    private let dataProvider: ReadOnlyCache<APIPath, Data>
+    private let dataProvider: ReadOnlyStorage<APIPath, Data>
     
-    public init(dataProvider: ReadOnlyCache<APIPath, Data>) {
+    public init(dataProvider: ReadOnlyStorage<APIPath, Data>) {
         self.dataProvider = dataProvider
         self.provider = dataProvider
             .mapJSONDictionary()
@@ -42,12 +42,12 @@ public final class GroupsAPI : APIPoint {
 
 public final class GroupsAPICache : APICachePoint {
     
-    public let provider: Cache<GroupsEndpoint, [String : Any]>
-    public let all: Cache<Void, Editioned<Groups>>
+    public let provider: Storage<GroupsEndpoint, [String : Any]>
+    public let all: Storage<Void, Editioned<Groups>>
     
-    private let dataProvider: Cache<APIPath, Data>
+    private let dataProvider: Storage<APIPath, Data>
     
-    public init(dataProvider: Cache<APIPath, Data>) {
+    public init(dataProvider: Storage<APIPath, Data>) {
         self.dataProvider = dataProvider
         self.provider = dataProvider
             .mapJSONDictionary()

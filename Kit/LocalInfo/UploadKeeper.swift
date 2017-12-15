@@ -13,12 +13,12 @@ import Alba
 internal final class UploadConsistencyKeeper<Upload : Equatable> {
     
     let actual: Retrieve<Upload>
-    let lastUploaded: Cache<Void, Upload>
+    let lastUploaded: Storage<Void, Upload>
     let name: String
     
     var reupload: (Upload) -> ()
     
-    init(actual: Retrieve<Upload>, lastUploaded: Cache<Void, Upload>, name: String, reupload: @escaping (Upload) -> ()) {
+    init(actual: Retrieve<Upload>, lastUploaded: Storage<Void, Upload>, name: String, reupload: @escaping (Upload) -> ()) {
         self.actual = actual
         self.lastUploaded = lastUploaded
         self.name = name
@@ -40,7 +40,7 @@ internal final class UploadConsistencyKeeper<Upload : Equatable> {
     func check() {
         let name = self.name
         printWithContext("(uploads-\(name)) Checking if last update was properly uploaded")
-        zip(actual, lastUploaded.asReadOnlyCache()).retrieve { (result) in
+        zip(actual, lastUploaded.asReadOnlyStorage()).retrieve { (result) in
             guard let value = result.value else {
                 fault("(uploads-\(name)) Both caches should be defaulted")
                 return
@@ -59,8 +59,8 @@ internal final class UploadConsistencyKeeper<Upload : Equatable> {
 
 //extension UploadConsistencyKeeper where Upload == Set<Team.ID> {
 //    
-//    convenience init(favorites: Retrieve<Set<Team.ID>>, diskCache: Cache<String, Data>) {
-//        let last: Cache<Void, Set<Team.ID>> = diskCache
+//    convenience init(favorites: Retrieve<Set<Team.ID>>, diskCache: Storage<String, Data>) {
+//        let last: Storage<Void, Set<Team.ID>> = diskCache
 //            .mapJSONDictionary()
 //            .mapBoxedSet()
 //            .singleKey("last-uploaded-favorites-teams")

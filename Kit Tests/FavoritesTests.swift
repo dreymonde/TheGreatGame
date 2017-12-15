@@ -58,25 +58,25 @@ extension Subscribe {
 class FavoritesTests: XCTestCase {
     
     func testFavorites() throws {
-        let fs = FileSystemCache.inDirectory(.cachesDirectory, appending: "fav-tests-1")
-        let favs = FavoriteTeams(diskCache: fs.asCache())
+        let fs = FileSystemStorage.inDirectory(.cachesDirectory, appending: "fav-tests-1")
+        let favs = FavoriteTeams(diskCache: fs.asStorage())
         let waiter = favs.didUpdateFavorite.makeWaiter()
         favs.updateFavorite(id: Team.ID(rawValue: 1)!, isFavorite: true)
         waiter.wait()
-        let sync = favs.favorites.makeSyncCache()
+        let sync = favs.favorites.makeSyncStorage()
         let withID1 = try sync.retrieve()
         XCTAssertEqual(withID1, [Team.ID.init(rawValue: 1)!])
         do { try FileManager.default.removeItem(at: fs.directoryURL) } catch {  }
     }
     
     func testGetMatches() throws {
-        let fs = FileSystemCache.inDirectory(.cachesDirectory, appending: "fav-tests-2")
-        let favs = FavoriteTeams(diskCache: fs.asCache())
+        let fs = FileSystemStorage.inDirectory(.cachesDirectory, appending: "fav-tests-2")
+        let favs = FavoriteTeams(diskCache: fs.asStorage())
         let waiter = favs.didUpdateFavorite.makeWaiter()
         favs.updateFavorite(id: Team.ID(rawValue: 1)!, isFavorite: true)
         waiter.wait()
-        let favsIDs = try favs.favorites.makeSyncCache().retrieve()
-        let api = API.digitalOcean().matches.all.mapValues({ $0.content.matches }).makeSyncCache()
+        let favsIDs = try favs.favorites.makeSyncStorage().retrieve()
+        let api = API.digitalOcean().matches.all.mapValues({ $0.content.matches }).makeSyncStorage()
         let matches = try api.retrieve().filter({ favsIDs.contains($0.home.id) || favsIDs.contains($0.away.id) })
         dump(matches.mostRelevant()!)
         do { try FileManager.default.removeItem(at: fs.directoryURL) } catch {  }

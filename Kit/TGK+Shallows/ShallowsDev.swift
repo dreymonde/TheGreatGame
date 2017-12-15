@@ -13,18 +13,18 @@ public enum DevCacheError : Error {
     case sorryPal
 }
 
-public enum DevCache<Key, Value> {
+public enum DevStorage<Key, Value> {
     
-    public static func successing(with value: Value) -> Cache<Key, Value> {
-        return Cache<Key, Value>(cacheName: "dev-success", retrieve: { (_, completion) in
+    public static func successing(with value: Value) -> Storage<Key, Value> {
+        return Storage<Key, Value>(storageName: "dev-success", retrieve: { (_, completion) in
             completion(.success(value))
         }, set: { (_, _, completion) in
             completion(.success)
         })
     }
     
-    public static func failing(with error: Error = DevCacheError.sorryPal) -> Cache<Key, Value> {
-        return Cache<Key, Value>(cacheName: "dev-failure", retrieve: { (_, completion) in
+    public static func failing(with error: Error = DevCacheError.sorryPal) -> Storage<Key, Value> {
+        return Storage<Key, Value>(storageName: "dev-failure", retrieve: { (_, completion) in
             completion(.failure(error))
         }, set: { (_, _, completion) in
             completion(.failure(error))

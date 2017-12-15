@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Shallows
 
 public protocol IDProtocol : Hashable, RawRepresentable {  }
 
@@ -97,6 +98,54 @@ extension Teams : Mappable {
     
     public func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.teams, to: .teams)
+    }
+    
+}
+
+public protocol ArrayMappableBox : Mappable {
+    
+    associatedtype Boxed
+    
+    init(_ values: [Boxed])
+    
+    var values: [Boxed] { get }
+    
+}
+
+extension Teams : ArrayMappableBox {
+    
+    public init(_ values: [Boxed]) {
+        self.teams = values
+    }
+    
+    public var values: [Team.Compact] {
+        return teams
+    }
+    
+}
+
+public protocol MappableBoxable {
+    
+    associatedtype Box : ArrayMappableBox where Box.Boxed == Self
+    
+}
+
+extension Team.Compact : MappableBoxable {
+    
+    public typealias Box = Teams
+    
+}
+
+extension Storage where Value == [String : Any] {
+    
+    public func mapMappable<T : MappableBoxable>(of: Array<T>.Type = Array<T>.self) -> Storage<Key, [T]> {
+        return mapValues(transformIn: { (dict) -> [T] in
+            let box = try T.Box.init(from: dict)
+            return box.values
+            }, transformOut: { (ar) -> [String : Any] in
+                let box = T.Box(ar)
+                return try box.map()
+        })
     }
     
 }

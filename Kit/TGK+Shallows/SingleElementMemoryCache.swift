@@ -13,7 +13,7 @@ public enum SingleElementMemoryCacheError : Error {
     case noValue
 }
 
-public final class SingleElementMemoryCache<Value> : CacheProtocol {
+public final class SingleElementMemoryStorage<Value> : StorageProtocol {
     
     public typealias Key = Void
     

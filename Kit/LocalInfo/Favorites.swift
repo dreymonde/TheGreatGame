@@ -59,8 +59,8 @@ public final class Favorites<IDType : IDProtocol> where IDType.RawValue == Int {
         public convenience init(favoritesRegistry: FavoritesRegistry<IDType>,
                                 tokens: DeviceTokens,
                                 shouldCheckUploadConsistency: Subscribe<Void>,
-                                consistencyKeepersStorage: Cache<Filename, Data>,
-                                upload: WriteOnlyCache<Void, Data>) {
+                                consistencyKeepersStorage: Storage<Filename, Data>,
+                                upload: WriteOnlyStorage<Void, Data>) {
             let favs = favoritesRegistry.favorites
             let uploader = FavoritesUploader<IDType>(pusher: FavoritesUploader.adapt(pusher: upload),
                                                      getNotificationsToken: tokens.getNotification,
@@ -74,9 +74,9 @@ public final class Favorites<IDType : IDProtocol> where IDType.RawValue == Int {
         
     }
     
-    public func upload(forURL url: URL) -> WriteOnlyCache<String, Data> {
+    public func upload(forURL url: URL) -> WriteOnlyStorage<String, Data> {
         return PUSHer(urlSession: URLSession.init(configuration: .default))
-            .asWriteOnlyCache()
+            .asWriteOnlyStorage()
             .mapKeys({ url.appendingPathComponent($0) })
     }
 
@@ -85,7 +85,7 @@ public final class Favorites<IDType : IDProtocol> where IDType.RawValue == Int {
 
 extension Favorites {
     
-    fileprivate static func makeKeeper(diskCache: Cache<Filename, Data>, favorites: Retrieve<Set<IDType>>, uploader: FavoritesUploader<IDType>) -> UploadConsistencyKeeper<Set<IDType>> {
+    fileprivate static func makeKeeper(diskCache: Storage<Filename, Data>, favorites: Retrieve<Set<IDType>>, uploader: FavoritesUploader<IDType>) -> UploadConsistencyKeeper<Set<IDType>> {
         let name = "keeper-notifications-\(String(reflecting: IDType.self))"
         let last = diskCache
             .mapJSONDictionary()

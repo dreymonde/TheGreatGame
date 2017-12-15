@@ -15,19 +15,19 @@ public protocol HardStoring {
     
     associatedtype Configurable
     
-    static func withDiskCache(_ diskCache: Cache<Filename, Data>) -> Configurable
+    static func withDiskCache(_ diskCache: Storage<Filename, Data>) -> Configurable
     
 }
 
 public protocol Storing : HardStoring {
     
-    init(diskCache: Cache<Filename, Data>)
+    init(diskCache: Storage<Filename, Data>)
     
 }
 
 extension Storing {
     
-    public static func withDiskCache(_ diskCache: Cache<Filename, Data>) -> Self {
+    public static func withDiskCache(_ diskCache: Storage<Filename, Data>) -> Self {
         return Self.init(diskCache: diskCache)
     }
     
@@ -48,26 +48,26 @@ extension HardStoring {
     }
     
     public static func inMemory() -> Configurable {
-        return Self.withDiskCache(MemoryCache<Filename, Data>().asCache())
+        return Self.withDiskCache(MemoryStorage<Filename, Data>().asStorage())
     }
     
     public static func inLocalCachesDirectory(subpath: String = Self.preferredSubPath) -> Configurable {
-        return Self.withDiskCache(FileSystemCache.inDirectory(.cachesDirectory,
-                                                              appending: subpath).asCache())
+        return Self.withDiskCache(FileSystemStorage.inDirectory(.cachesDirectory,
+                                                              appending: subpath).asStorage())
     }
     
     public static func inSharedCachesDirectory(subpath: String = Self.preferredSubPath) -> Configurable {
-        return Self.withDiskCache(FileSystemCache.inSharedContainer(subpath: FileSystemSubPath.caches(appending: subpath), qos: .default).asCache())
+        return Self.withDiskCache(FileSystemStorage.inSharedContainer(subpath: FileSystemSubPath.caches(appending: subpath), qos: .default).asStorage())
     }
     
     public static func inLocalDocumentsDirectory(subpath: String = Self.preferredSubPath) -> Configurable {
-        return Self.withDiskCache(FileSystemCache.inDirectory(.documentDirectory, appending: subpath, qos: .userInitiated).asCache())
+        return Self.withDiskCache(FileSystemStorage.inDirectory(.documentDirectory, appending: subpath, qos: .userInitiated).asStorage())
     }
     
     public static func inSharedDocumentsDirectory(subpath: String = Self.preferredSubPath) -> Configurable {
-        let diskCache = FileSystemCache.inSharedContainer(subpath: .documents(appending: subpath), qos: .userInitiated)
+        let diskCache = FileSystemStorage.inSharedContainer(subpath: .documents(appending: subpath), qos: .userInitiated)
         print(diskCache.directoryURL)
-        return Self.withDiskCache(diskCache.asCache())
+        return Self.withDiskCache(diskCache.asStorage())
     }
     
     
@@ -105,11 +105,11 @@ public struct FileSystemSubPath : ExpressibleByStringLiteral {
     
 }
 
-extension FileSystemCacheProtocol {
+extension FileSystemStorageProtocol {
     
     public static func inSharedContainer(subpath: FileSystemSubPath, qos: DispatchQoS) -> Self {
         let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: TheGreatKit.groupIdentifier)?.appendingPathComponent(subpath.subpath)
-        return Self.init(directoryURL: url!, qos: qos, cacheName: "group-container")
+        return Self.init(directoryURL: url!, qos: qos, storageName: "group-container")
     }
     
 }

@@ -82,38 +82,38 @@ final class Application {
         .connectingNetworkActivityIndicator(manager: .application)
     
     static func makeFavorites(tokens: DeviceTokens) -> Favorites<Team.ID> {
-        let keepersCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "teams-upload-keepers")
+        let keepersCache = FileSystemStorage.inDirectory(.cachesDirectory, appending: "teams-upload-keepers")
         print(keepersCache.directoryURL)
         return Favorites<Team.ID>(favoritesRegistry: FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteTeamsSubPath),
                                   tokens: tokens,
                                   shouldCheckUploadConsistency: shouldCheckUploadConsistency,
-                                  consistencyKeepersStorage: keepersCache.asCache(),
+                                  consistencyKeepersStorage: keepersCache.asStorage(),
                                   upload: uploadCache.singleKey("favorite-teams"))
     }
     
     static func makeFavorites(tokens: DeviceTokens) -> Favorites<Match.ID> {
-        let keepersCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "matches-upload-keepers")
+        let keepersCache = FileSystemStorage.inDirectory(.cachesDirectory, appending: "matches-upload-keepers")
         print(keepersCache.directoryURL)
         return Favorites<Match.ID>(favoritesRegistry: FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteMatchesSubPath),
                                    tokens: tokens,
                                    shouldCheckUploadConsistency: shouldCheckUploadConsistency,
-                                   consistencyKeepersStorage: keepersCache.asCache(),
+                                   consistencyKeepersStorage: keepersCache.asStorage(),
                                    upload: uploadCache.singleKey("favorite-matches"))
     }
 
     static func makeUnsubscribes(tokens: DeviceTokens) -> Favorites<Match.ID> {
-        let keepersCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "matches-unsub-upload-keepers")
+        let keepersCache = FileSystemStorage.inDirectory(.cachesDirectory, appending: "matches-unsub-upload-keepers")
         return Favorites<Match.ID>(favoritesRegistry: FavoritesRegistry.inSharedDocumentsDirectory(subpath: UnsubscribedMatchesSubPath),
                                    tokens: tokens,
                                    shouldCheckUploadConsistency: shouldCheckUploadConsistency,
-                                   consistencyKeepersStorage: keepersCache.asCache(),
+                                   consistencyKeepersStorage: keepersCache.asStorage(),
                                    upload: uploadCache.singleKey("unsubscribe"))
     }
     
     static func makeTokenUploader(getToken: Retrieve<PushToken>) -> TokenUploader {
         let fakeToken = PushToken(Data(repeating: 0, count: 1))
         
-        let keepersCache = FileSystemCache.inDirectory(.cachesDirectory, appending: "pushkit-token-upload-keeper")
+        let keepersCache = FileSystemStorage.inDirectory(.cachesDirectory, appending: "pushkit-token-upload-keeper")
             .mapValues(transformIn: PushToken.init,
                        transformOut: { $0.rawToken })
             .singleKey("uploaded-token")

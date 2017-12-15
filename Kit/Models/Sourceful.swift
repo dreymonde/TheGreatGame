@@ -72,17 +72,17 @@ extension Result where Value : HasSource {
     
 }
 
-extension ReadOnlyCache {
+extension ReadOnlyStorage {
     
-    public func withSource(_ source: Source) -> ReadOnlyCache<Key, Sourceful<Value>> {
+    public func withSource(_ source: Source) -> ReadOnlyStorage<Key, Sourceful<Value>> {
         return self.mapValues({ Sourceful.init(value: $0, source: source) })
     }
     
 }
 
-extension CacheProtocol {
+extension StorageProtocol {
     
-    public func withSource(_ source: Source) -> Cache<Key, Sourceful<Value>> {
+    public func withSource(_ source: Source) -> Storage<Key, Sourceful<Value>> {
         return self.mapValues(transformIn: { Sourceful.init(value: $0, source: source) },
                               transformOut: { $0.value })
     }

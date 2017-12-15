@@ -1,11 +1,11 @@
 import Foundation
 import Shallows
 
-public struct WebAPI : ReadableCacheProtocol {
+public struct WebAPI : ReadableStorageProtocol {
         
-    private let underlying: ReadOnlyCache<APIPath, Data>
+    private let underlying: ReadOnlyStorage<APIPath, Data>
     
-    public init(networkProvider: ReadOnlyCache<URL, Data>,
+    public init(networkProvider: ReadOnlyStorage<URL, Data>,
                 baseURL: URL) {
         self.underlying = networkProvider
             .mapKeys({ baseURL.appendingPath($0) })
@@ -20,7 +20,7 @@ public struct WebAPI : ReadableCacheProtocol {
 extension WebAPI {
     
     public init(urlSession: URLSession, baseURL: URL) {
-        let networkProvider = urlSession.asReadOnlyCache()
+        let networkProvider = urlSession.asReadOnlyStorage()
             .droppingResponse()
             .usingURLKeys()
         self.init(networkProvider: networkProvider, baseURL: baseURL)
@@ -28,7 +28,7 @@ extension WebAPI {
     
 }
 
-extension URLSession : ReadableCacheProtocol {
+extension URLSession : ReadableStorageProtocol {
     
     public enum Key {
         case url(URL)
@@ -69,21 +69,21 @@ extension URLSession : ReadableCacheProtocol {
     
 }
 
-extension ReadOnlyCache where Key == URLSession.Key {
+extension ReadOnlyStorage where Key == URLSession.Key {
     
-    public func usingURLKeys() -> ReadOnlyCache<URL, Value> {
+    public func usingURLKeys() -> ReadOnlyStorage<URL, Value> {
         return mapKeys({ .url($0) })
     }
     
-    public func usingURLRequestKeys() -> ReadOnlyCache<URLRequest, Value> {
+    public func usingURLRequestKeys() -> ReadOnlyStorage<URLRequest, Value> {
         return mapKeys({ .urlRequest($0) })
     }
     
 }
 
-extension ReadOnlyCache where Value == (HTTPURLResponse, Data) {
+extension ReadOnlyStorage where Value == (HTTPURLResponse, Data) {
     
-    public func droppingResponse() -> ReadOnlyCache<Key, Data> {
+    public func droppingResponse() -> ReadOnlyStorage<Key, Data> {
         return mapValues({ $0.1 })
     }
     

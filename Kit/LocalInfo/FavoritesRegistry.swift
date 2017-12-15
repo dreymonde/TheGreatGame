@@ -22,26 +22,26 @@ public final class FavoritesRegistry<IDType : IDProtocol> : Storing where IDType
         return "wrong"
     }
     
-    fileprivate let full_favorites: Cache<Void, Set<IDType>>
+    fileprivate let full_favorites: Storage<Void, Set<IDType>>
     
     public let favorites: Retrieve<Set<IDType>>
     
     public var all: Set<IDType> {
-        return try! favorites.makeSyncCache().retrieve()
+        return try! favorites.makeSyncStorage().retrieve()
     }
     
-    private lazy var favoriteTeamsSync: ReadOnlySyncCache<Void, Set<IDType>> = self.favorites.makeSyncCache()
+    private lazy var favoriteTeamsSync: ReadOnlySyncStorage<Void, Set<IDType>> = self.favorites.makeSyncStorage()
     
-    public init(diskCache: Cache<Filename, Data>) {
+    public init(diskCache: Storage<Filename, Data>) {
         let fileSystemTeams = diskCache
             .renaming(to: "favorites-disk")
             .mapJSONDictionary()
             .singleKey("favorites")
             .mapBoxedSet(of: IDType.self)
             .defaulting(to: [])
-        let memoryCache = MemoryCache<Int, Set<IDType>>().singleKey(0)
+        let memoryCache = MemoryStorage<Int, Set<IDType>>().singleKey(0)
         self.full_favorites = memoryCache.combined(with: fileSystemTeams).serial()
-        self.favorites = full_favorites.asReadOnlyCache()
+        self.favorites = full_favorites.asReadOnlyStorage()
     }
     
     public struct Update {
@@ -106,9 +106,9 @@ public final class FavoritesRegistry<IDType : IDProtocol> : Storing where IDType
     
 }
 
-extension CacheProtocol where Value == [String : Any] {
+extension StorageProtocol where Value == [String : Any] {
     
-    func mapBoxedSet<IDType : IDProtocol>(of type: IDType.Type = IDType.self) -> Cache<Key, Set<IDType>> where IDType.RawValue == Int {
+    func mapBoxedSet<IDType : IDProtocol>(of type: IDType.Type = IDType.self) -> Storage<Key, Set<IDType>> where IDType.RawValue == Int {
         return self
             .mapMappable(of: FavoritesBox<IDType>.self)
             .mapValues(transformIn: { Set($0.all) },

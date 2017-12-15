@@ -17,7 +17,7 @@ extension Shallows.Result {
 
 extension Avenues.ProcessorProtocol {
     
-    public func caching<CacheType : Shallows.CacheProtocol>(to cache: CacheType) -> Processor<Key, Value> where CacheType.Key == Key, CacheType.Value == Value {
+    public func caching<CacheType : Shallows.StorageProtocol>(to cache: CacheType) -> Processor<Key, Value> where CacheType.Key == Key, CacheType.Value == Value {
         var cacheInFlight = Set<Key>()
         let cacheInFlightLockQueue = DispatchQueue(label: "avenues+shallows.cache-in-flight-lock")
         let start: Processor<Key, Value>.Start = { key, completion in
@@ -26,7 +26,7 @@ extension Avenues.ProcessorProtocol {
                 switch cacheResult {
                 case .success(let cached):
                     if Avenues.Log.isEnabled {
-                        print("avenue-\(cache.cacheName): quick access for key \(key)")
+                        print("avenue-\(cache.storageName): quick access for key \(key)")
                     }
                     completion(.success(cached))
                 case .failure:
@@ -61,10 +61,10 @@ extension Avenues.ProcessorProtocol {
 
 public final class CacheProcessor<Key : Hashable, Value> : AutoProcessorProtocol {
     
-    let cache: ReadOnlyCache<Key, Value>
+    let cache: ReadOnlyStorage<Key, Value>
     
-    init<CacheType : ReadableCacheProtocol>(cache: CacheType) where CacheType.Key == Key, CacheType.Value == Value {
-        self.cache = cache.asReadOnlyCache()
+    init<CacheType : ReadableStorageProtocol>(cache: CacheType) where CacheType.Key == Key, CacheType.Value == Value {
+        self.cache = cache.asReadOnlyStorage()
     }
     
     public func start(key: Key, completion: @escaping (ProcessorResult<Value>) -> ()) {

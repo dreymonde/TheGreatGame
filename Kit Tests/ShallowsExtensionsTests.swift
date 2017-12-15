@@ -13,10 +13,10 @@ import Shallows
 class ShallowsExtensionsTests: XCTestCase {
     
     func testSerial() {
-//        let slowCache = MemoryCache<Int, String>(storage: [1: "AAA"])
-//            .asReadOnlyCache()
+//        let slowCache = MemoryStorage<Int, String>(storage: [1: "AAA"])
+//            .asReadOnlyStorage()
 //            .latency(ofInterval: 5)
-//        let fastCache = MemoryCache<Int, String>()
+//        let fastCache = MemoryStorage<Int, String>()
 //        let combined = fastCache.backed(by: slowCache).singleKey(1)
 //            .serial()
 //        combined.retrieve(completion: jprint)

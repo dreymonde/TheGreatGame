@@ -37,7 +37,7 @@ extension ComplicationReloader {
         didUpdateFavoriteMatches.flatSubscribe(self, with: { $0.didUpdateFavorite($1) })
     }
     
-    public func consume(complicationMatchUpdate: Subscribe<Match.Full>, writingTo matches: Cache<Void, Editioned<FullMatches>>) {
+    public func consume(complicationMatchUpdate: Subscribe<Match.Full>, writingTo matches: Storage<Void, Editioned<FullMatches>>) {
         complicationMatchUpdate.flatSubscribe(self, with: { $0.complicationMatchUpdate($1, matchesCache: matches) })
     }
     
@@ -51,7 +51,7 @@ extension ComplicationReloader {
         self.reloadComplications()
     }
     
-    fileprivate func complicationMatchUpdate(_ match: Match.Full, matchesCache: Cache<Void, Editioned<FullMatches>>) {
+    fileprivate func complicationMatchUpdate(_ match: Match.Full, matchesCache: Storage<Void, Editioned<FullMatches>>) {
         matchesCache.defaulting(to: Editioned(edition: -1, content: FullMatches(matches: []))).update({ (editioned) in
             if let indexOfReceived = editioned.content.matches.index(where: { $0.id == match.id }) {
                 editioned.content.matches[indexOfReceived] = match

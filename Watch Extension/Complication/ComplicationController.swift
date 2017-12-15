@@ -15,7 +15,7 @@ extension ComplicationDataSource {
     public static let main: ComplicationDataSource = {
         let provider = ExtensionDelegate.watchExtension.apiCache.matches.allFull
             .backed(by: ExtensionDelegate.watchExtension.api.matches.allFull)
-            .asReadOnlyCache()
+            .asReadOnlyStorage()
             .mapValues({ $0.content.matches })
             .serial()
         let conflictResolver = ExtensionDelegate.watchExtension.chooseMatchToShow

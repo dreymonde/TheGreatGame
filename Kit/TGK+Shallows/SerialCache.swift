@@ -9,27 +9,27 @@
 import Foundation
 import Shallows
 
-extension CacheProtocol {
+extension StorageProtocol {
     
-    public func renaming(to newName: String) -> Cache<Key, Value> {
-        return Cache(cacheName: newName, retrieve: self.retrieve, set: self.set)
+    public func renaming(to newName: String) -> Storage<Key, Value> {
+        return Storage(storageName: newName, retrieve: self.retrieve, set: self.set)
     }
     
 }
 
-extension ReadOnlyCache {
+extension ReadOnlyStorage {
     
-    public func renaming(to newName: String) -> ReadOnlyCache<Key, Value> {
-        return ReadOnlyCache(cacheName: newName, retrieve: self.retrieve)
+    public func renaming(to newName: String) -> ReadOnlyStorage<Key, Value> {
+        return ReadOnlyStorage(storageName: newName, retrieve: self.retrieve)
     }
     
 }
 
-extension CacheProtocol {
+extension StorageProtocol {
     
-    public func serial() -> Cache<Key, Value> {
+    public func serial() -> Storage<Key, Value> {
         let queue = DispatchQueue(label: "serial")
-        return Cache(cacheName: self.cacheName, retrieve: { (key, completion) in
+        return Storage(storageName: self.storageName, retrieve: { (key, completion) in
             queue.async {
                 let sema = DispatchSemaphore(value: 0)
                 self.retrieve(forKey: key, completion: { (result) in
@@ -52,11 +52,11 @@ extension CacheProtocol {
     
 }
 
-extension ReadOnlyCache {
+extension ReadOnlyStorage {
     
-    public func serial() -> ReadOnlyCache<Key, Value> {
+    public func serial() -> ReadOnlyStorage<Key, Value> {
         let queue = DispatchQueue(label: "serial")
-        return ReadOnlyCache(cacheName: self.cacheName, retrieve: { (key, completion) in
+        return ReadOnlyStorage(storageName: self.storageName, retrieve: { (key, completion) in
             queue.async {
                 let sema = DispatchSemaphore(value: 0)
                 self.retrieve(forKey: key, completion: { (result) in

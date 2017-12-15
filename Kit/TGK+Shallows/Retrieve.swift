@@ -8,4 +8,4 @@
 
 import Shallows
 
-public typealias Retrieve<Value> = ReadOnlyCache<Void, Value>
+public typealias Retrieve<Value> = ReadOnlyStorage<Void, Value>

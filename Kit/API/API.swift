@@ -11,7 +11,7 @@ import Shallows
 
 public protocol APIProvider {
     
-    init(dataProvider: ReadOnlyCache<APIPath, Data>)
+    init(dataProvider: ReadOnlyStorage<APIPath, Data>)
     
 }
 
@@ -21,32 +21,32 @@ internal protocol APIPoint : APIProvider {
 
 internal protocol APICachePoint {
     
-    init(dataProvider: Cache<APIPath, Data>)
+    init(dataProvider: Storage<APIPath, Data>)
     
 }
 
 extension APIProvider {
     
-    public static func gitHub(networkCache: ReadOnlyCache<URL, Data> = Self.makeUrlSessionCache()) -> Self {
-        let gitRepo: ReadOnlyCache<APIPath, Data> = GitHubRepo.theGreatGameStorage(networkCache: networkCache).asReadOnlyCache()
+    public static func gitHub(networkCache: ReadOnlyStorage<URL, Data> = Self.makeUrlSessionCache()) -> Self {
+        let gitRepo: ReadOnlyStorage<APIPath, Data> = GitHubRepo.theGreatGameStorage(networkCache: networkCache).asReadOnlyStorage()
             .mapKeys({ return "content" + $0 })
         return Self(dataProvider: gitRepo)
     }
     
-    public static func gitHubRaw(networkCache: ReadOnlyCache<URL, Data> = Self.makeUrlSessionCache()) -> Self {
-        let gitRawRepo: ReadOnlyCache<APIPath, Data> = GitHubRawFilesRepo.theGreatGameStorage(networkCache: networkCache).asReadOnlyCache()
+    public static func gitHubRaw(networkCache: ReadOnlyStorage<URL, Data> = Self.makeUrlSessionCache()) -> Self {
+        let gitRawRepo: ReadOnlyStorage<APIPath, Data> = GitHubRawFilesRepo.theGreatGameStorage(networkCache: networkCache).asReadOnlyStorage()
         return Self(dataProvider: gitRawRepo)
     }
     
-    public static func heroku(networkCache: ReadOnlyCache<URL, Data> = Self.makeUrlSessionCache()) -> Self {
+    public static func heroku(networkCache: ReadOnlyStorage<URL, Data> = Self.makeUrlSessionCache()) -> Self {
         let baseURL = URL(string: "https://the-great-game-ruby.herokuapp.com")!
-        let subcache: ReadOnlyCache<APIPath, Data> = WebAPI(networkProvider: networkCache, baseURL: baseURL).asReadOnlyCache()
+        let subcache: ReadOnlyStorage<APIPath, Data> = WebAPI(networkProvider: networkCache, baseURL: baseURL).asReadOnlyStorage()
         return Self(dataProvider: subcache)
     }
     
-    public static func digitalOcean(networkCache: ReadOnlyCache<URL, Data> = Self.makeUrlSessionCache()) -> Self {
+    public static func digitalOcean(networkCache: ReadOnlyStorage<URL, Data> = Self.makeUrlSessionCache()) -> Self {
         let baseURL = Server.digitalOceanStorageBaseURL
-        let subcache: ReadOnlyCache<APIPath, Data> = WebAPI(networkProvider: networkCache, baseURL: baseURL).asReadOnlyCache()
+        let subcache: ReadOnlyStorage<APIPath, Data> = WebAPI(networkProvider: networkCache, baseURL: baseURL).asReadOnlyStorage()
         return Self(dataProvider: subcache)
     }
     
@@ -57,17 +57,17 @@ extension APIProvider {
     
     public static func macBookSteve() -> Self {
         let directory = URL(fileURLWithPath: "/Users/oleg/Development/TheGreatGame/Storage/content")
-        let rawFS: Cache<APIPath, Data> = RawFileSystemCache(directoryURL: directory)
-            .mapKeys({ RawFileSystemCache.FileName.init(validFileName: Filename(rawValue: $0.rawValue)) })
+        let rawFS: Storage<APIPath, Data> = RawFileSystemStorage(directoryURL: directory)
+            .mapKeys({ RawFileSystemStorage.FileName.init(validFileName: Filename(rawValue: $0.rawValue)) })
         let cache = rawFS
-            .asReadOnlyCache()
+            .asReadOnlyStorage()
             .latency(ofInterval: 1.0)
         return Self(dataProvider: cache)
     }
     
-    public static func makeUrlSessionCache(from session: URLSession = .init(configuration: .ephemeral)) -> ReadOnlyCache<URL, Data> {
+    public static func makeUrlSessionCache(from session: URLSession = .init(configuration: .ephemeral)) -> ReadOnlyStorage<URL, Data> {
         return session
-            .asReadOnlyCache()
+            .asReadOnlyStorage()
             .droppingResponse()
             .usingURLKeys()
     }
@@ -86,7 +86,7 @@ public final class API : APIProvider {
         self.groups = groups
     }
     
-    public convenience init(dataProvider: ReadOnlyCache<APIPath, Data>) {
+    public convenience init(dataProvider: ReadOnlyStorage<APIPath, Data>) {
         let teamsAPI = TeamsAPI.init(dataProvider: dataProvider)
         let matchesAPI = MatchesAPI.init(dataProvider: dataProvider)
         let groupsAPI = GroupsAPI.init(dataProvider: dataProvider)
@@ -111,8 +111,8 @@ public final class APICache : Storing {
         self.groups = groups
     }
     
-    public convenience init(diskCache cache: Cache<Filename, Data>) {
-        let apiPathCache: Cache<APIPath, Data> = cache.mapKeys({ Filename(rawValue: $0.rawValue) })
+    public convenience init(diskCache cache: Storage<Filename, Data>) {
+        let apiPathCache: Storage<APIPath, Data> = cache.mapKeys({ Filename(rawValue: $0.rawValue) })
         self.init(teams: TeamsAPICache.init(dataProvider: apiPathCache),
                   matches: MatchesAPICache.init(dataProvider: apiPathCache),
                   groups: GroupsAPICache.init(dataProvider: apiPathCache))
@@ -120,10 +120,10 @@ public final class APICache : Storing {
 
 }
 
-extension ReadOnlyCache {
+extension ReadOnlyStorage {
     
-    public func latency(ofInterval interval: TimeInterval) -> ReadOnlyCache<Key, Value> {
-        return ReadOnlyCache(cacheName: self.cacheName) { (key, completion) in
+    public func latency(ofInterval interval: TimeInterval) -> ReadOnlyStorage<Key, Value> {
+        return ReadOnlyStorage(storageName: self.storageName) { (key, completion) in
             self.retrieve(forKey: key, completion: { (result) in
                 DispatchQueue.global().asyncAfter(deadline: .now() + interval, execute: {
                     completion(result)
@@ -134,10 +134,10 @@ extension ReadOnlyCache {
     
 }
 
-extension CacheProtocol {
+extension StorageProtocol {
     
-    public func latency(ofInterval interval: TimeInterval) -> Cache<Key, Value> {
-        return Cache(cacheName: self.cacheName, retrieve: { (key, completion) in
+    public func latency(ofInterval interval: TimeInterval) -> Storage<Key, Value> {
+        return Storage(storageName: self.storageName, retrieve: { (key, completion) in
             self.retrieve(forKey: key, completion: { (result) in
                 DispatchQueue.global().asyncAfter(deadline: .now() + interval, execute: {
                     completion(result)

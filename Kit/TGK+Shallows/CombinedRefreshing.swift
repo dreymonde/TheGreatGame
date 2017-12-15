@@ -35,10 +35,10 @@ public struct Relevant<Value> : HasSource {
     
 }
 
-extension CacheProtocol {
+extension StorageProtocol {
     
-    func combinedCompletingTwice<CacheType : ReadableCacheProtocol>(with backCache: CacheType) -> ReadOnlyCache<Key, Value> where CacheType.Key == Key, CacheType.Value == Value {
-        return ReadOnlyCache<Key, Value>(cacheName: self.cacheName + "++" + backCache.cacheName, retrieve: { (key, completion) in
+    func combinedCompletingTwice<CacheType : ReadableStorageProtocol>(with backCache: CacheType) -> ReadOnlyStorage<Key, Value> where CacheType.Key == Key, CacheType.Value == Value {
+        return ReadOnlyStorage<Key, Value>(storageName: self.storageName + "++" + backCache.storageName, retrieve: { (key, completion) in
             self.retrieve(forKey: key, completion: { (frontResult) in
                 switch frontResult {
                 case .success:
@@ -59,13 +59,13 @@ extension CacheProtocol {
         })
     }
     
-    public func combinedRefreshing<CacheType : ReadableCacheProtocol>(with backCache: CacheType, isMoreRecent: @escaping (Value, Value) -> Bool) -> ReadOnlyCache<Key, Relevant<Value.Value>> where CacheType.Key == Key, CacheType.Value == Value, Value : SourcefulProtocol {
-        let name = "\(self.cacheName)<-~\(backCache.cacheName)"
+    public func combinedRefreshing<CacheType : ReadableStorageProtocol>(with backCache: CacheType, isMoreRecent: @escaping (Value, Value) -> Bool) -> ReadOnlyStorage<Key, Relevant<Value.Value>> where CacheType.Key == Key, CacheType.Value == Value, Value : SourcefulProtocol {
+        let name = "\(self.storageName)<-~\(backCache.storageName)"
         func log(_ message: String) {
             let nameInBrackets = "(\(name))"
             print(nameInBrackets, message)
         }
-        return ReadOnlyCache<Key, Relevant<Value.Value>>(cacheName: name, retrieve: { (key, completion) in
+        return ReadOnlyStorage<Key, Relevant<Value.Value>>(storageName: name, retrieve: { (key, completion) in
             self.retrieve(forKey: key, completion: { (frontResult) in
                 if case .success(let frontValue) = frontResult {
                     log("Front cache not failed, completing first time")
@@ -103,10 +103,10 @@ extension CacheProtocol {
         
 }
 
-extension ReadOnlyCache {
+extension ReadOnlyStorage {
     
-    public func mainThread() -> ReadOnlyCache<Key, Value> {
-        return ReadOnlyCache.init(cacheName: self.cacheName, retrieve: { (key, completion) in
+    public func mainThread() -> ReadOnlyStorage<Key, Value> {
+        return ReadOnlyStorage.init(storageName: self.storageName, retrieve: { (key, completion) in
             self.retrieve(forKey: key, completion: { (result) in
                 DispatchQueue.main.async {
                     completion(result)

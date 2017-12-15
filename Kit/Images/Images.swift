@@ -6,13 +6,13 @@
 //  Copyright © 2017 The Great Game. All rights reserved.
 //
 
-import Avenues
 import Shallows
+import Avenues
 import UIKit
 
-extension CacheProtocol where Value == Data {
+extension Shallows.StorageProtocol where Value == Data {
     
-    public func mapImage() -> Cache<Key, UIImage> {
+    public func mapImage() -> Shallows.Storage<Key, UIImage> {
         return mapValues(transformIn: { try UIImage.init(data: $0, scale: 2.0).unwrap() },
                          transformOut: throwing(UIImagePNGRepresentation))
     }
@@ -27,27 +27,27 @@ public final class Images : Storing {
     
     internal enum SideSize { }
     
-    internal var caches: [IntType<SideSize> : Storage<URL, UIImage>] = [:]
+    internal var caches: [IntType<SideSize> : Avenues.Storage<URL, UIImage>] = [:]
     
     fileprivate let imageFetchingSession = URLSession(configuration: .default)
-    fileprivate let diskCache: Cache<URL, UIImage>
+    fileprivate let diskCache: Shallows.Storage<URL, UIImage>
     
-    public init(diskCache: Cache<Filename, Data>) {
+    public init(diskCache: Shallows.Storage<Filename, Data>) {
         self.diskCache = diskCache
             .mapKeys({ Filename(rawValue: $0.absoluteString) })
             .mapImage()
     }
     
-    public init(imageCache: Cache<URL, UIImage>) {
+    public init(imageCache: Shallows.Storage<URL, UIImage>) {
         self.diskCache = imageCache
     }
         
-    public func imageCache(forSize side: CGFloat) -> Storage<URL, UIImage> {
+    public func imageCache(forSize side: CGFloat) -> Avenues.Storage<URL, UIImage> {
         let intside = IntType<SideSize>(Int(side))
         if let existing = caches[intside] {
             return existing
         } else {
-            let new: Storage<URL, UIImage> = Storage(ImageNSCache())
+            let new: Avenues.Storage<URL, UIImage> = Storage(ImageNSCache())
                 //.mapValue(inTransform: { assert(max($0.size.width, $0.size.height) == side); return $0 },
                 //          outTransform: { assert(max($0.size.width, $0.size.height) == side); return $0 })
             caches[intside] = new
@@ -89,20 +89,20 @@ public enum EmptyCacheError : Error {
     case cacheIsAlwaysEmpty
 }
 
-extension ReadOnlyCache {
+extension ReadOnlyStorage {
     
-    public static func empty() -> ReadOnlyCache<Key, Value> {
-        return ReadOnlyCache(cacheName: "empty", retrieve: { (_, completion) in
+    public static func empty() -> ReadOnlyStorage<Key, Value> {
+        return ReadOnlyStorage(storageName: "empty", retrieve: { (_, completion) in
             completion(.failure(EmptyCacheError.cacheIsAlwaysEmpty))
         })
     }
     
 }
 
-extension Cache {
+extension Shallows.Storage {
     
-    public static func empty() -> Cache<Key, Value> {
-        return Cache(cacheName: "empty", retrieve: { (_, completion) in
+    public static func empty() -> Storage<Key, Value> {
+        return Storage(storageName: "empty", retrieve: { (_, completion) in
             completion(.failure(EmptyCacheError.cacheIsAlwaysEmpty))
         }, set: { (_, _, completion) in
             completion(.failure(EmptyCacheError.cacheIsAlwaysEmpty))

@@ -127,7 +127,7 @@ public extension AlbaCartographer {
         }
     }
     
-    convenience init<Writable : WritableCacheProtocol>(writingTo cache: Writable) where Writable.Key == Void, Writable.Value == [String : Any] {
+    convenience init<Writable : WritableStorageProtocol>(writingTo cache: Writable) where Writable.Key == Void, Writable.Value == [String : Any] {
         self.init { (dict) in
             cache.set(dict, completion: { (result) in
                 if let error = result.error {

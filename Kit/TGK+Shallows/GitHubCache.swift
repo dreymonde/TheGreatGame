@@ -9,13 +9,13 @@
 import Foundation
 import Shallows
 
-public final class GitHubRawFilesRepo : ReadableCacheProtocol {
+public final class GitHubRawFilesRepo : ReadableStorageProtocol {
     
     public static let apiBase = URL(string: "https://raw.githubusercontent.com/")!
     
-    private let internalCache: ReadOnlyCache<APIPath, Data>
+    private let internalCache: ReadOnlyStorage<APIPath, Data>
     
-    public init(owner: String, repo: String, networkCache: ReadOnlyCache<URL, Data>) {
+    public init(owner: String, repo: String, networkCache: ReadOnlyStorage<URL, Data>) {
         let base = GitHubRawFilesRepo.apiBase.appendingPath(APIPath.init(components: [owner, repo, "master", "content"]))
         self.internalCache = networkCache
             .mapKeys(to: APIPath.self, { path in base.appendingPath(path) })
@@ -29,19 +29,19 @@ public final class GitHubRawFilesRepo : ReadableCacheProtocol {
 
 extension GitHubRawFilesRepo {
     
-    public static func theGreatGameStorage(networkCache: ReadOnlyCache<URL, Data>) -> GitHubRawFilesRepo {
+    public static func theGreatGameStorage(networkCache: ReadOnlyStorage<URL, Data>) -> GitHubRawFilesRepo {
         return GitHubRawFilesRepo(owner: "dreymonde", repo: "thegreatgame-storage", networkCache: networkCache)
     }
     
 }
 
-public final class GitHubRepo : ReadableCacheProtocol {
+public final class GitHubRepo : ReadableStorageProtocol {
     
     public static let apiBase = URL(string: "https://api.github.com/repos/")!
     
-    private let internalCache: ReadOnlyCache<APIPath, Data>
+    private let internalCache: ReadOnlyStorage<APIPath, Data>
     
-    public init(owner: String, repo: String, networkCache: ReadOnlyCache<URL, Data>) {
+    public init(owner: String, repo: String, networkCache: ReadOnlyStorage<URL, Data>) {
         let base = GitHubRepo.apiBase.appendingPathComponent("\(owner)/\(repo)/").appendingPathComponent("contents/")
         print("GitHub repo base:", base)
         self.internalCache = networkCache
@@ -59,7 +59,7 @@ public final class GitHubRepo : ReadableCacheProtocol {
 
 extension GitHubRepo {
     
-    public static func theGreatGameStorage(networkCache: ReadOnlyCache<URL, Data>) -> GitHubRepo {
+    public static func theGreatGameStorage(networkCache: ReadOnlyStorage<URL, Data>) -> GitHubRepo {
         return GitHubRepo(owner: "dreymonde", repo: "thegreatgame-storage", networkCache: networkCache)
     }
     

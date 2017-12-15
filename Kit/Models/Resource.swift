@@ -122,14 +122,14 @@ public final class Resource<Value> : Prefetchable {
 
 extension Resource where Value : Mappable {
     
-    public convenience init(local: Cache<Void, Editioned<Value>>,
+    public convenience init(local: Storage<Void, Editioned<Value>>,
                             remote: Retrieve<Editioned<Value>>,
                             networkActivity manager: NetworkActivityIndicatorManager,
                             value: Value? = nil) {
         let prov = local.withSource(.disk).combinedRefreshing(with: remote.withSource(.server),
                                                               isMoreRecent: { $0.value.isMoreRecent(than: $1.value) })
             .mapValues({ $0.map({ $0.content }) })
-        let loc = local.asReadOnlyCache()
+        let loc = local.asReadOnlyStorage()
             .mainThread()
             .mapValues({ $0.content })
         self.init(provider: prov, local: loc, networkActivity: manager, value: value)
@@ -141,9 +141,9 @@ extension Resource where Value : Mappable {
 extension Resource {
     
     public static func testValue(_ value: Value, networkActivity manager: NetworkActivityIndicatorManager) -> Resource<Value> {
-        let suc = DevCache.successing(with: value) as Cache<Void, Value>
-        let relevant = suc.asReadOnlyCache().mapValues({ Relevant.init(valueIfRelevant: $0, source: Source.server, lastRelevant: $0) })
-        return Resource(provider: relevant, local: suc.asReadOnlyCache(), networkActivity: manager, value: nil)
+        let suc = DevStorage.successing(with: value) as Storage<Void, Value>
+        let relevant = suc.asReadOnlyStorage().mapValues({ Relevant.init(valueIfRelevant: $0, source: Source.server, lastRelevant: $0) })
+        return Resource(provider: relevant, local: suc.asReadOnlyStorage(), networkActivity: manager, value: nil)
     }
     
 }

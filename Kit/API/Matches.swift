@@ -28,15 +28,15 @@ public struct MatchesEndpoint {
 
 public final class MatchesAPI : APIPoint {
     
-    public let provider: ReadOnlyCache<MatchesEndpoint, [String : Any]>
+    public let provider: ReadOnlyStorage<MatchesEndpoint, [String : Any]>
     public let all: Retrieve<Editioned<Matches>>
     public let allFull: Retrieve<Editioned<FullMatches>>
     public let stages: Retrieve<Editioned<Stages>>
-    public let fullMatch: ReadOnlyCache<Match.ID, Editioned<Match.Full>>
+    public let fullMatch: ReadOnlyStorage<Match.ID, Editioned<Match.Full>>
     
-    private let dataProvider: ReadOnlyCache<APIPath, Data>
+    private let dataProvider: ReadOnlyStorage<APIPath, Data>
     
-    public init(dataProvider: ReadOnlyCache<APIPath, Data>) {
+    public init(dataProvider: ReadOnlyStorage<APIPath, Data>) {
         self.dataProvider = dataProvider
         self.provider = dataProvider
             .mapJSONDictionary()
@@ -59,15 +59,15 @@ public final class MatchesAPI : APIPoint {
 
 public final class MatchesAPICache : APICachePoint {
     
-    public let provider: Cache<MatchesEndpoint, [String : Any]>
-    public let all: Cache<Void, Editioned<Matches>>
-    public let allFull: Cache<Void, Editioned<FullMatches>>
-    public let stages: Cache<Void, Editioned<Stages>>
-    public let fullMatch: Cache<Match.ID, Editioned<Match.Full>>
+    public let provider: Storage<MatchesEndpoint, [String : Any]>
+    public let all: Storage<Void, Editioned<Matches>>
+    public let allFull: Storage<Void, Editioned<FullMatches>>
+    public let stages: Storage<Void, Editioned<Stages>>
+    public let fullMatch: Storage<Match.ID, Editioned<Match.Full>>
     
-    private let dataProvider: Cache<APIPath, Data>
+    private let dataProvider: Storage<APIPath, Data>
     
-    init(dataProvider: Cache<APIPath, Data>) {
+    init(dataProvider: Storage<APIPath, Data>) {
         self.dataProvider = dataProvider
         self.provider = dataProvider
             .mapJSONDictionary()

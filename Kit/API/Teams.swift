@@ -26,13 +26,13 @@ public struct TeamsEndpoint {
 
 public final class TeamsAPI : APIPoint {
     
-    public let provider: ReadOnlyCache<TeamsEndpoint, [String : Any]>
+    public let provider: ReadOnlyStorage<TeamsEndpoint, [String : Any]>
     public let all: Retrieve<Editioned<Teams>>
-    public let fullTeam: ReadOnlyCache<Team.ID, Editioned<Team.Full>>
+    public let fullTeam: ReadOnlyStorage<Team.ID, Editioned<Team.Full>>
     
-    private let dataProvider: ReadOnlyCache<APIPath, Data>
+    private let dataProvider: ReadOnlyStorage<APIPath, Data>
     
-    public init(dataProvider: ReadOnlyCache<APIPath, Data>) {
+    public init(dataProvider: ReadOnlyStorage<APIPath, Data>) {
         self.dataProvider = dataProvider
         self.provider = dataProvider
             .mapJSONDictionary()
@@ -49,13 +49,13 @@ public final class TeamsAPI : APIPoint {
 
 public final class TeamsAPICache : APICachePoint {
     
-    public let provider: Cache<TeamsEndpoint, [String : Any]>
-    public let all: Cache<Void, Editioned<Teams>>
-    public let fullTeam: Cache<Team.ID, Editioned<Team.Full>>
+    public let provider: Storage<TeamsEndpoint, [String : Any]>
+    public let all: Storage<Void, Editioned<Teams>>
+    public let fullTeam: Storage<Team.ID, Editioned<Team.Full>>
     
-    private let dataProvider: Cache<APIPath, Data>
+    private let dataProvider: Storage<APIPath, Data>
     
-    public init(dataProvider: Cache<APIPath, Data>) {
+    public init(dataProvider: Storage<APIPath, Data>) {
         self.dataProvider = dataProvider
         self.provider = dataProvider
             .mapJSONDictionary()

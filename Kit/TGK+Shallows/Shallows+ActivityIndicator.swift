@@ -10,10 +10,10 @@ import Foundation
 import Shallows
 import Avenues
 
-extension ReadOnlyCache {
+extension ReadOnlyStorage {
     
-    public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicatorManager) -> ReadOnlyCache<Key, Value> {
-        return ReadOnlyCache.init(cacheName: self.cacheName, retrieve: { (key, completion) in
+    public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicatorManager) -> ReadOnlyStorage<Key, Value> {
+        return ReadOnlyStorage.init(storageName: self.storageName, retrieve: { (key, completion) in
             manager.increment()
             self.retrieve(forKey: key, completion: { (result) in
                 manager.decrement()
@@ -24,10 +24,10 @@ extension ReadOnlyCache {
     
 }
 
-extension WriteOnlyCache {
+extension WriteOnlyStorage {
     
-    public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicatorManager) -> WriteOnlyCache<Key, Value> {
-        return WriteOnlyCache.init(cacheName: self.cacheName, set: { (value, key, completion) in
+    public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicatorManager) -> WriteOnlyStorage<Key, Value> {
+        return WriteOnlyStorage.init(storageName: self.storageName, set: { (value, key, completion) in
             manager.increment()
             self.set(value, forKey: key, completion: { (result) in
                 manager.decrement()
@@ -38,10 +38,10 @@ extension WriteOnlyCache {
     
 }
 
-extension ReadOnlyCache where Value : HasSource {
+extension ReadOnlyStorage where Value : HasSource {
     
-    public func sourceful_connectingNetworkActivityIndicator(manager: NetworkActivityIndicatorManager) -> ReadOnlyCache<Key, Value> {
-        return ReadOnlyCache.init(cacheName: self.cacheName, retrieve: { (key, completion) in
+    public func sourceful_connectingNetworkActivityIndicator(manager: NetworkActivityIndicatorManager) -> ReadOnlyStorage<Key, Value> {
+        return ReadOnlyStorage.init(storageName: self.storageName, retrieve: { (key, completion) in
             manager.increment()
             self.retrieve(forKey: key, completion: { (result) in
                 if result.isLastRequest {
@@ -54,10 +54,10 @@ extension ReadOnlyCache where Value : HasSource {
     
 }
 
-extension CacheProtocol {
+extension Shallows.StorageProtocol {
     
-    public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicatorManager) -> Cache<Key, Value> {
-        return Cache.init(cacheName: self.cacheName, retrieve: { (key, completion) in
+    public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicatorManager) -> Storage<Key, Value> {
+        return Storage.init(storageName: self.storageName, retrieve: { (key, completion) in
             self.retrieve(forKey: key, completion: { (result) in
                 manager.decrement()
                 completion(result)
