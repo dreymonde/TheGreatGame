@@ -10,6 +10,7 @@ import UIKit
 import Shallows
 import TheGreatKit
 import Avenues
+import Alba
 
 fileprivate let updateAfterActive = AppDelegate.applicationDidBecomeActive.proxy
     .void()
@@ -20,19 +21,12 @@ final class UserInterface {
     
     fileprivate let window: UIWindow
     fileprivate let logic: Application
-    fileprivate let resources: Resources
     
     init(window: UIWindow, application: Application) {
         self.window = window
         self.logic = application
-        self.resources = UserInterface.makeResources(with: application)
         subscribe()
         prefetch()
-    }
-    
-    static func makeResources(with logic: Application) -> Resources {
-        let resources = Resources(api: logic.api, apiCache: logic.apiCache, networkActivity: .application)
-        return resources
     }
     
     func subscribe() {
@@ -41,13 +35,13 @@ final class UserInterface {
     }
     
     func prefetch() {
-        resources.prefetchAll()
+        //logic.localDB.prefetchAll()
         self.prefetchFavorites()
     }
     
     func prefetchFavorites() {
-        logic.favoriteTeams.registry.all.forEach({ self.resources.fullTeam($0).prefetch() })
-        logic.favoriteMatches.registry.all.forEach({ self.resources.fullMatch($0).prefetch() })
+//        logic.favoriteTeams.registry.all.forEach({ self.resources.fullTeam($0).prefetch() })
+//        logic.favoriteMatches.registry.all.forEach({ self.resources.fullMatch($0).prefetch() })
     }
     
     var tabBarController: UITabBarController! {
@@ -56,7 +50,7 @@ final class UserInterface {
     
     func start() {
         let viewControllers = tabBarController.viewControllers?.flatMap({ $0 as? UINavigationController }).flatMap({ $0.viewControllers.first })
-        let matchesList = viewControllers?.flatMap({ $0 as? MatchesTableViewController }).first
+        let matchesList = viewControllers?.flatMap({ $0 as? StagesTableViewController }).first
         inject(to: matchesList!)
         let teamsList = viewControllers?.flatMap({ $0 as? TeamsTableViewController }).first
         inject(to: teamsList!)
@@ -75,8 +69,8 @@ final class UserInterface {
             let data = try! Data.init(contentsOf: url)
             let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String : Any]
             let match = try! Editioned<Match.Full>(from: json)
-            let resource = Resource.testValue(match.content, networkActivity: .none)
-            $0.resource = resource
+            $0.match = match.content
+            $0.reactiveTeam = Reactive(proxy: Subscribe.empty().mainThread(), update: EmptyFireUpdate())
             $0.makeAvenue = self.makeAvenue(forImageSize:)
             $0.makeTeamDetailVC = { _ in return UIViewController() }
             $0.isFavorite = { return false }
@@ -89,20 +83,15 @@ final class UserInterface {
         return logic.images.makeAvenue(forImageSize: imageSize, activityIndicator: .application)
     }
     
-//    let teamsDB = TeamsCompactModel(diskStorage: FileSystemStorage.inSharedContainer(subpath: FileSystemSubPath.documents(appending: "teams-db-1"), qos: .default).asStorage())
-    let teamsDB = TeamsCompactModel(diskStorage: MemoryStorage().asStorage())
-    
     func inject(to teamsList: TeamsTableViewController) {
         teamsList <- {
-            $0.teams = teamsDB.getAll()
-            $0.fireUpdate = { delegate in
-                self.logic.api.teams.all.retrieve(completion: { (result) in
-                    if let value = result.value?.content.teams {
-                        self.teamsDB.update(with: value)
-                    }
-                })
-            }
-            $0.teamsDidUpdate = teamsDB.didUpdate.proxy.mainThread()
+            let teamsDB = logic.localDB.teams
+            $0.teams = teamsDB.get() ?? []
+            let apiCall = logic.api.teams.all.mapValues({ $0.content.teams })
+            let fireUpdate = APIFireUpdate<[Team.Compact]>(retrieve: apiCall,
+                                                           write: teamsDB.writeAccess)
+            let update = teamsDB.didUpdate.proxy.mainThread()
+            $0.reactiveTeams = Reactive<[Team.Compact]>(proxy: update, update: fireUpdate)
             $0.isFavorite = self.logic.favoriteTeams.registry.isFavorite(id:)
             $0.updateFavorite = { self.logic.favoriteTeams.registry.updateFavorite(id: $0, isFavorite: $1) }
             $0.makeAvenue = self.makeAvenue(forImageSize:)
@@ -115,14 +104,19 @@ final class UserInterface {
                                 isFavoriteTeam: self.logic.favoriteTeams.registry.isFavorite)
     }
     
-    func inject(to matchesList: MatchesTableViewController) {
-        matchesList <- {
-            $0.resource = self.resources.stages
+    func inject(to stagesList: StagesTableViewController) {
+        stagesList <- {
+            let stagesDB = logic.localDB.stages
+            $0.stages = stagesDB.get() ?? []
+            let apiCall = logic.api.matches.stages.mapValues({ $0.content.stages })
+            let fireUpdate = APIFireUpdate<[Stage]>(retrieve: apiCall, write: stagesDB.writeAccess)
+            $0.reactiveStages = Reactive(proxy: stagesDB.didUpdate.proxy.mainThread(),
+                                         update: fireUpdate)
             $0.isFavorite = isFavoriteMatch(_:)
             $0.makeAvenue = self.makeAvenue(forImageSize:)
-            let shouldReloadTable = self.logic.favoriteTeams.registry.unitedDidUpdate.proxy.void()
+            let favoritesDidUpdate = self.logic.favoriteTeams.registry.unitedDidUpdate.proxy.void()
                 .merged(with: self.logic.favoriteMatches.registry.unitedDidUpdate.proxy.void())
-            $0.shouldReloadTable = shouldReloadTable.mainThread()
+            $0.shouldReloadTable = favoritesDidUpdate.mainThread()
             $0.shouldReloadData = updateAfterActive
             $0.makeMatchDetailVC = { match, stageTitle in
                 var preloaded = match.preloaded()
@@ -134,7 +128,11 @@ final class UserInterface {
     
     func inject(to groupsList: GroupsTableViewController) {
         groupsList <- {
-            $0.resource = self.resources.groups
+            let groupsDB = logic.localDB.groups
+            $0.groups = groupsDB.get() ?? []
+            let apiCall = logic.api.groups.all.mapValues({ $0.content.groups })
+            let fireUpdate = APIFireUpdate(retrieve: apiCall, write: groupsDB.writeAccess)
+            $0.reactiveGroups = Reactive(proxy: groupsDB.didUpdate.proxy.mainThread(), update: fireUpdate)
             $0.makeAvenue = self.makeAvenue(forImageSize:)
             $0.makeTeamDetailVC = { return self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
         }
@@ -144,7 +142,12 @@ final class UserInterface {
                                   preloaded: TeamDetailPreLoaded,
                                   onFavorite: @escaping () -> () = {  }) -> TeamDetailTableViewController {
         return Storyboard.Main.teamDetailTableViewController.instantiate() <- {
-            $0.resource = self.resources.fullTeam(teamID)
+            let teamDB = logic.localDB.fullTeam(teamID)
+            $0.team = teamDB.get()
+            let apiCall = logic.api.teams.fullTeam.singleKey(teamID).mapValues({ $0.content })
+            let fireUpdate = APIFireUpdate(retrieve: apiCall, write: teamDB.writeAccess)
+            $0.reactiveTeam = Reactive(proxy: teamDB.didUpdate.proxy.mainThread(),
+                                       update: fireUpdate)
             $0.isFavorite = { self.logic.favoriteTeams.registry.isFavorite(id: teamID) }
             $0.updateFavorite = {
                 self.logic.favoriteTeams.registry.updateFavorite(id: teamID, isFavorite: $0)
@@ -159,7 +162,13 @@ final class UserInterface {
     
     func matchDetailViewController(for matchID: Match.ID, preloaded: MatchDetailPreLoaded) -> MatchDetailTableViewController {
         return Storyboard.Main.matchDetailTableViewController.instantiate() <- {
-            $0.resource = self.resources.fullMatch(matchID)
+            let matchDB = logic.localDB.fullMatch(matchID)
+            $0.match = matchDB.get()
+            let apiCall = logic.api.matches.fullMatch.singleKey(matchID).mapValues({ $0.content })
+            let fireUpdate = APIFireUpdate(retrieve: apiCall,
+                                           write: matchDB.writeAccess)
+            $0.reactiveTeam = Reactive(proxy: matchDB.didUpdate.proxy.mainThread(),
+                                       update: fireUpdate)
             $0.makeAvenue = self.makeAvenue(forImageSize:)
             $0.makeTeamDetailVC = { self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
             $0.preloadedMatch = preloaded

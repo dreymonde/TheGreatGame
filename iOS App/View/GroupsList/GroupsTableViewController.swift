@@ -11,36 +11,41 @@ import TheGreatKit
 import Shallows
 import Avenues
 
-class GroupsTableViewController: TheGreatGame.TableViewController, Refreshing {
+class GroupsTableViewController: TheGreatGame.TableViewController {
 
     // MARK: - Data source
-    var groups: [Group.Compact] = []
+    var groups: [Group.Compact]!
     
     // MARK: - Injections
-    var resource: Resource<[Group.Compact]>!
     var makeTeamDetailVC: (Group.Team) -> UIViewController = runtimeInject
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
 
     // MARK: - Services
     var avenue: SymmetricalAvenue<URL, UIImage>!
-    var pullToRefreshActivities: NetworkActivityIndicatorManager!
     
     // MARK: - Cell Fillers
     var teamGroupCellFiller: TeamGroupCellFiller!
     
+    // MARK: - Connections
+    var reactiveGroups: Reactive<[Group.Compact]>!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.subscribe()
         configure(tableView)
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
         self.teamGroupCellFiller = TeamGroupCellFiller(avenue: avenue)
         configure(avenue)
-        self.pullToRefreshActivities = make()
         registerFor3DTouch()
-        resource.load(errorDelegate: self, completion: reloadData(with:source:))
+        reactiveGroups.update.fire(errorDelegate: self)
     }
     
-    fileprivate func reloadData(with groups: [Group.Compact], source: Source) {
-        if self.groups.isEmpty && source.isAbsoluteTruth {
+    func subscribe() {
+        self.reactiveGroups.proxy.subscribe(self, with: GroupsTableViewController.reloadData)
+    }
+    
+    fileprivate func reloadData(with groups: [Group.Compact]) {
+        if self.groups.isEmpty {
             self.groups = groups
             tableView.insertSections(IndexSet.init(integersIn: 0 ... groups.count - 1), with: UITableViewRowAnimation.top)
         } else {
@@ -55,9 +60,7 @@ class GroupsTableViewController: TheGreatGame.TableViewController, Refreshing {
     }
     
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
-        resource.reload(connectingToIndicator: pullToRefreshActivities,
-                        errorDelegate: self,
-                        completion: reloadData(with:source:))
+        reactiveGroups.update.fire(activityIndicator: pullToRefreshIndicator, errorDelegate: self)
     }
     
     func didFetchImage(with url: URL) {

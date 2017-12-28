@@ -116,3 +116,17 @@ extension ReadOnlyStorage {
     }
     
 }
+
+extension WriteOnlyStorage {
+    
+    public func mainThread() -> WriteOnlyStorage<Key, Value> {
+        return WriteOnlyStorage.init(storageName: self.storageName, set: { (value, key, completion) in
+            self.set(value, forKey: key, completion: { (result) in
+                DispatchQueue.main.async {
+                    completion(result)
+                }
+            })
+        })
+    }
+    
+}

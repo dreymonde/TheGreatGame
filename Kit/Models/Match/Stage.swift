@@ -39,6 +39,24 @@ public struct Stages {
     
 }
 
+extension Stages : ArrayMappableBox {
+    
+    public init(_ values: [Stage]) {
+        self.stages = values
+    }
+    
+    public var values: [Stage] {
+        return stages
+    }
+    
+}
+
+extension Stage : MappableBoxable {
+    
+    public typealias Box = Stages
+    
+}
+
 extension Stages : Mappable {
     
     public enum MappingKeys : String, IndexPathElement {

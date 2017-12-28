@@ -13,7 +13,7 @@ import TheGreatKit
 import Avenues
 import Shallows
 
-extension NetworkActivityIndicatorManager {
+extension NetworkActivityIndicator {
     
     public convenience init(image: WKInterfaceImage) {
         self.init(show: { 
@@ -50,7 +50,7 @@ class MatchesInterfaceController: WKInterfaceController {
     
     var context: Context!
     var avenue: Avenue<URL, URL, UIImage>!
-    var networkActivityIndicator: NetworkActivityIndicatorManager!
+    var networkActivityIndicator: NetworkActivityIndicator!
     
     var matches: [Match.Full] = [] {
         didSet {
@@ -65,7 +65,7 @@ class MatchesInterfaceController: WKInterfaceController {
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
         self.context = ExtensionDelegate.userInterface.makeContext(for: MatchesInterfaceController.self)
-        self.networkActivityIndicator = NetworkActivityIndicatorManager(image: activityImage)
+        self.networkActivityIndicator = NetworkActivityIndicator(image: activityImage)
         self.avenue = self.context.makeAvenue(CGSize.init(width: 35, height: 35))
             .connectingNetworkActivityIndicator(manager: networkActivityIndicator)
         printWithContext()

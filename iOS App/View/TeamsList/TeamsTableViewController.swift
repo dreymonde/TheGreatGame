@@ -24,25 +24,23 @@ extension Set {
     
 }
 
-class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing, Showing {
+class TeamsTableViewController: TheGreatGame.TableViewController, Showing {
     
     // MARK: - Data source
-    var teams: [Team.Compact] = []
+    var teams: [Team.Compact]!
     
     // MARK: - Injections
-    var fireUpdate: (ErrorStateDelegate) -> () = runtimeInject
     var makeTeamDetailVC: (Team.Compact, _ onFavorite: @escaping () -> ()) -> UIViewController = runtimeInject
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
     
     var isFavorite: (Team.ID) -> Bool = runtimeInject
     var updateFavorite: (Team.ID, Bool) -> () = runtimeInject
-
+    
     // MARK: - Services
     var avenue: SymmetricalAvenue<URL, UIImage>!
-    var pullToRefreshActivities: NetworkActivityIndicatorManager!
     
     // MARK: - Connections
-    var teamsDidUpdate: MainThreadSubscribe<[Team.Compact]>?
+    var reactiveTeams: Reactive<[Team.Compact]>!
     
     override func viewDidLoad() {
         printWithContext(teams.count.description + " teams cached")
@@ -50,20 +48,24 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing, Sh
         registerForPeekAndPop()
         self.subscribe()
         configure(tableView)
-        self.pullToRefreshActivities = make()
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
         configure(avenue)
-        self.fireUpdate(self)
+        self.reactiveTeams.update.fire(errorDelegate: self)
     }
     
     func subscribe() {
-        teamsDidUpdate?.subscribe(self, with: TeamsTableViewController.reloadData)
-        teamsDidUpdate = nil
+        reactiveTeams.proxy.subscribe(self, with: TeamsTableViewController.reloadData)
     }
     
     fileprivate func reloadData(with teams: [Team.Compact]) {
-        self.teams = teams
-        tableView.reloadData()
+        if self.teams.isEmpty {
+            self.teams = teams
+            let ips = teams.indices.map({ IndexPath.init(row: $0, section: 0) })
+            tableView.insertRows(at: ips, with: UITableViewRowAnimation.automatic)
+        } else {
+            self.teams = teams
+            tableView.reloadData()
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -72,7 +74,8 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing, Sh
     }
     
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
-        fireUpdate(self)
+        reactiveTeams.update.fire(activityIndicator: pullToRefreshIndicator,
+                                  errorDelegate: self)
     }
     
     func didFetchImage(with url: URL) {
@@ -84,17 +87,17 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing, Sh
             configureCell(cell, forRowAt: indexPath, afterImageDownload: true)
         }
     }
-
+    
     // MARK: - Table view data source
-
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return teams.count
     }
-
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TeamCompact", for: indexPath)
         configureCell(cell, forRowAt: indexPath)
@@ -140,7 +143,7 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Refreshing, Sh
     fileprivate func teamDetailViewController(for team: Team.Compact) -> UIViewController {
         return makeTeamDetailVC(team, { self.tableView.reloadData() })
     }
-
+    
 }
 
 // MARK: - Configurations

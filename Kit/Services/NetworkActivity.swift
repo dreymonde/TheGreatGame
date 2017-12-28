@@ -9,12 +9,12 @@
 import Foundation
 import UIKit
 
-public final class NetworkActivityIndicatorManager {
+public final class NetworkActivityIndicator {
     
     public static var isLogEnabled: Bool = false
     
     private func log(_ item: Any) {
-        if NetworkActivityIndicatorManager.isLogEnabled {
+        if NetworkActivityIndicator.isLogEnabled {
             print(item)
         }
     }
@@ -79,7 +79,7 @@ public final class NetworkActivityIndicatorManager {
         }
     }
     
-    public static let none = NetworkActivityIndicatorManager(setVisible: { _ in })
+    public static let none = NetworkActivityIndicator(setVisible: { _ in })
     
 }
 

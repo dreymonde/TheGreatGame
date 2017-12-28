@@ -34,6 +34,24 @@ public struct Groups {
     
 }
 
+extension Groups : ArrayMappableBox {
+    
+    public init(_ values: [Group.Compact]) {
+        self.groups = values
+    }
+    
+    public var values: [Group.Compact] {
+        return groups
+    }
+    
+}
+
+extension Group.Compact : MappableBoxable {
+    
+    public typealias Box = Groups
+    
+}
+
 extension Group.Team : Mappable {
     
     public enum MappingKeys : String, IndexPathElement {

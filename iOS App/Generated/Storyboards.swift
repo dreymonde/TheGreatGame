@@ -80,7 +80,7 @@ enum Storyboard {
     }
 
     case matchesTableViewControllerScene = "MatchesTableViewController"
-    static var matchesTableViewController: ViewControllerResource<Main, TheGreatGame.MatchesTableViewController> {
+    static var matchesTableViewController: ViewControllerResource<Main, TheGreatGame.StagesTableViewController> {
       return ViewControllerResource(scene: .matchesTableViewControllerScene)
     }
 

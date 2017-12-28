@@ -46,7 +46,7 @@ extension Match.Compact {
     
 }
 
-class MatchDetailTableViewController: TableViewController, Refreshing {
+class MatchDetailTableViewController: TableViewController {
     
     static let dateFormatter = DateFormatter() <- {
         $0.timeStyle = .short
@@ -61,7 +61,6 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
     
     // MARK: - Injections
     var preloadedMatch: MatchDetailPreLoaded?
-    var resource: Resource<Match.Full>!
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
     var makeTeamDetailVC: (Match.Team) -> UIViewController = runtimeInject
     var isFavorite: () -> Bool = runtimeInject
@@ -70,16 +69,15 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
     // MARK: - Services
     var badgeAvenue: SymmetricalAvenue<URL, UIImage>!
     var flagAvenue: SymmetricalAvenue<URL, UIImage>!
-    var pullToRefreshActivities: NetworkActivityIndicatorManager!
     
     // MARK: - Connections
+    var reactiveTeam: Reactive<Match.Full>!
     var shouldReloadData: MainThreadSubscribe<Void>?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.badgeAvenue = makeAvenue(CGSize(width: 80, height: 80))
         self.flagAvenue = makeAvenue(CGSize(width: 30, height: 15))
-        self.pullToRefreshActivities = make()
 
         configure(tableView)
         configure(navigationItem)
@@ -88,11 +86,11 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
         configure(favoriteButton: favoriteButton)
         
         self.subscribe()
-        self.resource.load(errorDelegate: self,
-                           completion: self.setup(with:source:))
+        self.reactiveTeam.update.fire(errorDelegate: self)
     }
     
     func subscribe() {
+        reactiveTeam.proxy.subscribe(self, with: MatchDetailTableViewController.setup)
         shouldReloadData?.subscribe(self, with: MatchDetailTableViewController.reload)
         shouldReloadData = nil
     }
@@ -108,7 +106,7 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
         return [favoriteAction]
     }
     
-    func setup(with match: Match.Full, source: Source) {
+    func setup(with match: Match.Full) {
         self.match = match
         self.tableView.reloadData()
         self.configure(navigationItem)
@@ -124,9 +122,7 @@ class MatchDetailTableViewController: TableViewController, Refreshing {
     }
     
     func reload() {
-        resource.reload(connectingToIndicator: pullToRefreshActivities,
-                        errorDelegate: self,
-                        completion: self.setup(with:source:))
+        reactiveTeam.update.fire(activityIndicator: pullToRefreshIndicator, errorDelegate: self)
     }
 
     @IBAction func didPressFavoriteButton(_ sender: UIButton) {

@@ -29,11 +29,11 @@ public final class Resource<Value> : Prefetchable {
     fileprivate var local: Retrieve<Value>
     public var provider: Retrieve<Relevant<Value>>
     
-    fileprivate let manager: NetworkActivityIndicatorManager
+    fileprivate let manager: NetworkActivityIndicator
     
     public init(provider: Retrieve<Relevant<Value>>,
                 local: Retrieve<Value> = .empty(),
-                networkActivity manager: NetworkActivityIndicatorManager,
+                networkActivity manager: NetworkActivityIndicator,
                 value: Value? = nil) {
         self.manager = manager
         self.provider = provider
@@ -59,7 +59,7 @@ public final class Resource<Value> : Prefetchable {
         }
     }
     
-    public func addActivityIndicator(_ activityIndicator: NetworkActivityIndicatorManager) {
+    public func addActivityIndicator(_ activityIndicator: NetworkActivityIndicator) {
         self.provider = self.provider.sourceful_connectingNetworkActivityIndicator(manager: activityIndicator)
     }
     
@@ -99,14 +99,14 @@ public final class Resource<Value> : Prefetchable {
         }
     }
     
-    public func reload(connectingToIndicator indicator: NetworkActivityIndicatorManager,
+    public func reload(connectingToIndicator indicator: NetworkActivityIndicator,
                        completion: @escaping (Value, Source) -> ()) {
         self.reload(connectingToIndicator: indicator,
                     errorDelegate: UnimplementedErrorStateDelegate.shared,
                     completion: completion)
     }
     
-    public func reload(connectingToIndicator indicator: NetworkActivityIndicatorManager,
+    public func reload(connectingToIndicator indicator: NetworkActivityIndicator,
                        errorDelegate: ErrorStateDelegate,
                        completion: @escaping (Value, Source) -> ()) {
         indicator.increment()
@@ -124,7 +124,7 @@ extension Resource where Value : Mappable {
     
     public convenience init(local: Storage<Void, Editioned<Value>>,
                             remote: Retrieve<Editioned<Value>>,
-                            networkActivity manager: NetworkActivityIndicatorManager,
+                            networkActivity manager: NetworkActivityIndicator,
                             value: Value? = nil) {
         let prov = local.withSource(.disk).combinedRefreshing(with: remote.withSource(.server),
                                                               isMoreRecent: { $0.value.isMoreRecent(than: $1.value) })
@@ -140,7 +140,7 @@ extension Resource where Value : Mappable {
 
 extension Resource {
     
-    public static func testValue(_ value: Value, networkActivity manager: NetworkActivityIndicatorManager) -> Resource<Value> {
+    public static func testValue(_ value: Value, networkActivity manager: NetworkActivityIndicator) -> Resource<Value> {
         let suc = DevStorage.successing(with: value) as Storage<Void, Value>
         let relevant = suc.asReadOnlyStorage().mapValues({ Relevant.init(valueIfRelevant: $0, source: Source.server, lastRelevant: $0) })
         return Resource(provider: relevant, local: suc.asReadOnlyStorage(), networkActivity: manager, value: nil)

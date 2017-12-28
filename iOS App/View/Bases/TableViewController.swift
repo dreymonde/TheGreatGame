@@ -11,6 +11,17 @@ import TheGreatKit
 
 class TableViewController : UITableViewController {
     
+    final var pullToRefreshIndicator: NetworkActivityIndicator!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.pullToRefreshIndicator = NetworkActivityIndicator(show: { [weak self] in
+            self?.refreshControl?.beginRefreshing()
+            }, hide: { [weak self] in
+                self?.refreshControl?.endRefreshing()
+        })
+    }
+    
     deinit {
         print("Deinit \(self)")
     }

@@ -9,10 +9,12 @@
 import Foundation
 import TheGreatKit
 import Shallows
+import Alba
 
 final class Application {
     
     let api: API
+    let localDB: LocalDB
     let apiCache: APICache
     let images: Images
     let favoriteTeams: Favorites<Team.ID>
@@ -28,6 +30,7 @@ final class Application {
         //Loggers.start()
         
         self.api = Application.makeAPI()
+        self.localDB = LocalDB.inSharedDocumentsFolder()
         self.apiCache = Application.makeAPICache()
         self.images = Images.inSharedCachesDirectory()
         self.tokens = DeviceTokens()
@@ -43,9 +46,9 @@ final class Application {
     
     func subscribe() {
         tokens.subscribeTo(notifications: AppDelegate.didRegisterForRemoteNotificationsWithDeviceToken.proxy,
-                       complication: watch?.pushKitReceiver.didRegisterWithToken.proxy ?? .empty())
+                           complication: watch?.pushKitReceiver.didRegisterWithToken.proxy ?? .empty())
         watch?.subscribeTo(didUpdateFavoriteTeams: favoriteTeams.registry.didUpdateFavorites,
-                       didUpdateFavoriteMatches: favoriteMatches.registry.didUpdateFavorites)
+                           didUpdateFavoriteMatches: favoriteMatches.registry.didUpdateFavorites)
         favoriteTeams.subscribe()
         favoriteMatches.subscribe()
         unsubscribedMatches.subscribe()
@@ -74,7 +77,7 @@ final class Application {
         }
     }
     
-    static let shouldCheckUploadConsistency = AppDelegate.applicationDidBecomeActive.proxy
+    static let fourSecondAfterAppDidBecomeActive = AppDelegate.applicationDidBecomeActive.proxy
         .void()
         .wait(seconds: 4.0)
     
@@ -86,7 +89,7 @@ final class Application {
         print(keepersCache.directoryURL)
         return Favorites<Team.ID>(favoritesRegistry: FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteTeamsSubPath),
                                   tokens: tokens,
-                                  shouldCheckUploadConsistency: shouldCheckUploadConsistency,
+                                  shouldCheckUploadConsistency: fourSecondAfterAppDidBecomeActive,
                                   consistencyKeepersStorage: keepersCache.asStorage(),
                                   upload: uploadCache.singleKey("favorite-teams"))
     }
@@ -96,16 +99,16 @@ final class Application {
         print(keepersCache.directoryURL)
         return Favorites<Match.ID>(favoritesRegistry: FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteMatchesSubPath),
                                    tokens: tokens,
-                                   shouldCheckUploadConsistency: shouldCheckUploadConsistency,
+                                   shouldCheckUploadConsistency: fourSecondAfterAppDidBecomeActive,
                                    consistencyKeepersStorage: keepersCache.asStorage(),
                                    upload: uploadCache.singleKey("favorite-matches"))
     }
-
+    
     static func makeUnsubscribes(tokens: DeviceTokens) -> Favorites<Match.ID> {
         let keepersCache = FileSystemStorage.inDirectory(.cachesDirectory, appending: "matches-unsub-upload-keepers")
         return Favorites<Match.ID>(favoritesRegistry: FavoritesRegistry.inSharedDocumentsDirectory(subpath: UnsubscribedMatchesSubPath),
                                    tokens: tokens,
-                                   shouldCheckUploadConsistency: shouldCheckUploadConsistency,
+                                   shouldCheckUploadConsistency: fourSecondAfterAppDidBecomeActive,
                                    consistencyKeepersStorage: keepersCache.asStorage(),
                                    upload: uploadCache.singleKey("unsubscribe"))
     }

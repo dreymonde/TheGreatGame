@@ -96,7 +96,7 @@ public struct FileSystemSubPath : ExpressibleByStringLiteral {
     }
     
     public static func caches(appending name: String) -> FileSystemSubPath {
-        return FileSystemSubPath("Library/Caches/\(name)/")
+        return FileSystemSubPath("Library/Caches/\(name)")
     }
     
     public static func documents(appending name: String) -> FileSystemSubPath {
@@ -106,6 +106,11 @@ public struct FileSystemSubPath : ExpressibleByStringLiteral {
 }
 
 extension FileSystemStorageProtocol {
+    
+    public static func inSharedDocuments(folder: SubpathName) -> Self {
+        let name = folder.fullStringValue
+        return Self.inSharedContainer(subpath: .documents(appending: name), qos: .default)
+    }
     
     public static func inSharedContainer(subpath: FileSystemSubPath, qos: DispatchQoS) -> Self {
         let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: TheGreatKit.groupIdentifier)?.appendingPathComponent(subpath.subpath)

@@ -63,7 +63,7 @@ public final class Images : Storing {
         return Avenue(storage: storage, processor: fullSizedLane)
     }
     
-    public func makeAvenue(forImageSize imageSize: CGSize, activityIndicator: NetworkActivityIndicatorManager) -> Avenue<URL, URL, UIImage> {
+    public func makeAvenue(forImageSize imageSize: CGSize, activityIndicator: NetworkActivityIndicator) -> Avenue<URL, URL, UIImage> {
         let fullSizedLane: Processor<URL, UIImage> = URLSessionProcessor(session: imageFetchingSession)
             .mapImage()
             .connectingNetworkActivityIndicator(manager: activityIndicator)

@@ -12,7 +12,7 @@ import Avenues
 
 extension ReadOnlyStorage {
     
-    public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicatorManager) -> ReadOnlyStorage<Key, Value> {
+    public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicator) -> ReadOnlyStorage<Key, Value> {
         return ReadOnlyStorage.init(storageName: self.storageName, retrieve: { (key, completion) in
             manager.increment()
             self.retrieve(forKey: key, completion: { (result) in
@@ -26,7 +26,7 @@ extension ReadOnlyStorage {
 
 extension WriteOnlyStorage {
     
-    public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicatorManager) -> WriteOnlyStorage<Key, Value> {
+    public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicator) -> WriteOnlyStorage<Key, Value> {
         return WriteOnlyStorage.init(storageName: self.storageName, set: { (value, key, completion) in
             manager.increment()
             self.set(value, forKey: key, completion: { (result) in
@@ -40,7 +40,7 @@ extension WriteOnlyStorage {
 
 extension ReadOnlyStorage where Value : HasSource {
     
-    public func sourceful_connectingNetworkActivityIndicator(manager: NetworkActivityIndicatorManager) -> ReadOnlyStorage<Key, Value> {
+    public func sourceful_connectingNetworkActivityIndicator(manager: NetworkActivityIndicator) -> ReadOnlyStorage<Key, Value> {
         return ReadOnlyStorage.init(storageName: self.storageName, retrieve: { (key, completion) in
             manager.increment()
             self.retrieve(forKey: key, completion: { (result) in
@@ -56,7 +56,7 @@ extension ReadOnlyStorage where Value : HasSource {
 
 extension Shallows.StorageProtocol {
     
-    public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicatorManager) -> Storage<Key, Value> {
+    public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicator) -> Storage<Key, Value> {
         return Storage.init(storageName: self.storageName, retrieve: { (key, completion) in
             self.retrieve(forKey: key, completion: { (result) in
                 manager.decrement()
@@ -76,7 +76,7 @@ extension Shallows.StorageProtocol {
 
 extension ProcessorProtocol {
     
-    public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicatorManager) -> Processor<Key, Value> {
+    public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicator) -> Processor<Key, Value> {
         return Processor.init(start: { (key, completion) in
             self.start(key: key, completion: { (result) in
                 manager.decrement()

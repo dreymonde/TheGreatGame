@@ -54,7 +54,6 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     
     // MARK: - Injections
     var preloadedTeam: TeamDetailPreLoaded?
-    var resource: Resource<Team.Full>!
     var makeTeamDetailVC: (Group.Team) -> UIViewController = runtimeInject
     var makeMatchDetailVC: (Match.Compact) -> UIViewController = runtimeInject
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
@@ -64,11 +63,13 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     // MARK: - Services
     var mainBadgeAvenue: SymmetricalAvenue<URL, UIImage>!
     var smallBadgesAvenue: SymmetricalAvenue<URL, UIImage>!
-    var pullToRefreshActivities: NetworkActivityIndicatorManager!
     
     // MARK: - Cell Fillers
     var matchCellFiller: MatchCellFiller!
     var teamGroupCellFiller: TeamGroupCellFiller!
+    
+    // MARK: - Connections
+    var reactiveTeam: Reactive<Team.Full>!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,14 +79,18 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
                                                scoreMode: .dateAndTime,
                                                isFavorite: { _ in return false })
         self.teamGroupCellFiller = TeamGroupCellFiller(avenue: smallBadgesAvenue)
-        self.pullToRefreshActivities = make()
         registerForPeekAndPop()
+        self.subscribe()
         configure(tableView)
         configure(smallBadges: smallBadgesAvenue)
         configure(mainBadge: mainBadgeAvenue)
         configure(navigationItem)
         configure(favoriteButton: favoriteButton)
-        self.resource.load(errorDelegate: self, completion: self.setup(with:source:))
+        self.reactiveTeam.update.fire(errorDelegate: self)
+    }
+    
+    func subscribe() {
+        reactiveTeam.proxy.subscribe(self, with: TeamDetailTableViewController.setup)
     }
     
     override var previewActionItems: [UIPreviewActionItem] {
@@ -99,7 +104,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
         return [favoriteAction]
     }
     
-    func setup(with team: Team.Full, source: Source) {
+    func setup(with team: Team.Full) {
         self.team = team
         self.tableView.reloadData()
         self.configure(self.navigationItem)
@@ -111,7 +116,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     }
     
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
-        resource.reload(connectingToIndicator: pullToRefreshActivities, errorDelegate: self, completion: self.setup(with:source:))
+        reactiveTeam.update.fire(activityIndicator: pullToRefreshIndicator, errorDelegate: self)
     }
     
     @IBAction func didPressFavoriteButton(_ sender: UIButton) {

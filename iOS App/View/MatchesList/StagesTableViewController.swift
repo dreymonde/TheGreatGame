@@ -16,25 +16,24 @@ let monthAndDayFormatter = DateFormatter() <- {
     $0.setLocalizedDateFormatFromTemplate("MMMMd")
 }
 
-class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, Showing {
+class StagesTableViewController: TheGreatGame.TableViewController, Showing {
     
     // MARK: - Data source
-    var stages: [Stage] = []
+    var stages: [Stage]!
     
     // MARK: - Injections
-    var resource: Resource<[Stage]>!
     var makeMatchDetailVC: (Match.Compact, String) -> UIViewController = runtimeInject
     var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject    
     var isFavorite: (Match.Compact) -> Bool = runtimeInject
 
     // MARK: - Services
     var avenue: SymmetricalAvenue<URL, UIImage>!
-    var pullToRefreshActivities: NetworkActivityIndicatorManager!
     
     // MARK: - Cell Fillers
     var matchCellFiller: MatchCellFiller!
     
     // MARK: - Connections
+    var reactiveStages: Reactive<[Stage]>!
     var shouldReloadTable: MainThreadSubscribe<Void>?
     var shouldReloadData: MainThreadSubscribe<Void>?
     
@@ -48,41 +47,24 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
                                                scoreMode: .timeOnly,
                                                isFavorite: { [unowned self] in self.isFavorite($0) })
         configure(avenue)
-        self.pullToRefreshActivities = make()
-        self.resource.load(errorDelegate: self,
-                           completion: { self.reloadData(stages: $0, source: $1, scrollToRecent: true) })
+        self.reactiveStages.update.fire(errorDelegate: self)
     }
     
     func subscribe() {
         shouldReloadTable?.flatSubscribe(self, with: { obj, _ in obj.tableView.reloadData() })
         shouldReloadTable = nil
-        shouldReloadData?.subscribe(self, with: MatchesTableViewController.reload)
+        shouldReloadData?.subscribe(self, with: StagesTableViewController.reload)
         shouldReloadData = nil
+        reactiveStages.proxy.subscribe(self, with: StagesTableViewController.reloadData)
     }
     
-    fileprivate func indexPathOfMostRelevantMatch(from stages: [Stage]) -> IndexPath {
-        let timeIntervalSinceNow: (Stage) -> TimeInterval = { abs(($0.matches.first?.date ?? Date.distantFuture).timeIntervalSinceNow) }
-        let zipped = zip(stages, stages.indices)
-        if let min = zipped.min(by: { timeIntervalSinceNow($0.0) < timeIntervalSinceNow($1.0) }) {
-            return IndexPath.start(ofSection: min.1)
-        }
-        return IndexPath.start(ofSection: 0)
-    }
-    
-    fileprivate func reloadData(stages: [Stage], source: Source, scrollToRecent: Bool) {
-        let mostRecent = indexPathOfMostRelevantMatch(from: stages)
-        if self.stages.isEmpty && source.isAbsoluteTruth {
+    fileprivate func reloadData(stages: [Stage]) {
+        if self.stages.isEmpty {
             self.stages = stages
             tableView.insertSections(IndexSet.init(integersIn: 0 ... stages.count - 1), with: UITableViewRowAnimation.top)
-            if scrollToRecent {
-                tableView.scrollToRow(at: mostRecent, at: .top, animated: false)
-            }
         } else {
             self.stages = stages
             tableView.reloadData()
-            if scrollToRecent {
-                tableView.scrollToRow(at: mostRecent, at: .top, animated: false)
-            }
         }
     }
     
@@ -96,9 +78,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
     }
     
     func reload() {
-        resource.reload(connectingToIndicator: pullToRefreshActivities,
-                        errorDelegate: self,
-                        completion: { self.reloadData(stages: $0, source: $1, scrollToRecent: false) })
+        reactiveStages.update.fire(activityIndicator: pullToRefreshIndicator, errorDelegate: self)
     }
     
     func didFetchImage(with url: URL) {
@@ -166,7 +146,7 @@ class MatchesTableViewController: TheGreatGame.TableViewController, Refreshing, 
 }
 
 // MARK: - Configurations
-extension MatchesTableViewController {
+extension StagesTableViewController {
         
     fileprivate func configure(_ avenue: Avenue<URL, URL, UIImage>) {
         avenue.onStateChange = { [weak self] url in
@@ -187,7 +167,7 @@ extension MatchesTableViewController {
     
 }
 
-extension MatchesTableViewController {
+extension StagesTableViewController {
     
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         return viewController(for: location, previewingContext: previewingContext)
