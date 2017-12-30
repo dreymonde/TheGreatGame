@@ -567,6 +567,24 @@ public struct FullMatches {
     
 }
 
+extension FullMatches : ArrayMappableBox {
+    
+    public init(_ values: [Match.Full]) {
+        self.matches = values
+    }
+    
+    public var values: [Match.Full] {
+        return matches
+    }
+    
+}
+
+extension Match.Full : MappableBoxable {
+    
+    public typealias Box = FullMatches
+    
+}
+
 extension FullMatches : Mappable {
     
     public enum MappingKeys : String, IndexPathElement {

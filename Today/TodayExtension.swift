@@ -16,30 +16,27 @@ final class TodayExtension {
     let favoriteTeams: FavoritesRegistry<Team.ID>
     let favoriteMatches: FavoritesRegistry<Match.ID>
     let api: API
-    let apiCache: APICache
+    let localDB: LocalDB
+    let connections: Connections
     let images: Images
+    
+    let reactive: Reactive<[Match.Full]>
     
     init() {
         
         ShallowsLog.isEnabled = true
         
         self.api = API.gitHub()
-        self.apiCache = APICache.inSharedCachesDirectory()
+        self.localDB = LocalDB.inSharedDocumentsFolder()
+        self.connections = Connections(api: api, localDB: localDB, activityIndicator: .none)
         self.favoriteTeams = FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteTeamsSubPath)
         self.favoriteMatches = FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteMatchesSubPath)
         self.images = Images.inSharedCachesDirectory()
         
-        self._resource = Resource<FullMatches>(local: apiCache.matches.allFull,
-                                              remote: api.matches.allFull,
-                                              networkActivity: .none)
-            .map({ $0.matches })
+        self.reactive = Reactive<[Match.Full]>(proxy: localDB.fullMatches.didUpdate.proxy.mainThread(),
+                                               update: connections.fullMatches)
+        
     }
-    
-    let _resource: Resource<[Match.Full]>
-    
-    lazy var resource: Resource<[Match.Full]> = {
-        return self._resource.map({ $0.filter(self.relevanceFilter()) })
-    }()
     
     func relevanceFilter() -> (Match.Full) -> Bool {
         return { match in

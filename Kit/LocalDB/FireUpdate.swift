@@ -43,8 +43,10 @@ public struct APIFireUpdate<Value> : FireUpdate {
     let retrieve: Retrieve<Value>
     let write: WriteOnlyStorage<Void, Value>
     
-    public init(retrieve: Retrieve<Value>, write: WriteOnlyStorage<Void, Value>) {
-        self.retrieve = retrieve.mainThread()
+    public init(retrieve: Retrieve<Value>, write: WriteOnlyStorage<Void, Value>, activityIndicator: NetworkActivityIndicator) {
+        self.retrieve = retrieve
+            .connectingNetworkActivityIndicator(indicator: activityIndicator)
+            .mainThread()
         self.write = write.mainThread()
     }
     

@@ -12,11 +12,11 @@ import Avenues
 
 extension ReadOnlyStorage {
     
-    public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicator) -> ReadOnlyStorage<Key, Value> {
+    public func connectingNetworkActivityIndicator(indicator: NetworkActivityIndicator) -> ReadOnlyStorage<Key, Value> {
         return ReadOnlyStorage.init(storageName: self.storageName, retrieve: { (key, completion) in
-            manager.increment()
+            indicator.increment()
             self.retrieve(forKey: key, completion: { (result) in
-                manager.decrement()
+                indicator.decrement()
                 completion(result)
             })
         })

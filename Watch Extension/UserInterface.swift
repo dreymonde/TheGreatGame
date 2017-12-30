@@ -13,29 +13,34 @@ import TheGreatKit
 final class UserInterface {
     
     let logic: WatchExtension
-    let matches: Resource<[Match.Full]>
     
     init(watchExtension: WatchExtension) {
         self.logic = watchExtension
-        self.matches = Resource<FullMatches>(local: logic.apiCache.matches.allFull,
-                                             remote: logic.api.matches.allFull,
-                                             networkActivity: .none)
-            .map({ $0.matches })
     }
     
     func preloadFullMatches() {
-        matches.load(completion: { _,_ in printWithContext("Loaded full matches") })
+        //matches.load(completion: { _,_ in printWithContext("Loaded full matches") })
+    }
+    
+    private func filter(matches: [Match.Full]) -> [Match.Full] {
+        let allUpcoming = matches.filter({ $0.isStarted.not || Calendar.autoupdatingCurrent.isDateInToday($0.date) })
+        if let firstUpcoming = allUpcoming.min(by: { $0.date < $1.date }) {
+            return matches.filter({ Calendar.autoupdatingCurrent.isDate($0.date,
+                                                                        inSameDayAs: firstUpcoming.date)})
+        }
+        return matches.last.map({ [$0] }) ?? []
     }
     
     func makeContext(for contr: MatchesInterfaceController.Type) -> MatchesInterfaceController.Context {
-        let relevantMatches = matches.map { (all) -> [Match.Full] in
-            let allUpcoming = all.filter({ !$0.isStarted || Calendar.autoupdatingCurrent.isDateInToday($0.date) })
-            if let firstUpcoming = allUpcoming.min(by: { $0.date < $1.date }) {
-                return all.filter({ Calendar.autoupdatingCurrent.isDate($0.date, inSameDayAs: firstUpcoming.date) })
-            }
-            return all.last.map({ [$0 ]}) ?? []
-        }
-        return MatchesInterfaceController.Context(resource: relevantMatches,
+        let db = logic.matchesDB
+        let relevantMatches = filter(matches: db.get() ?? [])
+        let apiCall = logic.matchesAPI.allFull.mapValues({ $0.content.matches })
+        let reactive = Reactive(proxy: db.didUpdate.proxy.map(filter(matches:)).mainThread(),
+                                update: APIFireUpdate(retrieve: apiCall,
+                                                      write: db.writeAccess,
+                                                      activityIndicator: .none))
+        return MatchesInterfaceController.Context(matches: relevantMatches,
+                                                  reactive: reactive,
                                                   makeAvenue: logic.images.makeDoubleCachedAvenue(forImageSize:))
     }
     

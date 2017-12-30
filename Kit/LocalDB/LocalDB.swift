@@ -15,17 +15,21 @@ public final class LocalDB {
     public let stages: LocalModel<[Stage]>
     public let groups: LocalModel<[Group.Compact]>
     
+    public let fullMatches: LocalModel<[Match.Full]>
+    
     public let fullTeam: (Team.ID) -> LocalModel<Team.Full>
     public let fullMatch: (Match.ID) -> LocalModel<Match.Full>
     
     public init(teams: LocalModel<[Team.Compact]>,
                 stages: LocalModel<[Stage]>,
                 groups: LocalModel<[Group.Compact]>,
+                fullMatches: LocalModel<[Match.Full]>,
                 fullTeam: @escaping (Team.ID) -> LocalModel<Team.Full>,
                 fullMatch: @escaping (Match.ID) -> LocalModel<Match.Full>) {
         self.teams = teams
         self.stages = stages
         self.groups = groups
+        self.fullMatches = fullMatches
         self.fullTeam = fullTeam
         self.fullMatch = fullMatch
     }
@@ -51,9 +55,19 @@ public final class LocalDB {
             let storage = makeStorage(folder)
             return LocalModel<[Group.Compact]>.inStorage(storage, filename: "all-groups")
         }()
+        let matches: LocalModel<[Match.Full]> = {
+            let folder = dbFolder.matches
+            let storage = makeStorage(folder)
+            return LocalModel<[Match.Full]>.inStorage(storage, filename: "matches-full")
+        }()
         let fullTeam = LocalDB.makeFullTeam(dbFolder: dbFolder, makeStorage: makeStorage)
         let fullMatch = LocalDB.makeFullMatch(dbFolder: dbFolder, makeStorage: makeStorage)
-        self.init(teams: teams, stages: stages, groups: groups, fullTeam: fullTeam, fullMatch: fullMatch)
+        self.init(teams: teams,
+                  stages: stages,
+                  groups: groups,
+                  fullMatches: matches,
+                  fullTeam: fullTeam,
+                  fullMatch: fullMatch)
     }
     
 }
@@ -63,6 +77,13 @@ extension LocalDB {
     public static func inSharedDocumentsFolder() -> LocalDB {
         return LocalDB(dbFolder: FolderStructure.data.db, makeStorage: { (subpath) -> Storage<Filename, Data> in
             return FileSystemStorage.inSharedDocuments(folder: subpath).asStorage()
+        })
+    }
+    
+    public static func inLocalDocumentsFolder() -> LocalDB {
+        return LocalDB(dbFolder: FolderStructure.data.db, makeStorage: { (subpath) -> Storage<Filename, Data> in
+            return FileSystemStorage.inDirectory(.documentDirectory, appending: subpath.fullStringValue)
+                .asStorage()
         })
     }
     

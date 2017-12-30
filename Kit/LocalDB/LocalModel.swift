@@ -12,10 +12,21 @@ import Alba
 
 public final class LocalModel<Value> {
     
-    private let storage: Storage<Void, Value>
+    private var _storage: Storage<Void, Value>!
+    public var storage: Storage<Void, Value> {
+        return _storage
+    }
     
     public init(storage: Storage<Void, Value>) {
-        self.storage = storage
+        self._storage = Storage<Void, Value>(storageName: storage.storageName, retrieve: { (_, completion) in
+            storage.retrieve(completion: completion)
+        }, set: { (value, _, completion) in
+            storage.set(value, completion: { (result) in
+                if result.isSuccess {
+                    self.didUpdate.publish(value)
+                }
+            })
+        })
     }
     
     public var access: Retrieve<Value> {
@@ -23,13 +34,7 @@ public final class LocalModel<Value> {
     }
     
     public var writeAccess: WriteOnlyStorage<Void, Value> {
-        return storage
-            .asWriteOnlyStorage()
-            .onCompletingWrite({ (value, result) in
-                if result.isSuccess {
-                    self.didUpdate.publish(value)
-                }
-            })
+        return storage.asWriteOnlyStorage()
     }
     
     public func prefetch() {
@@ -66,6 +71,11 @@ extension LocalModel {
             .memoryCached()
             .singleKey(filename)
         return LocalModel<[T]>(storage: storage)
+    }
+    
+    public static func inLocalDocumentsDirectory<T>(subpath: SubpathName, filename: Filename) -> LocalModel<[T]> where T : MappableBoxable {
+        let storage = FileSystemStorage.inDirectory(.documentDirectory, appending: subpath.fullStringValue).asStorage()
+        return LocalModel<[T]>.inStorage(storage, filename: filename)
     }
     
 }

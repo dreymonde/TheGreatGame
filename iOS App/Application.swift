@@ -15,6 +15,7 @@ final class Application {
     
     let api: API
     let localDB: LocalDB
+    let connections: Connections
     let apiCache: APICache
     let images: Images
     let favoriteTeams: Favorites<Team.ID>
@@ -31,6 +32,7 @@ final class Application {
         
         self.api = Application.makeAPI()
         self.localDB = LocalDB.inSharedDocumentsFolder()
+        self.connections = Connections(api: api, localDB: localDB, activityIndicator: .application)
         self.apiCache = Application.makeAPICache()
         self.images = Images.inSharedCachesDirectory()
         self.tokens = DeviceTokens()

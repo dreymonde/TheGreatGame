@@ -13,10 +13,9 @@ import Shallows
 extension ComplicationDataSource {
     
     public static let main: ComplicationDataSource = {
-        let provider = ExtensionDelegate.watchExtension.apiCache.matches.allFull
-            .backed(by: ExtensionDelegate.watchExtension.api.matches.allFull)
+        let provider = ExtensionDelegate.watchExtension.matchesDB.storage
+            .backed(by: ExtensionDelegate.watchExtension.matchesAPI.allFull.mapValues({ $0.content.matches }))
             .asReadOnlyStorage()
-            .mapValues({ $0.content.matches })
             .serial()
         let conflictResolver = ExtensionDelegate.watchExtension.chooseMatchToShow
         return ComplicationDataSource(provider: provider, conflictResolver: conflictResolver)

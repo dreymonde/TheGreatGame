@@ -44,7 +44,8 @@ class MatchesInterfaceController: WKInterfaceController {
     let matchRowType = "MatchCompact"
     
     struct Context {
-        let resource: Resource<[Match.Full]>
+        let matches: [Match.Full]
+        let reactive: Reactive<[Match.Full]>
         let makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage>
     }
     
@@ -70,8 +71,13 @@ class MatchesInterfaceController: WKInterfaceController {
             .connectingNetworkActivityIndicator(manager: networkActivityIndicator)
         printWithContext()
         configure(avenue)
-        self.context.resource.addActivityIndicator(networkActivityIndicator)
-        self.context.resource.load(completion: reload(with:source:))
+        self.matches = self.context.matches
+        self.context.reactive.update.fire(activityIndicator: networkActivityIndicator,
+                                          errorDelegate: UnimplementedErrorStateDelegate.shared)
+    }
+    
+    func subscribe() {
+        context.reactive.proxy.subscribe(self, with: MatchesInterfaceController.reload)
     }
     
     override func willActivate() {
@@ -80,7 +86,8 @@ class MatchesInterfaceController: WKInterfaceController {
             firstActivation = false
             return
         } else {
-            self.context.resource.reload(connectingToIndicator: .none, completion: reload(with:source:))
+            self.context.reactive.update.fire(activityIndicator: .none,
+                                              errorDelegate: UnimplementedErrorStateDelegate.shared)
         }
         super.willActivate()
     }
@@ -94,7 +101,7 @@ class MatchesInterfaceController: WKInterfaceController {
         }
     }
     
-    func reload(with matches: [Match.Full], source: Source) {
+    func reload(with matches: [Match.Full]) {
         printWithContext()
         self.matches = matches
         table.setNumberOfRows(matches.count, withRowType: matchRowType)

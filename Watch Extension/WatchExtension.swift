@@ -18,8 +18,8 @@ final class WatchExtension {
     
     let phone: Phone
     let images: Images
-    let api: API
-    let apiCache: APICache
+    let matchesAPI: MatchesAPI
+    let matchesDB: LocalModel<[Match.Full]>
     let favoriteTeams: FavoritesRegistry<Team.ID>
     let favoriteMatches: FavoritesRegistry<Match.ID>
     let complicationReloader: ComplicationReloader
@@ -30,8 +30,8 @@ final class WatchExtension {
         ShallowsLog.isEnabled = true
         self.phone = Phone()
         self.images = Images.inLocalCachesDirectory(subpath: "dev-3-images")
-        self.api = API.gitHub()
-        self.apiCache = APICache.inLocalCachesDirectory()
+        self.matchesAPI = MatchesAPI.gitHub()
+        self.matchesDB = LocalModel<[Match.Full]>.inLocalDocumentsDirectory(subpath: FolderStructure.data.db, filename: "matches-all")
         self.favoriteTeams = FavoritesRegistry.inLocalDocumentsDirectory()
         self.favoriteMatches = FavoritesRegistry.inLocalDocumentsDirectory()
         self.complicationReloader = ComplicationReloader()
@@ -43,7 +43,7 @@ final class WatchExtension {
         phone.didReceiveUpdatedFavoriteMatches.subscribe(self.favoriteMatches, with: FavoritesRegistry.replace)
         complicationReloader.consume(didUpdateFavoriteTeams: self.favoriteTeams.didUpdateFavorite, didUpdateFavoriteMatches: self.favoriteMatches.didUpdateFavorite)
         complicationReloader.consume(complicationMatchUpdate: self.phone.didReceiveComplicationMatchUpdate,
-                                     writingTo: apiCache.matches.allFull)
+                                     writingTo: matchesDB.storage)
     }
     
     func isFavoriteMatch(_ match: Match.Full) -> Bool {

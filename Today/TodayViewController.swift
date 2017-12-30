@@ -75,17 +75,6 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     
     func update() {
         
-        todayExtension.resource.load { (matches, source) in
-            if let mostRelevant = matches.mostRelevant() {
-                self.showingMatch = mostRelevant
-                self.lastConfirmedSource = source
-                self.setup(with: mostRelevant, afterDownload: false, source: source)
-            } else {
-                fault("No matches?")
-                self.completion?(.failed)
-            }
-        }
-        
     }
     
     override func didReceiveMemoryWarning() {
