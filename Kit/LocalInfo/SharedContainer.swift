@@ -9,26 +9,105 @@
 import Foundation
 import Shallows
 
-public protocol HardStoring {
+public struct DiskStorage : StorageProtocol {
     
-    static var preferredSubPath: String { get }
+    public enum BaseLocation {
+        case localCaches
+        case sharedCaches
+        case localDocuments
+        case sharedDocuments
+    }
     
-    associatedtype Configurable
+    public typealias Key = Filename
+    public typealias Value = Data
     
-    static func withDiskCache(_ diskCache: Storage<Filename, Data>) -> Configurable
+    private let underlying: Storage<Filename, Data>
+    
+    public init(underlyingStorage: Storage<Filename, Data>) {
+        self.underlying = underlyingStorage
+    }
+    
+    public func retrieve(forKey key: Filename, completion: @escaping (Result<Data>) -> ()) {
+        underlying.retrieve(forKey: key, completion: completion)
+    }
+    
+    public func set(_ value: Data, forKey key: Filename, completion: @escaping (Result<Void>) -> ()) {
+        underlying.set(value, forKey: key, completion: completion)
+    }
+    
+    public init(baseFolder: BaseLocation, subfolder: SubpathName) {
+        switch baseFolder {
+        case .localCaches:
+            self.init(underlyingStorage: FileSystemStorage.inDirectory(.cachesDirectory, appending: subfolder.fullStringValue).asStorage())
+        case .localDocuments:
+            self.init(underlyingStorage: FileSystemStorage.inDirectory(.documentDirectory, appending: subfolder.fullStringValue).asStorage())
+        case .sharedCaches:
+            self.init(underlyingStorage: FileSystemStorage.inSharedContainer(subpath: .caches(appending: subfolder.fullStringValue), qos: .default).asStorage())
+        case .sharedDocuments:
+            self.init(underlyingStorage: FileSystemStorage.inSharedContainer(subpath: .documents(appending: subfolder.fullStringValue), qos: .default).asStorage())
+        }
+    }
+    
+    public static func storage<StoringType : Storing>(for storingType: StoringType.Type, inBaseFolder baseFolder: BaseLocation) -> DiskStorage {
+        return DiskStorage(baseFolder: baseFolder, subfolder: StoringType.preferredSubpath(from: FolderStructure.data))
+    }
+    
+    public static func inLocalCaches(appending subpath: SubpathName) -> DiskStorage {
+        return DiskStorage(baseFolder: .localCaches, subfolder: subpath)
+    }
+    
+    public static func inSharedCaches(appending subpath: SubpathName) -> DiskStorage {
+        return DiskStorage(baseFolder: .sharedCaches, subfolder: subpath)
+    }
+    
+    public static func inLocalDocuments(appending subpath: SubpathName) -> DiskStorage {
+        return DiskStorage(baseFolder: .localDocuments, subfolder: subpath)
+    }
+    
+    public static func inSharedDocuments(appending subpath: SubpathName) -> DiskStorage {
+        return DiskStorage(baseFolder: .sharedDocuments, subfolder: subpath)
+    }
+    
+    public static func notStoring() -> DiskStorage {
+        return DiskStorage(underlyingStorage: .empty())
+    }
+    
+    public static func inMemory() -> DiskStorage {
+        return DiskStorage(underlyingStorage: MemoryStorage().asStorage())
+    }
     
 }
 
-public protocol Storing : HardStoring {
+public protocol Storing {
     
-    init(diskCache: Storage<Filename, Data>)
+    static func preferredSubpath(from dataDir: data_dir) -> SubpathName
     
 }
 
-extension Storing {
+public protocol DBStoring : Storing {
     
-    public static func withDiskCache(_ diskCache: Storage<Filename, Data>) -> Self {
-        return Self.init(diskCache: diskCache)
+    static func preferredSubpath(from dbDir: db_dir) -> SubpathName
+    
+}
+
+extension DBStoring {
+    
+    public static func preferredSubpath(from dataDir: data_dir) -> SubpathName {
+        return self.preferredSubpath(from: dataDir.db)
+    }
+    
+}
+
+public protocol SimpleStoring : Storing {
+    
+    init(diskStorage: DiskStorage)
+    
+}
+
+extension SimpleStoring {
+    
+    public static func inLocation(_ baseLocation: DiskStorage.BaseLocation) -> Self {
+        return Self.init(diskStorage: .storage(for: Self.self, inBaseFolder: baseLocation))
     }
     
 }
@@ -38,38 +117,6 @@ extension Filename : Hashable {
     public var hashValue: Int {
         return rawValue.hashValue
     }
-    
-}
-
-extension HardStoring {
-    
-    public static func notStoring() -> Configurable {
-        return Self.withDiskCache(.empty())
-    }
-    
-    public static func inMemory() -> Configurable {
-        return Self.withDiskCache(MemoryStorage<Filename, Data>().asStorage())
-    }
-    
-    public static func inLocalCachesDirectory(subpath: String = Self.preferredSubPath) -> Configurable {
-        return Self.withDiskCache(FileSystemStorage.inDirectory(.cachesDirectory,
-                                                              appending: subpath).asStorage())
-    }
-    
-    public static func inSharedCachesDirectory(subpath: String = Self.preferredSubPath) -> Configurable {
-        return Self.withDiskCache(FileSystemStorage.inSharedContainer(subpath: FileSystemSubPath.caches(appending: subpath), qos: .default).asStorage())
-    }
-    
-    public static func inLocalDocumentsDirectory(subpath: String = Self.preferredSubPath) -> Configurable {
-        return Self.withDiskCache(FileSystemStorage.inDirectory(.documentDirectory, appending: subpath, qos: .userInitiated).asStorage())
-    }
-    
-    public static func inSharedDocumentsDirectory(subpath: String = Self.preferredSubPath) -> Configurable {
-        let diskCache = FileSystemStorage.inSharedContainer(subpath: .documents(appending: subpath), qos: .userInitiated)
-        print(diskCache.directoryURL)
-        return Self.withDiskCache(diskCache.asStorage())
-    }
-    
     
 }
 

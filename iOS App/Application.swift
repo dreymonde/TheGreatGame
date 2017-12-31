@@ -16,11 +16,10 @@ final class Application {
     let api: API
     let localDB: LocalDB
     let connections: Connections
-    let apiCache: APICache
     let images: Images
-    let favoriteTeams: Favorites<Team.ID>
-    let favoriteMatches: Favorites<Match.ID>
-    let unsubscribedMatches: Favorites<Match.ID>
+    let favoriteTeams: Favorites<RD.Teams>
+    let favoriteMatches: Favorites<RD.Matches>
+    let unsubscribedMatches: Favorites<RD.Unsubs>
     let tokens: DeviceTokens
     let pushKitTokenUploader: TokenUploader
     
@@ -33,8 +32,7 @@ final class Application {
         self.api = Application.makeAPI()
         self.localDB = LocalDB.inSharedDocumentsFolder()
         self.connections = Connections(api: api, localDB: localDB, activityIndicator: .application)
-        self.apiCache = Application.makeAPICache()
-        self.images = Images.inSharedCachesDirectory()
+        self.images = Images.inLocation(.sharedCaches)
         self.tokens = DeviceTokens()
         self.favoriteTeams = Application.makeFavorites(tokens: tokens)
         self.favoriteMatches = Application.makeFavorites(tokens: tokens)
@@ -86,33 +84,33 @@ final class Application {
     static let uploadCache = upload(forURL: Server.digitalOceanAPIBaseURL)
         .connectingNetworkActivityIndicator(manager: .application)
     
-    static func makeFavorites(tokens: DeviceTokens) -> Favorites<Team.ID> {
+    static func makeFavorites(tokens: DeviceTokens) -> Favorites<RD.Teams> {
         let keepersCache = FileSystemStorage.inDirectory(.cachesDirectory, appending: "teams-upload-keepers")
         print(keepersCache.directoryURL)
-        return Favorites<Team.ID>(favoritesRegistry: FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteTeamsSubPath),
-                                  tokens: tokens,
-                                  shouldCheckUploadConsistency: fourSecondAfterAppDidBecomeActive,
-                                  consistencyKeepersStorage: keepersCache.asStorage(),
-                                  upload: uploadCache.singleKey("favorite-teams"))
+        return Favorites<RD.Teams>(favoritesRegistry: FavoritesRegistry.inLocation(.sharedDocuments),
+                                   tokens: tokens,
+                                   shouldCheckUploadConsistency: fourSecondAfterAppDidBecomeActive,
+                                   consistencyKeepersStorage: keepersCache.asStorage(),
+                                   upload: uploadCache.singleKey("favorite-teams"))
     }
     
-    static func makeFavorites(tokens: DeviceTokens) -> Favorites<Match.ID> {
+    static func makeFavorites(tokens: DeviceTokens) -> Favorites<RD.Matches> {
         let keepersCache = FileSystemStorage.inDirectory(.cachesDirectory, appending: "matches-upload-keepers")
         print(keepersCache.directoryURL)
-        return Favorites<Match.ID>(favoritesRegistry: FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteMatchesSubPath),
-                                   tokens: tokens,
-                                   shouldCheckUploadConsistency: fourSecondAfterAppDidBecomeActive,
-                                   consistencyKeepersStorage: keepersCache.asStorage(),
-                                   upload: uploadCache.singleKey("favorite-matches"))
+        return Favorites<RD.Matches>(favoritesRegistry: FavoritesRegistry.inLocation(.sharedDocuments),
+                                     tokens: tokens,
+                                     shouldCheckUploadConsistency: fourSecondAfterAppDidBecomeActive,
+                                     consistencyKeepersStorage: keepersCache.asStorage(),
+                                     upload: uploadCache.singleKey("favorite-matches"))
     }
     
-    static func makeUnsubscribes(tokens: DeviceTokens) -> Favorites<Match.ID> {
+    static func makeUnsubscribes(tokens: DeviceTokens) -> Favorites<RD.Unsubs> {
         let keepersCache = FileSystemStorage.inDirectory(.cachesDirectory, appending: "matches-unsub-upload-keepers")
-        return Favorites<Match.ID>(favoritesRegistry: FavoritesRegistry.inSharedDocumentsDirectory(subpath: UnsubscribedMatchesSubPath),
-                                   tokens: tokens,
-                                   shouldCheckUploadConsistency: fourSecondAfterAppDidBecomeActive,
-                                   consistencyKeepersStorage: keepersCache.asStorage(),
-                                   upload: uploadCache.singleKey("unsubscribe"))
+        return Favorites<RD.Unsubs>(favoritesRegistry: FavoritesRegistry.inLocation(.sharedDocuments),
+                                    tokens: tokens,
+                                    shouldCheckUploadConsistency: fourSecondAfterAppDidBecomeActive,
+                                    consistencyKeepersStorage: keepersCache.asStorage(),
+                                    upload: uploadCache.singleKey("unsubscribe"))
     }
     
     static func makeTokenUploader(getToken: Retrieve<PushToken>) -> TokenUploader {
@@ -130,15 +128,6 @@ final class Application {
                              getDeviceIdentifier: { UIDevice.current.identifierForVendor },
                              consistencyKeepersLastUpload: keepersCache,
                              getToken: getToken)
-    }
-    
-    static func makeAPICache() -> APICache {
-        let cachingDisabled = launchArgument(.isCachingDisabled)
-        if cachingDisabled {
-            return APICache.inMemory()
-        } else {
-            return APICache.inSharedCachesDirectory()
-        }
     }
     
 }

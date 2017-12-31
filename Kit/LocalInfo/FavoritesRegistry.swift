@@ -10,17 +10,51 @@ import Foundation
 import Shallows
 import Alba
 
-public typealias FavoriteTeams = FavoritesRegistry<Team.ID>
+public typealias FavoriteTeams = FavoritesRegistry<RD.Teams>
 
-public let FavoriteTeamsSubPath = "favorite-teams"
-public let FavoriteMatchesSubPath = "favorite-matches"
-public let UnsubscribedMatchesSubPath = "unsub-matches"
-
-public final class FavoritesRegistry<IDType : IDProtocol> : Storing where IDType.RawValue == Int {
+public protocol RegistryDescriptor {
     
-    public static var preferredSubPath: String {
-        return "wrong"
+    associatedtype IDType : IDProtocol where IDType.RawValue == Int
+    static var filename: Filename { get }
+    
+}
+
+public enum RD {
+    
+    public typealias Matches = MatchesRegistryDescriptor
+    public typealias Teams = TeamsRegistryDescriptor
+    public typealias Unsubs = UnsubsRegistryDescriptor
+    
+}
+
+public enum MatchesRegistryDescriptor : RegistryDescriptor {
+    public typealias IDType = Match.ID
+    public static var filename: Filename {
+        return "matches"
     }
+}
+
+public enum TeamsRegistryDescriptor : RegistryDescriptor {
+    public typealias IDType = Team.ID
+    public static var filename: Filename {
+        return "teams"
+    }
+}
+
+public enum UnsubsRegistryDescriptor : RegistryDescriptor {
+    public typealias IDType = Match.ID
+    public static var filename: Filename {
+        return "unsubs"
+    }
+}
+
+public final class FavoritesRegistry<Descriptor : RegistryDescriptor> : SimpleStoring {
+    
+    public static func preferredSubpath(from dataDir: data_dir) -> SubpathName {
+        return dataDir.db.favorites
+    }
+    
+    public typealias IDType = Descriptor.IDType
     
     fileprivate let full_favorites: Storage<Void, Set<IDType>>
     
@@ -32,12 +66,12 @@ public final class FavoritesRegistry<IDType : IDProtocol> : Storing where IDType
     
     private lazy var favoriteTeamsSync: ReadOnlySyncStorage<Void, Set<IDType>> = self.favorites.makeSyncStorage()
     
-    public init(diskCache: Storage<Filename, Data>) {
-        let fileSystemTeams = diskCache
+    public init(diskStorage: DiskStorage) {
+        let fileSystemTeams = diskStorage
             .renaming(to: "favorites-disk")
             .mapJSONDictionary()
-            .singleKey("favorites")
-            .mapBoxedSet(of: IDType.self)
+            .singleKey(Descriptor.filename)
+            .mapBoxedSet(of: Descriptor.IDType.self)
             .defaulting(to: [])
         let memoryCache = MemoryStorage<Int, Set<IDType>>().singleKey(0)
         self.full_favorites = memoryCache.combined(with: fileSystemTeams).serial()
@@ -46,10 +80,10 @@ public final class FavoritesRegistry<IDType : IDProtocol> : Storing where IDType
     
     public struct Update {
         
-        let changes: [Favorites<IDType>.Change]
+        let changes: [Favorites<Descriptor>.Change]
         let favorites: Set<IDType>
         
-        init(changes: [Favorites<IDType>.Change], all: Set<IDType>) {
+        init(changes: [Favorites<Descriptor>.Change], all: Set<IDType>) {
             self.changes = changes
             self.favorites = all
         }
@@ -58,13 +92,12 @@ public final class FavoritesRegistry<IDType : IDProtocol> : Storing where IDType
     
     public let unitedDidUpdate = Publisher<Update>(label: "FavoriteTeams.unitedDidUpdate")
     
-    public var didUpdateFavorite: Subscribe<Favorites<IDType>.Change> {
+    public var didUpdateFavorite: Subscribe<Favorites<Descriptor>.Change> {
         return self.unitedDidUpdate.proxy.map({ $0.changes }).unfolded()
     }
     public var didUpdateFavorites: Subscribe<Set<IDType>> {
         return self.unitedDidUpdate.proxy.map({ $0.favorites })
     }
-    
     
     public func updateFavorite(id: IDType, isFavorite: Bool) {
         full_favorites.update({ favs in
@@ -75,7 +108,7 @@ public final class FavoritesRegistry<IDType : IDProtocol> : Storing where IDType
             }
         }, completion: { result in
             if let new = result.value {
-                let update = Favorites.Change(id: id, isFavorite: isFavorite)
+                let update = Favorites<Descriptor>.Change(id: id, isFavorite: isFavorite)
                 let united = Update(changes: [update], all: new)
                 self.unitedDidUpdate.publish(united)
             }
@@ -87,7 +120,7 @@ public final class FavoritesRegistry<IDType : IDProtocol> : Storing where IDType
         let diff = existing.symmetricDifference(updated)
         full_favorites.set(updated) { (result) in
             if result.isSuccess {
-                let updates = diff.map({ Favorites.Change.init(id: $0, isFavorite: updated.contains($0)) })
+                let updates = diff.map({ Favorites<Descriptor>.Change.init(id: $0, isFavorite: updated.contains($0)) })
                 let united = Update(changes: updates, all: updated)
                 self.unitedDidUpdate.publish(united)
             }

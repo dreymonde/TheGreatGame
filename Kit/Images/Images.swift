@@ -19,10 +19,10 @@ extension Shallows.StorageProtocol where Value == Data {
     
 }
 
-public final class Images : Storing {
+public final class Images : SimpleStoring {
     
-    public static var preferredSubPath: String {
-        return "image-cache-10"
+    public static func preferredSubpath(from dataDir: data_dir) -> SubpathName {
+        return dataDir.images
     }
     
     internal enum SideSize { }
@@ -32,8 +32,8 @@ public final class Images : Storing {
     fileprivate let imageFetchingSession = URLSession(configuration: .default)
     fileprivate let diskCache: Shallows.Storage<URL, UIImage>
     
-    public init(diskCache: Shallows.Storage<Filename, Data>) {
-        self.diskCache = diskCache
+    public init(diskStorage: DiskStorage) {
+        self.diskCache = diskStorage
             .mapKeys({ Filename(rawValue: $0.absoluteString) })
             .mapImage()
     }

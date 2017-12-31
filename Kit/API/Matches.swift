@@ -56,34 +56,3 @@ public final class MatchesAPI : APIPoint {
     }
         
 }
-
-public final class MatchesAPICache : APICachePoint {
-    
-    public let provider: Storage<MatchesEndpoint, [String : Any]>
-    public let all: Storage<Void, Editioned<Matches>>
-    public let allFull: Storage<Void, Editioned<FullMatches>>
-    public let stages: Storage<Void, Editioned<Stages>>
-    public let fullMatch: Storage<Match.ID, Editioned<Match.Full>>
-    
-    private let dataProvider: Storage<APIPath, Data>
-    
-    init(dataProvider: Storage<APIPath, Data>) {
-        self.dataProvider = dataProvider
-        self.provider = dataProvider
-            .mapJSONDictionary()
-            .mapKeys({ $0.path })
-        self.all = provider
-            .singleKey(.all)
-            .mapMappable()
-        self.allFull = provider
-            .singleKey(.allFull)
-            .mapMappable()
-        self.stages = provider
-            .singleKey(.stages)
-            .mapMappable()
-        self.fullMatch = provider
-            .mapMappable(of: Editioned<Match.Full>.self)
-            .mapKeys({ .fullMatch(withID: $0) })
-    }
-    
-}

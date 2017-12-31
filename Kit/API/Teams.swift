@@ -46,26 +46,3 @@ public final class TeamsAPI : APIPoint {
     }
         
 }
-
-public final class TeamsAPICache : APICachePoint {
-    
-    public let provider: Storage<TeamsEndpoint, [String : Any]>
-    public let all: Storage<Void, Editioned<Teams>>
-    public let fullTeam: Storage<Team.ID, Editioned<Team.Full>>
-    
-    private let dataProvider: Storage<APIPath, Data>
-    
-    public init(dataProvider: Storage<APIPath, Data>) {
-        self.dataProvider = dataProvider
-        self.provider = dataProvider
-            .mapJSONDictionary()
-            .mapKeys({ $0.path })
-        self.all = provider
-            .singleKey(.all)
-            .mapMappable(of: Editioned<Teams>.self)
-        self.fullTeam = provider
-            .mapMappable(of: Editioned<Team.Full>.self)
-            .mapKeys({ .fullTeam(withID: $0) })
-    }
-    
-}

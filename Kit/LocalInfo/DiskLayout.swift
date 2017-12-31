@@ -50,7 +50,13 @@ public final class data_dir : SubpathName {
         return adding()
     }
     
+    public var images: images_dir {
+        return adding()
+    }
+    
 }
+
+public final class images_dir : SubpathName { }
 
 public final class db_dir : SubpathName {
     
@@ -70,8 +76,29 @@ public final class db_dir : SubpathName {
         return adding()
     }
     
+    public var favorites: favorites_dir {
+        return adding()
+    }
+    
 }
 
+public final class favorites_dir : SubpathName {
+    
+//    public var teams: teams_dir {
+//        return adding()
+//    }
+//
+//    public var matches: matches_dir {
+//        return adding()
+//    }
+//
+//    public var unsubs: unsubs_dir {
+//        return adding()
+//    }
+    
+}
+
+public final class unsubs_dir : SubpathName { }
 public final class teams_dir : SubpathName { }
 public final class stages_dir : SubpathName { }
 public final class groups_dir : SubpathName { }

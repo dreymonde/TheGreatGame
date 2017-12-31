@@ -19,12 +19,6 @@ internal protocol APIPoint : APIProvider {
     
 }
 
-internal protocol APICachePoint {
-    
-    init(dataProvider: Storage<APIPath, Data>)
-    
-}
-
 extension APIProvider {
     
     public static func gitHub(networkCache: ReadOnlyStorage<URL, Data> = Self.makeUrlSessionCache()) -> Self {
@@ -93,31 +87,6 @@ public final class API : APIProvider {
         self.init(teams: teamsAPI, matches: matchesAPI, groups: groupsAPI)
     }
     
-}
-
-public final class APICache : Storing {
-    
-    public static var preferredSubPath: String {
-        return "api-cache-10"
-    }
-    
-    public let teams: TeamsAPICache
-    public let matches: MatchesAPICache
-    public let groups: GroupsAPICache
-    
-    public init(teams: TeamsAPICache, matches: MatchesAPICache, groups: GroupsAPICache) {
-        self.teams = teams
-        self.matches = matches
-        self.groups = groups
-    }
-    
-    public convenience init(diskCache cache: Storage<Filename, Data>) {
-        let apiPathCache: Storage<APIPath, Data> = cache.mapKeys({ Filename(rawValue: $0.rawValue) })
-        self.init(teams: TeamsAPICache.init(dataProvider: apiPathCache),
-                  matches: MatchesAPICache.init(dataProvider: apiPathCache),
-                  groups: GroupsAPICache.init(dataProvider: apiPathCache))
-    }
-
 }
 
 extension ReadOnlyStorage {

@@ -20,8 +20,8 @@ final class WatchExtension {
     let images: Images
     let matchesAPI: MatchesAPI
     let matchesDB: LocalModel<[Match.Full]>
-    let favoriteTeams: FavoritesRegistry<Team.ID>
-    let favoriteMatches: FavoritesRegistry<Match.ID>
+    let favoriteTeams: FavoritesRegistry<RD.Teams>
+    let favoriteMatches: FavoritesRegistry<RD.Matches>
     let complicationReloader: ComplicationReloader
     
     init() {
@@ -29,11 +29,12 @@ final class WatchExtension {
         Alba.InformBureau.Logger.enable()
         ShallowsLog.isEnabled = true
         self.phone = Phone()
-        self.images = Images.inLocalCachesDirectory(subpath: "dev-3-images")
+        self.images = Images.inLocation(.localCaches)
         self.matchesAPI = MatchesAPI.gitHub()
-        self.matchesDB = LocalModel<[Match.Full]>.inLocalDocumentsDirectory(subpath: FolderStructure.data.db, filename: "matches-all")
-        self.favoriteTeams = FavoritesRegistry.inLocalDocumentsDirectory()
-        self.favoriteMatches = FavoritesRegistry.inLocalDocumentsDirectory()
+        self.matchesDB = LocalModel<[Match.Full]>.inStorage(.inLocalDocuments(appending: FolderStructure.data.db),
+                                                            filename: "matches-all")
+        self.favoriteTeams = FavoritesRegistry.inLocation(.localDocuments)
+        self.favoriteMatches = FavoritesRegistry.inLocation(.localDocuments)
         self.complicationReloader = ComplicationReloader()
         subscribe()
     }

@@ -10,9 +10,11 @@ import Foundation
 import Shallows
 import Alba
 
-public final class Favorites<IDType : IDProtocol> where IDType.RawValue == Int {
+public final class Favorites<Descriptor : RegistryDescriptor> {
     
-    public let registry: FavoritesRegistry<IDType>
+    public typealias IDType = Descriptor.IDType
+    
+    public let registry: FavoritesRegistry<Descriptor>
     internal let uploader: FavoritesUploader<IDType>
     internal let uploadConsistencyKeeper: UploadConsistencyKeeper<Set<IDType>>
     
@@ -30,7 +32,7 @@ public final class Favorites<IDType : IDProtocol> where IDType.RawValue == Int {
         }
     }
     
-    internal init(registry: FavoritesRegistry<IDType>,
+    internal init(registry: FavoritesRegistry<Descriptor>,
                   uploader: FavoritesUploader<IDType>,
                   uploadConsistencyKeeper: UploadConsistencyKeeper<Set<IDType>>,
                   shouldCheckUploadConsistency: Subscribe<Void>) {
@@ -56,7 +58,7 @@ public final class Favorites<IDType : IDProtocol> where IDType.RawValue == Int {
     
     extension Favorites {
         
-        public convenience init(favoritesRegistry: FavoritesRegistry<IDType>,
+        public convenience init(favoritesRegistry: FavoritesRegistry<Descriptor>,
                                 tokens: DeviceTokens,
                                 shouldCheckUploadConsistency: Subscribe<Void>,
                                 consistencyKeepersStorage: Storage<Filename, Data>,

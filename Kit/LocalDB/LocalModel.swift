@@ -55,7 +55,7 @@ public final class LocalModel<Value> {
 
 extension LocalModel {
     
-    public static func inStorage<T : Mappable>(_ diskStorage: Storage<Filename, Data>, filename: Filename) -> LocalModel<T> {
+    public static func inStorage<T : Mappable>(_ diskStorage: DiskStorage, filename: Filename) -> LocalModel<T> {
         let storage = diskStorage
             .mapJSONDictionary()
             .mapMappable(of: T.self)
@@ -64,18 +64,13 @@ extension LocalModel {
         return LocalModel<T>(storage: storage)
     }
     
-    public static func inStorage<T>(_ diskStorage: Storage<Filename, Data>, filename: Filename) -> LocalModel<[T]> where T : MappableBoxable {
+    public static func inStorage<T>(_ diskStorage: DiskStorage, filename: Filename) -> LocalModel<[T]> where T : MappableBoxable {
         let storage = diskStorage
             .mapJSONDictionary()
             .mapMappable(of: [T].self)
             .memoryCached()
             .singleKey(filename)
         return LocalModel<[T]>(storage: storage)
-    }
-    
-    public static func inLocalDocumentsDirectory<T>(subpath: SubpathName, filename: Filename) -> LocalModel<[T]> where T : MappableBoxable {
-        let storage = FileSystemStorage.inDirectory(.documentDirectory, appending: subpath.fullStringValue).asStorage()
-        return LocalModel<[T]>.inStorage(storage, filename: filename)
     }
     
 }

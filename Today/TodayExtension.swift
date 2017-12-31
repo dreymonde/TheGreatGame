@@ -13,8 +13,8 @@ import Shallows
 
 final class TodayExtension {
     
-    let favoriteTeams: FavoritesRegistry<Team.ID>
-    let favoriteMatches: FavoritesRegistry<Match.ID>
+    let favoriteTeams: FavoritesRegistry<RD.Teams>
+    let favoriteMatches: FavoritesRegistry<RD.Matches>
     let api: API
     let localDB: LocalDB
     let connections: Connections
@@ -29,9 +29,9 @@ final class TodayExtension {
         self.api = API.gitHub()
         self.localDB = LocalDB.inSharedDocumentsFolder()
         self.connections = Connections(api: api, localDB: localDB, activityIndicator: .none)
-        self.favoriteTeams = FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteTeamsSubPath)
-        self.favoriteMatches = FavoritesRegistry.inSharedDocumentsDirectory(subpath: FavoriteMatchesSubPath)
-        self.images = Images.inSharedCachesDirectory()
+        self.favoriteTeams = FavoritesRegistry.inLocation(.sharedDocuments)
+        self.favoriteMatches = FavoritesRegistry.inLocation(.sharedDocuments)
+        self.images = Images.inLocation(.sharedCaches)
         
         self.reactive = Reactive<[Match.Full]>(proxy: localDB.fullMatches.didUpdate.proxy.mainThread(),
                                                update: connections.fullMatches)

@@ -39,7 +39,7 @@ public final class LocalDB {
         stages.prefetch()
     }
     
-    public convenience init(dbFolder: db_dir, makeStorage: (SubpathName) -> Storage<Filename, Data>) {
+    public convenience init(dbFolder: db_dir, makeStorage: (SubpathName) -> DiskStorage) {
         let teams: LocalModel<[Team.Compact]> = {
             let folder = dbFolder.teams
             let storage = makeStorage(folder)
@@ -75,15 +75,14 @@ public final class LocalDB {
 extension LocalDB {
     
     public static func inSharedDocumentsFolder() -> LocalDB {
-        return LocalDB(dbFolder: FolderStructure.data.db, makeStorage: { (subpath) -> Storage<Filename, Data> in
-            return FileSystemStorage.inSharedDocuments(folder: subpath).asStorage()
+        return LocalDB(dbFolder: FolderStructure.data.db, makeStorage: { (subpath) -> DiskStorage in
+            return DiskStorage.inSharedDocuments(appending: subpath)
         })
     }
     
     public static func inLocalDocumentsFolder() -> LocalDB {
-        return LocalDB(dbFolder: FolderStructure.data.db, makeStorage: { (subpath) -> Storage<Filename, Data> in
-            return FileSystemStorage.inDirectory(.documentDirectory, appending: subpath.fullStringValue)
-                .asStorage()
+        return LocalDB(dbFolder: FolderStructure.data.db, makeStorage: { (subpath) -> DiskStorage in
+            return DiskStorage.inLocalDocuments(appending: subpath)
         })
     }
     
@@ -93,7 +92,7 @@ extension LocalDB {
     
     static func makeLazy<IDType : Hashable, Value : Mappable>(subpath: SubpathName,
                                                    makeFilename: @escaping (IDType) -> Filename,
-                                                   makeStorage: (SubpathName) -> Storage<Filename, Data>) -> (IDType) -> LocalModel<Value> {
+                                                   makeStorage: (SubpathName) -> DiskStorage) -> (IDType) -> LocalModel<Value> {
         let storage = makeStorage(subpath)
         let lazyDict = LazyDictionary<IDType, LocalModel<Value>> { id in
             return LocalModel<Value>.inStorage(storage, filename: makeFilename(id))
@@ -104,13 +103,13 @@ extension LocalDB {
         }
     }
     
-    static func makeFullTeam(dbFolder: db_dir, makeStorage: (SubpathName) -> Storage<Filename, Data>) -> (Team.ID) -> LocalModel<Team.Full> {
+    static func makeFullTeam(dbFolder: db_dir, makeStorage: (SubpathName) -> DiskStorage) -> (Team.ID) -> LocalModel<Team.Full> {
         return makeLazy(subpath: dbFolder.teams,
                         makeFilename: { Filename.init(rawValue: "team-\($0)") },
                         makeStorage: makeStorage)
     }
     
-    static func makeFullMatch(dbFolder: db_dir, makeStorage: (SubpathName) -> Storage<Filename, Data>) -> (Match.ID) -> LocalModel<Match.Full> {
+    static func makeFullMatch(dbFolder: db_dir, makeStorage: (SubpathName) -> DiskStorage) -> (Match.ID) -> LocalModel<Match.Full> {
         return makeLazy(subpath: dbFolder.matches,
                         makeFilename: { Filename.init(rawValue: "match-\($0)") },
                         makeStorage: makeStorage)
