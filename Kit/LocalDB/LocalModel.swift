@@ -22,6 +22,7 @@ public final class LocalModel<Value> {
             storage.retrieve(completion: completion)
         }, set: { (value, _, completion) in
             storage.set(value, completion: { (result) in
+                completion(result)
                 if result.isSuccess {
                     self.didUpdate.publish(value)
                 }
