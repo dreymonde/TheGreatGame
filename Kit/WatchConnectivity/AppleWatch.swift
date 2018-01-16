@@ -206,7 +206,7 @@ internal final class WatchTransferSession<IDType : IDProtocol> where IDType.RawV
             .mapBoxedSet(of: IDType.self)
             .singleKey(.init(validFileName: Filename(rawValue: "\(name).json")))
             .defaulting(to: [])
-        self.uploadConsistencyKeeper = UploadConsistencyKeeper(actual: provider, lastUploaded: lastTransfer, name: name, reupload: performTransfer)
+        self.uploadConsistencyKeeper = UploadConsistencyKeeper(latest: provider, internalStorage: lastTransfer, name: name, reupload: performTransfer)
         self.performTransfer = performTransfer
         uploadConsistencyKeeper.subscribeTo(didUpload: sendage)
     }

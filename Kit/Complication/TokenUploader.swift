@@ -18,11 +18,11 @@ public final class TokenUploader {
     
     public init(pusher: WriteOnlyStorage<Void, TokenUpload>,
                 getDeviceIdentifier: @escaping () -> UUID?,
-                consistencyKeepersLastUpload: Storage<Void, PushToken>,
+                consistencyKeepersStorage: Storage<Void, PushToken>,
                 getToken: Retrieve<PushToken>) {
         self.pusher = pusher
         self.getDeviceIdentifier = getDeviceIdentifier
-        self.consistencyKeeper = UploadConsistencyKeeper<PushToken>(actual: getToken, lastUploaded: consistencyKeepersLastUpload, name: "token-uploader-consistency-keeper", reupload: { _ in })
+        self.consistencyKeeper = UploadConsistencyKeeper<PushToken>(latest: getToken, internalStorage: consistencyKeepersStorage, name: "token-uploader-consistency-keeper", reupload: { _ in })
         consistencyKeeper.reupload = self.upload(token:)
         consistencyKeeper.subscribeTo(didUpload: self.didUploadToken.proxy.map({ $0.token }))
     }

@@ -94,7 +94,7 @@ extension Favorites {
             .mapBoxedSet(of: IDType.self)
             .singleKey(Filename(rawValue: name))
             .defaulting(to: [])
-        return UploadConsistencyKeeper<Set<IDType>>(actual: favorites, lastUploaded: last, name: name, reupload: { upload in
+        return UploadConsistencyKeeper<Set<IDType>>(latest: favorites, internalStorage: last, name: name, reupload: { upload in
             uploader.uploadFavorites(upload)
         })
     }

@@ -38,8 +38,9 @@ final class Application {
         self.favoriteMatches = Application.makeFavorites(tokens: tokens)
         self.unsubscribedMatches = Application.makeUnsubscribes(tokens: tokens)
         self.pushKitTokenUploader = Application.makeTokenUploader(getToken: tokens.getComplication)
-        self.watch = AppleWatch(favoriteTeams: favoriteTeams.registry.favorites,
-                                favoriteMatches: favoriteMatches.registry.favorites)
+        let extractedExpr: AppleWatch? = AppleWatch(favoriteTeams: favoriteTeams.registry.favorites,
+                                                    favoriteMatches: favoriteMatches.registry.favorites)
+        self.watch = extractedExpr
         self.notifications = Notifications(application: UIApplication.shared)
         subscribe()
     }
@@ -126,7 +127,7 @@ final class Application {
         
         return TokenUploader(pusher: TokenUploader.adapt(pusher: pusher),
                              getDeviceIdentifier: { UIDevice.current.identifierForVendor },
-                             consistencyKeepersLastUpload: keepersCache,
+                             consistencyKeepersStorage: keepersCache,
                              getToken: getToken)
     }
     

@@ -47,7 +47,6 @@ extension PushKitReceiver {
     
     public func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, forType type: PKPushType) {
         didReceiveIncomingPush.publish(payload)
-        dump(payload.dictionaryPayload)
     }
     
 }
