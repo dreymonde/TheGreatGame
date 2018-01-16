@@ -86,6 +86,12 @@ extension LocalDB {
         })
     }
     
+    public static func inSharedCachesFolder() -> LocalDB {
+        return LocalDB(dbFolder: FolderStructure.data.db, makeStorage: { (subpath) -> DiskStorage in
+            return DiskStorage.inSharedCaches(appending: subpath)
+        })
+    }
+    
 }
 
 extension LocalDB {

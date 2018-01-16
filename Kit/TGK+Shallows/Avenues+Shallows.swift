@@ -26,7 +26,7 @@ extension Avenues.ProcessorProtocol {
                 switch cacheResult {
                 case .success(let cached):
                     if Avenues.Log.isEnabled {
-                        print("avenue-\(cache.storageName): quick access for key \(key)")
+                        printWithContext("avenue-\(cache.storageName): quick access for key \(key)")
                     }
                     completion(.success(cached))
                 case .failure:

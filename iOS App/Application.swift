@@ -30,7 +30,7 @@ final class Application {
         //Loggers.start()
         
         self.api = Application.makeAPI()
-        self.localDB = LocalDB.inSharedDocumentsFolder()
+        self.localDB = LocalDB.inSharedCachesFolder()
         self.connections = Connections(api: api, localDB: localDB, activityIndicator: .application)
         self.images = Images.inLocation(.sharedCaches)
         self.tokens = DeviceTokens()
@@ -38,9 +38,8 @@ final class Application {
         self.favoriteMatches = Application.makeFavorites(tokens: tokens)
         self.unsubscribedMatches = Application.makeUnsubscribes(tokens: tokens)
         self.pushKitTokenUploader = Application.makeTokenUploader(getToken: tokens.getComplication)
-        let extractedExpr: AppleWatch? = AppleWatch(favoriteTeams: favoriteTeams.registry.favorites,
-                                                    favoriteMatches: favoriteMatches.registry.favorites)
-        self.watch = extractedExpr
+        self.watch = AppleWatch(favoriteTeams: favoriteTeams.registry.favorites,
+                                favoriteMatches: favoriteMatches.registry.favorites)
         self.notifications = Notifications(application: UIApplication.shared)
         subscribe()
     }
@@ -82,12 +81,12 @@ final class Application {
         .void()
         .wait(seconds: 4.0)
     
-    static let uploadCache = upload(forURL: Server.digitalOceanAPIBaseURL)
+    static let uploadCache: WriteOnlyStorage<APIPath, Data> = makeUploader(forURL: Server.digitalOceanAPIBaseURL)
         .connectingNetworkActivityIndicator(manager: .application)
     
     static func makeFavorites(tokens: DeviceTokens) -> Favorites<RD.Teams> {
         let keepersCache = FileSystemStorage.inDirectory(.cachesDirectory, appending: "teams-upload-keepers")
-        print(keepersCache.directoryURL)
+        printWithContext(keepersCache.directoryURL.description)
         return Favorites<RD.Teams>(favoritesRegistry: FavoritesRegistry.inLocation(.sharedDocuments),
                                    tokens: tokens,
                                    shouldCheckUploadConsistency: fourSecondAfterAppDidBecomeActive,
@@ -97,7 +96,7 @@ final class Application {
     
     static func makeFavorites(tokens: DeviceTokens) -> Favorites<RD.Matches> {
         let keepersCache = FileSystemStorage.inDirectory(.cachesDirectory, appending: "matches-upload-keepers")
-        print(keepersCache.directoryURL)
+        printWithContext(keepersCache.directoryURL.description)
         return Favorites<RD.Matches>(favoritesRegistry: FavoritesRegistry.inLocation(.sharedDocuments),
                                      tokens: tokens,
                                      shouldCheckUploadConsistency: fourSecondAfterAppDidBecomeActive,
@@ -129,6 +128,12 @@ final class Application {
                              getDeviceIdentifier: { UIDevice.current.identifierForVendor },
                              consistencyKeepersStorage: keepersCache,
                              getToken: getToken)
+    }
+    
+    static func makeUploader(forURL url: URL) -> WriteOnlyStorage<APIPath, Data> {
+        return PUSHer(urlSession: URLSession.init(configuration: .default))
+            .asWriteOnlyStorage()
+            .mapKeys({ url.appendingPath($0) })
     }
     
 }

@@ -34,29 +34,25 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     
     var avenue: SymmetricalAvenue<URL, UIImage>!
     
-    var lastConfirmedSource: Source = .memory
-        
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(homeBadgeImageView.frame.size)
         self.avenue = todayExtension.images.makeNotSizedAvenue()
         avenue.onStateChange = { _ in
             if let match = self.showingMatch {
-                self.setup(with: match, afterDownload: true, source: self.lastConfirmedSource)
+                self.setup(with: match, afterImageDownload: true, initial: false)
             }
         }
         avenue.onError = { _,_  in
-            self.completion?(.failed)
+            self.complete(result: .failed)
         }
-        // Do any additional setup after loading the view from its nib.
+        self.initial()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        update()
+    func subscribe() {
+        todayExtension.reactiveRelevantMatches.didUpdate.flatSubscribe(self, with: { vc, matches in vc.setup(with: matches, initial: false) })
     }
     
-    func setup(with match: Match.Full, afterDownload: Bool, source: Source) {
+    func setup(with match: Match.Full, afterImageDownload: Bool, initial: Bool) {
         self.homeNameLabel.text = match.home.shortName
         self.awayNameLabel.text = match.away.shortName
         self.scoreLabel.text = match.scoreOrPenaltyString()
@@ -68,13 +64,21 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         avenue.prepareItem(at: match.away.badges.large)
         self.homeBadgeImageView.setImage(avenue.item(at: match.home.badges.large), afterDownload: false)
         self.awayBadgeImageView.setImage(avenue.item(at: match.away.badges.large), afterDownload: false)
-        if source.isAbsoluteTruth, let _ = avenue.item(at: match.home.badges.large), let _ = avenue.item(at: match.away.badges.large) {
-            self.completion?(.newData)
+        if !initial, let _ = avenue.item(at: match.home.badges.large), let _ = avenue.item(at: match.away.badges.large) {
+            self.complete(result: .newData)
         }
     }
     
-    func update() {
-        
+    func setup(with relevantMatches: [Match.Full], initial: Bool) {
+        if let mostRelevant = relevantMatches.mostRelevant() {
+            self.showingMatch = mostRelevant
+            self.setup(with: mostRelevant, afterImageDownload: false, initial: initial)
+        }
+    }
+    
+    func initial() {
+        let matches = todayExtension.relevantMatches()
+        setup(with: matches, initial: true)
     }
     
     override func didReceiveMemoryWarning() {
@@ -82,15 +86,31 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         // Dispose of any resources that can be recreated.
     }
     
-    var completion: ((NCUpdateResult) -> Void)?
+    var _completion: ((NCUpdateResult) -> Void)?
+    func complete(result: NCUpdateResult) {
+        _completion?(result)
+        _completion = nil
+    }
     
     func widgetPerformUpdate(completionHandler: (@escaping (NCUpdateResult) -> Void)) {
         // Perform any setup necessary in order to update the view.
-        
+        todayExtension.reactiveRelevantMatches.update.fire(errorDelegate: self)
         // If an error is encountered, use NCUpdateResult.Failed
         // If there's no update required, use NCUpdateResult.NoData
         // If there's an update, use NCUpdateResult.NewData
-        self.completion = completionHandler
+        self._completion = completionHandler
+    }
+    
+}
+
+extension TodayViewController : ErrorStateDelegate {
+    
+    func errorDidNotOccur() {
+        printWithContext()
+    }
+    
+    func errorDidOccur(_ error: Error) {
+        complete(result: .failed)
     }
     
 }

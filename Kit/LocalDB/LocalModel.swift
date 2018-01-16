@@ -39,7 +39,7 @@ public final class LocalModel<Value> {
     }
     
     public func prefetch() {
-        access.retrieve(completion: { _ in print("Prefetched \(Value.self)") })
+        access.retrieve(completion: { _ in printWithContext("Prefetched \(Value.self)") })
     }
     
     public func get() -> Value? {

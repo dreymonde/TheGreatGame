@@ -9,18 +9,18 @@
 import Foundation
 import Shallows
 
-final class PUSHer : WritableStorageProtocol {
+public final class PUSHer : WritableStorageProtocol {
     
-    typealias Key = URL
-    typealias Value = Data
+    public typealias Key = URL
+    public typealias Value = Data
     
     let session: URLSession
     
-    init(urlSession: URLSession) {
+    public init(urlSession: URLSession) {
         self.session = urlSession
     }
     
-    enum Error : Swift.Error {
+    public enum Error : Swift.Error {
         case writeOnly
         case statusCodeNot200(Int)
         case responseIsNotHTTP
@@ -28,13 +28,12 @@ final class PUSHer : WritableStorageProtocol {
         case noData
     }
         
-    func set(_ value: Data, forKey key: URL, completion: @escaping (Result<Void>) -> ()) {
+    public func set(_ value: Data, forKey key: URL, completion: @escaping (Result<Void>) -> ()) {
         var request = URLRequest(url: key)
         request.httpMethod = "POST"
         request.httpBody = value
         let task = session.dataTask(with: request) { (data, response, error) in
             printWithContext("Push finished")
-            print("Is main thread:", Thread.isMainThread)
             guard error == nil else {
                 completion(Result.failure(error!))
                 return

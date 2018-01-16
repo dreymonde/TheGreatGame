@@ -76,13 +76,6 @@ public final class Favorites<Descriptor : RegistryDescriptor> {
         
     }
     
-    public func upload(forURL url: URL) -> WriteOnlyStorage<String, Data> {
-        return PUSHer(urlSession: URLSession.init(configuration: .default))
-            .asWriteOnlyStorage()
-            .mapKeys({ url.appendingPathComponent($0) })
-    }
-
-    
 #endif
 
 extension Favorites {

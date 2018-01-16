@@ -43,7 +43,7 @@ public final class GitHubRepo : ReadableStorageProtocol {
     
     public init(owner: String, repo: String, networkCache: ReadOnlyStorage<URL, Data>) {
         let base = GitHubRepo.apiBase.appendingPathComponent("\(owner)/\(repo)/").appendingPathComponent("contents/")
-        print("GitHub repo base:", base)
+        printWithContext("GitHub repo base: \(base)")
         self.internalCache = networkCache
             .mapJSONDictionary()
             .mapKeys({ base.appendingPath($0) })

@@ -9,6 +9,7 @@
 import Foundation
 import TheGreatKit
 import Avenues
+import Alba
 import Shallows
 
 final class TodayExtension {
@@ -20,29 +21,38 @@ final class TodayExtension {
     let connections: Connections
     let images: Images
     
-    let reactive: Reactive<[Match.Full]>
+    let relevanceFilter: (Match.Full) -> Bool
+    
+    let reactiveRelevantMatches: Reactive<[Match.Full]>
     
     init() {
         
         ShallowsLog.isEnabled = true
         
         self.api = API.gitHub()
-        self.localDB = LocalDB.inSharedDocumentsFolder()
+        self.localDB = LocalDB.inSharedCachesFolder()
         self.connections = Connections(api: api, localDB: localDB, activityIndicator: .none)
-        self.favoriteTeams = FavoritesRegistry.inLocation(.sharedDocuments)
-        self.favoriteMatches = FavoritesRegistry.inLocation(.sharedDocuments)
+        let favoriteTeams = FavoritesRegistry<RD.Teams>.inLocation(.sharedDocuments)
+        self.favoriteTeams = favoriteTeams
+        let favoriteMatches = FavoritesRegistry<RD.Matches>.inLocation(.sharedDocuments)
+        self.favoriteMatches = favoriteMatches
         self.images = Images.inLocation(.sharedCaches)
         
-        self.reactive = Reactive<[Match.Full]>(valueDidUpdate: localDB.fullMatches.didUpdate.proxy.mainThread(),
+        let relevanceFilter: (Match.Full) -> Bool = { match in
+            return match.isFavorite(isFavoriteMatch: favoriteMatches.isFavorite(id:),
+                                    isFavoriteTeam: favoriteTeams.isFavorite(id:))
+        }
+        
+        let filteredUpdate = localDB.fullMatches.didUpdate.proxy
+            .map({ $0.filter(relevanceFilter) })
+        self.reactiveRelevantMatches = Reactive<[Match.Full]>(valueDidUpdate: filteredUpdate.mainThread(),
                                                update: connections.fullMatches)
+        self.relevanceFilter = relevanceFilter
         
     }
     
-    func relevanceFilter() -> (Match.Full) -> Bool {
-        return { match in
-            return match.isFavorite(isFavoriteMatch: self.favoriteMatches.isFavorite(id:),
-                                    isFavoriteTeam: self.favoriteTeams.isFavorite(id:))
-        }
+    func relevantMatches() -> [Match.Full] {
+        return (localDB.fullMatches.get() ?? []).filter(relevanceFilter)
     }
     
 }

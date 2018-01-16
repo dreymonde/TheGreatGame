@@ -38,22 +38,6 @@ extension WriteOnlyStorage {
     
 }
 
-extension ReadOnlyStorage where Value : HasSource {
-    
-    public func sourceful_connectingNetworkActivityIndicator(manager: NetworkActivityIndicator) -> ReadOnlyStorage<Key, Value> {
-        return ReadOnlyStorage.init(storageName: self.storageName, retrieve: { (key, completion) in
-            manager.increment()
-            self.retrieve(forKey: key, completion: { (result) in
-                if result.isLastRequest {
-                    manager.decrement()
-                }
-                completion(result)
-            })
-        })
-    }
-    
-}
-
 extension Shallows.StorageProtocol {
     
     public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicator) -> Storage<Key, Value> {
@@ -88,3 +72,30 @@ extension ProcessorProtocol {
     
 }
 
+extension ReadOnlyStorage {
+    
+    public func mainThread() -> ReadOnlyStorage<Key, Value> {
+        return ReadOnlyStorage.init(storageName: self.storageName, retrieve: { (key, completion) in
+            self.retrieve(forKey: key, completion: { (result) in
+                DispatchQueue.main.async {
+                    completion(result)
+                }
+            })
+        })
+    }
+    
+}
+
+extension WriteOnlyStorage {
+    
+    public func mainThread() -> WriteOnlyStorage<Key, Value> {
+        return WriteOnlyStorage.init(storageName: self.storageName, set: { (value, key, completion) in
+            self.set(value, forKey: key, completion: { (result) in
+                DispatchQueue.main.async {
+                    completion(result)
+                }
+            })
+        })
+    }
+    
+}
