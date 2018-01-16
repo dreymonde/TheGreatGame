@@ -77,7 +77,7 @@ class MatchesInterfaceController: WKInterfaceController {
     }
     
     func subscribe() {
-        context.reactive.proxy.subscribe(self, with: MatchesInterfaceController.reload)
+        context.reactive.didUpdate.subscribe(self, with: MatchesInterfaceController.reload)
     }
     
     override func willActivate() {

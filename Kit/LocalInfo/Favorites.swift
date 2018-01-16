@@ -48,7 +48,7 @@ public final class Favorites<Descriptor : RegistryDescriptor> {
     }
     
     public func subscribe() {
-        self.uploadConsistencyKeeper.subscribeTo(didUploadFavorites: uploader.didUploadFavorites.proxy.map({ $0.favorites }))
+        self.uploadConsistencyKeeper.subscribeTo(didUpload: uploader.didUploadFavorites.proxy.map({ $0.favorites }))
         self.uploader.subscribeTo(didUpdateFavorites: registry.unitedDidUpdate.proxy.map({ $0.favorites }))
     }
     

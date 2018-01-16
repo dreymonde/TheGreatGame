@@ -208,7 +208,7 @@ internal final class WatchTransferSession<IDType : IDProtocol> where IDType.RawV
             .defaulting(to: [])
         self.uploadConsistencyKeeper = UploadConsistencyKeeper(actual: provider, lastUploaded: lastTransfer, name: name, reupload: performTransfer)
         self.performTransfer = performTransfer
-        uploadConsistencyKeeper.subscribeTo(didUploadFavorites: sendage)
+        uploadConsistencyKeeper.subscribeTo(didUpload: sendage)
     }
     
     func start() {

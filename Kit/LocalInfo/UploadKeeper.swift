@@ -25,8 +25,8 @@ internal final class UploadConsistencyKeeper<Upload : Equatable> {
         self.reupload = reupload
     }
     
-    func subscribeTo(didUploadFavorites: Subscribe<Upload>) {
-        didUploadFavorites.subscribe(self, with: UploadConsistencyKeeper.didUploadFavorites)
+    func subscribeTo(didUpload: Subscribe<Upload>) {
+        didUpload.subscribe(self, with: UploadConsistencyKeeper.didUploadFavorites)
     }
     
     func didUploadFavorites(_ upload: Upload) {

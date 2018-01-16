@@ -54,7 +54,7 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Showing {
     }
     
     func subscribe() {
-        reactiveTeams.proxy.subscribe(self, with: TeamsTableViewController.reloadData)
+        reactiveTeams.didUpdate.subscribe(self, with: TeamsTableViewController.reloadData)
     }
     
     fileprivate func reloadData(with teams: [Team.Compact]) {

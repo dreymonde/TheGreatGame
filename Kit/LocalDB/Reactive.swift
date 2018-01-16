@@ -11,11 +11,11 @@ import Alba
 
 public struct Reactive<Updating> {
     
-    public let proxy: MainThreadSubscribe<Updating>
+    public let didUpdate: MainThreadSubscribe<Updating>
     public let update: FireUpdate
     
-    public init(proxy: MainThreadSubscribe<Updating>, update: FireUpdate) {
-        self.proxy = proxy
+    public init(valueDidUpdate: MainThreadSubscribe<Updating>, update: FireUpdate) {
+        self.didUpdate = valueDidUpdate
         self.update = update
     }
     

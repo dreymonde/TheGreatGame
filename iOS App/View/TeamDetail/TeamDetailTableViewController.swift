@@ -90,7 +90,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     }
     
     func subscribe() {
-        reactiveTeam.proxy.subscribe(self, with: TeamDetailTableViewController.setup)
+        reactiveTeam.didUpdate.subscribe(self, with: TeamDetailTableViewController.setup)
     }
     
     override var previewActionItems: [UIPreviewActionItem] {

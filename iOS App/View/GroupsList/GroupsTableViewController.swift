@@ -41,7 +41,7 @@ class GroupsTableViewController: TheGreatGame.TableViewController {
     }
     
     func subscribe() {
-        self.reactiveGroups.proxy.subscribe(self, with: GroupsTableViewController.reloadData)
+        self.reactiveGroups.didUpdate.subscribe(self, with: GroupsTableViewController.reloadData)
     }
     
     fileprivate func reloadData(with groups: [Group.Compact]) {

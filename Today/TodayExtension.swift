@@ -33,7 +33,7 @@ final class TodayExtension {
         self.favoriteMatches = FavoritesRegistry.inLocation(.sharedDocuments)
         self.images = Images.inLocation(.sharedCaches)
         
-        self.reactive = Reactive<[Match.Full]>(proxy: localDB.fullMatches.didUpdate.proxy.mainThread(),
+        self.reactive = Reactive<[Match.Full]>(valueDidUpdate: localDB.fullMatches.didUpdate.proxy.mainThread(),
                                                update: connections.fullMatches)
         
     }

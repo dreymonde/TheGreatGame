@@ -90,7 +90,7 @@ class MatchDetailTableViewController: TableViewController {
     }
     
     func subscribe() {
-        reactiveTeam.proxy.subscribe(self, with: MatchDetailTableViewController.setup)
+        reactiveTeam.didUpdate.subscribe(self, with: MatchDetailTableViewController.setup)
         shouldReloadData?.subscribe(self, with: MatchDetailTableViewController.reload)
         shouldReloadData = nil
     }

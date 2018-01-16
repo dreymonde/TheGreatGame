@@ -55,7 +55,7 @@ class StagesTableViewController: TheGreatGame.TableViewController, Showing {
         shouldReloadTable = nil
         shouldReloadData?.subscribe(self, with: StagesTableViewController.reload)
         shouldReloadData = nil
-        reactiveStages.proxy.subscribe(self, with: StagesTableViewController.reloadData)
+        reactiveStages.didUpdate.subscribe(self, with: StagesTableViewController.reloadData)
     }
     
     fileprivate func reloadData(stages: [Stage]) {
