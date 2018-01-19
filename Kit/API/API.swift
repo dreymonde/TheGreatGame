@@ -51,8 +51,8 @@ extension APIProvider {
     
     public static func macBookSteve() -> Self {
         let directory = URL(fileURLWithPath: "/Users/oleg/Development/TheGreatGame/Storage/content")
-        let rawFS: Storage<APIPath, Data> = RawFileSystemStorage(directoryURL: directory)
-            .mapKeys({ RawFileSystemStorage.FileName.init(validFileName: Filename(rawValue: $0.rawValue)) })
+        let rawFS: Storage<APIPath, Data> = DiskFolderStorage(folderURL: directory, filenameEncoder: .noEncoding)
+            .mapKeys({ Filename.init(rawValue: $0.rawValue) })
         let cache = rawFS
             .asReadOnlyStorage()
             .latency(ofInterval: 1.0)

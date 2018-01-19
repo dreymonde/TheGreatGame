@@ -30,13 +30,13 @@ final class TodayExtension {
         ShallowsLog.isEnabled = true
         
         self.api = API.gitHub()
-        self.localDB = LocalDB.inSharedCachesFolder()
+        self.localDB = LocalDB.inContainer(.shared)
         self.connections = Connections(api: api, localDB: localDB, activityIndicator: .none)
-        let favoriteTeams = FavoritesRegistry<RD.Teams>.inLocation(.sharedDocuments)
+        let favoriteTeams = FavoritesRegistry<RD.Teams>.inContainer(.shared)
         self.favoriteTeams = favoriteTeams
-        let favoriteMatches = FavoritesRegistry<RD.Matches>.inLocation(.sharedDocuments)
+        let favoriteMatches = FavoritesRegistry<RD.Matches>.inContainer(.shared)
         self.favoriteMatches = favoriteMatches
-        self.images = Images.inLocation(.sharedCaches)
+        self.images = Images.inContainer(.shared)
         
         let relevanceFilter: (Match.Full) -> Bool = { match in
             return match.isFavorite(isFavoriteMatch: favoriteMatches.isFavorite(id:),

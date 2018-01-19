@@ -29,12 +29,14 @@ final class WatchExtension {
         Alba.InformBureau.Logger.enable()
         ShallowsLog.isEnabled = true
         self.phone = Phone()
-        self.images = Images.inLocation(.localCaches)
+        self.images = Images.inContainer(.appFolder)
         self.matchesAPI = MatchesAPI.gitHub()
-        self.matchesDB = LocalModel<[Match.Full]>.inStorage(.inLocalDocuments(appending: FolderStructure.data.db),
-                                                            filename: "matches-all")
-        self.favoriteTeams = FavoritesRegistry.inLocation(.localDocuments)
-        self.favoriteMatches = FavoritesRegistry.inLocation(.localDocuments)
+        self.matchesDB = LocalModel<[Match.Full]>.inStorage(
+            Disk.init(directory: AppFolder.Library.Application_Support.db),
+            filename: "all-matches"
+        )
+        self.favoriteTeams = FavoritesRegistry.inContainer(.appFolder)
+        self.favoriteMatches = FavoritesRegistry.inContainer(.appFolder)
         self.complicationReloader = ComplicationReloader()
         subscribe()
     }

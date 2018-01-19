@@ -39,7 +39,7 @@ public final class LocalDB {
         stages.prefetch()
     }
     
-    public convenience init(dbFolder: db_dir, makeStorage: (SubpathName) -> DiskStorage) {
+    public convenience init(dbFolder: Library.Application_Support.db, makeStorage: (Directory) -> Disk) {
         let teams: LocalModel<[Team.Compact]> = {
             let folder = dbFolder.teams
             let storage = makeStorage(folder)
@@ -74,31 +74,41 @@ public final class LocalDB {
 
 extension LocalDB {
     
-    public static func inSharedDocumentsFolder() -> LocalDB {
-        return LocalDB(dbFolder: FolderStructure.data.db, makeStorage: { (subpath) -> DiskStorage in
-            return DiskStorage.inSharedDocuments(appending: subpath)
-        })
-    }
-    
-    public static func inLocalDocumentsFolder() -> LocalDB {
-        return LocalDB(dbFolder: FolderStructure.data.db, makeStorage: { (subpath) -> DiskStorage in
-            return DiskStorage.inLocalDocuments(appending: subpath)
-        })
-    }
-    
-    public static func inSharedCachesFolder() -> LocalDB {
-        return LocalDB(dbFolder: FolderStructure.data.db, makeStorage: { (subpath) -> DiskStorage in
-            return DiskStorage.inSharedCaches(appending: subpath)
+    public static func inContainer(_ container: Container) -> LocalDB {
+        return LocalDB(dbFolder: container.baseFolder.Library.Application_Support.db, makeStorage: { (directory) -> Disk in
+            return Disk(directory: directory)
         })
     }
     
 }
 
+//extension LocalDB {
+//
+//    public static func inSharedDocumentsFolder() -> LocalDB {
+//        return LocalDB(dbFolder: FolderStructure.data.db, makeStorage: { (subpath) -> Disk in
+//            return Disk.inSharedDocuments(appending: subpath)
+//        })
+//    }
+//
+//    public static func inLocalDocumentsFolder() -> LocalDB {
+//        return LocalDB(dbFolder: FolderStructure.data.db, makeStorage: { (subpath) -> Disk in
+//            return Disk.inLocalDocuments(appending: subpath)
+//        })
+//    }
+//
+//    public static func inSharedCachesFolder() -> LocalDB {
+//        return LocalDB(dbFolder: FolderStructure.data.db, makeStorage: { (subpath) -> Disk in
+//            return Disk.inSharedCaches(appending: subpath)
+//        })
+//    }
+//
+//}
+//
 extension LocalDB {
-    
-    static func makeLazy<IDType : Hashable, Value : Mappable>(subpath: SubpathName,
-                                                   makeFilename: @escaping (IDType) -> Filename,
-                                                   makeStorage: (SubpathName) -> DiskStorage) -> (IDType) -> LocalModel<Value> {
+
+    static func makeLazy<IDType : Hashable, Value : Mappable>(subpath: Directory,
+                                                              makeFilename: @escaping (IDType) -> Filename,
+                                                              makeStorage: (Directory) -> Disk) -> (IDType) -> LocalModel<Value> {
         let storage = makeStorage(subpath)
         let lazyDict = LazyDictionary<IDType, LocalModel<Value>> { id in
             return LocalModel<Value>.inStorage(storage, filename: makeFilename(id))
@@ -108,17 +118,18 @@ extension LocalDB {
             return tsLazyDict.read()[id]
         }
     }
-    
-    static func makeFullTeam(dbFolder: db_dir, makeStorage: (SubpathName) -> DiskStorage) -> (Team.ID) -> LocalModel<Team.Full> {
+
+    static func makeFullTeam(dbFolder: Library.Application_Support.db, makeStorage: (Directory) -> Disk) -> (Team.ID) -> LocalModel<Team.Full> {
         return makeLazy(subpath: dbFolder.teams,
                         makeFilename: { Filename.init(rawValue: "team-\($0)") },
                         makeStorage: makeStorage)
     }
-    
-    static func makeFullMatch(dbFolder: db_dir, makeStorage: (SubpathName) -> DiskStorage) -> (Match.ID) -> LocalModel<Match.Full> {
+
+    static func makeFullMatch(dbFolder: Library.Application_Support.db, makeStorage: (Directory) -> Disk) -> (Match.ID) -> LocalModel<Match.Full> {
         return makeLazy(subpath: dbFolder.matches,
                         makeFilename: { Filename.init(rawValue: "match-\($0)") },
                         makeStorage: makeStorage)
     }
-    
+
 }
+

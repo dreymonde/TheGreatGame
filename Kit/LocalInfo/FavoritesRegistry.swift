@@ -49,9 +49,9 @@ public enum UnsubsRegistryDescriptor : RegistryDescriptor {
 }
 
 public final class FavoritesRegistry<Descriptor : RegistryDescriptor> : SimpleStoring {
-    
-    public static func preferredSubpath(from dataDir: data_dir) -> SubpathName {
-        return dataDir.db.favorites
+        
+    public static func preferredSubpath(from base: BaseFolder.Type) -> Directory {
+        return base.Library.Application_Support.db.favorites
     }
     
     public typealias IDType = Descriptor.IDType
@@ -66,7 +66,7 @@ public final class FavoritesRegistry<Descriptor : RegistryDescriptor> : SimpleSt
     
     private lazy var favoriteTeamsSync: ReadOnlySyncStorage<Void, Set<IDType>> = self.favorites.makeSyncStorage()
     
-    public init(diskStorage: DiskStorage) {
+    public init(diskStorage: Disk) {
         let fileSystemTeams = diskStorage
             .renaming(to: "favorites-disk")
             .mapJSONDictionary()

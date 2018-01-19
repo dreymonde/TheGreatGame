@@ -28,11 +28,10 @@ final class Application {
     
     init() {
         //Loggers.start()
-        
         self.api = Application.makeAPI()
-        self.localDB = LocalDB.inSharedCachesFolder()
+        self.localDB = LocalDB.inContainer(.shared)
         self.connections = Connections(api: api, localDB: localDB, activityIndicator: .application)
-        self.images = Images.inLocation(.sharedCaches)
+        self.images = Images.inContainer(.shared)
         self.tokens = DeviceTokens()
         self.favoriteTeams = Application.makeFavorites(tokens: tokens)
         self.favoriteMatches = Application.makeFavorites(tokens: tokens)
@@ -84,39 +83,39 @@ final class Application {
     static let uploadCache: WriteOnlyStorage<APIPath, Data> = makeUploader(forURL: Server.digitalOceanAPIBaseURL)
         .connectingNetworkActivityIndicator(manager: .application)
     
-    static func makeFavorites(tokens: DeviceTokens) -> Favorites<RD.Teams> {
-        let keepersCache = FileSystemStorage.inDirectory(.cachesDirectory, appending: "teams-upload-keepers")
-        printWithContext(keepersCache.directoryURL.description)
-        return Favorites<RD.Teams>(favoritesRegistry: FavoritesRegistry.inLocation(.sharedDocuments),
-                                   tokens: tokens,
-                                   shouldCheckUploadConsistency: fourSecondAfterAppDidBecomeActive,
-                                   consistencyKeepersStorage: keepersCache.asStorage(),
-                                   upload: uploadCache.singleKey("favorite-teams"))
-    }
-    
-    static func makeFavorites(tokens: DeviceTokens) -> Favorites<RD.Matches> {
-        let keepersCache = FileSystemStorage.inDirectory(.cachesDirectory, appending: "matches-upload-keepers")
-        printWithContext(keepersCache.directoryURL.description)
-        return Favorites<RD.Matches>(favoritesRegistry: FavoritesRegistry.inLocation(.sharedDocuments),
+    static func makeFavs<Descriptor : RegistryDescriptor>(tokens: DeviceTokens,
+                                                          keeperFolderName: String,
+                                                          apiPath: APIPath) -> Favorites<Descriptor> {
+        let keepersCache = DiskStorage.main.folder(keeperFolderName, in: .cachesDirectory)
+        return Favorites<Descriptor>(favoritesRegistry: FavoritesRegistry.inContainer(.shared),
                                      tokens: tokens,
                                      shouldCheckUploadConsistency: fourSecondAfterAppDidBecomeActive,
                                      consistencyKeepersStorage: keepersCache.asStorage(),
-                                     upload: uploadCache.singleKey("favorite-matches"))
+                                     upload: uploadCache.singleKey(apiPath))
+    }
+    
+    static func makeFavorites(tokens: DeviceTokens) -> Favorites<RD.Teams> {
+        return makeFavs(tokens: tokens,
+                        keeperFolderName: "teams-upload-keepers",
+                        apiPath: "favorite-teams")
+    }
+    
+    static func makeFavorites(tokens: DeviceTokens) -> Favorites<RD.Matches> {
+        return makeFavs(tokens: tokens,
+                        keeperFolderName: "matches-upload-keepers",
+                        apiPath: "favorite-matches")
     }
     
     static func makeUnsubscribes(tokens: DeviceTokens) -> Favorites<RD.Unsubs> {
-        let keepersCache = FileSystemStorage.inDirectory(.cachesDirectory, appending: "matches-unsub-upload-keepers")
-        return Favorites<RD.Unsubs>(favoritesRegistry: FavoritesRegistry.inLocation(.sharedDocuments),
-                                    tokens: tokens,
-                                    shouldCheckUploadConsistency: fourSecondAfterAppDidBecomeActive,
-                                    consistencyKeepersStorage: keepersCache.asStorage(),
-                                    upload: uploadCache.singleKey("unsubscribe"))
+        return makeFavs(tokens: tokens,
+                        keeperFolderName: "matches-unsub-upload-keepers",
+                        apiPath: "unsubscribe")
     }
     
     static func makeTokenUploader(getToken: Retrieve<PushToken>) -> TokenUploader {
         let fakeToken = PushToken(Data(repeating: 0, count: 1))
         
-        let keepersCache = FileSystemStorage.inDirectory(.cachesDirectory, appending: "pushkit-token-upload-keeper")
+        let keepersCache = DiskStorage.main.folder("pushkit-token-upload-keeper", in: .cachesDirectory)
             .mapValues(transformIn: PushToken.init,
                        transformOut: { $0.rawToken })
             .singleKey("uploaded-token")
