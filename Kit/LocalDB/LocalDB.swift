@@ -9,7 +9,17 @@
 import Foundation
 import Shallows
 
-public final class LocalDB {
+public final class LocalDB : DeepStoring {
+    
+    public typealias PreferredDirectory = Library.Application_Support.db
+    
+    public static func preferredDirectory(from base: BaseFolder.Type) -> Library.Application_Support.db {
+        return base.Library.Application_Support.db
+    }
+    
+    public static var filenameEncoder: Filename.Encoder {
+        return .noEncoding
+    }
     
     public let teams: LocalModel<[Team.Compact]>
     public let stages: LocalModel<[Stage]>
@@ -39,29 +49,13 @@ public final class LocalDB {
         stages.prefetch()
     }
     
-    public convenience init(dbFolder: Library.Application_Support.db, makeStorage: (Directory) -> Disk) {
-        let teams: LocalModel<[Team.Compact]> = {
-            let folder = dbFolder.teams
-            let storage = makeStorage(folder)
-            return LocalModel<[Team.Compact]>.inStorage(storage, filename: "teams-compact")
-        }()
-        let stages: LocalModel<[Stage]> = {
-            let folder = dbFolder.stages
-            let storage = makeStorage(folder)
-            return LocalModel<[Stage]>.inStorage(storage, filename: "stages")
-        }()
-        let groups: LocalModel<[Group.Compact]> = {
-            let folder = dbFolder.groups
-            let storage = makeStorage(folder)
-            return LocalModel<[Group.Compact]>.inStorage(storage, filename: "all-groups")
-        }()
-        let matches: LocalModel<[Match.Full]> = {
-            let folder = dbFolder.matches
-            let storage = makeStorage(folder)
-            return LocalModel<[Match.Full]>.inStorage(storage, filename: "matches-full")
-        }()
-        let fullTeam = LocalDB.makeFullTeam(dbFolder: dbFolder, makeStorage: makeStorage)
-        let fullMatch = LocalDB.makeFullMatch(dbFolder: dbFolder, makeStorage: makeStorage)
+    public convenience init(container: Container) {
+        let teams: LocalModel<[Team.Compact]> = LocalModel<[Team.Compact]>.inStorage(LocalDB.substorage(in: container, subFolder: { $0.teams }), filename: "teams-compact")
+        let stages: LocalModel<[Stage]> = LocalModel<[Stage]>.inStorage(LocalDB.substorage(in: container, subFolder: { $0.stages }), filename: "stages")
+        let groups: LocalModel<[Group.Compact]> = LocalModel<[Group.Compact]>.inStorage(LocalDB.substorage(in: container, subFolder: { $0.groups }), filename: "all-groups")
+        let matches: LocalModel<[Match.Full]> = LocalModel<[Match.Full]>.inStorage(LocalDB.substorage(in: container, subFolder: { $0.matches }), filename: "matches-full")
+        let fullTeam = LocalDB.makeFullTeam(makeStorage: { produce in LocalDB.substorage(in: container, subFolder: produce) })
+        let fullMatch = LocalDB.makeFullMatch(makeStorage: { produce in LocalDB.substorage(in: container, subFolder: produce) })
         self.init(teams: teams,
                   stages: stages,
                   groups: groups,
@@ -75,41 +69,15 @@ public final class LocalDB {
 extension LocalDB {
     
     public static func inContainer(_ container: Container) -> LocalDB {
-        return LocalDB(dbFolder: container.baseFolder.Library.Application_Support.db, makeStorage: { (directory) -> Disk in
-            return Disk(directory: directory)
-        })
+        return LocalDB(container: container)
     }
     
 }
 
-//extension LocalDB {
-//
-//    public static func inSharedDocumentsFolder() -> LocalDB {
-//        return LocalDB(dbFolder: FolderStructure.data.db, makeStorage: { (subpath) -> Disk in
-//            return Disk.inSharedDocuments(appending: subpath)
-//        })
-//    }
-//
-//    public static func inLocalDocumentsFolder() -> LocalDB {
-//        return LocalDB(dbFolder: FolderStructure.data.db, makeStorage: { (subpath) -> Disk in
-//            return Disk.inLocalDocuments(appending: subpath)
-//        })
-//    }
-//
-//    public static func inSharedCachesFolder() -> LocalDB {
-//        return LocalDB(dbFolder: FolderStructure.data.db, makeStorage: { (subpath) -> Disk in
-//            return Disk.inSharedCaches(appending: subpath)
-//        })
-//    }
-//
-//}
-//
 extension LocalDB {
 
-    static func makeLazy<IDType : Hashable, Value : Mappable>(subpath: Directory,
-                                                              makeFilename: @escaping (IDType) -> Filename,
-                                                              makeStorage: (Directory) -> Disk) -> (IDType) -> LocalModel<Value> {
-        let storage = makeStorage(subpath)
+    static func makeLazy<IDType : Hashable, Value : Mappable>(storage: Disk,
+                                                              makeFilename: @escaping (IDType) -> Filename) -> (IDType) -> LocalModel<Value> {
         let lazyDict = LazyDictionary<IDType, LocalModel<Value>> { id in
             return LocalModel<Value>.inStorage(storage, filename: makeFilename(id))
         }
@@ -119,16 +87,14 @@ extension LocalDB {
         }
     }
 
-    static func makeFullTeam(dbFolder: Library.Application_Support.db, makeStorage: (Directory) -> Disk) -> (Team.ID) -> LocalModel<Team.Full> {
-        return makeLazy(subpath: dbFolder.teams,
-                        makeFilename: { Filename.init(rawValue: "team-\($0)") },
-                        makeStorage: makeStorage)
+    static func makeFullTeam(makeStorage: ((PreferredDirectory) -> (Directory)) -> Disk) -> (Team.ID) -> LocalModel<Team.Full> {
+        return makeLazy(storage: makeStorage({ $0.teams }),
+                        makeFilename: { Filename.init(rawValue: "team-\($0)") })
     }
 
-    static func makeFullMatch(dbFolder: Library.Application_Support.db, makeStorage: (Directory) -> Disk) -> (Match.ID) -> LocalModel<Match.Full> {
-        return makeLazy(subpath: dbFolder.matches,
-                        makeFilename: { Filename.init(rawValue: "match-\($0)") },
-                        makeStorage: makeStorage)
+    static func makeFullMatch(makeStorage: ((PreferredDirectory) -> (Directory)) -> Disk) -> (Match.ID) -> LocalModel<Match.Full> {
+        return makeLazy(storage: makeStorage({ $0.matches }),
+                        makeFilename: { Filename.init(rawValue: "match-\($0)") })
     }
 
 }

@@ -25,6 +25,10 @@ public final class Images : SimpleStoring {
         return base.Library.Caches.Images
     }
     
+    public static var filenameEncoder: Filename.Encoder {
+        return .base64
+    }
+    
     internal enum SideSize { }
     
     internal var caches: [IntType<SideSize> : Avenues.Storage<URL, UIImage>] = [:]

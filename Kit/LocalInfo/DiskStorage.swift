@@ -22,13 +22,6 @@ extension DiskStorage {
 
 public struct Disk : StorageProtocol {
     
-    public enum BaseLocation {
-        case localCaches
-        case sharedCaches
-        case localDocuments
-        case sharedDocuments
-    }
-    
     public typealias Key = Filename
     public typealias Value = Data
     
@@ -46,8 +39,8 @@ public struct Disk : StorageProtocol {
         underlying.set(value, forKey: key, completion: completion)
     }
     
-    public init(directory: Directory) {
-        self.init(underlyingStorage: DiskStorage.main.directory(directory).asStorage())
+    public init(directory: Directory, filenameEncoder: Filename.Encoder = .base64) {
+        self.init(underlyingStorage: DiskStorage.main.directory(directory, filenameEncoder: filenameEncoder).asStorage())
     }
     
     public static func notStoring() -> Disk {
@@ -60,7 +53,16 @@ public struct Disk : StorageProtocol {
     
 }
 
-public protocol Storing {
+public protocol DeepStoring {
+    
+    associatedtype PreferredDirectory : Directory
+    
+    static func preferredDirectory(from base: BaseFolder.Type) -> PreferredDirectory
+    static var filenameEncoder: Filename.Encoder { get }
+    
+}
+
+public protocol Storing : DeepStoring {
     
     static func preferredDirectory(from base: BaseFolder.Type) -> Directory
     
@@ -86,11 +88,25 @@ public enum Container {
     }
 }
 
+extension DeepStoring {
+    
+    public static func substorage(
+        in container: Container,
+        topFolder: (BaseFolder.Type) -> PreferredDirectory = Self.preferredDirectory,
+        subFolder: (PreferredDirectory) -> Directory,
+        filenameEncoder: Filename.Encoder = Self.filenameEncoder
+    ) -> Disk {
+        return Disk(directory: subFolder(topFolder(container.baseFolder)), filenameEncoder: filenameEncoder)
+    }
+    
+}
+
 extension Storing {
     
     public static func storage(in container: Container,
-                               folder: (BaseFolder.Type) -> Directory = Self.preferredDirectory) -> Disk {
-        return Disk(directory: folder(container.baseFolder))
+                               folder: (BaseFolder.Type) -> Directory = Self.preferredDirectory,
+                               filenameEncoder: Filename.Encoder = Self.filenameEncoder) -> Disk {
+        return Disk(directory: folder(container.baseFolder), filenameEncoder: filenameEncoder)
     }
     
 }
@@ -98,8 +114,9 @@ extension Storing {
 extension SimpleStoring {
     
     public static func inContainer(_ container: Container,
-                                   folder: (BaseFolder.Type) -> Directory = Self.preferredDirectory) -> Self {
-        return Self.init(diskStorage: storage(in: container, folder: folder))
+                                   folder: (BaseFolder.Type) -> Directory = Self.preferredDirectory,
+                                   filenameEncoder: Filename.Encoder = Self.filenameEncoder) -> Self {
+        return Self.init(diskStorage: storage(in: container, folder: folder, filenameEncoder: filenameEncoder))
     }
     
 }

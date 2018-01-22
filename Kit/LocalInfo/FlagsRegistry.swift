@@ -41,7 +41,13 @@ public enum UnsubscribedMatches : RegistryDescriptor {
 public final class FlagsRegistry<Descriptor : RegistryDescriptor> : SimpleStoring {
         
     public static func preferredDirectory(from base: BaseFolder.Type) -> Directory {
-        return base.Library.Application_Support.db.favorites
+        let dir = base.Library.Application_Support.db.favorites
+        print(dir.url)
+        return dir
+    }
+    
+    public static var filenameEncoder: Filename.Encoder {
+        return .noEncoding
     }
     
     public typealias IDType = Descriptor.IDType
