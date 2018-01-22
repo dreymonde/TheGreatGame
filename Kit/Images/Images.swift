@@ -21,7 +21,7 @@ extension Shallows.StorageProtocol where Value == Data {
 
 public final class Images : SimpleStoring {
     
-    public static func preferredSubpath(from base: BaseFolder.Type) -> Directory {
+    public static func preferredDirectory(from base: BaseFolder.Type) -> Directory {
         return base.Library.Caches.Images
     }
     

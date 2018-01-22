@@ -62,21 +62,7 @@ public struct Disk : StorageProtocol {
 
 public protocol Storing {
     
-    static func preferredSubpath(from base: BaseFolder.Type) -> Directory
-    
-}
-
-public protocol DBStoring : Storing {
-    
-    static func preferredSubpath(from db: Library.Application_Support.db) -> Directory
-    
-}
-
-extension DBStoring {
-    
-    public static func preferredSubpath(from base: BaseFolder.Type) -> Directory {
-        return self.preferredSubpath(from: base.Library.Application_Support.db)
-    }
+    static func preferredDirectory(from base: BaseFolder.Type) -> Directory
     
 }
 
@@ -103,7 +89,7 @@ public enum Container {
 extension Storing {
     
     public static func storage(in container: Container,
-                               folder: (BaseFolder.Type) -> Directory = Self.preferredSubpath) -> Disk {
+                               folder: (BaseFolder.Type) -> Directory = Self.preferredDirectory) -> Disk {
         return Disk(directory: folder(container.baseFolder))
     }
     
@@ -112,7 +98,7 @@ extension Storing {
 extension SimpleStoring {
     
     public static func inContainer(_ container: Container,
-                                   folder: (BaseFolder.Type) -> Directory = Self.preferredSubpath) -> Self {
+                                   folder: (BaseFolder.Type) -> Directory = Self.preferredDirectory) -> Self {
         return Self.init(diskStorage: storage(in: container, folder: folder))
     }
     

@@ -40,7 +40,7 @@ public enum UnsubscribedMatches : RegistryDescriptor {
 
 public final class FlagsRegistry<Descriptor : RegistryDescriptor> : SimpleStoring {
         
-    public static func preferredSubpath(from base: BaseFolder.Type) -> Directory {
+    public static func preferredDirectory(from base: BaseFolder.Type) -> Directory {
         return base.Library.Application_Support.db.favorites
     }
     
