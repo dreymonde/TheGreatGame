@@ -32,21 +32,22 @@ public final class ComplicationReloader {
 
 extension ComplicationReloader {
     
-    public func consume(didUpdateFavoriteTeams: Subscribe<Favorites<RD.Teams>.Change>, didUpdateFavoriteMatches: Subscribe<Favorites<RD.Matches>.Change>) {
-        didUpdateFavoriteTeams.flatSubscribe(self, with: { $0.didUpdateFavorite($1) })
-        didUpdateFavoriteMatches.flatSubscribe(self, with: { $0.didUpdateFavorite($1) })
+    public func consume(favoriteTeamsDidUpdate: Subscribe<Flags<FavoriteTeams>.Change>,
+                        favoriteMatchesDidUpdate: Subscribe<Flags<FavoriteMatches>.Change>) {
+        favoriteTeamsDidUpdate.flatSubscribe(self, with: { $0.didUpdateFavorite($1) })
+        favoriteMatchesDidUpdate.flatSubscribe(self, with: { $0.didUpdateFavorite($1) })
     }
     
     public func consume(complicationMatchUpdate: Subscribe<Match.Full>, writingTo matches: Storage<Void, [Match.Full]>) {
         complicationMatchUpdate.flatSubscribe(self, with: { $0.complicationMatchUpdate($1, matchesCache: matches) })
     }
     
-    fileprivate func didUpdateFavorite(_ update: Favorites<RD.Teams>.Change) {
+    fileprivate func didUpdateFavorite(_ update: Flags<FavoriteTeams>.Change) {
         printWithContext("Reloading complication")
         self.reloadComplications()
     }
     
-    fileprivate func didUpdateFavorite(_ update: Favorites<RD.Matches>.Change) {
+    fileprivate func didUpdateFavorite(_ update: Flags<FavoriteMatches>.Change) {
         printWithContext("Reloaing complication")
         self.reloadComplications()
     }

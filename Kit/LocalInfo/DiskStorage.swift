@@ -50,26 +50,6 @@ public struct Disk : StorageProtocol {
         self.init(underlyingStorage: DiskStorage.main.directory(directory).asStorage())
     }
     
-    public static func storage<StoringType : Storing>(for storingType: StoringType.Type, baseFolder: BaseFolder.Type) -> Disk {
-        return Disk(directory: StoringType.preferredSubpath(from: baseFolder))
-    }
-    
-//    public static func inLocalCaches(appending directory: Directory) -> Disk {
-//        return Disk(baseFolder: .localCaches, subfolder: subpath)
-//    }
-//
-//    public static func inSharedCaches(appending subpath: SubpathName) -> Disk {
-//        return Disk(baseFolder: .sharedCaches, subfolder: subpath)
-//    }
-//
-//    public static func inLocalDocuments(appending subpath: SubpathName) -> Disk {
-//        return Disk(baseFolder: .localDocuments, subfolder: subpath)
-//    }
-//
-//    public static func inSharedDocuments(appending subpath: SubpathName) -> Disk {
-//        return Disk(baseFolder: .sharedDocuments, subfolder: subpath)
-//    }
-    
     public static func notStoring() -> Disk {
         return Disk(underlyingStorage: .empty())
     }
@@ -120,45 +100,25 @@ public enum Container {
     }
 }
 
+extension Storing {
+    
+    public static func storage(in container: Container,
+                               folder: (BaseFolder.Type) -> Directory = Self.preferredSubpath) -> Disk {
+        return Disk(directory: folder(container.baseFolder))
+    }
+    
+}
+
 extension SimpleStoring {
     
-    public static func inContainer(_ container: Container) -> Self {
-        return Self.init(diskStorage: .storage(for: Self.self, baseFolder: container.baseFolder))
+    public static func inContainer(_ container: Container,
+                                   folder: (BaseFolder.Type) -> Directory = Self.preferredSubpath) -> Self {
+        return Self.init(diskStorage: storage(in: container, folder: folder))
     }
     
 }
 
 public let groupIdentifier = "group.com.the-great-game.the-great-group"
-
-public struct FileSystemSubPath : ExpressibleByStringLiteral {
-    
-    public let subpath: String
-    
-    public init(stringLiteral value: String) {
-        self.subpath = value
-    }
-    
-    public init(unicodeScalarLiteral value: String) {
-        self.subpath = value
-    }
-    
-    public init(extendedGraphemeClusterLiteral value: String) {
-        self.subpath = value
-    }
-    
-    public init(_ subpath: String) {
-        self.subpath = subpath
-    }
-    
-    public static func caches(appending name: String) -> FileSystemSubPath {
-        return FileSystemSubPath("Library/Caches/\(name)")
-    }
-    
-    public static func documents(appending name: String) -> FileSystemSubPath {
-        return FileSystemSubPath("Documents/\(name)")
-    }
-    
-}
 
 public enum TheGreatGroup : AppGroup {
     public static var groupIdentifier: String {
@@ -167,18 +127,3 @@ public enum TheGreatGroup : AppGroup {
 }
 
 public typealias SharedContainer = AppGroupContainer<TheGreatGroup>
-
-extension FileSystemStorageProtocol {
-    
-//    public static func inSharedDocuments(folder: SubpathName) -> Self {
-//        let name = folder.fullStringValue
-//        return Self.inSharedContainer(subpath: .documents(appending: name), qos: .default)
-//    }
-//
-//    public static func inSharedContainer(subpath: FileSystemSubPath, qos: DispatchQoS) -> Self {
-//        let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: TheGreatKit.groupIdentifier)?.appendingPathComponent(subpath.subpath)
-//        printWithContext(url!.description)
-//        return Self.init(directoryURL: url!, qos: qos, storageName: "group-container")
-//    }
-    
-}

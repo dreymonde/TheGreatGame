@@ -36,7 +36,7 @@ final class UserInterface {
     
     func prefetch() {
         logic.localDB.prefetchAll()
-        logic.favoriteMatches.registry.favorites.retrieve(completion: { _ in })
+        logic.favoriteMatches.registry.flags.retrieve(completion: { _ in })
         self.prefetchFavorites()
     }
     
@@ -90,16 +90,16 @@ final class UserInterface {
             $0.teams = teamsDB.get() ?? []
             $0.reactiveTeams = Reactive<[Team.Compact]>(valueDidUpdate: teamsDB.didUpdate.proxy.mainThread(),
                                                         update: logic.connections.teams)
-            $0.isFavorite = self.logic.favoriteTeams.registry.isFavorite(id:)
-            $0.updateFavorite = { self.logic.favoriteTeams.registry.updateFavorite(id: $0, isFavorite: $1) }
+            $0.isFavorite = self.logic.favoriteTeams.registry.isPresent(id:)
+            $0.updateFavorite = { self.logic.favoriteTeams.registry.updatePresence(id: $0, isPresent: $1) }
             $0.makeAvenue = self.makeAvenue(forImageSize:)
             $0.makeTeamDetailVC = { self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded(), onFavorite: $1) }
         }
     }
     
     func isFavoriteMatch(_ match: Match.Compact) -> Bool {
-        return match.isFavorite(isFavoriteMatch: self.logic.favoriteMatches.registry.isFavorite,
-                                isFavoriteTeam: self.logic.favoriteTeams.registry.isFavorite)
+        return match.isFavorite(isFavoriteMatch: self.logic.favoriteMatches.registry.isPresent,
+                                isFavoriteTeam: self.logic.favoriteTeams.registry.isPresent)
     }
     
     func inject(to stagesList: StagesTableViewController) {
@@ -141,9 +141,9 @@ final class UserInterface {
             $0.team = teamDB.get()
             $0.reactiveTeam = Reactive(valueDidUpdate: teamDB.didUpdate.proxy.mainThread(),
                                        update: logic.connections.fullTeam(id: teamID))
-            $0.isFavorite = { self.logic.favoriteTeams.registry.isFavorite(id: teamID) }
+            $0.isFavorite = { self.logic.favoriteTeams.registry.isPresent(id: teamID) }
             $0.updateFavorite = {
-                self.logic.favoriteTeams.registry.updateFavorite(id: teamID, isFavorite: $0)
+                self.logic.favoriteTeams.registry.updatePresence(id: teamID, isPresent: $0)
                 onFavorite()
             }
             $0.makeAvenue = self.makeAvenue(forImageSize:)
@@ -162,8 +162,8 @@ final class UserInterface {
             $0.makeAvenue = self.makeAvenue(forImageSize:)
             $0.makeTeamDetailVC = { self.teamDetailViewController(for: $0.id, preloaded: $0.preLoaded()) }
             $0.preloadedMatch = preloaded
-            $0.isFavorite = { self.logic.favoriteMatches.registry.isFavorite(id: matchID) }
-            $0.updateFavorite = { self.logic.favoriteMatches.registry.updateFavorite(id: matchID, isFavorite: $0) }
+            $0.isFavorite = { self.logic.favoriteMatches.registry.isPresent(id: matchID) }
+            $0.updateFavorite = { self.logic.favoriteMatches.registry.updatePresence(id: matchID, isPresent: $0) }
             $0.shouldReloadData = updateAfterActive
         }
     }
@@ -183,7 +183,7 @@ final class UserInterface {
     
     func unsubscribe(from match: Match.Full) {
         printWithContext("Unsubscribing")
-        logic.unsubscribedMatches.registry.updateFavorite(id: match.id, isFavorite: true)
+        logic.unsubscribedMatches.registry.updatePresence(id: match.id, isPresent: true)
     }
     
     func showMatch(_ match: Match.Full) {

@@ -20,8 +20,8 @@ final class WatchExtension {
     let images: Images
     let matchesAPI: MatchesAPI
     let matchesDB: LocalModel<[Match.Full]>
-    let favoriteTeams: FavoritesRegistry<RD.Teams>
-    let favoriteMatches: FavoritesRegistry<RD.Matches>
+    let favoriteTeams: FlagsRegistry<FavoriteTeams>
+    let favoriteMatches: FlagsRegistry<FavoriteMatches>
     let complicationReloader: ComplicationReloader
     
     init() {
@@ -35,23 +35,23 @@ final class WatchExtension {
             Disk.init(directory: AppFolder.Library.Application_Support.db),
             filename: "all-matches"
         )
-        self.favoriteTeams = FavoritesRegistry.inContainer(.appFolder)
-        self.favoriteMatches = FavoritesRegistry.inContainer(.appFolder)
+        self.favoriteTeams = FlagsRegistry.inContainer(.appFolder)
+        self.favoriteMatches = FlagsRegistry.inContainer(.appFolder)
         self.complicationReloader = ComplicationReloader()
         subscribe()
     }
     
     func subscribe() {
-        phone.didReceiveUpdatedFavoriteTeams.subscribe(self.favoriteTeams, with: FavoritesRegistry.replace)
-        phone.didReceiveUpdatedFavoriteMatches.subscribe(self.favoriteMatches, with: FavoritesRegistry.replace)
-        complicationReloader.consume(didUpdateFavoriteTeams: self.favoriteTeams.didUpdateFavorite, didUpdateFavoriteMatches: self.favoriteMatches.didUpdateFavorite)
+        phone.didReceiveUpdatedFavoriteTeams.subscribe(self.favoriteTeams, with: FlagsRegistry.replace)
+        phone.didReceiveUpdatedFavoriteMatches.subscribe(self.favoriteMatches, with: FlagsRegistry.replace)
+        complicationReloader.consume(favoriteTeamsDidUpdate: self.favoriteTeams.didUpdatePresence, favoriteMatchesDidUpdate: self.favoriteMatches.didUpdatePresence)
         complicationReloader.consume(complicationMatchUpdate: self.phone.didReceiveComplicationMatchUpdate,
                                      writingTo: matchesDB.storage)
     }
     
     func isFavoriteMatch(_ match: Match.Full) -> Bool {
-        return match.isFavorite(isFavoriteMatch: self.favoriteMatches.isFavorite,
-                                isFavoriteTeam: self.favoriteTeams.isFavorite)
+        return match.isFavorite(isFavoriteMatch: self.favoriteMatches.isPresent,
+                                isFavoriteTeam: self.favoriteTeams.isPresent)
     }
     
     func chooseMatchToShow(_ lhs: Match.Full, _ rhs: Match.Full) -> Match.Full {

@@ -17,9 +17,9 @@ final class Application {
     let localDB: LocalDB
     let connections: Connections
     let images: Images
-    let favoriteTeams: Favorites<RD.Teams>
-    let favoriteMatches: Favorites<RD.Matches>
-    let unsubscribedMatches: Favorites<RD.Unsubs>
+    let favoriteTeams: Flags<FavoriteTeams>
+    let favoriteMatches: Flags<FavoriteMatches>
+    let unsubscribedMatches: Flags<UnsubscribedMatches>
     let tokens: DeviceTokens
     let pushKitTokenUploader: TokenUploader
     
@@ -37,8 +37,8 @@ final class Application {
         self.favoriteMatches = Application.makeFavorites(tokens: tokens)
         self.unsubscribedMatches = Application.makeUnsubscribes(tokens: tokens)
         self.pushKitTokenUploader = Application.makeTokenUploader(getToken: tokens.getComplication)
-        self.watch = AppleWatch(favoriteTeams: favoriteTeams.registry.favorites,
-                                favoriteMatches: favoriteMatches.registry.favorites)
+        self.watch = AppleWatch(favoriteTeams: favoriteTeams.registry.flags,
+                                favoriteMatches: favoriteMatches.registry.flags)
         self.notifications = Notifications(application: UIApplication.shared)
         subscribe()
     }
@@ -46,8 +46,8 @@ final class Application {
     func subscribe() {
         tokens.subscribeTo(notifications: AppDelegate.didRegisterForRemoteNotificationsWithDeviceToken.proxy,
                            complication: watch?.pushKitReceiver.didRegisterWithToken.proxy ?? .empty())
-        watch?.subscribeTo(didUpdateFavoriteTeams: favoriteTeams.registry.didUpdateFavorites,
-                           didUpdateFavoriteMatches: favoriteMatches.registry.didUpdateFavorites)
+        watch?.subscribeTo(didUpdateFavoriteTeams: favoriteTeams.registry.didUpdate,
+                           didUpdateFavoriteMatches: favoriteMatches.registry.didUpdate)
         favoriteTeams.subscribe()
         favoriteMatches.subscribe()
         unsubscribedMatches.subscribe()
@@ -85,28 +85,28 @@ final class Application {
     
     static func makeFavs<Descriptor : RegistryDescriptor>(tokens: DeviceTokens,
                                                           keeperFolderName: String,
-                                                          apiPath: APIPath) -> Favorites<Descriptor> {
+                                                          apiPath: APIPath) -> Flags<Descriptor> {
         let keepersCache = DiskStorage.main.folder(keeperFolderName, in: .cachesDirectory)
-        return Favorites<Descriptor>(favoritesRegistry: FavoritesRegistry.inContainer(.shared),
-                                     tokens: tokens,
-                                     shouldCheckUploadConsistency: fourSecondAfterAppDidBecomeActive,
-                                     consistencyKeepersStorage: keepersCache.asStorage(),
-                                     upload: uploadCache.singleKey(apiPath))
+        return Flags<Descriptor>(registry: FlagsRegistry.inContainer(.shared),
+                                 tokens: tokens,
+                                 shouldCheckUploadConsistency: fourSecondAfterAppDidBecomeActive,
+                                 consistencyKeepersStorage: keepersCache.asStorage(),
+                                 upload: uploadCache.singleKey(apiPath))
     }
     
-    static func makeFavorites(tokens: DeviceTokens) -> Favorites<RD.Teams> {
+    static func makeFavorites(tokens: DeviceTokens) -> Flags<FavoriteTeams> {
         return makeFavs(tokens: tokens,
                         keeperFolderName: "teams-upload-keepers",
                         apiPath: "favorite-teams")
     }
     
-    static func makeFavorites(tokens: DeviceTokens) -> Favorites<RD.Matches> {
+    static func makeFavorites(tokens: DeviceTokens) -> Flags<FavoriteMatches> {
         return makeFavs(tokens: tokens,
                         keeperFolderName: "matches-upload-keepers",
                         apiPath: "favorite-matches")
     }
     
-    static func makeUnsubscribes(tokens: DeviceTokens) -> Favorites<RD.Unsubs> {
+    static func makeUnsubscribes(tokens: DeviceTokens) -> Flags<UnsubscribedMatches> {
         return makeFavs(tokens: tokens,
                         keeperFolderName: "matches-unsub-upload-keepers",
                         apiPath: "unsubscribe")

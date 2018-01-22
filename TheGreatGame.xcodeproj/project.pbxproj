@@ -169,7 +169,7 @@
 		7C93AE101FF527A50036BE36 /* ErrorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C93AE0F1FF527A50036BE36 /* ErrorDelegate.swift */; };
 		7C93AE111FF527A50036BE36 /* ErrorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C93AE0F1FF527A50036BE36 /* ErrorDelegate.swift */; };
 		7CA2136B1ECEF61200F088DD /* ScoreViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA2136A1ECEF61200F088DD /* ScoreViewModel.swift */; };
-		7CA2136E1ECEFA0A00F088DD /* Favorites.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA2136D1ECEFA0A00F088DD /* Favorites.swift */; };
+		7CA2136E1ECEFA0A00F088DD /* Flags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA2136D1ECEFA0A00F088DD /* Flags.swift */; };
 		7CA213701ECEFB2000F088DD /* FavoritesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA2136F1ECEFB2000F088DD /* FavoritesTests.swift */; };
 		7CA213721ECEFF3700F088DD /* ResultExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA213711ECEFF3700F088DD /* ResultExtensions.swift */; };
 		7CA213741ECF382200F088DD /* DiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA213731ECF382200F088DD /* DiskStorage.swift */; };
@@ -202,7 +202,7 @@
 		7CCD25D11EDEBE5700F3C5CB /* PushNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD25CF1EDEBE5700F3C5CB /* PushNotification.swift */; };
 		7CCF50CD1FF2DA4B00D0A394 /* AppFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCF50CC1FF2DA4B00D0A394 /* AppFolder.swift */; };
 		7CCF50CE1FF2DA4B00D0A394 /* AppFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCF50CC1FF2DA4B00D0A394 /* AppFolder.swift */; };
-		7CD0B7CD1F0006FB0039EAF8 /* Favorites.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA2136D1ECEFA0A00F088DD /* Favorites.swift */; };
+		7CD0B7CD1F0006FB0039EAF8 /* Flags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA2136D1ECEFA0A00F088DD /* Flags.swift */; };
 		7CD0B7CF1F00098A0039EAF8 /* URLSessionPush.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD0B7CE1F00098A0039EAF8 /* URLSessionPush.swift */; };
 		7CD0B7D01F00098A0039EAF8 /* URLSessionPush.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD0B7CE1F00098A0039EAF8 /* URLSessionPush.swift */; };
 		7CD0B7D21F0009CA0039EAF8 /* TokenUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD0B7D11F0009CA0039EAF8 /* TokenUploader.swift */; };
@@ -237,8 +237,8 @@
 		BE1713CA1EEFF7A100CFB448 /* DeviceTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1713C81EEFF7A100CFB448 /* DeviceTokens.swift */; };
 		BE461ACE1EF026D40035AE11 /* UploadKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE461ACD1EF026D40035AE11 /* UploadKeeper.swift */; };
 		BE461ACF1EF026D40035AE11 /* UploadKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE461ACD1EF026D40035AE11 /* UploadKeeper.swift */; };
-		BE461AD11EF027330035AE11 /* FavoritesRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE461AD01EF027330035AE11 /* FavoritesRegistry.swift */; };
-		BE461AD21EF027330035AE11 /* FavoritesRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE461AD01EF027330035AE11 /* FavoritesRegistry.swift */; };
+		BE461AD11EF027330035AE11 /* FlagsRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE461AD01EF027330035AE11 /* FlagsRegistry.swift */; };
+		BE461AD21EF027330035AE11 /* FlagsRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE461AD01EF027330035AE11 /* FlagsRegistry.swift */; };
 		BE461AD41EF03A260035AE11 /* Retrieve.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE461AD31EF03A260035AE11 /* Retrieve.swift */; };
 		BE461AD51EF03A260035AE11 /* Retrieve.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE461AD31EF03A260035AE11 /* Retrieve.swift */; };
 		BEA224781FD9B7A400AAA95D /* NetworkErrorHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA224771FD9B7A400AAA95D /* NetworkErrorHandling.swift */; };
@@ -497,7 +497,7 @@
 		7C93AE0C1FF5250E0036BE36 /* Connections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connections.swift; sourceTree = "<group>"; };
 		7C93AE0F1FF527A50036BE36 /* ErrorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorDelegate.swift; sourceTree = "<group>"; };
 		7CA2136A1ECEF61200F088DD /* ScoreViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreViewModel.swift; sourceTree = "<group>"; };
-		7CA2136D1ECEFA0A00F088DD /* Favorites.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Favorites.swift; sourceTree = "<group>"; };
+		7CA2136D1ECEFA0A00F088DD /* Flags.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Flags.swift; sourceTree = "<group>"; };
 		7CA2136F1ECEFB2000F088DD /* FavoritesTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesTests.swift; sourceTree = "<group>"; };
 		7CA213711ECEFF3700F088DD /* ResultExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultExtensions.swift; sourceTree = "<group>"; };
 		7CA213731ECF382200F088DD /* DiskStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskStorage.swift; sourceTree = "<group>"; };
@@ -548,7 +548,7 @@
 		BE1713C61EEFED1100CFB448 /* UploadTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadTests.swift; sourceTree = "<group>"; };
 		BE1713C81EEFF7A100CFB448 /* DeviceTokens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTokens.swift; sourceTree = "<group>"; };
 		BE461ACD1EF026D40035AE11 /* UploadKeeper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadKeeper.swift; sourceTree = "<group>"; };
-		BE461AD01EF027330035AE11 /* FavoritesRegistry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesRegistry.swift; sourceTree = "<group>"; };
+		BE461AD01EF027330035AE11 /* FlagsRegistry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlagsRegistry.swift; sourceTree = "<group>"; };
 		BE461AD31EF03A260035AE11 /* Retrieve.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Retrieve.swift; sourceTree = "<group>"; };
 		BEA224771FD9B7A400AAA95D /* NetworkErrorHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkErrorHandling.swift; sourceTree = "<group>"; };
 		BEB5C4301EEF0790005A4065 /* NotificationsReceiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsReceiver.swift; sourceTree = "<group>"; };
@@ -1125,11 +1125,11 @@
 		7CA2136C1ECEF9EC00F088DD /* LocalInfo */ = {
 			isa = PBXGroup;
 			children = (
-				7CA2136D1ECEFA0A00F088DD /* Favorites.swift */,
+				7CA2136D1ECEFA0A00F088DD /* Flags.swift */,
 				7CA213731ECF382200F088DD /* DiskStorage.swift */,
 				BE1713C31EEFE79800CFB448 /* FavoritesUploader.swift */,
 				BE461ACD1EF026D40035AE11 /* UploadKeeper.swift */,
-				BE461AD01EF027330035AE11 /* FavoritesRegistry.swift */,
+				BE461AD01EF027330035AE11 /* FlagsRegistry.swift */,
 				7CD0B7CE1F00098A0039EAF8 /* URLSessionPush.swift */,
 				7CCF50CC1FF2DA4B00D0A394 /* AppFolder.swift */,
 				7CB28091201242DB00CCF2CC /* ALayout.swift */,
@@ -1727,7 +1727,7 @@
 				7CD0B7D21F0009CA0039EAF8 /* TokenUploader.swift in Sources */,
 				7CEC80381F02B3FE00752923 /* Server.swift in Sources */,
 				7C7916E41EBB15B20070E6C5 /* AvenuesExtensions.swift in Sources */,
-				BE461AD11EF027330035AE11 /* FavoritesRegistry.swift in Sources */,
+				BE461AD11EF027330035AE11 /* FlagsRegistry.swift in Sources */,
 				7C0EA6661EBA599D00F50EB2 /* Avenues+Shallows.swift in Sources */,
 				7C0EFD951EEC483C0077C37E /* NotificationAuthorizer.swift in Sources */,
 				7C0EA63F1EBA1D1E00F50EB2 /* InMappable.swift in Sources */,
@@ -1745,7 +1745,7 @@
 				7CD0B7CF1F00098A0039EAF8 /* URLSessionPush.swift in Sources */,
 				7C489C891F16515A001875E5 /* EventViewModel.swift in Sources */,
 				7CDD79681FE4057300782D58 /* LocalModel.swift in Sources */,
-				7CA2136E1ECEFA0A00F088DD /* Favorites.swift in Sources */,
+				7CA2136E1ECEFA0A00F088DD /* Flags.swift in Sources */,
 				7C0EA65B1EBA1F0200F50EB2 /* Editioned.swift in Sources */,
 				7CB28092201242DB00CCF2CC /* ALayout.swift in Sources */,
 				7C93AE101FF527A50036BE36 /* ErrorDelegate.swift in Sources */,
@@ -1858,7 +1858,7 @@
 				7C489C8A1F16515B001875E5 /* EventViewModel.swift in Sources */,
 				BEB5C4321EEF0790005A4065 /* NotificationsReceiver.swift in Sources */,
 				7CD0B7D01F00098A0039EAF8 /* URLSessionPush.swift in Sources */,
-				7CD0B7CD1F0006FB0039EAF8 /* Favorites.swift in Sources */,
+				7CD0B7CD1F0006FB0039EAF8 /* Flags.swift in Sources */,
 				7CDD79691FE4057300782D58 /* LocalModel.swift in Sources */,
 				7C13BC621ED84B3D00588F5F /* OutMapper.swift in Sources */,
 				BE1713C21EEF428A00CFB448 /* ComplicationTemplate.swift in Sources */,
@@ -1876,7 +1876,7 @@
 				BEB5C4351EEF082E005A4065 /* NotificationResponse.swift in Sources */,
 				7C93AE0B1FF4068D0036BE36 /* Reactive.swift in Sources */,
 				7C13BC651ED84B3D00588F5F /* CocoaMapper.swift in Sources */,
-				BE461AD21EF027330035AE11 /* FavoritesRegistry.swift in Sources */,
+				BE461AD21EF027330035AE11 /* FlagsRegistry.swift in Sources */,
 				7C6AA1771ED87925003F2388 /* DiskStorage.swift in Sources */,
 				7C13BC7A1ED854D000588F5F /* Jubilee.swift in Sources */,
 				7C93AE111FF527A50036BE36 /* ErrorDelegate.swift in Sources */,

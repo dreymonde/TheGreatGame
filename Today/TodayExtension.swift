@@ -14,8 +14,8 @@ import Shallows
 
 final class TodayExtension {
     
-    let favoriteTeams: FavoritesRegistry<RD.Teams>
-    let favoriteMatches: FavoritesRegistry<RD.Matches>
+    let favoriteTeams: FlagsRegistry<FavoriteTeams>
+    let favoriteMatches: FlagsRegistry<FavoriteMatches>
     let api: API
     let localDB: LocalDB
     let connections: Connections
@@ -32,15 +32,15 @@ final class TodayExtension {
         self.api = API.gitHub()
         self.localDB = LocalDB.inContainer(.shared)
         self.connections = Connections(api: api, localDB: localDB, activityIndicator: .none)
-        let favoriteTeams = FavoritesRegistry<RD.Teams>.inContainer(.shared)
+        let favoriteTeams = FlagsRegistry<FavoriteTeams>.inContainer(.shared)
         self.favoriteTeams = favoriteTeams
-        let favoriteMatches = FavoritesRegistry<RD.Matches>.inContainer(.shared)
+        let favoriteMatches = FlagsRegistry<FavoriteMatches>.inContainer(.shared)
         self.favoriteMatches = favoriteMatches
         self.images = Images.inContainer(.shared)
         
         let relevanceFilter: (Match.Full) -> Bool = { match in
-            return match.isFavorite(isFavoriteMatch: favoriteMatches.isFavorite(id:),
-                                    isFavoriteTeam: favoriteTeams.isFavorite(id:))
+            return match.isFavorite(isFavoriteMatch: favoriteMatches.isPresent(id:),
+                                    isFavoriteTeam: favoriteTeams.isPresent(id:))
         }
         
         let filteredUpdate = localDB.fullMatches.didUpdate.proxy

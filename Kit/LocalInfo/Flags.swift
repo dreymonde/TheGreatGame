@@ -10,29 +10,29 @@ import Foundation
 import Shallows
 import Alba
 
-public final class Favorites<Descriptor : RegistryDescriptor> {
+public final class Flags<Descriptor : RegistryDescriptor> {
     
     public typealias IDType = Descriptor.IDType
     
-    public let registry: FavoritesRegistry<Descriptor>
+    public let registry: FlagsRegistry<Descriptor>
     internal let uploader: FavoritesUploader<IDType>
     internal let uploadConsistencyKeeper: UploadConsistencyKeeper<Set<IDType>>
     
     public struct Change {
         public var id: IDType
-        public var isFavorite: Bool
+        public var isPresent: Bool
         
-        public init(id: IDType, isFavorite: Bool) {
+        public init(id: IDType, isPresent: Bool) {
             self.id = id
-            self.isFavorite = isFavorite
+            self.isPresent = isPresent
         }
         
         public var reversed: Change {
-            return Change(id: id, isFavorite: !isFavorite)
+            return Change(id: id, isPresent: !isPresent)
         }
     }
     
-    internal init(registry: FavoritesRegistry<Descriptor>,
+    internal init(registry: FlagsRegistry<Descriptor>,
                   uploader: FavoritesUploader<IDType>,
                   uploadConsistencyKeeper: UploadConsistencyKeeper<Set<IDType>>,
                   shouldCheckUploadConsistency: Subscribe<Void>) {
@@ -49,26 +49,26 @@ public final class Favorites<Descriptor : RegistryDescriptor> {
     
     public func subscribe() {
         self.uploadConsistencyKeeper.subscribeTo(didUpload: uploader.didUploadFavorites.proxy.map({ $0.favorites }))
-        self.uploader.subscribeTo(didUpdateFavorites: registry.unitedDidUpdate.proxy.map({ $0.favorites }))
+        self.uploader.subscribeTo(didUpdateFavorites: registry.unitedDidUpdate.proxy.map({ $0.flags }))
     }
     
 }
 
 #if os(iOS)
     
-    extension Favorites {
+    extension Flags {
         
-        public convenience init(favoritesRegistry: FavoritesRegistry<Descriptor>,
+        public convenience init(registry: FlagsRegistry<Descriptor>,
                                 tokens: DeviceTokens,
                                 shouldCheckUploadConsistency: Subscribe<Void>,
                                 consistencyKeepersStorage: Storage<Filename, Data>,
                                 upload: WriteOnlyStorage<Void, Data>) {
-            let favs = favoritesRegistry.favorites
+            let favs = registry.flags
             let uploader = FavoritesUploader<IDType>(pusher: FavoritesUploader.adapt(pusher: upload),
                                                      getNotificationsToken: tokens.getNotification,
                                                      getDeviceIdentifier: { UIDevice.current.identifierForVendor })
-            let keeper = Favorites.makeKeeper(diskCache: consistencyKeepersStorage, favorites: favs, uploader: uploader)
-            self.init(registry: favoritesRegistry,
+            let keeper = Flags.makeKeeper(diskCache: consistencyKeepersStorage, flags: favs, uploader: uploader)
+            self.init(registry: registry,
                       uploader: uploader,
                       uploadConsistencyKeeper: keeper,
                       shouldCheckUploadConsistency: shouldCheckUploadConsistency)
@@ -78,16 +78,16 @@ public final class Favorites<Descriptor : RegistryDescriptor> {
     
 #endif
 
-extension Favorites {
+extension Flags {
     
-    fileprivate static func makeKeeper(diskCache: Storage<Filename, Data>, favorites: Retrieve<Set<IDType>>, uploader: FavoritesUploader<IDType>) -> UploadConsistencyKeeper<Set<IDType>> {
+    fileprivate static func makeKeeper(diskCache: Storage<Filename, Data>, flags: Retrieve<Set<IDType>>, uploader: FavoritesUploader<IDType>) -> UploadConsistencyKeeper<Set<IDType>> {
         let name = "keeper-notifications-\(String(reflecting: IDType.self))"
         let last = diskCache
             .mapJSONDictionary()
             .mapBoxedSet(of: IDType.self)
             .singleKey(Filename(rawValue: name))
             .defaulting(to: [])
-        return UploadConsistencyKeeper<Set<IDType>>(latest: favorites, internalStorage: last, name: name, reupload: { upload in
+        return UploadConsistencyKeeper<Set<IDType>>(latest: flags, internalStorage: last, name: name, reupload: { upload in
             uploader.uploadFavorites(upload)
         })
     }
