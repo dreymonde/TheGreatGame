@@ -25,28 +25,28 @@ public final class Connections {
         self.localDB = localDB
         self.activityIndicator = activityIndicator
         self.teams = APIFireUpdate(retrieve: api.teams.all.mapValues({ $0.content.teams }),
-                                   write: localDB.teams.writeAccess,
+                                   write: localDB.teams.ioWrite,
                                    activityIndicator: activityIndicator)
         self.stages = APIFireUpdate(retrieve: api.matches.stages.mapValues({ $0.content.stages }),
-                                    write: localDB.stages.writeAccess,
+                                    write: localDB.stages.ioWrite,
                                     activityIndicator: activityIndicator)
         self.groups = APIFireUpdate(retrieve: api.groups.all.mapValues({ $0.content.groups }),
-                                    write: localDB.groups.writeAccess,
+                                    write: localDB.groups.ioWrite,
                                     activityIndicator: activityIndicator)
         self.fullMatches = APIFireUpdate(retrieve: api.matches.allFull.mapValues({ $0.content.matches }),
-                                         write: localDB.fullMatches.writeAccess,
+                                         write: localDB.fullMatches.ioWrite,
                                          activityIndicator: activityIndicator)
     }
     
     public func fullTeam(id: Team.ID) -> APIFireUpdate<Team.Full> {
         return APIFireUpdate(retrieve: api.teams.fullTeam.singleKey(id).mapValues({ $0.content }),
-                             write: localDB.fullTeam(id).writeAccess,
+                             write: localDB.fullTeam(id).ioWrite,
                              activityIndicator: activityIndicator)
     }
     
     public func fullMatch(id: Match.ID) -> APIFireUpdate<Match.Full> {
         return APIFireUpdate(retrieve: api.matches.fullMatch.singleKey(id).mapValues({ $0.content }),
-                             write: localDB.fullMatch(id).writeAccess,
+                             write: localDB.fullMatch(id).ioWrite,
                              activityIndicator: activityIndicator)
     }
     

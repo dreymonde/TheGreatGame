@@ -46,7 +46,7 @@ final class WatchExtension {
         phone.didReceiveUpdatedFavoriteMatches.subscribe(self.favoriteMatches, with: FlagsRegistry.replace)
         complicationReloader.consume(favoriteTeamsDidUpdate: self.favoriteTeams.didUpdatePresence, favoriteMatchesDidUpdate: self.favoriteMatches.didUpdatePresence)
         complicationReloader.consume(complicationMatchUpdate: self.phone.didReceiveComplicationMatchUpdate,
-                                     writingTo: matchesDB.storage)
+                                     writingTo: matchesDB.io)
     }
     
     func isFavoriteMatch(_ match: Match.Full) -> Bool {

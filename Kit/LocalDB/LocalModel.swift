@@ -10,44 +10,66 @@ import Foundation
 import Shallows
 import Alba
 
-public final class LocalModel<Value> {
+extension Storage where Key == Void {
     
-    private var _storage: Storage<Void, Value>!
-    public var storage: Storage<Void, Value> {
-        return _storage
-    }
-    
-    public init(storage: Storage<Void, Value>) {
-        self._storage = Storage<Void, Value>(storageName: storage.storageName, retrieve: { (_, completion) in
-            storage.retrieve(completion: completion)
-        }, set: { (value, _, completion) in
-            storage.set(value, completion: { (result) in
-                completion(result)
-                if result.isSuccess {
-                    self.didUpdate.publish(value)
+    public func writing(to memoryWrite: @escaping (Value) -> ()) -> Storage<Key, Value> {
+        return Storage<Key, Value>(storageName: self.storageName, retrieve: { (_, completion) in
+            self.retrieve(completion: { (result) in
+                if let value = result.value {
+                    memoryWrite(value)
                 }
+                completion(result)
             })
+        }, set: { (value, _, completion) in
+            memoryWrite(value)
+            self.set(value, forKey: (), completion: completion)
         })
     }
     
-    public var access: Retrieve<Value> {
-        return storage.asReadOnlyStorage()
+}
+
+public final class LocalModel<Value> {
+    
+    private var _storage: Storage<Void, Value>!
+    public var io: Storage<Void, Value> {
+        return _storage
     }
     
-    public var writeAccess: WriteOnlyStorage<Void, Value> {
-        return storage.asWriteOnlyStorage()
+    public var inMemory = ThreadSafe<Value?>(nil) {
+        didSet {
+            print("THREAD SAFE UPDATE!")
+        }
+    }
+    
+    public init(storage: Storage<Void, Value>) {
+        let stor = storage
+            .writing(to: { new in self.inMemory.write(new) })
+            .writing(to: { new in self.didUpdate.publish(new) })
+        #if os(iOS)
+            self._storage = stor
+        #else
+            self._storage = stor
+        #endif
+    }
+    
+    public var ioRead: Retrieve<Value> {
+        return io.asReadOnlyStorage()
+    }
+    
+    public var ioWrite: WriteOnlyStorage<Void, Value> {
+        return io.asWriteOnlyStorage()
     }
     
     public func prefetch() {
-        access.retrieve(completion: { _ in printWithContext("Prefetched \(Value.self)") })
+        ioRead.retrieve(completion: { _ in printWithContext("Prefetched \(Value.self)") })
     }
     
     public func get() -> Value? {
-        return try? access.makeSyncStorage().retrieve()
+        return inMemory.read()
     }
     
     public func update(with newValue: Value) {
-        writeAccess.set(newValue)
+        ioWrite.set(newValue)
     }
     
     public let didUpdate = Publisher<Value>(label: "LocalModel<\(Value.self)>.didUpdate")

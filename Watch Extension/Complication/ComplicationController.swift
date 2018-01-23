@@ -13,7 +13,7 @@ import Shallows
 extension ComplicationDataSource {
     
     public static let main: ComplicationDataSource = {
-        let provider = ExtensionDelegate.watchExtension.matchesDB.storage
+        let provider = ExtensionDelegate.watchExtension.matchesDB.io
             .backed(by: ExtensionDelegate.watchExtension.matchesAPI.allFull.mapValues({ $0.content.matches }))
             .asReadOnlyStorage()
             .serial()

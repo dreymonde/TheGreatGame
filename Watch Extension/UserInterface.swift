@@ -37,7 +37,7 @@ final class UserInterface {
         let apiCall = logic.matchesAPI.allFull.mapValues({ $0.content.matches })
         let reactive = Reactive(valueDidUpdate: db.didUpdate.proxy.map(filter(matches:)).mainThread(),
                                 update: APIFireUpdate(retrieve: apiCall,
-                                                      write: db.writeAccess,
+                                                      write: db.ioWrite,
                                                       activityIndicator: .none))
         return MatchesInterfaceController.Context(matches: relevantMatches,
                                                   reactive: reactive,
