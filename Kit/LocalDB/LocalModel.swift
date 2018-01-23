@@ -35,11 +35,7 @@ public final class LocalModel<Value> {
         return _storage
     }
     
-    public var inMemory = ThreadSafe<Value?>(nil) {
-        didSet {
-            print("THREAD SAFE UPDATE!")
-        }
-    }
+    public var inMemory = ThreadSafe<Value?>(nil)
     
     public init(storage: Storage<Void, Value>) {
         let stor = storage
