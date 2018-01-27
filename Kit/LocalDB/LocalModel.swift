@@ -60,8 +60,12 @@ public final class LocalModel<Value> {
         ioRead.retrieve(completion: { _ in printWithContext("Prefetched \(Value.self)") })
     }
     
-    public func get() -> Value? {
+    public func getInMemory() -> Value? {
         return inMemory.read()
+    }
+    
+    public func getPersisted() -> Value? {
+        return try? getInMemory() ?? ioRead.makeSyncStorage().retrieve()
     }
     
     public func update(with newValue: Value) {

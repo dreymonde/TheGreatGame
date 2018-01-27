@@ -14,6 +14,8 @@ import Shallows
 
 final class TodayExtension {
     
+    static let shared = TodayExtension()
+    
     let favoriteTeams: FlagsRegistry<FavoriteTeams>
     let favoriteMatches: FlagsRegistry<FavoriteMatches>
     let api: API
@@ -25,7 +27,7 @@ final class TodayExtension {
     
     let reactiveRelevantMatches: Reactive<[Match.Full]>
     
-    init() {
+    private init() {
         
         ShallowsLog.isEnabled = true
         
@@ -52,7 +54,7 @@ final class TodayExtension {
     }
     
     func relevantMatches() -> [Match.Full] {
-        return (localDB.fullMatches.get() ?? []).filter(relevanceFilter)
+        return (localDB.fullMatches.getPersisted() ?? []).filter(relevanceFilter)
     }
     
 }

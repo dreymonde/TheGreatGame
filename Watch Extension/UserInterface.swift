@@ -33,7 +33,7 @@ final class UserInterface {
     
     func makeContext(for contr: MatchesInterfaceController.Type) -> MatchesInterfaceController.Context {
         let db = logic.matchesDB
-        let relevantMatches = filter(matches: db.get() ?? [])
+        let relevantMatches = filter(matches: db.getInMemory() ?? [])
         let apiCall = logic.matchesAPI.allFull.mapValues({ $0.content.matches })
         let reactive = Reactive(valueDidUpdate: db.didUpdate.proxy.map(filter(matches:)).mainThread(),
                                 update: APIFireUpdate(retrieve: apiCall,

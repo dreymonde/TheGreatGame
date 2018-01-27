@@ -12,7 +12,7 @@ import TheGreatKit
 class ViewController : UIViewController {
     
     deinit {
-        print("Deinit \(self)")
+        printWithContext("Deinit \(self)")
     }
     
 }

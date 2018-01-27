@@ -23,7 +23,7 @@ class TableViewController : UITableViewController {
     }
     
     deinit {
-        print("Deinit \(self)")
+        printWithContext("Deinit \(self)")
     }
         
 }

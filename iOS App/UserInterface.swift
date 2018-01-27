@@ -41,8 +41,8 @@ final class UserInterface {
     }
     
     func prefetchFavorites() {
-//        logic.favoriteTeams.registry.all.forEach({ self.resources.fullTeam($0).prefetch() })
-//        logic.favoriteMatches.registry.all.forEach({ self.resources.fullMatch($0).prefetch() })
+        //        logic.favoriteTeams.registry.all.forEach({ self.resources.fullTeam($0).prefetch() })
+        //        logic.favoriteMatches.registry.all.forEach({ self.resources.fullMatch($0).prefetch() })
     }
     
     var tabBarController: UITabBarController! {
@@ -87,7 +87,7 @@ final class UserInterface {
     func inject(to teamsList: TeamsTableViewController) {
         teamsList <- {
             let teamsDB = logic.localDB.teams
-            $0.teams = teamsDB.get() ?? []
+            $0.teams = teamsDB.getPersisted() ?? []
             $0.reactiveTeams = Reactive<[Team.Compact]>(valueDidUpdate: teamsDB.didUpdate.proxy.mainThread(),
                                                         update: logic.connections.teams)
             $0.isFavorite = self.logic.favoriteTeams.registry.isPresent(id:)
@@ -105,7 +105,7 @@ final class UserInterface {
     func inject(to stagesList: StagesTableViewController) {
         stagesList <- {
             let stagesDB = logic.localDB.stages
-            $0.stages = stagesDB.get() ?? []
+            $0.stages = stagesDB.getPersisted() ?? []
             $0.reactiveStages = Reactive(valueDidUpdate: stagesDB.didUpdate.proxy.mainThread(),
                                          update: logic.connections.stages)
             $0.isFavorite = isFavoriteMatch(_:)
@@ -125,7 +125,7 @@ final class UserInterface {
     func inject(to groupsList: GroupsTableViewController) {
         groupsList <- {
             let groupsDB = logic.localDB.groups
-            $0.groups = groupsDB.get() ?? []
+            $0.groups = groupsDB.getPersisted() ?? []
             $0.reactiveGroups = Reactive(valueDidUpdate: groupsDB.didUpdate.proxy.mainThread(),
                                          update: logic.connections.groups)
             $0.makeAvenue = self.makeAvenue(forImageSize:)
@@ -138,7 +138,7 @@ final class UserInterface {
                                   onFavorite: @escaping () -> () = {  }) -> TeamDetailTableViewController {
         return Storyboard.Main.teamDetailTableViewController.instantiate() <- {
             let teamDB = logic.localDB.fullTeam(teamID)
-            $0.team = teamDB.get()
+            $0.team = teamDB.getInMemory()
             $0.reactiveTeam = Reactive(valueDidUpdate: teamDB.didUpdate.proxy.mainThread(),
                                        update: logic.connections.fullTeam(id: teamID))
             $0.isFavorite = { self.logic.favoriteTeams.registry.isPresent(id: teamID) }
@@ -156,7 +156,7 @@ final class UserInterface {
     func matchDetailViewController(for matchID: Match.ID, preloaded: MatchDetailPreLoaded) -> MatchDetailTableViewController {
         return Storyboard.Main.matchDetailTableViewController.instantiate() <- {
             let matchDB = logic.localDB.fullMatch(matchID)
-            $0.match = matchDB.get()
+            $0.match = matchDB.getInMemory()
             $0.reactiveTeam = Reactive(valueDidUpdate: matchDB.didUpdate.proxy.mainThread(),
                                        update: logic.connections.fullMatch(id: matchID))
             $0.makeAvenue = self.makeAvenue(forImageSize:)

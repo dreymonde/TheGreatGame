@@ -28,7 +28,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var stageTitle: UILabel!
     
-    let todayExtension = TodayExtension()
+    let todayExtension = TodayExtension.shared
     
     var showingMatch: Match.Full?
     
@@ -37,13 +37,13 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.avenue = todayExtension.images.makeNotSizedAvenue()
-        avenue.onStateChange = { _ in
-            if let match = self.showingMatch {
-                self.setup(with: match, afterImageDownload: true, initial: false)
+        avenue.onStateChange = { [weak self] _ in
+            if let match = self?.showingMatch {
+                self?.setup(with: match, afterImageDownload: true, initial: false)
             }
         }
-        avenue.onError = { _,_  in
-            self.complete(result: .failed)
+        avenue.onError = { [weak self] _,_  in
+            self?.complete(result: .failed)
         }
         self.initial()
     }
