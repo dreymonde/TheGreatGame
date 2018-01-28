@@ -35,7 +35,7 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
     }
     
     func didReceive(_ notification: UNNotification) {
-        guard let match = try? PushNotification(notification.request.content).map(to: Match.Full.self) else {
+        guard let match = try? PushNotification(notification.request.content).extract(Match.Full.self) else {
             fault("Push is not match")
             return
         }

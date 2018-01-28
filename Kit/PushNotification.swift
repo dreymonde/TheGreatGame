@@ -45,7 +45,7 @@ public struct PushNotification {
         try self.init(from: payload)
     }
     
-    public func map<MappableType : InMappable>(to type: MappableType.Type) throws -> MappableType {
+    public func extract<MappableType : InMappable>(_ type: MappableType.Type) throws -> MappableType {
         return try MappableType(from: content)
     }
         
