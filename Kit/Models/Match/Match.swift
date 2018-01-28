@@ -323,6 +323,10 @@ public enum Match {
             return events.contains(eventOfKind: .start)
         }
         
+        public var isNotStarted: Bool {
+            return !isStarted
+        }
+        
         public var isInHalfTime: Bool {
             return (isFirstHalfEnded && !isMainHalfTimeEnded) || (isExtraTimeAppointed && !isExtraTime && !isEnded && !isPenaltiesAppointed)
         }

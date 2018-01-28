@@ -23,7 +23,7 @@ class NetworkActivityIndicatorTests: XCTestCase {
     
     func testShowHide() {
         let expectation = self.expectation(description: "On hide")
-        let manager = NetworkActivityIndicatorManager(show: { print("Showing") }, hide: expectation.fulfill)
+        let manager = NetworkActivityIndicator(show: { print("Showing") }, hide: expectation.fulfill)
         manager.increment()
         manager.increment()
         DispatchQueue.global().async {

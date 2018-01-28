@@ -58,28 +58,28 @@ extension Subscribe {
 class FavoritesTests: XCTestCase {
     
     func testFavorites() throws {
-        let fs = FileSystemStorage.inDirectory(.cachesDirectory, appending: "fav-tests-1")
-        let favs = FavoriteTeams(diskCache: fs.asStorage())
-        let waiter = favs.didUpdateFavorite.makeWaiter()
-        favs.updateFavorite(id: Team.ID(rawValue: 1)!, isFavorite: true)
+        let fs = DiskStorage.main.folder("fav-tests-1", in: .cachesDirectory)
+        let favs = FlagsRegistry<FavoriteTeams>(diskStorage: Disk(underlyingStorage: fs.asStorage()))
+        let waiter = favs.didUpdatePresence.makeWaiter()
+        favs.updatePresence(id: Team.ID(rawValue: 1)!, isPresent: true)
         waiter.wait()
-        let sync = favs.favorites.makeSyncStorage()
+        let sync = favs.flags.makeSyncStorage()
         let withID1 = try sync.retrieve()
         XCTAssertEqual(withID1, [Team.ID.init(rawValue: 1)!])
-        do { try FileManager.default.removeItem(at: fs.directoryURL) } catch {  }
+        do { try FileManager.default.removeItem(at: fs.folderURL) } catch {  }
     }
     
     func testGetMatches() throws {
-        let fs = FileSystemStorage.inDirectory(.cachesDirectory, appending: "fav-tests-2")
-        let favs = FavoriteTeams(diskCache: fs.asStorage())
-        let waiter = favs.didUpdateFavorite.makeWaiter()
-        favs.updateFavorite(id: Team.ID(rawValue: 1)!, isFavorite: true)
+        let fs = DiskStorage.main.folder("fav-tests-2", in: .cachesDirectory)
+        let favs = FlagsRegistry<FavoriteTeams>(diskStorage: Disk(underlyingStorage: fs.asStorage()))
+        let waiter = favs.didUpdatePresence.makeWaiter()
+        favs.updatePresence(id: Team.ID(rawValue: 1)!, isPresent: true)
         waiter.wait()
-        let favsIDs = try favs.favorites.makeSyncStorage().retrieve()
+        let favsIDs = try favs.flags.makeSyncStorage().retrieve()
         let api = API.digitalOcean().matches.all.mapValues({ $0.content.matches }).makeSyncStorage()
         let matches = try api.retrieve().filter({ favsIDs.contains($0.home.id) || favsIDs.contains($0.away.id) })
         dump(matches.mostRelevant()!)
-        do { try FileManager.default.removeItem(at: fs.directoryURL) } catch {  }
+        do { try FileManager.default.removeItem(at: fs.folderURL) } catch {  }
     }
     
 }

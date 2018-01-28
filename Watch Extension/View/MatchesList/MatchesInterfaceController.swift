@@ -72,6 +72,7 @@ class MatchesInterfaceController: WKInterfaceController {
         printWithContext()
         configure(avenue)
         self.matches = self.context.matches
+        subscribe()
         self.context.reactive.update.fire(activityIndicator: networkActivityIndicator,
                                           errorDelegate: UnimplementedErrorStateDelegate.shared)
     }

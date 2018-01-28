@@ -159,6 +159,7 @@
 		7C7916EC1EBB35AE0070E6C5 /* Shallows.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C0EA5FE1EBA1C3100F50EB2 /* Shallows.framework */; };
 		7C7916EE1EBB36F70070E6C5 /* APITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916ED1EBB36F70070E6C5 /* APITests.swift */; };
 		7C7916F01EBB37910070E6C5 /* TeamFull.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7916EF1EBB37910070E6C5 /* TeamFull.swift */; };
+		7C795D58201DF549009B704A /* TheGreatGameUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C795D57201DF549009B704A /* TheGreatGameUITests.swift */; };
 		7C7A501D1ED87C2E000BFFB1 /* UserInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7A501C1ED87C2E000BFFB1 /* UserInterface.swift */; };
 		7C93AE071FF4007B0036BE36 /* LocalDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C93AE061FF4007B0036BE36 /* LocalDB.swift */; };
 		7C93AE081FF4007B0036BE36 /* LocalDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C93AE061FF4007B0036BE36 /* LocalDB.swift */; };
@@ -304,6 +305,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 7C489C711F164C68001875E5;
 			remoteInfo = "Match Notification";
+		};
+		7C795D5A201DF549009B704A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7C0EA5CF1EBA1B3400F50EB2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7C0EA5D61EBA1B3500F50EB2;
+			remoteInfo = TheGreatGame;
 		};
 		7CEDF0961FF7E26B00DFEDA3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -491,6 +499,10 @@
 		7C7916EA1EBB34E50070E6C5 /* ShallowsExtensionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShallowsExtensionsTests.swift; sourceTree = "<group>"; };
 		7C7916ED1EBB36F70070E6C5 /* APITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APITests.swift; sourceTree = "<group>"; };
 		7C7916EF1EBB37910070E6C5 /* TeamFull.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamFull.swift; sourceTree = "<group>"; };
+		7C795D50201DF510009B704A /* TheGreatGameTests copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "TheGreatGameTests copy-Info.plist"; path = "/Users/oleg/Development/TheGreatGame/TheGreatGame/TheGreatGameTests copy-Info.plist"; sourceTree = "<absolute>"; };
+		7C795D55201DF548009B704A /* TheGreatGameUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TheGreatGameUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7C795D57201DF549009B704A /* TheGreatGameUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TheGreatGameUITests.swift; sourceTree = "<group>"; };
+		7C795D59201DF549009B704A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7C7A501C1ED87C2E000BFFB1 /* UserInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInterface.swift; sourceTree = "<group>"; };
 		7C93AE061FF4007B0036BE36 /* LocalDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDB.swift; sourceTree = "<group>"; };
 		7C93AE091FF4068D0036BE36 /* Reactive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reactive.swift; sourceTree = "<group>"; };
@@ -626,6 +638,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7C795D52201DF548009B704A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7CA213761ECF3F9A00F088DD /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -649,6 +668,7 @@
 				7C0EA6251EBA1CA300F50EB2 /* Shared */,
 				7C0EA5D91EBA1B3500F50EB2 /* iOS App */,
 				7C0EA5EE1EBA1B3500F50EB2 /* iOS Tests */,
+				7C795D56201DF549009B704A /* UI Tests */,
 				7CA2137C1ECF3F9A00F088DD /* Today */,
 				7C489C751F164C68001875E5 /* Match Notification */,
 				7C0EA6081EBA1C9000F50EB2 /* Kit */,
@@ -658,6 +678,7 @@
 				7C13BC481ED84AF400588F5F /* TheGreatKit-Watch */,
 				7C0EA5D81EBA1B3500F50EB2 /* Products */,
 				7C0EA5FB1EBA1C3100F50EB2 /* Frameworks */,
+				7C795D50201DF510009B704A /* TheGreatGameTests copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -673,6 +694,7 @@
 				7C13BC1E1ED8498300588F5F /* Watch Extension.appex */,
 				7C13BC471ED84AF300588F5F /* TheGreatKit.framework */,
 				7C489C721F164C68001875E5 /* Match Notification.appex */,
+				7C795D55201DF548009B704A /* TheGreatGameUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1122,6 +1144,15 @@
 			path = TeamDetail;
 			sourceTree = "<group>";
 		};
+		7C795D56201DF549009B704A /* UI Tests */ = {
+			isa = PBXGroup;
+			children = (
+				7C795D57201DF549009B704A /* TheGreatGameUITests.swift */,
+				7C795D59201DF549009B704A /* Info.plist */,
+			);
+			path = "UI Tests";
+			sourceTree = "<group>";
+		};
 		7CA2136C1ECEF9EC00F088DD /* LocalInfo */ = {
 			isa = PBXGroup;
 			children = (
@@ -1377,6 +1408,24 @@
 			productReference = 7C489C721F164C68001875E5 /* Match Notification.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		7C795D54201DF548009B704A /* TheGreatGameUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7C795D5C201DF549009B704A /* Build configuration list for PBXNativeTarget "TheGreatGameUITests" */;
+			buildPhases = (
+				7C795D51201DF548009B704A /* Sources */,
+				7C795D52201DF548009B704A /* Frameworks */,
+				7C795D53201DF548009B704A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7C795D5B201DF549009B704A /* PBXTargetDependency */,
+			);
+			name = TheGreatGameUITests;
+			productName = TheGreatGameUITests;
+			productReference = 7C795D55201DF548009B704A /* TheGreatGameUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		7CA213781ECF3F9A00F088DD /* GameToday */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7CA213861ECF3F9A00F088DD /* Build configuration list for PBXNativeTarget "GameToday" */;
@@ -1400,7 +1449,7 @@
 		7C0EA5CF1EBA1B3400F50EB2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0830;
+				LastSwiftUpdateCheck = 0920;
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "The Great Game";
 				TargetAttributes = {
@@ -1482,6 +1531,12 @@
 							};
 						};
 					};
+					7C795D54201DF548009B704A = {
+						CreatedOnToolsVersion = 9.2;
+						DevelopmentTeam = 8E9Y56P64W;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 7C0EA5D61EBA1B3500F50EB2;
+					};
 					7CA213781ECF3F9A00F088DD = {
 						CreatedOnToolsVersion = 8.3.2;
 						DevelopmentTeam = 8E9Y56P64W;
@@ -1510,6 +1565,7 @@
 			targets = (
 				7C0EA5D61EBA1B3500F50EB2 /* TheGreatGame */,
 				7C0EA5EA1EBA1B3500F50EB2 /* TheGreatGameTests */,
+				7C795D54201DF548009B704A /* TheGreatGameUITests */,
 				7C0EA6061EBA1C9000F50EB2 /* TheGreatKit */,
 				7C13BC461ED84AF300588F5F /* TheGreatKit-Watch */,
 				7C0EA60E1EBA1C9000F50EB2 /* TheGreatKitTests */,
@@ -1591,6 +1647,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				7C489C841F164C88001875E5 /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7C795D53201DF548009B704A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1892,6 +1955,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7C795D51201DF548009B704A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7C795D58201DF549009B704A /* TheGreatGameUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7CA213751ECF3F9A00F088DD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1944,6 +2015,11 @@
 			isa = PBXTargetDependency;
 			target = 7C489C711F164C68001875E5 /* Match Notification */;
 			targetProxy = 7C489C7C1F164C68001875E5 /* PBXContainerItemProxy */;
+		};
+		7C795D5B201DF549009B704A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7C0EA5D61EBA1B3500F50EB2 /* TheGreatGame */;
+			targetProxy = 7C795D5A201DF549009B704A /* PBXContainerItemProxy */;
 		};
 		7CEDF0971FF7E26B00DFEDA3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2476,6 +2552,68 @@
 			};
 			name = Release;
 		};
+		7C795D5D201DF549009B704A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8E9Y56P64W;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "UI Tests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatGameTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = TheGreatGame;
+			};
+			name = Debug;
+		};
+		7C795D5E201DF549009B704A /* Beta */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8E9Y56P64W;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "UI Tests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatGameTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = TheGreatGame;
+			};
+			name = Beta;
+		};
+		7C795D5F201DF549009B704A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8E9Y56P64W;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "UI Tests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.the-great-game.TheGreatGameTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = TheGreatGame;
+			};
+			name = Release;
+		};
 		7CA213871ECF3F9A00F088DD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2867,6 +3005,16 @@
 				7C489C801F164C68001875E5 /* Debug */,
 				7CDD79651FE3FDD700782D58 /* Beta */,
 				7C489C811F164C68001875E5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7C795D5C201DF549009B704A /* Build configuration list for PBXNativeTarget "TheGreatGameUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7C795D5D201DF549009B704A /* Debug */,
+				7C795D5E201DF549009B704A /* Beta */,
+				7C795D5F201DF549009B704A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

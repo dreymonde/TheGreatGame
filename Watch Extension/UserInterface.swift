@@ -23,10 +23,9 @@ final class UserInterface {
     }
     
     private func filter(matches: [Match.Full]) -> [Match.Full] {
-        let allUpcoming = matches.filter({ $0.isStarted.not || Calendar.autoupdatingCurrent.isDateInToday($0.date) })
+        let allUpcoming = matches.filter({ $0.isNotStarted || $0.date.isToday })
         if let firstUpcoming = allUpcoming.min(by: { $0.date < $1.date }) {
-            return matches.filter({ Calendar.autoupdatingCurrent.isDate($0.date,
-                                                                        inSameDayAs: firstUpcoming.date)})
+            return matches.filter({ $0.date.isSameDay(as: firstUpcoming.date) })
         }
         return matches.last.map({ [$0] }) ?? []
     }
@@ -45,5 +44,21 @@ final class UserInterface {
     }
     
     static let matchesList = "MatchesInterfaceController"
+    
+}
+
+fileprivate extension Date {
+    
+    static var cal: Calendar {
+        return .autoupdatingCurrent
+    }
+    
+    var isToday: Bool {
+        return Date.cal.isDateInToday(self)
+    }
+    
+    func isSameDay(as otherDate: Date) -> Bool {
+        return Date.cal.isDate(self, inSameDayAs: otherDate)
+    }
     
 }
