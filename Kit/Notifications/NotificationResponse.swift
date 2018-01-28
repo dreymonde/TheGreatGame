@@ -12,7 +12,7 @@ import UserNotifications
 public struct NotificationResponse {
     
     public let action: NotificationAction
-    public let notification: RawPushNotification
+    public let notification: PushNotification
     
 }
 
@@ -36,11 +36,10 @@ public enum NotificationAction {
     
 }
 
-extension PushNotificationProtocol {
+extension PushNotification {
     
-    public init?(_ content: UNNotificationContent) {
-        self.init(userInfo: content.userInfo)
+    public init(_ content: UNNotificationContent) throws {
+        try self.init(userInfo: content.userInfo)
     }
     
 }
-

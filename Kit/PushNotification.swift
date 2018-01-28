@@ -33,54 +33,37 @@ extension PushToken : CustomStringConvertible {
     
 }
 
-public protocol PushNotificationProtocol {
-    
-    associatedtype Content
-    
-    var content: Content { get }
-    
-    init(payload: [String : Any]) throws
-    
+enum PushPayloadError : Error {
+    case notValidContent([AnyHashable : Any])
 }
 
-extension PushNotificationProtocol {
-    
-    public init?(userInfo: [AnyHashable : Any]) {
-        if let content = userInfo as? [String : Any] {
-            try? self.init(payload: content)
-        } else {
-            return nil
-        }
-    }
-    
-}
-
-public struct RawPushNotification : PushNotificationProtocol {
+public struct PushNotification {
     
     public let content: [String : Any]
     
     public init(payload: [String : Any]) throws {
         try self.init(from: payload)
     }
+    
+    public func map<MappableType : InMappable>(to type: MappableType.Type) throws -> MappableType {
+        return try MappableType(from: content)
+    }
         
 }
 
-public struct PushNotification<Content : InMappable> : PushNotificationProtocol {
+extension PushNotification {
     
-    public let content: Content
-    
-    public init(payload: [String : Any]) throws {
-        let push = try RawPushNotification(payload: payload)
-        try self.init(push)
-    }
-    
-    public init(_ pushNotification: RawPushNotification) throws {
-        self.content = try! Content(from: pushNotification.content)
+    public init(userInfo: [AnyHashable : Any]) throws {
+        if let content = userInfo as? [String : Any] {
+            try self.init(payload: content)
+        } else {
+            throw PushPayloadError.notValidContent(userInfo)
+        }
     }
     
 }
 
-extension RawPushNotification : Mappable {
+extension PushNotification : Mappable {
     
     public enum MappingKeys : String, IndexPathElement {
         case aps, content

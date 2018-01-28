@@ -15,7 +15,7 @@ public final class ComplicationPusher {
     
     public static let adapter: AlbaAdapter<PKPushPayload, Match.Full> = { proxy in
         return proxy
-            .flatMap({ PushNotification<Match.Full>(userInfo: $0.dictionaryPayload)?.content })
+            .flatMap({ try? PushNotification(userInfo: $0.dictionaryPayload).map(to: Match.Full.self) })
     }
         
 }

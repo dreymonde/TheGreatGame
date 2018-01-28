@@ -24,7 +24,7 @@ internal final class NotificationsReceiver : NSObject, UNUserNotificationCenterD
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        guard let notification = RawPushNotification(response.notification.request.content) else {
+        guard let notification = try? PushNotification(response.notification.request.content) else {
             print(response.notification.request.content.userInfo)
             fault("Cannot initialize PushNotification")
             return

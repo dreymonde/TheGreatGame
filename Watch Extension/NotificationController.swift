@@ -36,11 +36,10 @@ class NotificationController: WKUserNotificationInterfaceController {
         // This method is called when a notification needs to be presented.
         // Implement it if you use a dynamic notification interface.
         // Populate your dynamic notification interface as quickly as possible.
-        guard let push = PushNotification<Match.Full>(notification.request.content) else {
+        guard let match = try? PushNotification(notification.request.content).map(to: Match.Full.self) else {
             fault("Not a match push notification")
             return
         }
-        let match = push.content
         self.testLabel.setText("\(match.home.name) \(match.score?.string ?? "VS") \(match.away.name)")
         // After populating your dynamic notification interface call the completion block.
         completionHandler(.custom)
