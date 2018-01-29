@@ -259,7 +259,6 @@ class MatchDetailTableViewController: TableViewController {
             return
         }
         let eventViewModel = match.events.reversed()[indexPath.row].viewModel(in: match)
-        cell.eventTextLabel.text = eventViewModel.text
         cell.setText(eventViewModel.title, on: cell.eventTitleLabel)
         cell.setText(eventViewModel.text, on: cell.eventTextLabel)
         cell.minuteLabel.text = eventViewModel.minute

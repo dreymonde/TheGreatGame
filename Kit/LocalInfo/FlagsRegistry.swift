@@ -52,26 +52,22 @@ public final class FlagsRegistry<Descriptor : RegistryDescriptor> : SimpleStorin
     
     public typealias IDType = Descriptor.IDType
     
-    fileprivate let full_flags: Storage<Void, Set<IDType>>
+    fileprivate let full_flags: MemoryCached<Set<IDType>>
     
     public let flags: Retrieve<Set<IDType>>
     
     public var all: Set<IDType> {
-        return try! flags.makeSyncStorage().retrieve()
+        return full_flags.read()
     }
     
-    private lazy var flagsSync: ReadOnlySyncStorage<Void, Set<IDType>> = self.flags.makeSyncStorage()
-    
     public init(diskStorage: Disk) {
-        let fileSystemTeams = diskStorage
+        let fileSystemFlags = diskStorage
             .renaming(to: "flags-disk")
             .mapJSONDictionary()
             .singleKey(Descriptor.filename)
             .mapBoxedSet(of: Descriptor.IDType.self)
-            .defaulting(to: [])
-        let memoryCache = MemoryStorage<Int, Set<IDType>>().singleKey(0)
-        self.full_flags = memoryCache.combined(with: fileSystemTeams).serial()
-        self.flags = full_flags.asReadOnlyStorage()
+        self.full_flags = MemoryCached(io: fileSystemFlags, defaultValue: [])
+        self.flags = full_flags.ioRead
     }
     
     public struct Update {
@@ -96,41 +92,29 @@ public final class FlagsRegistry<Descriptor : RegistryDescriptor> : SimpleStorin
     }
     
     public func updatePresence(id: IDType, isPresent: Bool) {
-        full_flags.update({ favs in
+        full_flags.write { (flags) in
             if isPresent {
-                favs.insert(id)
+                flags.insert(id)
             } else {
-                favs.remove(id)
+                flags.remove(id)
             }
-        }, completion: { result in
-            if let new = result.value {
-                let update = Flags<Descriptor>.Change(id: id, isPresent: isPresent)
-                let united = Update(changes: [update], all: new)
-                self.unitedDidUpdate.publish(united)
-            }
-        })
+        }
+        let update = Flags<Descriptor>.Change(id: id, isPresent: isPresent)
+        let united = Update(changes: [update], all: full_flags.read())
+        unitedDidUpdate.publish(united)
     }
     
     public func replace(with updated: Set<IDType>) {
-        let existing = try! flagsSync.retrieve()
+        let existing = full_flags.read()
         let diff = existing.symmetricDifference(updated)
-        full_flags.set(updated) { (result) in
-            if result.isSuccess {
-                let updates = diff.map({ Flags<Descriptor>.Change.init(id: $0, isPresent: updated.contains($0)) })
-                let united = Update(changes: updates, all: updated)
-                self.unitedDidUpdate.publish(united)
-            }
-        }
+        full_flags.write(updated)
+        let updates = diff.map({ Flags<Descriptor>.Change.init(id: $0, isPresent: updated.contains($0)) })
+        let united = Update(changes: updates, all: updated)
+        self.unitedDidUpdate.publish(united)
     }
     
     public func isPresent(id: IDType) -> Bool {
-        do {
-            let favs = try flagsSync.retrieve()
-            return favs.contains(id)
-        } catch {
-            fault(error)
-            return false
-        }
+        return full_flags.read().contains(id)
     }
     
 }
@@ -168,3 +152,45 @@ extension FlagsBox : Mappable {
     
 }
 
+public final class MemoryCached<Value> {
+    
+    private let underlying: Storage<Void, Value>
+    public var ioRead: ReadOnlyStorage<Void, Value> {
+        return underlying.asReadOnlyStorage()
+    }
+    
+    private var inMemory: Value
+    
+    init(io: Storage<Void, Value>, defaultValue: Value) {
+        self.underlying = io
+        do {
+            self.inMemory = try io.makeSyncStorage().retrieve()
+        } catch {
+            self.inMemory = defaultValue
+        }
+    }
+    
+    public func read() -> Value {
+        return inMemory
+    }
+    
+    public func write(_ newValue: Value) {
+        inMemory = newValue
+        push(inMemory)
+    }
+    
+    private func push(_ updatedValue: Value) {
+        underlying.set(updatedValue) { result in
+            if let error = result.error {
+                fault("FlagsRegistry MemoryCached error:")
+                fault(error)
+            }
+        }
+    }
+    
+    public func write(with block: (inout Value) -> ()) {
+        block(&inMemory)
+        push(inMemory)
+    }
+    
+}

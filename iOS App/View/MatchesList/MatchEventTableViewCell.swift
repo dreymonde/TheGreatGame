@@ -10,19 +10,19 @@ import UIKit
 
 class MatchEventTableViewCell: UITableViewCell {
     
-    @IBOutlet private weak var stackView: UIStackView!
+    @IBOutlet fileprivate weak var stackView: UIStackView!
     
     @IBOutlet weak var minuteLabel: UILabel!
     @IBOutlet weak var eventTitleLabel: UILabel!
     @IBOutlet weak var eventTextLabel: UILabel!
     
     func setText(_ text: String?, on label: UILabel) {
-        if let text = text, text.count != 0 {
+        if let text = text, !text.isEmpty {
             label.text = text
-            stackView.addArrangedSubview(label)
+            label.isHidden = false
         } else {
             label.text = nil
-            stackView.removeArrangedSubview(label)
+            label.isHidden = true
         }
     }
 
