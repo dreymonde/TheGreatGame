@@ -41,8 +41,8 @@ final class TodayExtension {
         self.images = Images.inContainer(.shared)
         
         let relevanceFilter: (Match.Full) -> Bool = { match in
-            return match.isFavorite(isFavoriteMatch: favoriteMatches.isPresent(id:),
-                                    isFavoriteTeam: favoriteTeams.isPresent(id:))
+            return match.isFavorite(isFavoriteMatch: favoriteMatches.isPresent,
+                                    isFavoriteTeam: favoriteTeams.isPresent)
         }
         
         let filteredUpdate = localDB.fullMatches.didUpdate.proxy
@@ -54,6 +54,8 @@ final class TodayExtension {
     }
     
     func relevantMatches() -> [Match.Full] {
+        favoriteTeams.forceRefresh()
+        favoriteMatches.forceRefresh()
         return (localDB.fullMatches.getPersisted() ?? []).filter(relevanceFilter)
     }
     

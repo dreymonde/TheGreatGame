@@ -113,6 +113,10 @@ public final class FlagsRegistry<Descriptor : RegistryDescriptor> : SimpleStorin
         self.unitedDidUpdate.publish(united)
     }
     
+    public func forceRefresh() {
+        full_flags.forceRefresh()
+    }
+    
     public func isPresent(id: IDType) -> Bool {
         return full_flags.read().contains(id)
     }
@@ -168,6 +172,18 @@ public final class MemoryCached<Value> {
         } catch {
             self.inMemory = defaultValue
         }
+    }
+    
+    public func forceRefresh() {
+        do {
+            self.inMemory = try underlying.makeSyncStorage().retrieve()
+        } catch {
+            fault(error)
+        }
+    }
+    
+    public func readIO() -> Value? {
+        return try? ioRead.makeSyncStorage().retrieve()
     }
     
     public func read() -> Value {
