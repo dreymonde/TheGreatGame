@@ -54,7 +54,7 @@ public final class Images : SimpleStoring {
         if let existing = caches[intside] {
             return existing
         } else {
-            let new: Avenues.MemoryCache<URL, UIImage> = MemoryCache(ImageNSCache())
+            let new: Avenues.MemoryCache<URL, UIImage> = MemoryCache.dictionaryBased()
                 //.mapValue(inTransform: { assert(max($0.size.width, $0.size.height) == side); return $0 },
                 //          outTransform: { assert(max($0.size.width, $0.size.height) == side); return $0 })
             caches[intside] = new
