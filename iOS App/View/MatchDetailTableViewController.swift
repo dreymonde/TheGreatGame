@@ -61,14 +61,14 @@ class MatchDetailTableViewController: TableViewController {
     
     // MARK: - Injections
     var preloadedMatch: MatchDetailPreLoaded?
-    var makeAvenue: (CGSize) -> Avenue<URL, UIImage, UIImageView> = runtimeInject
+    var makeAvenue: (CGSize) -> Avenue<URL, UIImage> = runtimeInject
     var makeTeamDetailVC: (Match.Team) -> UIViewController = runtimeInject
     var isFavorite: () -> Bool = runtimeInject
     var updateFavorite: (Bool) -> () = runtimeInject
     
     // MARK: - Services
-    var badgeAvenue: Avenue<URL, UIImage, UIImageView>!
-    var flagAvenue: Avenue<URL, UIImage, UIImageView>!
+    var badgeAvenue: Avenue<URL, UIImage>!
+    var flagAvenue: Avenue<URL, UIImage>!
     
     // MARK: - Connections
     var reactiveTeam: Reactive<Match.Full>!
@@ -199,11 +199,11 @@ class MatchDetailTableViewController: TableViewController {
                 cell.minuteLabel.text = match.minuteOrStateString()
             }
             
-            flagAvenue.register(imageView: cell.homeFlagImageView, for: match.home.badges.flag)
-            flagAvenue.register(imageView: cell.awayFlagImageView, for: match.away.badges.flag)
+            flagAvenue.register(cell.homeFlagImageView, for: match.home.badges.flag)
+            flagAvenue.register(cell.awayFlagImageView, for: match.away.badges.flag)
             
-            badgeAvenue.register(imageView: cell.homeBadgeImageView, for: match.home.badges.large)
-            badgeAvenue.register(imageView: cell.awayBadgeImageView, for: match.away.badges.large)
+            badgeAvenue.register(cell.homeBadgeImageView, for: match.home.badges.large)
+            badgeAvenue.register(cell.awayBadgeImageView, for: match.away.badges.large)
             
             cell.onHomeBadgeTap = { [unowned self] in
                 let vc = self.makeTeamDetailVC(match.home)
@@ -216,12 +216,12 @@ class MatchDetailTableViewController: TableViewController {
             
         } else if let preloaded = preloadedMatch {
             if let home = preloaded.home {
-                flagAvenue.register(imageView: cell.homeFlagImageView, for: home.badges.flag)
-                badgeAvenue.register(imageView: cell.homeBadgeImageView, for: home.badges.large)
+                flagAvenue.register(cell.homeFlagImageView, for: home.badges.flag)
+                badgeAvenue.register(cell.homeBadgeImageView, for: home.badges.large)
             }
             if let away = preloaded.away {
-                flagAvenue.register(imageView: cell.awayFlagImageView, for: away.badges.flag)
-                badgeAvenue.register(imageView: cell.awayBadgeImageView, for: away.badges.large)
+                flagAvenue.register(cell.awayFlagImageView, for: away.badges.flag)
+                badgeAvenue.register(cell.awayBadgeImageView, for: away.badges.large)
             }
             cell.homeTeamNameLabel.text = preloaded.home?.name
             cell.scoreLabel.text = preloaded.score?.string ?? "-:-"

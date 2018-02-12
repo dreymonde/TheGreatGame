@@ -46,11 +46,11 @@ class MatchesInterfaceController: WKInterfaceController {
     struct Context {
         let matches: [Match.Full]
         let reactive: Reactive<[Match.Full]>
-        let makeAvenue: (CGSize) -> Avenue<URL, UIImage, WKInterfaceImage>
+        let makeAvenue: (CGSize) -> Avenue<URL, UIImage>
     }
     
     var context: Context!
-    var avenue: Avenue<URL, UIImage, WKInterfaceImage>!
+    var avenue: Avenue<URL, UIImage>!
     var networkActivityIndicator: NetworkActivityIndicator!
     
     var matches: [Match.Full] = [] {
@@ -105,12 +105,8 @@ class MatchesInterfaceController: WKInterfaceController {
     func configure(_ cell: MatchCellController, with match: Match.Full, forRowAt index: Int) {
 //        avenue.prepareItem(at: match.home.badges.large)
 //        avenue.prepareItem(at: match.away.badges.large)
-        avenue.register(cell.homeBadgeImage, for: match.home.badges.large) { (view, image) in
-            view.setImage(image)
-        }
-        avenue.register(cell.awayBadgeImage, for: match.away.badges.large) { (view, image) in
-            view.setImage(image)
-        }
+        avenue.register(cell.homeBadgeImage, for: match.home.badges.large)
+        avenue.register(cell.awayBadgeImage, for: match.away.badges.large)
         cell.scoreLabel.setText(match.scoreOrTimeString())
         if match.score == nil {
             cell.scoreLabel.setTextColor(.lightGray)

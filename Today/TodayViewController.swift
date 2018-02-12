@@ -32,11 +32,11 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     
     var showingMatch: Match.Full?
     
-    var avenue: Avenue<URL, UIImage, UIImageView>!
+    var avenue: Avenue<URL, UIImage>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.avenue = todayExtension.images.makeNotSizedAvenue(claimer: UIImageView.self)
+        self.avenue = todayExtension.images.makeNotSizedAvenue()
         self.initial()
     }
     
@@ -52,8 +52,8 @@ class TodayViewController: UIViewController, NCWidgetProviding {
             self.scoreLabel.text?.append(" PEN")
         }
         self.stageTitle.text = TodayViewController.dateFormatter.string(from: match.date)
-        avenue.register(imageView: homeBadgeImageView, for: match.home.badges.large)
-        avenue.register(imageView: awayBadgeImageView, for: match.away.badges.large)
+        avenue.register(homeBadgeImageView, for: match.home.badges.large)
+        avenue.register(awayBadgeImageView, for: match.away.badges.large)
         if !initial,
             let _ = avenue.cache.value(forKey: match.home.badges.large),
             let _ = avenue.cache.value(forKey: match.away.badges.large) {

@@ -31,13 +31,13 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Showing {
     
     // MARK: - Injections
     var makeTeamDetailVC: (Team.Compact, _ onFavorite: @escaping () -> ()) -> UIViewController = runtimeInject
-    var makeAvenue: (CGSize) -> Avenue<URL, UIImage, UIImageView> = runtimeInject
+    var makeAvenue: (CGSize) -> Avenue<URL, UIImage> = runtimeInject
     
     var isFavorite: (Team.ID) -> Bool = runtimeInject
     var updateFavorite: (Team.ID, Bool) -> () = runtimeInject
     
     // MARK: - Services
-    var avenue: Avenue<URL, UIImage, UIImageView>!
+    var avenue: Avenue<URL, UIImage>!
     
     // MARK: - Connections
     var reactiveTeams: Reactive<[Team.Compact]>!
@@ -108,7 +108,7 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Showing {
         cell.favoriteButton.isSelected = isFavorite(team.id)
         cell.nameLabel.text = team.name
         cell.shortNameLabel.text = team.shortName
-        avenue.register(imageView: cell.badgeImageView, for: badgeURL)
+        avenue.register(cell.badgeImageView, for: badgeURL)
         cell.onSwitch = { isFavorite in
             if let ipath = self.tableView.indexPath(for: cell) {
                 let team = self.teams[ipath.row]
@@ -140,6 +140,23 @@ extension TeamsTableViewController {
                            forCellReuseIdentifier: "TeamCompact")
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.prefetchDataSource = self
+    }
+    
+}
+
+extension TeamsTableViewController : UITableViewDataSourcePrefetching {
+    
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        for url in indexPaths.map({ self.teams[$0.row].badges.large }) {
+            avenue.preload(key: url)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
+        for url in indexPaths.map({ self.teams[$0.row].badges.large }) {
+            avenue.cancel(key: url)
+        }
     }
     
 }

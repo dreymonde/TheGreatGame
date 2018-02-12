@@ -22,7 +22,7 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
     @IBOutlet weak var homeBadgeImageView: UIImageView!
     @IBOutlet weak var awayBadgeImageView: UIImageView!
     
-    let avenue = Images.inContainer(.shared).makeAvenue(claimer: UIImageView.self, forImageSize: CGSize.init(width: 100, height: 100), activityIndicator: .none)
+    let avenue = Images.inContainer(.shared).makeAvenue(forImageSize: CGSize.init(width: 100, height: 100), activityIndicator: .none)
     
     var match: Match.Full?
     
@@ -45,8 +45,8 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
             fault("No match in reload")
             return
         }
-        avenue.register(imageView: homeBadgeImageView, for: match.home.badges.large)
-        avenue.register(imageView: awayBadgeImageView, for: match.away.badges.large)
+        avenue.register(homeBadgeImageView, for: match.home.badges.large)
+        avenue.register(awayBadgeImageView, for: match.away.badges.large)
         scoreLabel.text = match.scoreOrPenaltyString()
         homeLabel.text = match.home.shortName
         awayLabel.text = match.away.shortName

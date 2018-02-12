@@ -56,13 +56,13 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     var preloadedTeam: TeamDetailPreLoaded?
     var makeTeamDetailVC: (Group.Team) -> UIViewController = runtimeInject
     var makeMatchDetailVC: (Match.Compact) -> UIViewController = runtimeInject
-    var makeAvenue: (CGSize) -> Avenue<URL, UIImage, UIImageView> = runtimeInject
+    var makeAvenue: (CGSize) -> Avenue<URL, UIImage> = runtimeInject
     var isFavorite: () -> Bool = runtimeInject
     var updateFavorite: (Bool) -> () = runtimeInject
 
     // MARK: - Services
-    var mainBadgeAvenue: Avenue<URL, UIImage, UIImageView>!
-    var smallBadgesAvenue: Avenue<URL, UIImage, UIImageView>!
+    var mainBadgeAvenue: Avenue<URL, UIImage>!
+    var smallBadgesAvenue: Avenue<URL, UIImage>!
     
     // MARK: - Cell Fillers
     var matchCellFiller: MatchCellFiller!
@@ -189,14 +189,14 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     func configureTeamDetailsCell(_ cell: TeamDetailInfoTableViewCell, forRowAt indexPath: IndexPath) {
         cell.selectionStyle = .none
         if let team = team {
-            mainBadgeAvenue.register(imageView: cell.badgeImageView, for: team.badges.flag)
+            mainBadgeAvenue.register(cell.badgeImageView, for: team.badges.flag)
             cell.nameLabel.text = team.name
             cell.teamSummaryLabel.text = team.summary
         } else if let preloaded = preloadedTeam {
             cell.nameLabel.text = preloaded.name
             cell.teamSummaryLabel.text = preloaded.summary
             if let badgeURL = preloaded.badges?.flag {
-                mainBadgeAvenue.register(imageView: cell.badgeImageView, for: badgeURL)
+                mainBadgeAvenue.register(cell.badgeImageView, for: badgeURL)
             }
         }
     }

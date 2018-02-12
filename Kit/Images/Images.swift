@@ -35,15 +35,18 @@ public final class Images : SimpleStoring {
     
     fileprivate let imageFetchingSession = URLSession(configuration: .default)
     fileprivate let diskCache: Shallows.Storage<URL, UIImage>
+    fileprivate let imageLane: Processor<URL, UIImage>
     
-    public init(diskStorage: Disk) {
-        self.diskCache = diskStorage
-            .mapKeys({ Filename(rawValue: $0.absoluteString) })
+    public convenience init(diskStorage: Disk) {
+        let diskCache = diskStorage
+            .mapKeys(to: URL.self, { Filename(rawValue: $0.absoluteString) })
             .mapImage()
+        self.init(imageCache: diskCache)
     }
     
     public init(imageCache: Shallows.Storage<URL, UIImage>) {
         self.diskCache = imageCache
+        self.imageLane = URLSessionProcessor(session: imageFetchingSession).mapImage()
     }
         
     public func imageCache(forSize side: CGFloat) -> Avenues.MemoryCache<URL, UIImage> {
@@ -59,17 +62,15 @@ public final class Images : SimpleStoring {
         }
     }
     
-    public func makeNotSizedAvenue<Claimer : AnyObject & Hashable>(claimer: Claimer.Type) -> Avenue<URL, UIImage, Claimer> {
-        let fullSizedLane: Processor<URL, UIImage> = URLSessionProcessor(sessionConfiguration: .ephemeral)
-            .mapImage()
+    public func makeNotSizedAvenue() -> Avenue<URL, UIImage> {
+        let fullSizedLane: Processor<URL, UIImage> = imageLane
             .caching(to: diskCache)
         let storage = MemoryCache(ImageNSCache())
         return Avenue(cache: storage, processor: fullSizedLane)
     }
     
-    public func makeAvenue<Claimer : AnyObject & Hashable>(claimer: Claimer.Type, forImageSize imageSize: CGSize, activityIndicator: NetworkActivityIndicator) -> Avenue<URL, UIImage, Claimer> {
-        let fullSizedLane: Processor<URL, UIImage> = URLSessionProcessor(sessionConfiguration: .ephemeral)
-            .mapImage()
+    public func makeAvenue(forImageSize imageSize: CGSize, activityIndicator: NetworkActivityIndicator) -> Avenue<URL, UIImage> {
+        let fullSizedLane: Processor<URL, UIImage> = imageLane
             .connectingNetworkActivityIndicator(manager: activityIndicator)
             .caching(to: diskCache)
         let lane = fullSizedLane.mapValues({ $0.resized(toFit: imageSize) })
@@ -77,9 +78,8 @@ public final class Images : SimpleStoring {
         return Avenue(cache: storage, processor: lane)
     }
     
-    public func makeDoubleCachedAvenue<Claimer : AnyObject & Hashable>(claimer: Claimer.Type, forImageSize imageSize: CGSize) -> Avenue<URL, UIImage, Claimer> {
-        let lane: Processor<URL, UIImage> = URLSessionProcessor(sessionConfiguration: .ephemeral)
-            .mapImage()
+    public func makeDoubleCachedAvenue(forImageSize imageSize: CGSize) -> Avenue<URL, UIImage> {
+        let lane: Processor<URL, UIImage> = imageLane
             .caching(to: diskCache)
             .mapValues({ $0.resized(toFit: imageSize) })
             .caching(to: diskCache.mapKeys({ $0.appendingPathComponent("-\(imageSize.width)") }))

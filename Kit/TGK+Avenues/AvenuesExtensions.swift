@@ -13,26 +13,12 @@ import CoreGraphics
 
 extension Avenue {
     
-    public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicator) -> Avenue<Key, Value, Claimer> {
+    public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicator) -> Avenue<Key, Value> {
         let newLane = self.processor.connectingNetworkActivityIndicator(manager: manager)
         return Avenue(cache: cache, processor: newLane)
     }
     
 }
-
-#if os(iOS)
-    
-    extension Avenue where Claimer == UIImageView, Value == UIImage {
-        
-        public func register(imageView: UIImageView, for resource: Key) {
-            self.register(imageView, for: resource) { (view, value) in
-                view.image = value
-            }
-        }
-        
-    }
-    
-#endif
 
 extension UIImage {
     

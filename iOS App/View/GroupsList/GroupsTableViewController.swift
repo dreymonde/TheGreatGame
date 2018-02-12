@@ -18,10 +18,10 @@ class GroupsTableViewController: TheGreatGame.TableViewController {
     
     // MARK: - Injections
     var makeTeamDetailVC: (Group.Team) -> UIViewController = runtimeInject
-    var makeAvenue: (CGSize) -> Avenue<URL, UIImage, UIImageView> = runtimeInject
+    var makeAvenue: (CGSize) -> Avenue<URL, UIImage> = runtimeInject
 
     // MARK: - Services
-    var avenue: Avenue<URL, UIImage, UIImageView>!
+    var avenue: Avenue<URL, UIImage>!
     
     // MARK: - Cell Fillers
     var teamGroupCellFiller: TeamGroupCellFiller!

@@ -80,11 +80,11 @@ final class MatchCellFiller : CellFiller {
     typealias CellType = MatchTableViewCell
     typealias Content = Match.Compact
     
-    let avenue: Avenue<URL, UIImage, UIImageView>
+    let avenue: Avenue<URL, UIImage>
     let isFavorite: (Match.Compact) -> Bool
     let scoreMode: ScoreMode
     
-    init(avenue: Avenue<URL, UIImage, UIImageView>,
+    init(avenue: Avenue<URL, UIImage>,
          scoreMode: ScoreMode,
          isFavorite: @escaping (Match.Compact) -> Bool) {
         self.avenue = avenue
@@ -103,8 +103,8 @@ final class MatchCellFiller : CellFiller {
         cell.scoreLabelMode = match.score == nil ? scoreMode.labelMode : .score
         cell.homeTeamNameLabel.text = match.home.name
         cell.awayTeamNameLabel.text = match.away.name
-        avenue.register(imageView: cell.homeBadgeImageView, for: match.home.badges.large)
-        avenue.register(imageView: cell.awayBadgeImageView, for: match.away.badges.large)
+        avenue.register(cell.homeBadgeImageView, for: match.home.badges.large)
+        avenue.register(cell.awayBadgeImageView, for: match.away.badges.large)
         cell.penaltyLabel.isHidden = (match.penalties == nil)
     }
     

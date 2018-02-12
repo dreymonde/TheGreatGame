@@ -23,11 +23,11 @@ class StagesTableViewController: TheGreatGame.TableViewController, Showing {
     
     // MARK: - Injections
     var makeMatchDetailVC: (Match.Compact, String) -> UIViewController = runtimeInject
-    var makeAvenue: (CGSize) -> Avenue<URL, UIImage, UIImageView> = runtimeInject
+    var makeAvenue: (CGSize) -> Avenue<URL, UIImage> = runtimeInject
     var isFavorite: (Match.Compact) -> Bool = runtimeInject
 
     // MARK: - Services
-    var avenue: Avenue<URL, UIImage, UIImageView>!
+    var avenue: Avenue<URL, UIImage>!
     
     // MARK: - Cell Fillers
     var matchCellFiller: MatchCellFiller!
@@ -136,6 +136,25 @@ extension StagesTableViewController {
                            forCellReuseIdentifier: "MatchListMatch")
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.prefetchDataSource = self
+    }
+    
+}
+
+extension StagesTableViewController : UITableViewDataSourcePrefetching {
+    
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        for match in indexPaths.map({ stages[$0.section].matches[$0.row] }) {
+            avenue.preload(key: match.home.badges.large)
+            avenue.preload(key: match.away.badges.large)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
+        for match in indexPaths.map({ stages[$0.section].matches[$0.row] }) {
+            avenue.cancel(key: match.home.badges.large)
+            avenue.cancel(key: match.away.badges.large)
+        }
     }
     
 }

@@ -35,9 +35,9 @@ final class TeamGroupCellFiller : CellFiller {
     typealias CellType = TeamGroupTableViewCell
     typealias Content = Group.Team
     
-    let avenue: Avenue<URL, UIImage, UIImageView>
+    let avenue: Avenue<URL, UIImage>
     
-    init(avenue: Avenue<URL, UIImage, UIImageView>) {
+    init(avenue: Avenue<URL, UIImage>) {
         self.avenue = avenue
     }
     
@@ -46,7 +46,7 @@ final class TeamGroupCellFiller : CellFiller {
         cell.pointsLabel.text = String(team.points)
         cell.pointsLabel.textColor = .black
         cell.positionLabel.text = "\(indexPath.row + 1)."
-        avenue.register(imageView: cell.badgeImageView, for: team.badges.large)
+        avenue.register(cell.badgeImageView, for: team.badges.large)
     }
     
 }
