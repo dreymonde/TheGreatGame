@@ -22,15 +22,12 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
     @IBOutlet weak var homeBadgeImageView: UIImageView!
     @IBOutlet weak var awayBadgeImageView: UIImageView!
     
-    let avenue = Images.inContainer(.shared).makeAvenue(forImageSize: CGSize.init(width: 100, height: 100), activityIndicator: .none)
+    let avenue = Images.inContainer(.shared).makeAvenue(claimer: UIImageView.self, forImageSize: CGSize.init(width: 100, height: 100), activityIndicator: .none)
     
     var match: Match.Full?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        avenue.onStateChange = { [weak self] _ in
-            self?.reload(afterImageDownload: true)
-        }
         // Do any required interface initialization here.
     }
     
@@ -40,16 +37,16 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
             return
         }
         self.match = match
-        reload(afterImageDownload: false)
+        reload()
     }
     
-    func reload(afterImageDownload: Bool) {
+    func reload() {
         guard let match = match else {
             fault("No match in reload")
             return
         }
-        avenue.prepareItem(at: match.home.badges.large)
-        avenue.prepareItem(at: match.away.badges.large)
+        avenue.register(imageView: homeBadgeImageView, for: match.home.badges.large)
+        avenue.register(imageView: awayBadgeImageView, for: match.away.badges.large)
         scoreLabel.text = match.scoreOrPenaltyString()
         homeLabel.text = match.home.shortName
         awayLabel.text = match.away.shortName
@@ -58,8 +55,6 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
 ////            eventLabel.text = vm.text
 ////            minuteLabel.text = vm.minute
 //        }
-        homeBadgeImageView.setImage(avenue.item(at: match.home.badges.large), afterDownload: afterImageDownload)
-        awayBadgeImageView.setImage(avenue.item(at: match.away.badges.large), afterDownload: afterImageDownload)
     }
     
 }

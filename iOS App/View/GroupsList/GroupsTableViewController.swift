@@ -18,10 +18,10 @@ class GroupsTableViewController: TheGreatGame.TableViewController {
     
     // MARK: - Injections
     var makeTeamDetailVC: (Group.Team) -> UIViewController = runtimeInject
-    var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
+    var makeAvenue: (CGSize) -> Avenue<URL, UIImage, UIImageView> = runtimeInject
 
     // MARK: - Services
-    var avenue: SymmetricalAvenue<URL, UIImage>!
+    var avenue: Avenue<URL, UIImage, UIImageView>!
     
     // MARK: - Cell Fillers
     var teamGroupCellFiller: TeamGroupCellFiller!
@@ -35,7 +35,6 @@ class GroupsTableViewController: TheGreatGame.TableViewController {
         configure(tableView)
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
         self.teamGroupCellFiller = TeamGroupCellFiller(avenue: avenue)
-        configure(avenue)
         registerFor3DTouch()
         reactiveGroups.update.fire(errorDelegate: self)
     }
@@ -62,23 +61,7 @@ class GroupsTableViewController: TheGreatGame.TableViewController {
     @IBAction func didPullToRefresh(_ sender: UIRefreshControl) {
         reactiveGroups.update.fire(activityIndicator: pullToRefreshIndicator, errorDelegate: self)
     }
-    
-    func didFetchImage(with url: URL) {
-        var paths: [IndexPath] = []
-        for (group, groupIndex) in zip(groups, groups.indices) {
-            for (team, teamIndex) in zip(group.teams, group.teams.indices) {
-                if team.badges.large == url {
-                    paths.append(IndexPath.init(row: teamIndex, section: groupIndex))
-                }
-            }
-        }
-        for indexPath in paths {
-            if let cell = tableView.cellForRow(at: indexPath) {
-                configureCell(cell, forRowAt: indexPath, afterImageDownload: true)
-            }
-        }
-    }
-    
+        
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -99,18 +82,18 @@ class GroupsTableViewController: TheGreatGame.TableViewController {
         return cell
     }
     
-    func configureCell(_ cell: UITableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool = false) {
+    func configureCell(_ cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         switch cell {
         case let match as TeamGroupTableViewCell:
-            configureTeamGroupCell(match, forRowAt: indexPath, afterImageDownload: afterImageDownload)
+            configureTeamGroupCell(match, forRowAt: indexPath)
         default:
             fault(type(of: cell))
         }
     }
     
-    func configureTeamGroupCell(_ cell: TeamGroupTableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
+    func configureTeamGroupCell(_ cell: TeamGroupTableViewCell, forRowAt indexPath: IndexPath) {
         let groupTeam = groups[indexPath.section].teams[indexPath.row]
-        teamGroupCellFiller.setup(cell, with: groupTeam, forRowAt: indexPath, afterImageDownload: afterImageDownload)
+        teamGroupCellFiller.setup(cell, with: groupTeam, forRowAt: indexPath)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -126,16 +109,6 @@ extension GroupsTableViewController {
     fileprivate func registerFor3DTouch() {
         if traitCollection.forceTouchCapability == .available {
             registerForPreviewing(with: self, sourceView: tableView)
-        }
-    }
-    
-    fileprivate func configure(_ avenue: Avenue<URL, URL, UIImage>) {
-        avenue.onStateChange = { [weak self] url in
-            assert(Thread.isMainThread)
-            self?.didFetchImage(with: url)
-        }
-        avenue.onError = { er, _ in
-            print(er)
         }
     }
     

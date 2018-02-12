@@ -46,11 +46,11 @@ class MatchesInterfaceController: WKInterfaceController {
     struct Context {
         let matches: [Match.Full]
         let reactive: Reactive<[Match.Full]>
-        let makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage>
+        let makeAvenue: (CGSize) -> Avenue<URL, UIImage, WKInterfaceImage>
     }
     
     var context: Context!
-    var avenue: Avenue<URL, URL, UIImage>!
+    var avenue: Avenue<URL, UIImage, WKInterfaceImage>!
     var networkActivityIndicator: NetworkActivityIndicator!
     
     var matches: [Match.Full] = [] {
@@ -70,7 +70,6 @@ class MatchesInterfaceController: WKInterfaceController {
         self.avenue = self.context.makeAvenue(CGSize.init(width: 35, height: 35))
             .connectingNetworkActivityIndicator(manager: networkActivityIndicator)
         printWithContext()
-        configure(avenue)
         self.matches = self.context.matches
         subscribe()
         self.context.reactive.update.fire(activityIndicator: networkActivityIndicator,
@@ -92,16 +91,7 @@ class MatchesInterfaceController: WKInterfaceController {
         }
         super.willActivate()
     }
-    
-    func didFetchImage(with url: URL) {
-        for (match, index) in zip(matches, matches.indices) {
-            if match.teams.map({ $0.badges.large }).contains(url) {
-                let controller = table.rowController(at: index) as! MatchCellController
-                configure(controller, with: match, forRowAt: index)
-            }
-        }
-    }
-    
+        
     func reload(with matches: [Match.Full]) {
         printWithContext()
         self.matches = matches
@@ -113,16 +103,20 @@ class MatchesInterfaceController: WKInterfaceController {
     }
     
     func configure(_ cell: MatchCellController, with match: Match.Full, forRowAt index: Int) {
-        avenue.prepareItem(at: match.home.badges.large)
-        avenue.prepareItem(at: match.away.badges.large)
+//        avenue.prepareItem(at: match.home.badges.large)
+//        avenue.prepareItem(at: match.away.badges.large)
+        avenue.register(cell.homeBadgeImage, for: match.home.badges.large) { (view, image) in
+            view.setImage(image)
+        }
+        avenue.register(cell.awayBadgeImage, for: match.away.badges.large) { (view, image) in
+            view.setImage(image)
+        }
         cell.scoreLabel.setText(match.scoreOrTimeString())
         if match.score == nil {
             cell.scoreLabel.setTextColor(.lightGray)
         } else {
             cell.scoreLabel.setTextColor(.white)
         }
-        cell.homeBadgeImage.setImage(avenue.item(at: match.home.badges.large))
-        cell.awayBadgeImage.setImage(avenue.item(at: match.away.badges.large))
         configureProgressSeparator(cell.minutesPassedSeparator, with: match)
     }
     
@@ -150,11 +144,5 @@ class MatchesInterfaceController: WKInterfaceController {
 extension MatchesInterfaceController {
     
     // MARK: - Configurations
-    
-    fileprivate func configure(_ avenue: SymmetricalAvenue<URL, UIImage>) {
-        avenue.onStateChange = { [weak self] url in
-            self?.didFetchImage(with: url)
-        }
-    }
     
 }

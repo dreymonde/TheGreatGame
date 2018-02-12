@@ -15,19 +15,19 @@ protocol CellFiller {
     associatedtype CellType
     associatedtype Content
     
-    func setup(_ cell: CellType, with content: Content, forRowAt indexPath: IndexPath, afterImageDownload: Bool)
+    func setup(_ cell: CellType, with content: Content, forRowAt indexPath: IndexPath)
     
 }
 
 final class Cell<CellType : UITableViewCell, Content> : CellFiller {
     
-    private let _setup: (CellType, Content, IndexPath, Bool) -> ()
-    init(setup: @escaping (CellType, Content, IndexPath, Bool) -> ()) {
+    private let _setup: (CellType, Content, IndexPath) -> ()
+    init(setup: @escaping (CellType, Content, IndexPath) -> ()) {
         self._setup = setup
     }
     
-    func setup(_ cell: CellType, with content: Content, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
-        _setup(cell, content, indexPath, afterImageDownload)
+    func setup(_ cell: CellType, with content: Content, forRowAt indexPath: IndexPath) {
+        _setup(cell, content, indexPath)
     }
     
 }

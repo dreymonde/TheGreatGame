@@ -35,21 +35,18 @@ final class TeamGroupCellFiller : CellFiller {
     typealias CellType = TeamGroupTableViewCell
     typealias Content = Group.Team
     
-    let avenue: Avenue<URL, URL, UIImage>
+    let avenue: Avenue<URL, UIImage, UIImageView>
     
-    init(avenue: Avenue<URL, URL, UIImage>) {
+    init(avenue: Avenue<URL, UIImage, UIImageView>) {
         self.avenue = avenue
     }
     
-    func setup(_ cell: TeamGroupTableViewCell, with team: Group.Team, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
-        if !afterImageDownload {
-            avenue.prepareItem(at: team.badges.large)
-        }
+    func setup(_ cell: TeamGroupTableViewCell, with team: Group.Team, forRowAt indexPath: IndexPath) {
         cell.nameLabel.text = team.name
         cell.pointsLabel.text = String(team.points)
         cell.pointsLabel.textColor = .black
         cell.positionLabel.text = "\(indexPath.row + 1)."
-        cell.badgeImageView.setImage(avenue.item(at: team.badges.large), afterDownload: afterImageDownload)
+        avenue.register(imageView: cell.badgeImageView, for: team.badges.large)
     }
     
 }

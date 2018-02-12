@@ -23,11 +23,11 @@ class StagesTableViewController: TheGreatGame.TableViewController, Showing {
     
     // MARK: - Injections
     var makeMatchDetailVC: (Match.Compact, String) -> UIViewController = runtimeInject
-    var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject    
+    var makeAvenue: (CGSize) -> Avenue<URL, UIImage, UIImageView> = runtimeInject
     var isFavorite: (Match.Compact) -> Bool = runtimeInject
 
     // MARK: - Services
-    var avenue: SymmetricalAvenue<URL, UIImage>!
+    var avenue: Avenue<URL, UIImage, UIImageView>!
     
     // MARK: - Cell Fillers
     var matchCellFiller: MatchCellFiller!
@@ -46,7 +46,6 @@ class StagesTableViewController: TheGreatGame.TableViewController, Showing {
         self.matchCellFiller = MatchCellFiller(avenue: avenue,
                                                scoreMode: .timeOnly,
                                                isFavorite: { [unowned self] in self.isFavorite($0) })
-        configure(avenue)
         self.reactiveStages.update.fire(errorDelegate: self)
     }
     
@@ -81,22 +80,6 @@ class StagesTableViewController: TheGreatGame.TableViewController, Showing {
         reactiveStages.update.fire(activityIndicator: pullToRefreshIndicator, errorDelegate: self)
     }
     
-    func didFetchImage(with url: URL) {
-        var paths: [IndexPath] = []
-        for (stage, stageIndex) in zip(stages, stages.indices) {
-            for (match, matchIndex) in zip(stage.matches, stage.matches.indices) {
-                if match.teams.contains(where: { $0.badges.large == url }) {
-                    paths.append(IndexPath(row: matchIndex, section: stageIndex))
-                }
-            }
-        }
-        for indexPath in paths {
-            if let cell = tableView.cellForRow(at: indexPath) {
-                configureCell(cell, forRowAt: indexPath, afterImageDownload: true)
-            }
-        }
-    }
-    
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -120,18 +103,18 @@ class StagesTableViewController: TheGreatGame.TableViewController, Showing {
         return cell
     }
     
-    func configureCell(_ cell: UITableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool = false) {
+    func configureCell(_ cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         switch cell {
         case let match as MatchTableViewCell:
-            configureMatchCell(match, forRowAt: indexPath, afterImageDownload: afterImageDownload)
+            configureMatchCell(match, forRowAt: indexPath)
         default:
             fault(type(of: cell))
         }
     }
     
-    func configureMatchCell(_ cell: MatchTableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
+    func configureMatchCell(_ cell: MatchTableViewCell, forRowAt indexPath: IndexPath) {
         let match = stages[indexPath.section].matches[indexPath.row]
-        matchCellFiller.setup(cell, with: match, forRowAt: indexPath, afterImageDownload: afterImageDownload)
+        matchCellFiller.setup(cell, with: match, forRowAt: indexPath)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -147,16 +130,6 @@ class StagesTableViewController: TheGreatGame.TableViewController, Showing {
 
 // MARK: - Configurations
 extension StagesTableViewController {
-        
-    fileprivate func configure(_ avenue: Avenue<URL, URL, UIImage>) {
-        avenue.onStateChange = { [weak self] url in
-            assert(Thread.isMainThread)
-            self?.didFetchImage(with: url)
-        }
-        avenue.onError = { er, _ in
-            print(er)
-        }
-    }
     
     fileprivate func configure(_ tableView: UITableView) {
         tableView.register(UINib.init(nibName: "MatchTableViewCell", bundle: nil),

@@ -32,19 +32,11 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     
     var showingMatch: Match.Full?
     
-    var avenue: SymmetricalAvenue<URL, UIImage>!
+    var avenue: Avenue<URL, UIImage, UIImageView>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.avenue = todayExtension.images.makeNotSizedAvenue()
-        avenue.onStateChange = { [weak self] _ in
-            if let match = self?.showingMatch {
-                self?.setup(with: match, afterImageDownload: true, initial: false)
-            }
-        }
-        avenue.onError = { [weak self] _,_  in
-            self?.complete(result: .failed)
-        }
+        self.avenue = todayExtension.images.makeNotSizedAvenue(claimer: UIImageView.self)
         self.initial()
     }
     
@@ -52,7 +44,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         todayExtension.reactiveRelevantMatches.didUpdate.flatSubscribe(self, with: { vc, matches in vc.setup(with: matches, initial: false) })
     }
     
-    func setup(with match: Match.Full, afterImageDownload: Bool, initial: Bool) {
+    func setup(with match: Match.Full, initial: Bool) {
         self.homeNameLabel.text = match.home.shortName
         self.awayNameLabel.text = match.away.shortName
         self.scoreLabel.text = match.scoreOrPenaltyString()
@@ -60,11 +52,11 @@ class TodayViewController: UIViewController, NCWidgetProviding {
             self.scoreLabel.text?.append(" PEN")
         }
         self.stageTitle.text = TodayViewController.dateFormatter.string(from: match.date)
-        avenue.prepareItem(at: match.home.badges.large)
-        avenue.prepareItem(at: match.away.badges.large)
-        self.homeBadgeImageView.setImage(avenue.item(at: match.home.badges.large), afterDownload: false)
-        self.awayBadgeImageView.setImage(avenue.item(at: match.away.badges.large), afterDownload: false)
-        if !initial, let _ = avenue.item(at: match.home.badges.large), let _ = avenue.item(at: match.away.badges.large) {
+        avenue.register(imageView: homeBadgeImageView, for: match.home.badges.large)
+        avenue.register(imageView: awayBadgeImageView, for: match.away.badges.large)
+        if !initial,
+            let _ = avenue.cache.value(forKey: match.home.badges.large),
+            let _ = avenue.cache.value(forKey: match.away.badges.large) {
             self.complete(result: .newData)
         }
     }
@@ -72,7 +64,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     func setup(with relevantMatches: [Match.Full], initial: Bool) {
         if let mostRelevant = relevantMatches.mostRelevant() {
             self.showingMatch = mostRelevant
-            self.setup(with: mostRelevant, afterImageDownload: false, initial: initial)
+            self.setup(with: mostRelevant, initial: initial)
         }
     }
     

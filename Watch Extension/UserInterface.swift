@@ -40,7 +40,7 @@ final class UserInterface {
                                                       activityIndicator: .none))
         return MatchesInterfaceController.Context(matches: relevantMatches,
                                                   reactive: reactive,
-                                                  makeAvenue: logic.images.makeDoubleCachedAvenue(forImageSize:))
+                                                  makeAvenue: { self.logic.images.makeDoubleCachedAvenue(claimer: WKInterfaceImage.self, forImageSize: $0) })
     }
     
     static let matchesList = "MatchesInterfaceController"

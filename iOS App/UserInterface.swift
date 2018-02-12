@@ -80,8 +80,8 @@ final class UserInterface {
         show(match)
     }
     
-    private func makeAvenue(forImageSize imageSize: CGSize) -> Avenue<URL, URL, UIImage> {
-        return logic.images.makeAvenue(forImageSize: imageSize, activityIndicator: .application)
+    private func makeAvenue(forImageSize imageSize: CGSize) -> Avenue<URL, UIImage, UIImageView> {
+        return logic.images.makeAvenue(claimer: UIImageView.self, forImageSize: imageSize, activityIndicator: .application)
     }
     
     func inject(to teamsList: TeamsTableViewController) {

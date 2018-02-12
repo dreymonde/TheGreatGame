@@ -56,13 +56,13 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
     var preloadedTeam: TeamDetailPreLoaded?
     var makeTeamDetailVC: (Group.Team) -> UIViewController = runtimeInject
     var makeMatchDetailVC: (Match.Compact) -> UIViewController = runtimeInject
-    var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
+    var makeAvenue: (CGSize) -> Avenue<URL, UIImage, UIImageView> = runtimeInject
     var isFavorite: () -> Bool = runtimeInject
     var updateFavorite: (Bool) -> () = runtimeInject
 
     // MARK: - Services
-    var mainBadgeAvenue: SymmetricalAvenue<URL, UIImage>!
-    var smallBadgesAvenue: SymmetricalAvenue<URL, UIImage>!
+    var mainBadgeAvenue: Avenue<URL, UIImage, UIImageView>!
+    var smallBadgesAvenue: Avenue<URL, UIImage, UIImageView>!
     
     // MARK: - Cell Fillers
     var matchCellFiller: MatchCellFiller!
@@ -82,8 +82,6 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
         registerForPeekAndPop()
         self.subscribe()
         configure(tableView)
-        configure(smallBadges: smallBadgesAvenue)
-        configure(mainBadge: mainBadgeAvenue)
         configure(navigationItem)
         configure(favoriteButton: favoriteButton)
         self.reactiveTeam.update.fire(errorDelegate: self)
@@ -155,36 +153,7 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
             return nil
         }
     }
-    
-    func didFetchMainBadge() {
-        let detailCellIndexPath = IndexPath(row: 0, section: detailSectionIndex)
-        if let detailCell = tableView.cellForRow(at: detailCellIndexPath) {
-            configureCell(detailCell, forRowAt: detailCellIndexPath, afterImageDownload: true)
-        }
-    }
-    
-    func didFetchImage(with url: URL) {
-        guard let team = team else {
-            return
-        }
-        var paths: [IndexPath] = []
-        for (match, index) in zip(team.matches, team.matches.indices) {
-            if match.teams.map({ $0.badges.large }).contains(url) {
-                paths.append(IndexPath.init(row: index, section: matchesSectionIndex))
-            }
-        }
-        for (team, index) in zip(team.group.teams, team.group.teams.indices) {
-            if team.badges.large == url {
-                paths.append(IndexPath.init(row: index, section: groupSectionIndex))
-            }
-        }
-        for indexPath in paths {
-            if let cell = tableView.cellForRow(at: indexPath) {
-                configureCell(cell, forRowAt: indexPath, afterImageDownload: true)
-            }
-        }
-    }
-
+        
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case detailSectionIndex:
@@ -204,50 +173,48 @@ class TeamDetailTableViewController: TheGreatGame.TableViewController, Refreshin
         }
     }
     
-    func configureCell(_ cell: UITableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool = false) {
+    func configureCell(_ cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         switch cell {
         case let match as MatchTableViewCell:
-            configureMatchCell(match, forRowAt: indexPath, afterImageDownload: afterImageDownload)
+            configureMatchCell(match, forRowAt: indexPath)
         case let teamGroup as TeamGroupTableViewCell:
-            configureTeamGroupCell(teamGroup, forRowAt: indexPath, afterImageDownload: afterImageDownload)
+            configureTeamGroupCell(teamGroup, forRowAt: indexPath)
         case let teamDetail as TeamDetailInfoTableViewCell:
-            configureTeamDetailsCell(teamDetail, forRowAt: indexPath, afterImageDownload: afterImageDownload)
+            configureTeamDetailsCell(teamDetail, forRowAt: indexPath)
         default:
             fault("Such cell is not registered \(type(of: cell))")
         }
     }
     
-    func configureTeamDetailsCell(_ cell: TeamDetailInfoTableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
+    func configureTeamDetailsCell(_ cell: TeamDetailInfoTableViewCell, forRowAt indexPath: IndexPath) {
         cell.selectionStyle = .none
         if let team = team {
-            mainBadgeAvenue.prepareItem(at: team.badges.flag)
+            mainBadgeAvenue.register(imageView: cell.badgeImageView, for: team.badges.flag)
             cell.nameLabel.text = team.name
-            cell.badgeImageView.image = mainBadgeAvenue.item(at: team.badges.flag)
             cell.teamSummaryLabel.text = team.summary
         } else if let preloaded = preloadedTeam {
             cell.nameLabel.text = preloaded.name
             cell.teamSummaryLabel.text = preloaded.summary
             if let badgeURL = preloaded.badges?.flag {
-                mainBadgeAvenue.prepareItem(at: badgeURL)
-                cell.badgeImageView.image = mainBadgeAvenue.item(at: badgeURL)
+                mainBadgeAvenue.register(imageView: cell.badgeImageView, for: badgeURL)
             }
         }
     }
     
-    func configureMatchCell(_ cell: MatchTableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
+    func configureMatchCell(_ cell: MatchTableViewCell, forRowAt indexPath: IndexPath) {
         guard let match = team?.matches[indexPath.row] else {
             fault("No team still?")
             return
         }
-        matchCellFiller.setup(cell, with: match, forRowAt: indexPath, afterImageDownload: afterImageDownload)
+        matchCellFiller.setup(cell, with: match, forRowAt: indexPath)
     }
     
-    func configureTeamGroupCell(_ cell: TeamGroupTableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
+    func configureTeamGroupCell(_ cell: TeamGroupTableViewCell, forRowAt indexPath: IndexPath) {
         guard let groupTeam = team?.group.teams[indexPath.row] else {
             fault("No team, really?")
             return
         }
-        teamGroupCellFiller.setup(cell, with: groupTeam, forRowAt: indexPath, afterImageDownload: afterImageDownload)
+        teamGroupCellFiller.setup(cell, with: groupTeam, forRowAt: indexPath)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -293,20 +260,6 @@ extension TeamDetailTableViewController {
             $0.register(UINib.init(nibName: "TeamDetailInfoTableViewCell", bundle: nil), forCellReuseIdentifier: "TeamDetailTeamDetail")
             $0.estimatedRowHeight = 55
             $0.rowHeight = UITableViewAutomaticDimension
-        }
-    }
-    
-    fileprivate func configure(smallBadges avenue: SymmetricalAvenue<URL, UIImage>) {
-        avenue.onStateChange = { [weak self] url in
-            assert(Thread.isMainThread)
-            self?.didFetchImage(with: url)
-        }
-    }
-    
-    fileprivate func configure(mainBadge avenue: SymmetricalAvenue<URL, UIImage>) {
-        avenue.onStateChange = { [weak self] url in
-            assert(Thread.isMainThread)
-            self?.didFetchMainBadge()
         }
     }
     

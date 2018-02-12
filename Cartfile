@@ -1,4 +1,4 @@
 github "dreymonde/Shallows" ~> 0.8.0
 github "hyperoslo/Whisper" ~> 6.0.0
-github "dreymonde/Avenues"
+github "dreymonde/Avenues" "new-avenue"
 github "dreymonde/Alba" ~> 0.5.0

@@ -10,18 +10,18 @@ import Foundation
 import Avenues
 import UIKit.UIImage
 
-public final class ImageNSCache : Avenues.StorageProtocol {
+public final class ImageNSCache : Avenues.MemoryCacheProtocol {
     
     let internalCache = NSCache<NSURL, UIImage>()
     
     public typealias Key = URL
     public typealias Value = UIImage
     
-    public func value(for key: URL) -> UIImage? {
+    public func value(forKey key: URL) -> UIImage? {
         return internalCache.object(forKey: key as NSURL)
     }
     
-    public func set(_ value: UIImage, for key: URL) {
+    public func set(_ value: UIImage, forKey key: URL) {
         internalCache.setObject(value, forKey: key as NSURL)
     }
     

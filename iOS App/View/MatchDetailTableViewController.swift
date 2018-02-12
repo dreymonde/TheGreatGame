@@ -61,14 +61,14 @@ class MatchDetailTableViewController: TableViewController {
     
     // MARK: - Injections
     var preloadedMatch: MatchDetailPreLoaded?
-    var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
+    var makeAvenue: (CGSize) -> Avenue<URL, UIImage, UIImageView> = runtimeInject
     var makeTeamDetailVC: (Match.Team) -> UIViewController = runtimeInject
     var isFavorite: () -> Bool = runtimeInject
     var updateFavorite: (Bool) -> () = runtimeInject
     
     // MARK: - Services
-    var badgeAvenue: SymmetricalAvenue<URL, UIImage>!
-    var flagAvenue: SymmetricalAvenue<URL, UIImage>!
+    var badgeAvenue: Avenue<URL, UIImage, UIImageView>!
+    var flagAvenue: Avenue<URL, UIImage, UIImageView>!
     
     // MARK: - Connections
     var reactiveTeam: Reactive<Match.Full>!
@@ -81,8 +81,6 @@ class MatchDetailTableViewController: TableViewController {
 
         configure(tableView)
         configure(navigationItem)
-        configure(badgeAvenue)
-        configure(flagAvenue)
         configure(favoriteButton: favoriteButton)
         
         self.subscribe()
@@ -153,13 +151,6 @@ class MatchDetailTableViewController: TableViewController {
     let matchDetailReuseIdentifier = "MatchDetailMatch"
     let matchEventReuseIdentifier = "MatchDetailEvent"
     
-    func didFetchImage(with url: URL) {
-        let matchDetailIndexPath = IndexPath(row: 0, section: 0)
-        if let matchDetail = tableView.cellForRow(at: matchDetailIndexPath) {
-            configureCell(matchDetail, forRowAt: matchDetailIndexPath, afterImageDownload: true)
-        }
-    }
-
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: UITableViewCell = {
             switch indexPath.section {
@@ -175,24 +166,21 @@ class MatchDetailTableViewController: TableViewController {
         return cell
     }
     
-    func configureCell(_ cell: UITableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool = false) {
+    func configureCell(_ cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         switch cell {
         case let matchDetail as MatchDetailTableViewCell:
-            configureMatchDetailCell(matchDetail, forRowAt: indexPath, afterImageDownload: afterImageDownload)
+            configureMatchDetailCell(matchDetail, forRowAt: indexPath)
         case let event as MatchEventTableViewCell:
-            configureEventCell(event, forRowAt: indexPath, afterImageDownload: afterImageDownload)
+            configureEventCell(event, forRowAt: indexPath)
         default:
             fault("Such cell is not registered \(type(of: cell))")
         }
     }
     
-    func configureMatchDetailCell(_ cell: MatchDetailTableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
+    func configureMatchDetailCell(_ cell: MatchDetailTableViewCell, forRowAt indexPath: IndexPath) {
         cell.selectionStyle = .none
         if let match = match {
-            
-            prepareBadges(for: match.home)
-            prepareBadges(for: match.away)
-            
+                        
             cell.homeTeamNameLabel.text = match.home.name
             cell.scoreLabel.text = match.scoreOrPenaltyString()
             cell.awayTeamLabel.text = match.away.name
@@ -211,11 +199,11 @@ class MatchDetailTableViewController: TableViewController {
                 cell.minuteLabel.text = match.minuteOrStateString()
             }
             
-            cell.homeFlagImageView.setImage(flagAvenue.item(at: match.home.badges.flag), afterDownload: afterImageDownload)
-            cell.awayFlagImageView.setImage(flagAvenue.item(at: match.away.badges.flag), afterDownload: afterImageDownload)
+            flagAvenue.register(imageView: cell.homeFlagImageView, for: match.home.badges.flag)
+            flagAvenue.register(imageView: cell.awayFlagImageView, for: match.away.badges.flag)
             
-            cell.homeBadgeImageView.setImage(badgeAvenue.item(at: match.home.badges.large), afterDownload: afterImageDownload)
-            cell.awayBadgeImageView.setImage(badgeAvenue.item(at: match.away.badges.large), afterDownload: afterImageDownload)
+            badgeAvenue.register(imageView: cell.homeBadgeImageView, for: match.home.badges.large)
+            badgeAvenue.register(imageView: cell.awayBadgeImageView, for: match.away.badges.large)
             
             cell.onHomeBadgeTap = { [unowned self] in
                 let vc = self.makeTeamDetailVC(match.home)
@@ -228,14 +216,12 @@ class MatchDetailTableViewController: TableViewController {
             
         } else if let preloaded = preloadedMatch {
             if let home = preloaded.home {
-                prepareBadges(for: home)
-                cell.homeFlagImageView.setImage(flagAvenue.item(at: home.badges.flag), afterDownload: afterImageDownload)
-                cell.homeBadgeImageView.setImage(badgeAvenue.item(at: home.badges.large), afterDownload: afterImageDownload)
+                flagAvenue.register(imageView: cell.homeFlagImageView, for: home.badges.flag)
+                badgeAvenue.register(imageView: cell.homeBadgeImageView, for: home.badges.large)
             }
             if let away = preloaded.away {
-                prepareBadges(for: away)
-                cell.awayFlagImageView.setImage(flagAvenue.item(at: away.badges.flag), afterDownload: afterImageDownload)
-                cell.awayBadgeImageView.setImage(badgeAvenue.item(at: away.badges.large), afterDownload: afterImageDownload)
+                flagAvenue.register(imageView: cell.awayFlagImageView, for: away.badges.flag)
+                badgeAvenue.register(imageView: cell.awayBadgeImageView, for: away.badges.large)
             }
             cell.homeTeamNameLabel.text = preloaded.home?.name
             cell.scoreLabel.text = preloaded.score?.string ?? "-:-"
@@ -247,12 +233,7 @@ class MatchDetailTableViewController: TableViewController {
         cell.scoreLabel.textColor = .black
     }
     
-    private func prepareBadges(for team: Match.Team) {
-        badgeAvenue.prepareItem(at: team.badges.large)
-        flagAvenue.prepareItem(at: team.badges.flag)
-    }
-    
-    func configureEventCell(_ cell: MatchEventTableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
+    func configureEventCell(_ cell: MatchEventTableViewCell, forRowAt indexPath: IndexPath) {
         cell.selectionStyle = .none
         guard let match = match else {
             fault("Match should be existing at this point")
@@ -280,16 +261,6 @@ extension MatchDetailTableViewController {
             $0.register(UINib.init(nibName: "MatchEventTableViewCell", bundle: nil), forCellReuseIdentifier: matchEventReuseIdentifier)
             $0.estimatedRowHeight = 70
             $0.rowHeight = UITableViewAutomaticDimension
-        }
-    }
-    
-    fileprivate func configure(_ avenue: Avenue<URL, URL, UIImage>) {
-        avenue.onStateChange = { [weak self] url in
-            assert(Thread.isMainThread)
-            self?.didFetchImage(with: url)
-        }
-        avenue.onError = { er,_ in
-            print(er)
         }
     }
     

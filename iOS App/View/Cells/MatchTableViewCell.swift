@@ -80,11 +80,11 @@ final class MatchCellFiller : CellFiller {
     typealias CellType = MatchTableViewCell
     typealias Content = Match.Compact
     
-    let avenue: Avenue<URL, URL, UIImage>
+    let avenue: Avenue<URL, UIImage, UIImageView>
     let isFavorite: (Match.Compact) -> Bool
     let scoreMode: ScoreMode
     
-    init(avenue: Avenue<URL, URL, UIImage>,
+    init(avenue: Avenue<URL, UIImage, UIImageView>,
          scoreMode: ScoreMode,
          isFavorite: @escaping (Match.Compact) -> Bool) {
         self.avenue = avenue
@@ -92,11 +92,7 @@ final class MatchCellFiller : CellFiller {
         self.scoreMode = scoreMode
     }
     
-    func setup(_ cell: MatchTableViewCell, with match: Match.Compact, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
-        if !afterImageDownload {
-            avenue.prepareItem(at: match.home.badges.large)
-            avenue.prepareItem(at: match.away.badges.large)
-        }
+    func setup(_ cell: MatchTableViewCell, with match: Match.Compact, forRowAt indexPath: IndexPath) {
         if isFavorite(match) {
             cell.backgroundColor = UIColor(named: .favoriteBackground)
         } else {
@@ -107,8 +103,8 @@ final class MatchCellFiller : CellFiller {
         cell.scoreLabelMode = match.score == nil ? scoreMode.labelMode : .score
         cell.homeTeamNameLabel.text = match.home.name
         cell.awayTeamNameLabel.text = match.away.name
-        cell.homeBadgeImageView.setImage(avenue.item(at: match.home.badges.large), afterDownload: afterImageDownload)
-        cell.awayBadgeImageView.setImage(avenue.item(at: match.away.badges.large), afterDownload: afterImageDownload)
+        avenue.register(imageView: cell.homeBadgeImageView, for: match.home.badges.large)
+        avenue.register(imageView: cell.awayBadgeImageView, for: match.away.badges.large)
         cell.penaltyLabel.isHidden = (match.penalties == nil)
     }
     

@@ -15,7 +15,7 @@ extension Shallows.Result {
     
 }
 
-extension Avenues.ProcessorProtocol {
+extension Avenues.ProcessorProtocol where Key : Hashable {
     
     public func caching<CacheType : Shallows.StorageProtocol>(to cache: CacheType) -> Processor<Key, Value> where CacheType.Key == Key, CacheType.Value == Value {
         var cacheInFlight = Set<Key>()
@@ -25,9 +25,9 @@ extension Avenues.ProcessorProtocol {
                 _ = cacheInFlightLockQueue.sync { cacheInFlight.remove(key) }
                 switch cacheResult {
                 case .success(let cached):
-                    if Avenues.Log.isEnabled {
-                        printWithContext("avenue-\(cache.storageName): quick access for key \(key)")
-                    }
+//                    if Avenues.Log.isEnabled {
+//                        printWithContext("avenue-\(cache.storageName): quick access for key \(key)")
+//                    }
                     completion(.success(cached))
                 case .failure:
                     self.start(key: key, completion: { (processorResult) in
@@ -59,26 +59,3 @@ extension Avenues.ProcessorProtocol {
     
 }
 
-public final class CacheProcessor<Key : Hashable, Value> : AutoProcessorProtocol {
-    
-    let cache: ReadOnlyStorage<Key, Value>
-    
-    init<CacheType : ReadableStorageProtocol>(cache: CacheType) where CacheType.Key == Key, CacheType.Value == Value {
-        self.cache = cache.asReadOnlyStorage()
-    }
-    
-    public func start(key: Key, completion: @escaping (ProcessorResult<Value>) -> ()) {
-        cache.retrieve(forKey: key) { (result) in
-            completion(result.asProcessorResult)
-        }
-    }
-    
-    public func cancel(key: Key) -> Bool {
-        return false
-    }
-    
-    public func cancelAll() {
-        // not supported
-    }
-    
-}

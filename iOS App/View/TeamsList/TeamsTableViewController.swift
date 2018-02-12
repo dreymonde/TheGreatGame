@@ -31,13 +31,13 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Showing {
     
     // MARK: - Injections
     var makeTeamDetailVC: (Team.Compact, _ onFavorite: @escaping () -> ()) -> UIViewController = runtimeInject
-    var makeAvenue: (CGSize) -> SymmetricalAvenue<URL, UIImage> = runtimeInject
+    var makeAvenue: (CGSize) -> Avenue<URL, UIImage, UIImageView> = runtimeInject
     
     var isFavorite: (Team.ID) -> Bool = runtimeInject
     var updateFavorite: (Team.ID, Bool) -> () = runtimeInject
     
     // MARK: - Services
-    var avenue: SymmetricalAvenue<URL, UIImage>!
+    var avenue: Avenue<URL, UIImage, UIImageView>!
     
     // MARK: - Connections
     var reactiveTeams: Reactive<[Team.Compact]>!
@@ -49,7 +49,6 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Showing {
         self.subscribe()
         configure(tableView)
         self.avenue = makeAvenue(CGSize(width: 30, height: 30))
-        configure(avenue)
         self.reactiveTeams.update.fire(errorDelegate: self)
     }
     
@@ -77,17 +76,7 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Showing {
         reactiveTeams.update.fire(activityIndicator: pullToRefreshIndicator,
                                   errorDelegate: self)
     }
-    
-    func didFetchImage(with url: URL) {
-        guard let indexPath = teams.index(where: { $0.badges.large == url }).map({ IndexPath(row: $0, section: 0) }) else {
-            fault("No team with badge url: \(url)")
-            return
-        }
-        if let cell = tableView.cellForRow(at: indexPath) {
-            configureCell(cell, forRowAt: indexPath, afterImageDownload: true)
-        }
-    }
-    
+        
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -104,25 +93,22 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Showing {
         return cell
     }
     
-    func configureCell(_ cell: UITableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool = false) {
+    func configureCell(_ cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         switch cell {
         case let teamCompact as TeamCompactTableViewCell:
-            configureTeamCompactCell(teamCompact, forRowAt: indexPath, afterImageDownload: afterImageDownload)
+            configureTeamCompactCell(teamCompact, forRowAt: indexPath)
         default:
             fault(type(of: cell))
         }
     }
     
-    func configureTeamCompactCell(_ cell: TeamCompactTableViewCell, forRowAt indexPath: IndexPath, afterImageDownload: Bool) {
+    func configureTeamCompactCell(_ cell: TeamCompactTableViewCell, forRowAt indexPath: IndexPath) {
         let team = teams[indexPath.row]
         let badgeURL = team.badges.large
-        if !afterImageDownload {
-            avenue.prepareItem(at: badgeURL)
-        }
         cell.favoriteButton.isSelected = isFavorite(team.id)
         cell.nameLabel.text = team.name
         cell.shortNameLabel.text = team.shortName
-        cell.badgeImageView.setImage(avenue.item(at: badgeURL), afterDownload: true)
+        avenue.register(imageView: cell.badgeImageView, for: badgeURL)
         cell.onSwitch = { isFavorite in
             if let ipath = self.tableView.indexPath(for: cell) {
                 let team = self.teams[ipath.row]
@@ -148,16 +134,6 @@ class TeamsTableViewController: TheGreatGame.TableViewController, Showing {
 
 // MARK: - Configurations
 extension TeamsTableViewController {
-    
-    fileprivate func configure(_ avenue: Avenue<URL, URL, UIImage>) {
-        avenue.onStateChange = { [weak self] url in
-            assert(Thread.isMainThread)
-            self?.didFetchImage(with: url)
-        }
-        avenue.onError = { er,_ in
-            print(er)
-        }
-    }
     
     fileprivate func configure(_ tableView: UITableView) {
         tableView.register(UINib.init(nibName: "TeamCompactTableViewCell", bundle: nil),
