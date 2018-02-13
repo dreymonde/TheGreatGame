@@ -10,6 +10,23 @@ import Foundation
 import Avenues
 import UIKit.UIImage
 
+public final class EmptyCache : MemoryCacheProtocol {
+
+    public typealias Key = URL
+    public typealias Value = UIImage
+    
+    public init() { }
+    
+    public func value(forKey key: URL) -> UIImage? {
+        return nil
+    }
+    
+    public func set(_ value: UIImage, forKey key: URL) {
+        //
+    }
+    
+}
+
 public final class ImageNSCache : Avenues.MemoryCacheProtocol {
     
     let internalCache = NSCache<NSURL, UIImage>()

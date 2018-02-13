@@ -31,7 +31,7 @@ final class TodayExtension {
         
         ShallowsLog.isEnabled = true
         
-        self.api = API.gitHub()
+        self.api = API.gitHubRaw()
         self.localDB = LocalDB.inContainer(.shared)
         self.connections = Connections(api: api, localDB: localDB, activityIndicator: .none)
         let favoriteTeams = FlagsRegistry<FavoriteTeams>.inContainer(.shared)

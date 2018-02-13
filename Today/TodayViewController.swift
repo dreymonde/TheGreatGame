@@ -35,9 +35,11 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     var avenue: Avenue<URL, UIImage>!
     
     override func viewDidLoad() {
+        printWithContext()
         super.viewDidLoad()
         self.avenue = todayExtension.images.makeNotSizedAvenue()
         self.initial()
+        self.subscribe()
     }
     
     func subscribe() {
@@ -45,6 +47,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     }
     
     func setup(with match: Match.Full, initial: Bool) {
+        printWithContext(initial.description)
         self.homeNameLabel.text = match.home.shortName
         self.awayNameLabel.text = match.away.shortName
         self.scoreLabel.text = match.scoreOrPenaltyString()
@@ -69,6 +72,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     }
     
     func initial() {
+        printWithContext()
         let matches = todayExtension.relevantMatches()
         setup(with: matches, initial: true)
     }
@@ -80,11 +84,13 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     
     var _completion: ((NCUpdateResult) -> Void)?
     func complete(result: NCUpdateResult) {
+        printWithContext()
         _completion?(result)
         _completion = nil
     }
     
     func widgetPerformUpdate(completionHandler: (@escaping (NCUpdateResult) -> Void)) {
+        printWithContext()
         // Perform any setup necessary in order to update the view.
         todayExtension.reactiveRelevantMatches.update.fire(errorDelegate: self)
         // If an error is encountered, use NCUpdateResult.Failed
@@ -102,6 +108,7 @@ extension TodayViewController : ErrorStateDelegate {
     }
     
     func errorDidOccur(_ error: Error) {
+        print(error)
         complete(result: .failed)
     }
     

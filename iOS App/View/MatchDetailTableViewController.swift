@@ -72,7 +72,7 @@ class MatchDetailTableViewController: TableViewController {
     
     // MARK: - Connections
     var reactiveTeam: Reactive<Match.Full>!
-    var shouldReloadData: MainThreadSubscribe<Void>?
+    //var shouldReloadData: MainThreadSubscribe<Void>?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -89,8 +89,8 @@ class MatchDetailTableViewController: TableViewController {
     
     func subscribe() {
         reactiveTeam.didUpdate.subscribe(self, with: MatchDetailTableViewController.setup)
-        shouldReloadData?.subscribe(self, with: MatchDetailTableViewController.reload)
-        shouldReloadData = nil
+        //shouldReloadData?.subscribe(self, with: MatchDetailTableViewController.reload)
+        //shouldReloadData = nil
     }
     
     override var previewActionItems: [UIPreviewActionItem] {

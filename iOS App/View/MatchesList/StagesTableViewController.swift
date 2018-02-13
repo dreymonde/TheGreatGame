@@ -35,7 +35,7 @@ class StagesTableViewController: TheGreatGame.TableViewController, Showing {
     // MARK: - Connections
     var reactiveStages: Reactive<[Stage]>!
     var shouldReloadTable: MainThreadSubscribe<Void>?
-    var shouldReloadData: MainThreadSubscribe<Void>?
+    //var shouldReloadData: MainThreadSubscribe<Void>?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,10 +50,12 @@ class StagesTableViewController: TheGreatGame.TableViewController, Showing {
     }
     
     func subscribe() {
-        shouldReloadTable?.flatSubscribe(self, with: { obj, _ in obj.tableView.reloadData() })
+        shouldReloadTable?.flatSubscribe(self, with: {
+            obj, _ in obj.tableView.reloadData()
+        })
         shouldReloadTable = nil
-        shouldReloadData?.subscribe(self, with: StagesTableViewController.reload)
-        shouldReloadData = nil
+        //shouldReloadData?.subscribe(self, with: StagesTableViewController.reload)
+        //shouldReloadData = nil
         reactiveStages.didUpdate.subscribe(self, with: StagesTableViewController.reloadData)
     }
     

@@ -113,7 +113,7 @@ final class UserInterface {
             let favoritesDidUpdate = self.logic.favoriteTeams.registry.unitedDidUpdate.proxy.void()
                 .merged(with: self.logic.favoriteMatches.registry.unitedDidUpdate.proxy.void())
             $0.shouldReloadTable = favoritesDidUpdate.mainThread()
-            $0.shouldReloadData = updateAfterActive
+            //$0.shouldReloadData = updateAfterActive
             $0.makeMatchDetailVC = { match, stageTitle in
                 var preloaded = match.preloaded()
                 preloaded.stageTitle = stageTitle
@@ -164,7 +164,7 @@ final class UserInterface {
             $0.preloadedMatch = preloaded
             $0.isFavorite = { self.logic.favoriteMatches.registry.isPresent(id: matchID) }
             $0.updateFavorite = { self.logic.favoriteMatches.registry.updatePresence(id: matchID, isPresent: $0) }
-            $0.shouldReloadData = updateAfterActive
+            //$0.shouldReloadData = updateAfterActive
         }
     }
     

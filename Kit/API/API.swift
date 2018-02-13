@@ -21,6 +21,7 @@ internal protocol APIPoint : APIProvider {
 
 extension APIProvider {
     
+    @available(*, deprecated, message: "Use gitHubRaw in production")
     public static func gitHub(networkCache: ReadOnlyStorage<URL, Data> = Self.makeUrlSessionCache()) -> Self {
         let gitRepo: ReadOnlyStorage<APIPath, Data> = GitHubRepo.theGreatGameStorage(networkCache: networkCache).asReadOnlyStorage()
             .mapKeys({ return "content" + $0 })
@@ -44,10 +45,10 @@ extension APIProvider {
         return Self(dataProvider: subcache)
     }
     
-    public static func gitHub(urlSession: URLSession) -> Self {
-        let sessionCache = Self.makeUrlSessionCache(from: urlSession)
-        return Self.gitHub(networkCache: sessionCache)
-    }
+//    public static func gitHub(urlSession: URLSession) -> Self {
+//        let sessionCache = Self.makeUrlSessionCache(from: urlSession)
+//        return Self.gitHub(networkCache: sessionCache)
+//    }
     
     public static func macBookSteve() -> Self {
         let directory = URL(fileURLWithPath: "/Users/oleg/Development/TheGreatGame/Storage/content")

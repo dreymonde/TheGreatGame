@@ -30,7 +30,7 @@ final class WatchExtension {
         ShallowsLog.isEnabled = true
         self.phone = Phone()
         self.images = Images.inContainer(.appFolder)
-        self.matchesAPI = MatchesAPI.gitHub()
+        self.matchesAPI = MatchesAPI.gitHubRaw()
         self.matchesDB = LocalModel<[Match.Full]>.inStorage(
             Disk.init(directory: AppFolder.Library.Application_Support.db),
             filename: "all-matches"
