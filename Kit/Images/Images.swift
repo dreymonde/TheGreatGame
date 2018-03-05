@@ -54,9 +54,9 @@ public final class Images : SimpleStoring {
         if let existing = caches[intside] {
             return existing
         } else {
-//            let new: Avenues.MemoryCache<URL, UIImage> = MemoryCache.dictionaryBased()
+            let new: Avenues.MemoryCache<URL, UIImage> = MemoryCache.dictionaryBased()
 //            let new = MemoryCache(ImageNSCache())
-            let new = ImageNSCache().asCache()
+//            let new = ImageNSCache().asCache()
                 //.mapValue(inTransform: { assert(max($0.size.width, $0.size.height) == side); return $0 },
                 //          outTransform: { assert(max($0.size.width, $0.size.height) == side); return $0 })
             caches[intside] = new
@@ -77,7 +77,13 @@ public final class Images : SimpleStoring {
             .caching(to: diskCache)
         let lane = fullSizedLane.mapValues({ $0.resized(toFit: imageSize) })
         let storage = imageCache(forSize: imageSize.width)
-        return Avenue(cache: storage, processor: lane)
+        let pre = Avenue(cache: storage, processor: lane)
+        let proc = pre.processor
+        let newProc = Processor<URL, UIImage>(start: { (url, completion) in
+            print("REQUESTED:", url)
+            proc.start(key: url, completion: completion)
+        }, cancel: proc.cancel, getState: proc.processingState(key:), cancelAll: proc.cancelAll)
+        return Avenue(cache: storage, processor: newProc)
     }
     
     public func makeDoubleCachedAvenue(forImageSize imageSize: CGSize) -> Avenue<URL, UIImage> {

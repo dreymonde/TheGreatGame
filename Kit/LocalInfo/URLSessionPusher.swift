@@ -9,7 +9,7 @@
 import Foundation
 import Shallows
 
-public final class PUSHer : WritableStorageProtocol {
+public final class URLSessionPusher : WritableStorageProtocol {
     
     public typealias Key = URL
     public typealias Value = Data

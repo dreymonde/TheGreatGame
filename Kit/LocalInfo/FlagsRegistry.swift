@@ -42,7 +42,6 @@ public final class FlagsRegistry<Descriptor : RegistryDescriptor> : SimpleStorin
         
     public static func preferredDirectory(from base: BaseFolder.Type) -> Directory {
         let dir = base.Library.Application_Support.db.favorites
-        print(dir.url)
         return dir
     }
     

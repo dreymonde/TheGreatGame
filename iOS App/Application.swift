@@ -60,7 +60,7 @@ final class Application {
         switch server {
         case .github:
             printWithContext("Using github as a server")
-            return API.gitHub()
+            return API.gitHubDirectLimited()
         case .githubRaw:
             printWithContext("Using github raw file system as a server")
             return API.gitHubRaw()
@@ -130,7 +130,7 @@ final class Application {
     }
     
     static func makeUploader(forURL url: URL) -> WriteOnlyStorage<APIPath, Data> {
-        return PUSHer(urlSession: URLSession.init(configuration: .default))
+        return URLSessionPusher(urlSession: URLSession.init(configuration: .default))
             .asWriteOnlyStorage()
             .mapKeys({ url.appendingPath($0) })
     }

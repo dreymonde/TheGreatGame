@@ -50,10 +50,18 @@ public final class LocalDB : DeepStoring {
     }
     
     public convenience init(container: Container) {
-        let teams: LocalModel<[Team.Compact]> = LocalModel<[Team.Compact]>.inStorage(LocalDB.substorage(in: container, subFolder: { $0.teams }), filename: "teams-compact")
-        let stages: LocalModel<[Stage]> = LocalModel<[Stage]>.inStorage(LocalDB.substorage(in: container, subFolder: { $0.stages }), filename: "stages")
-        let groups: LocalModel<[Group.Compact]> = LocalModel<[Group.Compact]>.inStorage(LocalDB.substorage(in: container, subFolder: { $0.groups }), filename: "all-groups")
-        let matches: LocalModel<[Match.Full]> = LocalModel<[Match.Full]>.inStorage(LocalDB.substorage(in: container, subFolder: { $0.matches }), filename: "matches-full")
+        let teams: LocalModel<[Team.Compact]> = LocalModel<[Team.Compact]>.inStorage(
+            LocalDB.substorage(in: container, subFolder: { $0.teams }), filename: "teams-compact"
+        )
+        let stages: LocalModel<[Stage]> = LocalModel<[Stage]>.inStorage(
+            LocalDB.substorage(in: container, subFolder: { $0.stages }), filename: "stages"
+        )
+        let groups: LocalModel<[Group.Compact]> = LocalModel<[Group.Compact]>.inStorage(
+            LocalDB.substorage(in: container, subFolder: { $0.groups }), filename: "all-groups"
+        )
+        let matches: LocalModel<[Match.Full]> = LocalModel<[Match.Full]>.inStorage(
+            LocalDB.substorage(in: container, subFolder: { $0.matches }), filename: "matches-full"
+        )
         let fullTeam = LocalDB.makeFullTeam(makeStorage: { produce in LocalDB.substorage(in: container, subFolder: produce) })
         let fullMatch = LocalDB.makeFullMatch(makeStorage: { produce in LocalDB.substorage(in: container, subFolder: produce) })
         self.init(teams: teams,

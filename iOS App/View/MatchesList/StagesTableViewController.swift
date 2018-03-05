@@ -138,7 +138,7 @@ extension StagesTableViewController {
                            forCellReuseIdentifier: "MatchListMatch")
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.prefetchDataSource = self
+//        tableView.prefetchDataSource = self
     }
     
 }

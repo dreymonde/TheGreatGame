@@ -8,19 +8,6 @@
 
 import Foundation
 
-public func rethrowing<In, Out>(_ block: @escaping (In) throws -> Out,
-                       with recatch: @escaping (Error) -> Error = { $0 }) -> (In) throws -> Out {
-    return { input in
-        do {
-            let output = try block(input)
-            return output
-        } catch {
-            let rethrowed = recatch(error)
-            throw rethrowed
-        }
-    }
-}
-
 public struct IntType<Meaning> : Hashable {
     
     public var hashValue: Int {

@@ -10,29 +10,11 @@ import Foundation
 import Shallows
 import Alba
 
-extension Storage where Key == Void {
-    
-    public func writing(to memoryWrite: @escaping (Value) -> ()) -> Storage<Key, Value> {
-        return Storage<Key, Value>(storageName: self.storageName, retrieve: { (_, completion) in
-            self.retrieve(completion: { (result) in
-                if let value = result.value {
-                    memoryWrite(value)
-                }
-                completion(result)
-            })
-        }, set: { (value, _, completion) in
-            memoryWrite(value)
-            self.set(value, forKey: (), completion: completion)
-        })
-    }
-    
-}
-
 public final class LocalModel<Value> {
     
-    private var _storage: Storage<Void, Value>!
+    private var storage: Storage<Void, Value>!
     public var io: Storage<Void, Value> {
-        return _storage
+        return storage
     }
     
     public var inMemory = ThreadSafe<Value?>(nil)
@@ -41,11 +23,7 @@ public final class LocalModel<Value> {
         let stor = storage
             .writing(to: { new in self.inMemory.write(new) })
             .writing(to: { new in self.didUpdate.publish(new) })
-        #if os(iOS)
-            self._storage = stor
-        #else
-            self._storage = stor
-        #endif
+        self.storage = stor
     }
     
     public var ioRead: Retrieve<Value> {
@@ -107,14 +85,19 @@ extension StorageProtocol where Key : Hashable {
     
 }
 
-extension WriteOnlyStorageProtocol {
+extension Storage where Key == Void {
     
-    public func onCompletingWrite(_ handle: @escaping (Value, Result<Void>) -> ()) -> WriteOnlyStorage<Key, Value> {
-        return WriteOnlyStorage<Key, Value>(storageName: self.storageName, set: { (value, key, completion) in
-            self.set(value, forKey: key, completion: { (result) in
+    public func writing(to memoryWrite: @escaping (Value) -> ()) -> Storage<Key, Value> {
+        return Storage<Key, Value>(storageName: self.storageName, retrieve: { (_, completion) in
+            self.retrieve(completion: { (result) in
+                if let value = result.value {
+                    memoryWrite(value)
+                }
                 completion(result)
-                handle(value, result)
             })
+        }, set: { (value, _, completion) in
+            memoryWrite(value)
+            self.set(value, forKey: (), completion: completion)
         })
     }
     

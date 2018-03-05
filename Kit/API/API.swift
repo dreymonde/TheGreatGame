@@ -21,8 +21,7 @@ internal protocol APIPoint : APIProvider {
 
 extension APIProvider {
     
-    @available(*, deprecated, message: "Use gitHubRaw in production")
-    public static func gitHub(networkCache: ReadOnlyStorage<URL, Data> = Self.makeUrlSessionCache()) -> Self {
+    public static func gitHubDirectLimited(networkCache: ReadOnlyStorage<URL, Data> = Self.makeUrlSessionCache()) -> Self {
         let gitRepo: ReadOnlyStorage<APIPath, Data> = GitHubRepo.theGreatGameStorage(networkCache: networkCache).asReadOnlyStorage()
             .mapKeys({ return "content" + $0 })
         return Self(dataProvider: gitRepo)
