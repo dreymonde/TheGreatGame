@@ -19,8 +19,7 @@ xcuserdata/
 
 ## Other
 *.moved-aside
-*.xccheckout
-*.xcscmblueprint
+*.xcuserstate
 *.DS_Store
 
 ## Obj-C/Swift specific
@@ -37,7 +36,6 @@ playground.xcworkspace
 #
 # Add this line if you want to avoid checking in source code from Swift Package Manager dependencies.
 # Packages/
-# Package.pins
 .build/
 
 # CocoaPods
@@ -52,6 +50,7 @@ playground.xcworkspace
 #
 # Add this line if you want to avoid checking in source code from Carthage dependencies.
 # Carthage/Checkouts
+
 Carthage/Build
 
 # fastlane
@@ -59,7 +58,7 @@ Carthage/Build
 # It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
 # screenshots whenever they are needed.
 # For more information about the recommended setup visit:
-# https://docs.fastlane.tools/best-practices/source-control/#source-control
+# https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Gitignore.md
 
 fastlane/report.xml
 fastlane/Preview.html
