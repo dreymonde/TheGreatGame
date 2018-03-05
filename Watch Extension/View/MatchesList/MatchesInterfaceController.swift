@@ -36,7 +36,6 @@ let relativeDateFormatter = DateFormatter() <- {
 class MatchesInterfaceController: WKInterfaceController {
     
     @IBOutlet var relativeDateLabel: WKInterfaceLabel!
-    @IBOutlet var noMatchesLabel: WKInterfaceLabel!
     @IBOutlet var stageLabel: WKInterfaceLabel!
     @IBOutlet var activityImage: WKInterfaceImage!
     @IBOutlet var table: WKInterfaceTable!
@@ -57,11 +56,8 @@ class MatchesInterfaceController: WKInterfaceController {
         didSet {
             stageLabel.setText(matches.first?.stageTitle)
             relativeDateLabel.setText(matches.first.map({ relativeDateFormatter.string(from: $0.date) }))
-            noMatchesLabel.setHidden(!matches.isEmpty)
         }
     }
-    
-    var firstActivation = true
     
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
@@ -80,18 +76,6 @@ class MatchesInterfaceController: WKInterfaceController {
         context.reactive.didUpdate.subscribe(self, with: MatchesInterfaceController.reload)
     }
     
-    override func willActivate() {
-        // This method is called when watch view controller is about to be visible to user
-        if firstActivation {
-            firstActivation = false
-            return
-        } else {
-            self.context.reactive.update.fire(activityIndicator: .none,
-                                              errorDelegate: UnimplementedErrorStateDelegate.shared)
-        }
-        super.willActivate()
-    }
-        
     func reload(with matches: [Match.Full]) {
         printWithContext()
         self.matches = matches
@@ -103,8 +87,6 @@ class MatchesInterfaceController: WKInterfaceController {
     }
     
     func configure(_ cell: MatchCellController, with match: Match.Full, forRowAt index: Int) {
-//        avenue.prepareItem(at: match.home.badges.large)
-//        avenue.prepareItem(at: match.away.badges.large)
         avenue.register(cell.homeBadgeImage, for: match.home.badges.large)
         avenue.register(cell.awayBadgeImage, for: match.away.badges.large)
         cell.scoreLabel.setText(match.scoreOrTimeString())
@@ -135,10 +117,4 @@ class MatchesInterfaceController: WKInterfaceController {
         super.didDeactivate()
     }
 
-}
-
-extension MatchesInterfaceController {
-    
-    // MARK: - Configurations
-    
 }
