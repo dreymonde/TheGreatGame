@@ -20,7 +20,8 @@ public final class LocalModel<Value> {
     public var inMemory = ThreadSafe<Value?>(nil)
     
     public init(storage: Storage<Void, Value>) {
-        let stor = storage
+        let actualStorage: Storage<Void, Value> = launchArgument(.isCachingDisabled) ? SingleElementMemoryStorage().asStorage() : storage
+        let stor = actualStorage
             .writing(to: { new in self.inMemory.write(new) })
             .writing(to: { new in self.didUpdate.publish(new) })
         self.storage = stor

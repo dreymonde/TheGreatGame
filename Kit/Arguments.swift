@@ -6,9 +6,15 @@
 //  Copyright © 2017 The Great Game. All rights reserved.
 //
 
-import TheGreatKit
+extension String {
+    
+    public var bundled: String {
+        return "com.the-great-game.TheGreatGame." + self
+    }
+    
+}
 
-extension LaunchArgumentKey {
+public extension LaunchArgumentKey {
     
     static var isCachingDisabled: LaunchArgumentKey<Bool> {
         return LaunchArgumentKey<Bool>("disable-caching".bundled)

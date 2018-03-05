@@ -101,29 +101,3 @@ public final class Images : SimpleStoring {
     }
     
 }
-
-public enum EmptyCacheError : Error {
-    case cacheIsAlwaysEmpty
-}
-
-extension ReadOnlyStorage {
-    
-    public static func empty() -> ReadOnlyStorage<Key, Value> {
-        return ReadOnlyStorage(storageName: "empty", retrieve: { (_, completion) in
-            completion(.failure(EmptyCacheError.cacheIsAlwaysEmpty))
-        })
-    }
-    
-}
-
-extension Shallows.Storage {
-    
-    public static func empty() -> Storage<Key, Value> {
-        return Storage(storageName: "empty", retrieve: { (_, completion) in
-            completion(.failure(EmptyCacheError.cacheIsAlwaysEmpty))
-        }, set: { (_, _, completion) in
-            completion(.failure(EmptyCacheError.cacheIsAlwaysEmpty))
-        })
-    }
-    
-}

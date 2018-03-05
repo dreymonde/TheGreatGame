@@ -130,9 +130,10 @@ final class Application {
     }
     
     static func makeUploader(forURL url: URL) -> WriteOnlyStorage<APIPath, Data> {
-        return URLSessionPusher(urlSession: URLSession.init(configuration: .default))
-            .asWriteOnlyStorage()
-            .mapKeys({ url.appendingPath($0) })
+        return .empty()
+//        return URLSessionPusher(urlSession: URLSession.init(configuration: .default))
+//            .asWriteOnlyStorage()
+//            .mapKeys({ url.appendingPath($0) })
     }
     
 }

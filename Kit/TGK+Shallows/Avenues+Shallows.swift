@@ -18,6 +18,10 @@ extension Shallows.Result {
 extension Avenues.ProcessorProtocol where Key : Hashable {
     
     public func caching<CacheType : Shallows.StorageProtocol>(to cache: CacheType) -> Processor<Key, Value> where CacheType.Key == Key, CacheType.Value == Value {
+        guard launchArgument(.isCachingDisabled) == false else {
+            printWithContext("Not caching")
+            return asProcessor()
+        }
         let start: Processor<Key, Value>.Start = { key, completion in
             cache.retrieve(forKey: key, completion: { (cacheResult) in
                 switch cacheResult {
