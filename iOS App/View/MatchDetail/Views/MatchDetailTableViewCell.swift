@@ -39,7 +39,8 @@ class MatchDetailTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
+        penaltyLabel.text = " "
+        minuteLabel.text = " "
         let homeBadgeGesture = UITapGestureRecognizer(target: self, action: #selector(didTapHomeBadge(_:)))
         homeBadgeImageView.addGestureRecognizer(homeBadgeGesture)
         

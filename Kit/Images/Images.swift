@@ -33,7 +33,7 @@ public final class Images : SimpleStoring {
     
     internal var caches: [IntType<SideSize> : Avenues.MemoryCache<URL, UIImage>] = [:]
     
-    fileprivate let imageFetchingSession = URLSession(configuration: .default)
+    fileprivate let imageFetchingSession: URLSession
     fileprivate let diskCache: Shallows.Storage<URL, UIImage>
     fileprivate let imageLane: Processor<URL, UIImage>
     
@@ -45,8 +45,14 @@ public final class Images : SimpleStoring {
     }
     
     public init(imageCache: Shallows.Storage<URL, UIImage>) {
+        let config = URLSessionConfiguration.default <- {
+            $0.requestCachePolicy = .reloadIgnoringLocalCacheData
+            $0.httpMaximumConnectionsPerHost = 4
+        }
+        self.imageFetchingSession = URLSession(configuration: config)
+        
         self.diskCache = imageCache
-        self.imageLane = URLSessionProcessor(session: imageFetchingSession).mapImage()
+        self.imageLane = URLSessionProcessor(session: imageFetchingSession).mapImages()
     }
         
     public func imageCache(forSize side: CGFloat) -> Avenues.MemoryCache<URL, UIImage> {
@@ -54,11 +60,7 @@ public final class Images : SimpleStoring {
         if let existing = caches[intside] {
             return existing
         } else {
-            let new: Avenues.MemoryCache<URL, UIImage> = MemoryCache.dictionaryBased()
-//            let new = MemoryCache(ImageNSCache())
-//            let new = ImageNSCache().asCache()
-                //.mapValue(inTransform: { assert(max($0.size.width, $0.size.height) == side); return $0 },
-                //          outTransform: { assert(max($0.size.width, $0.size.height) == side); return $0 })
+            let new = ImageNSCache().asCache()
             caches[intside] = new
             return new
         }
@@ -77,13 +79,16 @@ public final class Images : SimpleStoring {
             .caching(to: diskCache)
         let lane = fullSizedLane.mapValues({ $0.resized(toFit: imageSize) })
         let storage = imageCache(forSize: imageSize.width)
-        let pre = Avenue(cache: storage, processor: lane)
-        let proc = pre.processor
-        let newProc = Processor<URL, UIImage>(start: { (url, completion) in
-            print("REQUESTED:", url)
-            proc.start(key: url, completion: completion)
-        }, cancel: proc.cancel, getState: proc.processingState(key:), cancelAll: proc.cancelAll)
-        return Avenue(cache: storage, processor: newProc)
+        return Avenue(cache: storage, processor: lane)
+    }
+    
+    public func makeDoubleCachedAvenue(forImageSize imageSize: CGSize, activityIndicator: NetworkActivityIndicator) -> Avenue<URL, UIImage> {
+        let lane: Processor<URL, UIImage> = imageLane
+            .caching(to: diskCache)
+            .mapValues({ $0.resized(toFit: imageSize) })
+            .caching(to: diskCache.mapKeys({ $0.appendingPathComponent("-\(imageSize.width)") }))
+        let storage = imageCache(forSize: imageSize.width)
+        return Avenue(cache: storage, processor: lane)
     }
     
     public func makeDoubleCachedAvenue(forImageSize imageSize: CGSize) -> Avenue<URL, UIImage> {

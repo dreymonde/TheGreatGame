@@ -81,7 +81,7 @@ final class UserInterface {
     }
     
     private func makeAvenue(forImageSize imageSize: CGSize) -> Avenue<URL, UIImage> {
-        return logic.images.makeAvenue(forImageSize: imageSize, activityIndicator: .application)
+        return logic.images.makeDoubleCachedAvenue(forImageSize: imageSize, activityIndicator: .application)
     }
     
     func inject(to teamsList: TeamsTableViewController) {

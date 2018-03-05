@@ -56,7 +56,7 @@ extension ProcessorProtocol {
                 indicator.decrement()
                 completion(result)
             })
-        }, cancel: self.cancel(key:), getState: self.processingState(key:), cancelAll: self.cancelAll)
+        }, cancel: self.cancel, cancelAll: self.cancelAll)
     }
     
 }
