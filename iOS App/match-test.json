@@ -10,6 +10,7 @@
         "endDate" : 1500323700,
         "away" : {
             "name" : "Liverpool",
+            "shortest_name" : "LV",
             "id" : 1,
             "short_name" : "LIV",
             "badges" : {
@@ -21,8 +22,9 @@
         "date" : 1500317100,
         "home" : {
             "name" : "Metalist 1925",
+            "shortest_name" : "KH",
             "id" : 3,
-            "short_name" : "MET",
+            "short_name" : "KHA",
             "badges" : {
                 "flag" : "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Flag_of_Ukraine.svg/640px-Flag_of_Ukraine.svg.png",
                 "large" : "https:\/\/raw.githubusercontent.com\/dreymonde\/thegreatgame-badges\/master\/NEW_LOGO_FCMK1925.png"
@@ -57,7 +59,13 @@
                     {
                     "match_minute" : 93,
                     "type" : "halftime_start",
-                    "text" : "FEFull time. 0:0",
+                    "text" : "FE Full time. 0:0",
+                    "real_minute" : 110
+                    },
+                    {
+                    "match_minute" : 93,
+                    "type" : "end",
+                    "text" : "Full time. 0:0",
                     "real_minute" : 110
                     }
                     ]
