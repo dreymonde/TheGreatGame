@@ -1,7 +1,7 @@
 import Foundation
 import Shallows
 
-public struct WebAPI : ReadableStorageProtocol {
+public struct WebAPI : ReadOnlyStorageProtocol {
         
     private let underlying: ReadOnlyStorage<APIPath, Data>
     
@@ -20,7 +20,7 @@ public struct WebAPI : ReadableStorageProtocol {
 extension WebAPI {
     
     public init(urlSession: URLSession, baseURL: URL) {
-        let networkProvider = urlSession.asReadOnlyStorage()
+        let networkProvider = urlSession
             .droppingResponse()
             .usingURLKeys()
         self.init(networkProvider: networkProvider, baseURL: baseURL)
@@ -28,7 +28,7 @@ extension WebAPI {
     
 }
 
-extension URLSession : ReadableStorageProtocol {
+extension URLSession : ReadOnlyStorageProtocol {
     
     public enum Key {
         case url(URL)
@@ -69,7 +69,7 @@ extension URLSession : ReadableStorageProtocol {
     
 }
 
-extension ReadOnlyStorage where Key == URLSession.Key {
+extension ReadOnlyStorageProtocol where Key == URLSession.Key {
     
     public func usingURLKeys() -> ReadOnlyStorage<URL, Value> {
         return mapKeys({ .url($0) })
@@ -81,7 +81,7 @@ extension ReadOnlyStorage where Key == URLSession.Key {
     
 }
 
-extension ReadOnlyStorage where Value == (HTTPURLResponse, Data) {
+extension ReadOnlyStorageProtocol where Value == (HTTPURLResponse, Data) {
     
     public func droppingResponse() -> ReadOnlyStorage<Key, Data> {
         return mapValues({ $0.1 })

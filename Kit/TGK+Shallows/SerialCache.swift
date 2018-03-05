@@ -11,22 +11,6 @@ import Shallows
 
 extension StorageProtocol {
     
-    public func renaming(to newName: String) -> Storage<Key, Value> {
-        return Storage(storageName: newName, retrieve: self.retrieve, set: self.set)
-    }
-    
-}
-
-extension ReadOnlyStorage {
-    
-    public func renaming(to newName: String) -> ReadOnlyStorage<Key, Value> {
-        return ReadOnlyStorage(storageName: newName, retrieve: self.retrieve)
-    }
-    
-}
-
-extension StorageProtocol {
-    
     public func serial() -> Storage<Key, Value> {
         let queue = DispatchQueue(label: "serial")
         return Storage(storageName: self.storageName, retrieve: { (key, completion) in
@@ -52,7 +36,7 @@ extension StorageProtocol {
     
 }
 
-extension ReadOnlyStorage {
+extension ReadOnlyStorageProtocol {
     
     public func serial() -> ReadOnlyStorage<Key, Value> {
         let queue = DispatchQueue(label: "serial")

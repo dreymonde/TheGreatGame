@@ -81,7 +81,7 @@ final class Application {
         .wait(seconds: 4.0)
     
     static let uploadCache: WriteOnlyStorage<APIPath, Data> = makeUploader(forURL: Server.digitalOceanAPIBaseURL)
-        .connectingNetworkActivityIndicator(manager: .application)
+        .connectingNetworkActivityIndicator(indicator: .application)
     
     static func makeFavs<Descriptor : RegistryDescriptor>(tokens: DeviceTokens,
                                                           keeperFolderName: String,

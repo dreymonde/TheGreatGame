@@ -73,7 +73,7 @@ public final class Images : SimpleStoring {
     
     public func makeAvenue(forImageSize imageSize: CGSize, activityIndicator: NetworkActivityIndicator) -> Avenue<URL, UIImage> {
         let fullSizedLane: Processor<URL, UIImage> = imageLane
-            .connectingNetworkActivityIndicator(manager: activityIndicator)
+            .connectingNetworkActivityIndicator(indicator: activityIndicator)
             .caching(to: diskCache)
         let lane = fullSizedLane.mapValues({ $0.resized(toFit: imageSize) })
         let storage = imageCache(forSize: imageSize.width)

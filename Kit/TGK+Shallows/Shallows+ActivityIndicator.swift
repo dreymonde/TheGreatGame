@@ -10,7 +10,7 @@ import Foundation
 import Shallows
 import Avenues
 
-extension ReadOnlyStorage {
+extension ReadOnlyStorageProtocol {
     
     public func connectingNetworkActivityIndicator(indicator: NetworkActivityIndicator) -> ReadOnlyStorage<Key, Value> {
         return ReadOnlyStorage.init(storageName: self.storageName, retrieve: { (key, completion) in
@@ -24,13 +24,13 @@ extension ReadOnlyStorage {
     
 }
 
-extension WriteOnlyStorage {
+extension WriteOnlyStorageProtocol {
     
-    public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicator) -> WriteOnlyStorage<Key, Value> {
+    public func connectingNetworkActivityIndicator(indicator: NetworkActivityIndicator) -> WriteOnlyStorage<Key, Value> {
         return WriteOnlyStorage.init(storageName: self.storageName, set: { (value, key, completion) in
-            manager.increment()
+            indicator.increment()
             self.set(value, forKey: key, completion: { (result) in
-                manager.decrement()
+                indicator.decrement()
                 completion(result)
             })
         })
@@ -40,39 +40,28 @@ extension WriteOnlyStorage {
 
 extension Shallows.StorageProtocol {
     
-    public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicator) -> Storage<Key, Value> {
-        return Storage.init(storageName: self.storageName, retrieve: { (key, completion) in
-            self.retrieve(forKey: key, completion: { (result) in
-                manager.decrement()
-                completion(result)
-            })
-            manager.increment()
-        }, set: { (value, key, completion) in
-            self.set(value, forKey: key, completion: { (result) in
-                manager.decrement()
-                completion(result)
-            })
-            manager.increment()
-        })
+    public func connectingNetworkActivityIndicator(indicator: NetworkActivityIndicator) -> Storage<Key, Value> {
+        return Storage(read: asReadOnlyStorage().connectingNetworkActivityIndicator(indicator: indicator),
+                       write: asWriteOnlyStorage().connectingNetworkActivityIndicator(indicator: indicator))
     }
     
 }
 
 extension ProcessorProtocol {
     
-    public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicator) -> Processor<Key, Value> {
+    public func connectingNetworkActivityIndicator(indicator: NetworkActivityIndicator) -> Processor<Key, Value> {
         return Processor.init(start: { (key, completion) in
+            indicator.increment()
             self.start(key: key, completion: { (result) in
-                manager.decrement()
+                indicator.decrement()
                 completion(result)
             })
-            manager.increment()
         }, cancel: self.cancel(key:), getState: self.processingState(key:), cancelAll: self.cancelAll)
     }
     
 }
 
-extension ReadOnlyStorage {
+extension ReadOnlyStorageProtocol {
     
     public func mainThread() -> ReadOnlyStorage<Key, Value> {
         return ReadOnlyStorage.init(storageName: self.storageName, retrieve: { (key, completion) in
@@ -86,7 +75,7 @@ extension ReadOnlyStorage {
     
 }
 
-extension WriteOnlyStorage {
+extension WriteOnlyStorageProtocol {
     
     public func mainThread() -> WriteOnlyStorage<Key, Value> {
         return WriteOnlyStorage.init(storageName: self.storageName, set: { (value, key, completion) in

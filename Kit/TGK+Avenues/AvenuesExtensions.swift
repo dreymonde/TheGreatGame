@@ -14,7 +14,7 @@ import CoreGraphics
 extension Avenue {
     
     public func connectingNetworkActivityIndicator(manager: NetworkActivityIndicator) -> Avenue<Key, Value> {
-        let newLane = self.processor.connectingNetworkActivityIndicator(manager: manager)
+        let newLane = self.processor.connectingNetworkActivityIndicator(indicator: manager)
         return Avenue(cache: cache, processor: newLane)
     }
     

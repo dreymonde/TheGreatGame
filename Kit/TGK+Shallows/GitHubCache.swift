@@ -9,7 +9,7 @@
 import Foundation
 import Shallows
 
-public final class GitHubRawFilesRepo : ReadableStorageProtocol {
+public final class GitHubRawFilesRepo : ReadOnlyStorageProtocol {
     
     public static let apiBase = URL(string: "https://raw.githubusercontent.com/")!
     
@@ -35,7 +35,7 @@ extension GitHubRawFilesRepo {
     
 }
 
-public final class GitHubRepo : ReadableStorageProtocol {
+public final class GitHubRepo : ReadOnlyStorageProtocol {
     
     public static let apiBase = URL(string: "https://api.github.com/repos/")!
     

@@ -22,7 +22,7 @@ internal protocol APIPoint : APIProvider {
 extension APIProvider {
     
     public static func gitHubDirectLimited(networkCache: ReadOnlyStorage<URL, Data> = Self.makeUrlSessionCache()) -> Self {
-        let gitRepo: ReadOnlyStorage<APIPath, Data> = GitHubRepo.theGreatGameStorage(networkCache: networkCache).asReadOnlyStorage()
+        let gitRepo: ReadOnlyStorage<APIPath, Data> = GitHubRepo.theGreatGameStorage(networkCache: networkCache)
             .mapKeys({ return "content" + $0 })
         return Self(dataProvider: gitRepo)
     }
@@ -51,17 +51,16 @@ extension APIProvider {
     
     public static func macBookSteve() -> Self {
         let directory = URL(fileURLWithPath: "/Users/oleg/Development/TheGreatGame/Storage/content")
-        let rawFS: Storage<APIPath, Data> = DiskFolderStorage(folderURL: directory, filenameEncoder: .noEncoding)
-            .mapKeys({ Filename.init(rawValue: $0.rawValue) })
-        let cache = rawFS
+        let rawFS = DiskFolderStorage(folderURL: directory, filenameEncoder: .noEncoding)
             .asReadOnlyStorage()
+            .mapKeys(to: APIPath.self, { Filename.init(rawValue: $0.rawValue) })
+        let cache = rawFS
             .latency(ofInterval: 1.0)
         return Self(dataProvider: cache)
     }
     
     public static func makeUrlSessionCache(from session: URLSession = .init(configuration: .ephemeral)) -> ReadOnlyStorage<URL, Data> {
         return session
-            .asReadOnlyStorage()
             .droppingResponse()
             .usingURLKeys()
     }
@@ -89,7 +88,7 @@ public final class API : APIProvider {
     
 }
 
-extension ReadOnlyStorage {
+extension ReadOnlyStorageProtocol {
     
     public func latency(ofInterval interval: TimeInterval) -> ReadOnlyStorage<Key, Value> {
         return ReadOnlyStorage(storageName: self.storageName) { (key, completion) in
@@ -103,22 +102,25 @@ extension ReadOnlyStorage {
     
 }
 
-extension StorageProtocol {
+extension WriteOnlyStorageProtocol {
     
-    public func latency(ofInterval interval: TimeInterval) -> Storage<Key, Value> {
-        return Storage(storageName: self.storageName, retrieve: { (key, completion) in
-            self.retrieve(forKey: key, completion: { (result) in
+    public func latency(ofInterval interval: TimeInterval) -> WriteOnlyStorage<Key, Value> {
+        return WriteOnlyStorage(storageName: self.storageName, set: { (value, key, completion) in
+            self.set(value, forKey: key, completion: { (result) in
                 DispatchQueue.global().asyncAfter(deadline: .now() + interval, execute: {
                     completion(result)
                 })
             })
-        }, set: { (value, key, completion) in
-            self.set(value, forKey: key, completion: { (result) in
-                DispatchQueue.global().asyncAfter(deadline: .now() + interval, execute: { 
-                    completion(result)
-                })
-            })
         })
+    }
+    
+}
+
+extension StorageProtocol {
+    
+    public func latency(ofInterval interval: TimeInterval) -> Storage<Key, Value> {
+        return Storage(read: asReadOnlyStorage().latency(ofInterval: interval),
+                       write: asWriteOnlyStorage().latency(ofInterval: interval))
     }
     
 }
