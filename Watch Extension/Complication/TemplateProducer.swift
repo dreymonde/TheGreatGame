@@ -180,6 +180,7 @@ final class TemplateProducer {
                 $0.row2Column1TextProvider = CLKSimpleTextProvider(text: match.away.name)
                 $0.row1Column2TextProvider = scoreTextProvider(displayScore.home)
                 $0.row2Column2TextProvider = scoreTextProvider(displayScore.away)
+                $0.column2Alignment = .trailing
                 $0.tintColor = tintColor
             }
         } else {

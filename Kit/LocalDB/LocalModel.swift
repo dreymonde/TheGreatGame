@@ -12,46 +12,46 @@ import Alba
 
 public final class LocalModel<Value> {
     
-    private var storage: Storage<Void, Value>!
-    public var io: Storage<Void, Value> {
-        return storage
-    }
+    public var io: Storage<Void, Value>!
     
     public var inMemory = ThreadSafe<Value?>(nil)
     
     public init(storage: Storage<Void, Value>) {
         let actualStorage: Storage<Void, Value> = launchArgument(.isCachingDisabled) ? SingleElementMemoryStorage().asStorage() : storage
-        let stor = actualStorage
-            .writing(to: { new in self.inMemory.write(new) })
-            .writing(to: { new in self.didUpdate.publish(new) })
-        self.storage = stor
+        self.io = actualStorage.serial()
+        self.populateInMemory()
     }
     
-    public var ioRead: Retrieve<Value> {
-        return io.asReadOnlyStorage()
-    }
-    
-    public var ioWrite: WriteOnlyStorage<Void, Value> {
-        return io.asWriteOnlyStorage()
-    }
-    
-    public func prefetch() {
-        ioRead.retrieve(completion: { _ in printWithContext("Prefetched \(Value.self)") })
+    public func populateInMemory() {
+        if inMemory.read() == nil {
+            io.retrieve(completion: { (result) in
+                if let value = result.value {
+                    self.set(value)
+                }
+            })
+        }
     }
     
     public func getInMemory() -> Value? {
         return inMemory.read()
     }
     
+    private let setQueue = DispatchQueue(label: "LocalModel.setQueue")
+    public func set(_ newValue: Value) {
+        setQueue.async {
+            self.inMemory.write(newValue)
+            self.didUpdate.publish(newValue)
+        }
+    }
+    
     public func getPersisted() -> Value? {
-        return try? getInMemory() ?? ioRead.makeSyncStorage().retrieve()
+        return try? getInMemory() ?? io.asReadOnlyStorage().makeSyncStorage().retrieve()
     }
     
-    public func update(with newValue: Value) {
-        ioWrite.set(newValue)
+    private let didUpdate = Publisher<Value>(label: "LocalModel<\(Value.self)>.didUpdate")
+    public var inMemoryValueDidUpdate: Subscribe<Value> {
+        return didUpdate.proxy
     }
-    
-    public let didUpdate = Publisher<Value>(label: "LocalModel<\(Value.self)>.didUpdate")
     
 }
 
@@ -82,24 +82,6 @@ extension StorageProtocol where Key : Hashable {
     func memoryCached() -> Storage<Key, Value> {
         let memCache = MemoryStorage<Key, Value>()
         return memCache.combined(with: self)
-    }
-    
-}
-
-extension Storage where Key == Void {
-    
-    public func writing(to memoryWrite: @escaping (Value) -> ()) -> Storage<Key, Value> {
-        return Storage<Key, Value>(storageName: self.storageName, retrieve: { (_, completion) in
-            self.retrieve(completion: { (result) in
-                if let value = result.value {
-                    memoryWrite(value)
-                }
-                completion(result)
-            })
-        }, set: { (value, _, completion) in
-            memoryWrite(value)
-            self.set(value, forKey: (), completion: completion)
-        })
     }
     
 }

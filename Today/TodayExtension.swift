@@ -45,7 +45,7 @@ final class TodayExtension {
                                     isFavoriteTeam: favoriteTeams.isPresent)
         }
         
-        let filteredUpdate = localDB.fullMatches.didUpdate.proxy
+        let filteredUpdate = localDB.fullMatches.inMemoryValueDidUpdate
             .map({ $0.filter(relevanceFilter) })
         self.reactiveRelevantMatches = Reactive<[Match.Full]>(valueDidUpdate: filteredUpdate.mainThread(),
                                                update: connections.fullMatches)

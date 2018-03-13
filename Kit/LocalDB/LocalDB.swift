@@ -44,11 +44,6 @@ public final class LocalDB : DeepStoring {
         self.fullMatch = fullMatch
     }
     
-    public func prefetchAll() {
-        teams.prefetch()
-        stages.prefetch()
-    }
-    
     public convenience init(container: Container) {
         let teams: LocalModel<[Team.Compact]> = LocalModel<[Team.Compact]>.inStorage(
             LocalDB.substorage(in: container, subFolder: { $0.teams }), filename: "teams-compact"

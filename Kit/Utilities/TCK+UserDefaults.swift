@@ -125,19 +125,20 @@ public func launchArgument<Value>(_ key: LaunchArgumentKey<Value>) -> Value? {
     let userDefaultsKey = UserDefaultsKey<Value>(key.rawValue)
     let value = UserDefaults.standard.value(forKey: userDefaultsKey)
     print(key.rawValue, value as Any)
+    printWithContext("\(key.rawValue) \(String.init(describing: value))")
     return value
 }
 
 public func launchArgument<Value : UserDefaultsDefaultRetrievable>(_ key: LaunchArgumentKey<Value>) -> Value {
     let userDefaultsKey = UserDefaultsKey<Value>(key.rawValue)
     let value = UserDefaults.standard.value(forKey: userDefaultsKey)
-    print(key.rawValue, value)
+    printWithContext("\(key.rawValue) \(String.init(describing: value))")
     return value
 }
 
 public func launchArgument<Value : RawRepresentable>(_ key: LaunchArgumentKey<Value>) -> Value? {
     let userDefaultsKey = UserDefaultsKey<Value.RawValue>(key.rawValue)
     let value = UserDefaults.standard.value(forKey: userDefaultsKey).flatMap(Value.init(rawValue:))
-    print(key.rawValue, value as Any)
+    printWithContext("\(key.rawValue) \(String.init(describing: value))")
     return value
 }

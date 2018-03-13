@@ -41,13 +41,15 @@ public struct EmptyFireUpdate : FireUpdate {
 public struct APIFireUpdate<Value> : FireUpdate {
     
     let retrieve: Retrieve<Value>
-    let write: WriteOnlyStorage<Void, Value>
+    let write: (Value) -> Void
     
-    public init(retrieve: Retrieve<Value>, write: WriteOnlyStorage<Void, Value>, activityIndicator: NetworkActivityIndicator) {
+    public init(retrieve: Retrieve<Value>,
+                write: @escaping (Value) -> Void,
+                activityIndicator: NetworkActivityIndicator) {
         self.retrieve = retrieve
             .connectingNetworkActivityIndicator(indicator: activityIndicator)
             .mainThread()
-        self.write = write.mainThread()
+        self.write = write
     }
     
     public func fire(activityIndicator: NetworkActivityIndicator, errorDelegate: ErrorStateDelegate) {
@@ -58,14 +60,8 @@ public struct APIFireUpdate<Value> : FireUpdate {
             case .failure(let error):
                 errorDelegate.errorDidOccur(error)
             case .success(let value):
-                self.write.set(value, completion: { (writeResult) in
-                    switch writeResult {
-                    case .failure(let error):
-                        errorDelegate.errorDidOccur(error)
-                    case .success:
-                        errorDelegate.errorDidNotOccur()
-                    }
-                })
+                errorDelegate.errorDidNotOccur()
+                self.write(value)
             }
         }
     }
