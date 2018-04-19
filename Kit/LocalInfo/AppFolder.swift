@@ -64,12 +64,12 @@ public final class Library : Directory {
     
     public final class Caches : Directory { }
     public var Caches: Caches {
-        return appending(Caches.self)
+        return appending()
     }
     
     public final class Application_Support : Directory { }
     public var Application_Support: Application_Support {
-        return appending(Application_Support.self)
+        return appending()
     }
     
 }

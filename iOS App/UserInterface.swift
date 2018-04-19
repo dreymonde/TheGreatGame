@@ -38,12 +38,12 @@ final class UserInterface {
     }
     
     func start() {
-        let viewControllers = tabBarController.viewControllers?.flatMap({ $0 as? UINavigationController }).flatMap({ $0.viewControllers.first })
-        let matchesList = viewControllers?.flatMap({ $0 as? StagesTableViewController }).first
+        let viewControllers = tabBarController.viewControllers?.compactMap({ $0 as? UINavigationController }).compactMap({ $0.viewControllers.first })
+        let matchesList = viewControllers?.compactMap({ $0 as? StagesTableViewController }).first
         inject(to: matchesList!)
-        let teamsList = viewControllers?.flatMap({ $0 as? TeamsTableViewController }).first
+        let teamsList = viewControllers?.compactMap({ $0 as? TeamsTableViewController }).first
         inject(to: teamsList!)
-        let groupsList = viewControllers?.flatMap({ $0 as? GroupsTableViewController }).first
+        let groupsList = viewControllers?.compactMap({ $0 as? GroupsTableViewController }).first
         inject(to: groupsList!)
         if launchArgument(.openTestMatch) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {

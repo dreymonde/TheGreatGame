@@ -114,6 +114,8 @@ public protocol ArrayMappableBox : Mappable {
 
 extension Teams : ArrayMappableBox {
     
+    public typealias Boxed = Team.Compact
+    
     public init(_ values: [Boxed]) {
         self.teams = values
     }

@@ -103,12 +103,6 @@ public struct Subscribe<Event> {
         self.payload = payload
     }
     
-//    public var signed: SignedSubscribe<Event> {
-//        return SignedSubscribe<Event>(subscribe: { (identifier, handler) in
-//            self._subscribe(identifier, unsigned(handler))
-//        }, unsubscribe: self._unsubscribe)
-//    }
-    
     public func subscribe<Object : AnyObject>(_ object: Object,
                           with producer: @escaping (Object) -> EventHandler<Event>) {
         let identifier = ObjectIdentifier(object)
@@ -202,6 +196,17 @@ public struct Subscribe<Event> {
     
     public var manual: ManualSubscribe<Event> {
         return ManualSubscribe(proxy: self)
+    }
+    
+}
+
+extension Subscribe where Event == Void {
+    
+    public func subscribe<Object : AnyObject>(_ object: Object,
+                                              with producer: @escaping (Object) -> () -> ()) {
+        self.flatSubscribe(object) { (obj, _) in
+            producer(obj)()
+        }
     }
     
 }

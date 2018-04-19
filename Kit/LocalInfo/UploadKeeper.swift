@@ -36,10 +36,6 @@ internal final class UploadConsistencyKeeper<Upload : Equatable> {
         lastUploaded.set(upload)
     }
     
-    func check(listeningTo updates: Subscribe<Void>) {
-        updates.subscribe(self, with: UploadConsistencyKeeper.check)
-    }
-    
     func check() {
         let name = self.name
         printWithContext("(uploads-\(name)) Checking if last update was properly uploaded")

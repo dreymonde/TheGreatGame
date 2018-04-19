@@ -77,7 +77,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         printWithContext()
         dataSource.matches(before: date, limit: limit) { (matches) in
             if let matches = matches {
-                handler(matches.flatMap({ self.entry(with: $0, for: complication) }))
+                handler(matches.compactMap({ self.entry(with: $0, for: complication) }))
             } else {
                 handler(nil)
             }
@@ -89,7 +89,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         printWithContext()
         dataSource.matches(after: date, limit: limit) { (matches) in
             if let matches = matches {
-                handler(matches.flatMap({ self.entry(with: $0, for: complication) }))
+                handler(matches.compactMap({ self.entry(with: $0, for: complication) }))
             } else {
                 handler(nil)
             }

@@ -34,7 +34,7 @@ public final class TokenUploader {
     }
     
     public func subscribeTo(shouldCheckUploadConsistency: Subscribe<Void>) {
-        consistencyKeeper.check(listeningTo: shouldCheckUploadConsistency)
+        shouldCheckUploadConsistency.subscribe(consistencyKeeper, with: UploadConsistencyKeeper.check)
     }
     
     let didUploadToken = Publisher<TokenUpload>(label: "TokenUploader.didUploadToken")

@@ -76,20 +76,6 @@ publisher.publish(112) // prints "112"
 
 Be careful with `listen`. Don't prefer it over `subscribe` as it can introduce memory leaks to your application.
 
-### Observables
-
-`Observable` is just a simple wrapper around a value with an embedded publisher. You can observe its changes using publicly available `proxy`:
-
-```swift
-final class State {
-    var number: Observable<Int> = Observable(5)
-    var isActive = Observable(false)    
-}
-
-let state = State()
-state.number.proxy.subscribe( ... )
-```
-
 ### Writing your own `Subscribe` extensions
 
 If you want to write your own `Subscribe` extensions, you should use `rawModify` method:

@@ -116,3 +116,11 @@ public extension Publisher where Event : SignedProtocol {
     }
     
 }
+
+extension Publisher where Event == Void {
+    
+    public func publish() {
+        self.publish(())
+    }
+    
+}
