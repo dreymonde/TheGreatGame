@@ -19,14 +19,6 @@ extension Subscribe {
     
 }
 
-extension PublisherProtocol where Event == Void {
-    
-    public func publish() {
-        self.publish(())
-    }
-    
-}
-
 fileprivate extension Subscribe {
     
     func _mainThread() -> Subscribe<Event> {
@@ -79,10 +71,6 @@ extension Subscribe {
         return MainThreadSubscribe.alreadyOnMainThread(self)
     }
     
-    public func signed(with identifier: ObjectIdentifier?) -> SignedSubscribe<Event> {
-        return map({ Signed.init($0, identifier) })
-    }
-    
     public func wait(seconds: TimeInterval) -> Subscribe<Event> {
         return rawModify(subscribe: { (identifier, handle) in
             self.manual.subscribe(objectWith: identifier, with: { (event) in
@@ -103,20 +91,6 @@ extension Subscribe {
                 queue.async { handler(event) }
             })
         }, entry: ProxyPayload.Entry.custom("redispatched"))
-    }
-    
-}
-
-extension Subscribe {
-    
-    public func reuseValue<OtherEvent>(_ transforms: [(Event) -> OtherEvent]) -> Subscribe<OtherEvent> {
-        return rawModify(subscribe: { (identifier, handle) in
-            self.manual.subscribe(objectWith: identifier, with: { (event) in
-                for transformed in transforms.map({ $0(event) }) {
-                    handle(transformed)
-                }
-            })
-        }, entry: ProxyPayload.Entry.transformation(label: "reused", ProxyPayload.Entry.Transformation.transformed(fromType: Event.self, toType: OtherEvent.self)))
     }
     
 }

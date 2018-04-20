@@ -39,12 +39,12 @@ public final class GitHubRepo : ReadOnlyStorageProtocol {
     
     public static let apiBase = URL(string: "https://api.github.com/repos/")!
     
-    private let internalCache: ReadOnlyStorage<APIPath, Data>
+    private let internalStorage: ReadOnlyStorage<APIPath, Data>
     
     public init(owner: String, repo: String, networkCache: ReadOnlyStorage<URL, Data>) {
         let base = GitHubRepo.apiBase.appendingPathComponent("\(owner)/\(repo)/").appendingPathComponent("contents/")
         printWithContext("GitHub repo base: \(base)")
-        self.internalCache = networkCache
+        self.internalStorage = networkCache
             .mapJSONDictionary()
             .mapKeys({ base.appendingPath($0) })
             .mapMappable(of: GitHubContentAPIResponse.self)
@@ -52,7 +52,7 @@ public final class GitHubRepo : ReadOnlyStorageProtocol {
     }
     
     public func retrieve(forKey key: APIPath, completion: @escaping (Result<Data>) -> ()) {
-        internalCache.retrieve(forKey: key, completion: completion)
+        internalStorage.retrieve(forKey: key, completion: completion)
     }
     
 }
