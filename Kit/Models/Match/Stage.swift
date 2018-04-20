@@ -15,6 +15,14 @@ public struct Stage {
     
 }
 
+extension Stage : CustomStringConvertible {
+    
+    public var description: String {
+        return "Stage: \(title), \(matches)"
+    }
+    
+}
+
 extension Stage : Mappable {
     
     public enum MappingKeys : String, IndexPathElement {

@@ -56,7 +56,15 @@ extension Team {
 extension Team.Compact : CustomStringConvertible {
     
     public var description: String {
-        return "(\(shortName) : id \(id.rawValue))"
+        return "(\(shortName) : id\(id.rawValue))"
+    }
+    
+}
+
+extension Group.Team : CustomStringConvertible {
+    
+    public var description: String {
+        return "(\(name) : id\(id.rawValue), points: \(points))"
     }
     
 }
