@@ -15,7 +15,7 @@ public final class Flags<Descriptor : RegistryDescriptor> {
     public typealias IDType = Descriptor.IDType
     
     public let registry: FlagsRegistry<Descriptor>
-    internal let uploader: FavoritesUploader<IDType>
+    internal let uploader: FlagsUploader<Descriptor>
     internal let uploadConsistencyKeeper: UploadConsistencyKeeper<Set<IDType>>
     
     public struct Change {
@@ -33,7 +33,7 @@ public final class Flags<Descriptor : RegistryDescriptor> {
     }
     
     internal init(registry: FlagsRegistry<Descriptor>,
-                  uploader: FavoritesUploader<IDType>,
+                  uploader: FlagsUploader<Descriptor>,
                   uploadConsistencyKeeper: UploadConsistencyKeeper<Set<IDType>>,
                   shouldCheckUploadConsistency: Subscribe<Void>) {
         self.registry = registry
@@ -64,7 +64,7 @@ public final class Flags<Descriptor : RegistryDescriptor> {
                                 consistencyKeepersStorage: Storage<Filename, Data>,
                                 upload: WriteOnlyStorage<Void, Data>) {
             let favs = registry.flags.defaulting(to: [])
-            let uploader = FavoritesUploader<IDType>(pusher: FavoritesUploader.adapt(pusher: upload),
+            let uploader = FlagsUploader<Descriptor>(pusher: FlagsUploader<Descriptor>.adapt(pusher: upload),
                                                      getNotificationsToken: tokens.getNotification,
                                                      getDeviceIdentifier: { UIDevice.current.identifierForVendor })
             let keeper = Flags.makeKeeper(diskCache: consistencyKeepersStorage, flags: favs, uploader: uploader)
@@ -80,7 +80,7 @@ public final class Flags<Descriptor : RegistryDescriptor> {
 
 extension Flags {
     
-    fileprivate static func makeKeeper(diskCache: Storage<Filename, Data>, flags: Retrieve<Set<IDType>>, uploader: FavoritesUploader<IDType>) -> UploadConsistencyKeeper<Set<IDType>> {
+    fileprivate static func makeKeeper(diskCache: Storage<Filename, Data>, flags: Retrieve<Set<IDType>>, uploader: FlagsUploader<Descriptor>) -> UploadConsistencyKeeper<Set<IDType>> {
         let name = "keeper-notifications-\(String(reflecting: IDType.self))"
         let last = diskCache
             .mapJSONDictionary()

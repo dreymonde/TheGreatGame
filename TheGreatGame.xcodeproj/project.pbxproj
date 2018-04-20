@@ -231,8 +231,8 @@
 		7CF3D17B1EBC879300E86A91 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF3D1791EBC873700E86A91 /* Match.swift */; };
 		BE1713C11EEF428A00CFB448 /* ComplicationTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1713C01EEF428A00CFB448 /* ComplicationTemplate.swift */; };
 		BE1713C21EEF428A00CFB448 /* ComplicationTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1713C01EEF428A00CFB448 /* ComplicationTemplate.swift */; };
-		BE1713C41EEFE79800CFB448 /* FavoritesUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1713C31EEFE79800CFB448 /* FavoritesUploader.swift */; };
-		BE1713C51EEFE79800CFB448 /* FavoritesUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1713C31EEFE79800CFB448 /* FavoritesUploader.swift */; };
+		BE1713C41EEFE79800CFB448 /* FlagsUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1713C31EEFE79800CFB448 /* FlagsUploader.swift */; };
+		BE1713C51EEFE79800CFB448 /* FlagsUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1713C31EEFE79800CFB448 /* FlagsUploader.swift */; };
 		BE1713C71EEFED1100CFB448 /* UploadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1713C61EEFED1100CFB448 /* UploadTests.swift */; };
 		BE1713C91EEFF7A100CFB448 /* DeviceTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1713C81EEFF7A100CFB448 /* DeviceTokens.swift */; };
 		BE1713CA1EEFF7A100CFB448 /* DeviceTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1713C81EEFF7A100CFB448 /* DeviceTokens.swift */; };
@@ -554,7 +554,7 @@
 		7CF7DF8A1EEC6430004F0A73 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		7CF7DF8C1EEC6430004F0A73 /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
 		BE1713C01EEF428A00CFB448 /* ComplicationTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplicationTemplate.swift; sourceTree = "<group>"; };
-		BE1713C31EEFE79800CFB448 /* FavoritesUploader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesUploader.swift; sourceTree = "<group>"; };
+		BE1713C31EEFE79800CFB448 /* FlagsUploader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlagsUploader.swift; sourceTree = "<group>"; };
 		BE1713C61EEFED1100CFB448 /* UploadTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadTests.swift; sourceTree = "<group>"; };
 		BE1713C81EEFF7A100CFB448 /* DeviceTokens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTokens.swift; sourceTree = "<group>"; };
 		BE461ACD1EF026D40035AE11 /* UploadKeeper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadKeeper.swift; sourceTree = "<group>"; };
@@ -1161,7 +1161,7 @@
 			children = (
 				7CA2136D1ECEFA0A00F088DD /* Flags.swift */,
 				7CA213731ECF382200F088DD /* DiskStorage.swift */,
-				BE1713C31EEFE79800CFB448 /* FavoritesUploader.swift */,
+				BE1713C31EEFE79800CFB448 /* FlagsUploader.swift */,
 				BE461ACD1EF026D40035AE11 /* UploadKeeper.swift */,
 				BE461AD01EF027330035AE11 /* FlagsRegistry.swift */,
 				7CD0B7CE1F00098A0039EAF8 /* URLSessionPusher.swift */,
@@ -1799,7 +1799,7 @@
 				7C0EA63F1EBA1D1E00F50EB2 /* InMappable.swift in Sources */,
 				7C0EA64F1EBA1D3100F50EB2 /* Shallows+Mapper.swift in Sources */,
 				7C13BC761ED8523600588F5F /* Package.swift in Sources */,
-				BE1713C41EEFE79800CFB448 /* FavoritesUploader.swift in Sources */,
+				BE1713C41EEFE79800CFB448 /* FlagsUploader.swift in Sources */,
 				7C1E66451EBB67CC003AF505 /* Group.swift in Sources */,
 				BE1713C11EEF428A00CFB448 /* ComplicationTemplate.swift in Sources */,
 				7C6B36BE1EBCA88100FC17F9 /* Matches.swift in Sources */,
@@ -1897,7 +1897,7 @@
 				7CCD25C61EDD7AE300F3C5CB /* SingleElementMemoryCache.swift in Sources */,
 				7C13BC5E1ED84B3D00588F5F /* InMappable.swift in Sources */,
 				7C13BC771ED8523600588F5F /* Package.swift in Sources */,
-				BE1713C51EEFE79800CFB448 /* FavoritesUploader.swift in Sources */,
+				BE1713C51EEFE79800CFB448 /* FlagsUploader.swift in Sources */,
 				7CA5420E1EDB14C600B4D1BD /* ComplicationDataSource.swift in Sources */,
 				7CCD25D11EDEBE5700F3C5CB /* PushNotification.swift in Sources */,
 				7C6AA1761ED87900003F2388 /* GitHubCache.swift in Sources */,

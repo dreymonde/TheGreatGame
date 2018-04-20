@@ -10,7 +10,9 @@ import Foundation
 import Alba
 import Shallows
 
-internal final class FavoritesUploader<IDType : IDProtocol> where IDType.RawValue == Int {
+internal final class FlagsUploader<Descriptor : RegistryDescriptor> {
+    
+    typealias IDType = Descriptor.IDType
     
     let getNotificationsToken: Retrieve<PushToken>
     let getDeviceIdentifier: () -> UUID?
@@ -32,7 +34,7 @@ internal final class FavoritesUploader<IDType : IDProtocol> where IDType.RawValu
     let pusher: WriteOnlyStorage<Void, FavoritesUpload<IDType>>
     
     internal func subscribeTo(didUpdateFavorites: Subscribe<Set<IDType>>) {
-        didUpdateFavorites.subscribe(self, with: FavoritesUploader.uploadFavorites)
+        didUpdateFavorites.subscribe(self, with: FlagsUploader.uploadFavorites)
     }
     
     internal func uploadFavorites(_ update: Set<IDType>) {
