@@ -10,13 +10,13 @@ import Foundation
 import Shallows
 import Alba
 
-public final class Flags<Descriptor : RegistryDescriptor> {
+public final class Flags<Flag : FlagDescriptor> {
     
-    public typealias IDType = Descriptor.IDType
+    public typealias IDType = Flag.IDType
     
-    public let registry: FlagsRegistry<Descriptor>
-    internal let uploader: FlagsUploader<Descriptor>
-    internal let uploadConsistencyKeeper: UploadConsistencyKeeper<FlagsSet<Descriptor>>
+    public let registry: FlagsRegistry<Flag>
+    internal let uploader: FlagsUploader<Flag>
+    internal let uploadConsistencyKeeper: UploadConsistencyKeeper<FlagsSet<Flag>>
     
     public struct Change {
         public var id: IDType
@@ -32,9 +32,9 @@ public final class Flags<Descriptor : RegistryDescriptor> {
         }
     }
     
-    internal init(registry: FlagsRegistry<Descriptor>,
-                  uploader: FlagsUploader<Descriptor>,
-                  uploadConsistencyKeeper: UploadConsistencyKeeper<FlagsSet<Descriptor>>,
+    internal init(registry: FlagsRegistry<Flag>,
+                  uploader: FlagsUploader<Flag>,
+                  uploadConsistencyKeeper: UploadConsistencyKeeper<FlagsSet<Flag>>,
                   shouldCheckUploadConsistency: Subscribe<Void>) {
         self.registry = registry
         self.uploader = uploader
@@ -60,13 +60,13 @@ public final class Flags<Descriptor : RegistryDescriptor> {
     
     extension Flags {
         
-        public convenience init(registry: FlagsRegistry<Descriptor>,
+        public convenience init(registry: FlagsRegistry<Flag>,
                                 tokens: DeviceTokens,
                                 shouldCheckUploadConsistency: Subscribe<Void>,
                                 consistencyKeepersStorage: Storage<Filename, Data>,
                                 upload: WriteOnlyStorage<Void, Data>) {
-            let favs = registry.flags.defaulting(to: FlagsSet<Descriptor>([]))
-            let uploader = FlagsUploader<Descriptor>(pusher: FlagsUploader<Descriptor>.adapt(pusher: upload),
+            let favs = registry.flags.defaulting(to: FlagsSet<Flag>([]))
+            let uploader = FlagsUploader<Flag>(pusher: FlagsUploader<Flag>.adapt(pusher: upload),
                                                      getNotificationsToken: tokens.getNotification,
                                                      getDeviceIdentifier: { UIDevice.current.identifierForVendor })
             let keeper = Flags.makeKeeper(diskCache: consistencyKeepersStorage, flags: favs, uploader: uploader)
@@ -83,15 +83,15 @@ public final class Flags<Descriptor : RegistryDescriptor> {
 extension Flags {
     
     fileprivate static func makeKeeper(diskCache: Storage<Filename, Data>,
-                                       flags: Retrieve<FlagsSet<Descriptor>>,
-                                       uploader: FlagsUploader<Descriptor>) -> UploadConsistencyKeeper<FlagsSet<Descriptor>> {
+                                       flags: Retrieve<FlagsSet<Flag>>,
+                                       uploader: FlagsUploader<Flag>) -> UploadConsistencyKeeper<FlagsSet<Flag>> {
         let name = "keeper-notifications-\(String(reflecting: IDType.self))"
         let last = diskCache
             .mapJSONDictionary()
-            .mapFlagsSet(of: Descriptor.self)
+            .mapFlagsSet(of: Flag.self)
             .singleKey(Filename(rawValue: name))
             .defaulting(to: FlagsSet([]))
-        return UploadConsistencyKeeper<FlagsSet<Descriptor>>(latest: flags, internalStorage: last, name: name, reupload: { upload in
+        return UploadConsistencyKeeper<FlagsSet<Flag>>(latest: flags, internalStorage: last, name: name, reupload: { upload in
             uploader.uploadFavorites(upload)
         })
     }

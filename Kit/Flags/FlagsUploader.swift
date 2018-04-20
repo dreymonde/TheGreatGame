@@ -10,14 +10,14 @@ import Foundation
 import Alba
 import Shallows
 
-internal final class FlagsUploader<Descriptor : RegistryDescriptor> {
+internal final class FlagsUploader<Flag : FlagDescriptor> {
     
-    typealias IDType = Descriptor.IDType
+    typealias IDType = Flag.IDType
     
     let getNotificationsToken: Retrieve<PushToken>
     let getDeviceIdentifier: () -> UUID?
     
-    init(pusher: WriteOnlyStorage<Void, FavoritesUpload<Descriptor>>,
+    init(pusher: WriteOnlyStorage<Void, FavoritesUpload<Flag>>,
          getNotificationsToken: Retrieve<PushToken>,
          getDeviceIdentifier: @escaping () -> UUID?) {
         self.pusher = pusher
@@ -25,20 +25,20 @@ internal final class FlagsUploader<Descriptor : RegistryDescriptor> {
         self.getDeviceIdentifier = getDeviceIdentifier
     }
     
-    internal static func adapt(pusher: WriteOnlyStorage<Void, Data>) -> WriteOnlyStorage<Void, FavoritesUpload<Descriptor>> {
+    internal static func adapt(pusher: WriteOnlyStorage<Void, Data>) -> WriteOnlyStorage<Void, FavoritesUpload<Flag>> {
         return pusher
             .mapJSONDictionary()
             .mapMappable()
     }
     
-    let pusher: WriteOnlyStorage<Void, FavoritesUpload<Descriptor>>
+    let pusher: WriteOnlyStorage<Void, FavoritesUpload<Flag>>
     
-    func uploadFavorites(_ update: FlagsSet<Descriptor>) {
+    func uploadFavorites(_ update: FlagsSet<Flag>) {
         printWithContext()
         uploadFavorites(update, usingTokenProvider: getNotificationsToken)
     }
     
-    private func uploadFavorites(_ favorites: FlagsSet<Descriptor>, usingTokenProvider provider: Retrieve<PushToken>) {
+    private func uploadFavorites(_ favorites: FlagsSet<Flag>, usingTokenProvider provider: Retrieve<PushToken>) {
         guard let deviceIdentifier = getDeviceIdentifier() else {
             fault("No device UUID")
             return
@@ -61,15 +61,15 @@ internal final class FlagsUploader<Descriptor : RegistryDescriptor> {
         }
     }
     
-    let didUploadFavorites = Publisher<FavoritesUpload<Descriptor>>(label: "FlagsUploader<\(Descriptor.self)>.didUploadFavorites")
+    let didUploadFavorites = Publisher<FavoritesUpload<Flag>>(label: "FlagsUploader<\(Flag.self)>.didUploadFavorites")
     
 }
 
-internal struct FavoritesUpload<Descriptor : RegistryDescriptor> {
+internal struct FavoritesUpload<Flag : FlagDescriptor> {
     
     let deviceIdentifier: UUID
     let token: PushToken
-    let favorites: FlagsSet<Descriptor>
+    let favorites: FlagsSet<Flag>
     
 }
 

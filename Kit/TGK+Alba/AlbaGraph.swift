@@ -30,8 +30,8 @@ extension ProxyPayload.Entry.Subscription {
 
 extension ProxyPayload {
     
-    var publishers: [AlbaObjectDescriptor] {
-        var publishersDescriptions: [AlbaObjectDescriptor] = []
+    var publishers: [AlbaObjectFlag] {
+        var publishersDescriptions: [AlbaObjectFlag] = []
         for entry in entries {
             switch entry {
             case .publisherLabel(let label, type: let type):

@@ -83,11 +83,11 @@ final class Application {
     static let uploadCache: WriteOnlyStorage<APIPath, Data> = makeUploader(forURL: Server.digitalOceanAPIBaseURL)
         .connectingNetworkActivityIndicator(indicator: .application)
     
-    static func makeFavs<Descriptor : RegistryDescriptor>(tokens: DeviceTokens,
+    static func makeFavs<Flag : FlagDescriptor>(tokens: DeviceTokens,
                                                           keeperFolderName: String,
-                                                          apiPath: APIPath) -> Flags<Descriptor> {
+                                                          apiPath: APIPath) -> Flags<Flag> {
         let keepersCache = DiskStorage.main.folder(keeperFolderName, in: .cachesDirectory)
-        return Flags<Descriptor>(registry: FlagsRegistry.inContainer(.shared),
+        return Flags<Flag>(registry: FlagsRegistry.inContainer(.shared),
                                  tokens: tokens,
                                  shouldCheckUploadConsistency: fourSecondAfterAppDidBecomeActive,
                                  consistencyKeepersStorage: keepersCache.asStorage(),

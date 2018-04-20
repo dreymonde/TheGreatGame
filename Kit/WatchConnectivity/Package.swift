@@ -98,15 +98,15 @@ extension FavoriteMatches : AppleWatchPackableElement {
     
 }
 
-public struct IDPackage<Descriptor : RegistryDescriptor> : AppleWatchPackable where Descriptor : AppleWatchPackableElement {
+public struct IDPackage<Flag : FlagDescriptor> : AppleWatchPackable where Flag : AppleWatchPackableElement {
     
     public static var kind: Connection.Package.Kind {
-        return Descriptor.kind
+        return Flag.kind
     }
     
-    public let favs: Set<Descriptor.IDType>
+    public let favs: Set<Flag.IDType>
     
-    public init(_ favs: FlagsSet<Descriptor>) {
+    public init(_ favs: FlagsSet<Flag>) {
         self.favs = favs.set
     }
     
@@ -114,10 +114,10 @@ public struct IDPackage<Descriptor : RegistryDescriptor> : AppleWatchPackable wh
 
 extension IDPackage {
     
-    public static var packageToIDsSet: AlbaAdapter<Connection.Package, FlagsSet<Descriptor>> {
+    public static var packageToIDsSet: AlbaAdapter<Connection.Package, FlagsSet<Flag>> {
         return { proxy in
             proxy
-                .filter({ $0.kind == Descriptor.kind })
+                .filter({ $0.kind == Flag.kind })
                 .flatMap({ try? IDPackage.unpacked(from: $0) })
                 .map({ FlagsSet($0.favs) })
         }

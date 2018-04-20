@@ -176,16 +176,16 @@ extension WatchSessionManager {
     
 }
 
-internal final class WatchTransferSession<Descriptor : RegistryDescriptor> where Descriptor : AppleWatchPackableElement {
+internal final class WatchTransferSession<Flag : FlagDescriptor> where Flag : AppleWatchPackableElement {
     
     let directoryURLCache: DiskFolderStorage
-    private let uploadConsistencyKeeper: UploadConsistencyKeeper<FlagsSet<Descriptor>>
+    private let uploadConsistencyKeeper: UploadConsistencyKeeper<FlagsSet<Flag>>
     
-    internal let transfer: (FlagsSet<Descriptor>) -> ()
+    internal let transfer: (FlagsSet<Flag>) -> ()
     
     init?(activation: WatchSessionManager.Activation,
-          provider: Retrieve<FlagsSet<Descriptor>>,
-          sendage: Subscribe<FlagsSet<Descriptor>>,
+          provider: Retrieve<FlagsSet<Flag>>,
+          sendage: Subscribe<FlagsSet<Flag>>,
           name: String,
           performTransfer: @escaping (WatchSessionManager.Package) -> ()) {
         guard activation.state == .activated else {
@@ -195,15 +195,15 @@ internal final class WatchTransferSession<Descriptor : RegistryDescriptor> where
         self.directoryURLCache = DiskFolderStorage(folderURL: url, filenameEncoder: .noEncoding)
         let lastTransfer = directoryURLCache
             .mapJSONDictionary()
-            .mapFlagsSet(of: Descriptor.self)
+            .mapFlagsSet(of: Flag.self)
             .singleKey(Filename(rawValue: "\(name).json"))
             .defaulting(to: FlagsSet([]))
         
-        let perform: (FlagsSet<Descriptor>) -> () = { flags in
+        let perform: (FlagsSet<Flag>) -> () = { flags in
             performTransfer(package(from: flags))
         }
         self.transfer = perform
-        self.uploadConsistencyKeeper = UploadConsistencyKeeper<FlagsSet<Descriptor>>(
+        self.uploadConsistencyKeeper = UploadConsistencyKeeper<FlagsSet<Flag>>(
             latest: provider,
             internalStorage: lastTransfer,
             name: name,
@@ -219,7 +219,7 @@ internal final class WatchTransferSession<Descriptor : RegistryDescriptor> where
     
 }
 
-func package<Descriptor : RegistryDescriptor>(from flags: FlagsSet<Descriptor>) -> WatchSessionManager.Package where Descriptor : AppleWatchPackableElement {
+func package<Flag : FlagDescriptor>(from flags: FlagsSet<Flag>) -> WatchSessionManager.Package where Flag : AppleWatchPackableElement {
     let package = try! IDPackage(flags).pack()
     return package
 }
