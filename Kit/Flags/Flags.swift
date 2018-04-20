@@ -16,7 +16,7 @@ public final class Flags<Descriptor : RegistryDescriptor> {
     
     public let registry: FlagsRegistry<Descriptor>
     internal let uploader: FlagsUploader<Descriptor>
-    internal let uploadConsistencyKeeper: UploadConsistencyKeeper<Set<IDType>>
+    internal let uploadConsistencyKeeper: UploadConsistencyKeeper<FlagsSet<Descriptor>>
     
     public struct Change {
         public var id: IDType
@@ -34,7 +34,7 @@ public final class Flags<Descriptor : RegistryDescriptor> {
     
     internal init(registry: FlagsRegistry<Descriptor>,
                   uploader: FlagsUploader<Descriptor>,
-                  uploadConsistencyKeeper: UploadConsistencyKeeper<Set<IDType>>,
+                  uploadConsistencyKeeper: UploadConsistencyKeeper<FlagsSet<Descriptor>>,
                   shouldCheckUploadConsistency: Subscribe<Void>) {
         self.registry = registry
         self.uploader = uploader
@@ -49,7 +49,9 @@ public final class Flags<Descriptor : RegistryDescriptor> {
     
     public func subscribe() {
         self.uploadConsistencyKeeper.subscribeTo(didUpload: uploader.didUploadFavorites.proxy.map({ $0.favorites }))
-        self.uploader.subscribeTo(didUpdateFavorites: registry.unitedDidUpdate.proxy.map({ $0.flags.set }))
+        registry.unitedDidUpdate.proxy.flatSubscribe(uploader) { (uploader, update) in
+            uploader.uploadFavorites(update.flags)
+        }
     }
     
 }
@@ -67,7 +69,7 @@ public final class Flags<Descriptor : RegistryDescriptor> {
             let uploader = FlagsUploader<Descriptor>(pusher: FlagsUploader<Descriptor>.adapt(pusher: upload),
                                                      getNotificationsToken: tokens.getNotification,
                                                      getDeviceIdentifier: { UIDevice.current.identifierForVendor })
-            let keeper = Flags.makeKeeper(diskCache: consistencyKeepersStorage, flags: favs.mapValues({ $0.set }), uploader: uploader)
+            let keeper = Flags.makeKeeper(diskCache: consistencyKeepersStorage, flags: favs, uploader: uploader)
             self.init(registry: registry,
                       uploader: uploader,
                       uploadConsistencyKeeper: keeper,
@@ -80,14 +82,16 @@ public final class Flags<Descriptor : RegistryDescriptor> {
 
 extension Flags {
     
-    fileprivate static func makeKeeper(diskCache: Storage<Filename, Data>, flags: Retrieve<Set<IDType>>, uploader: FlagsUploader<Descriptor>) -> UploadConsistencyKeeper<Set<IDType>> {
+    fileprivate static func makeKeeper(diskCache: Storage<Filename, Data>,
+                                       flags: Retrieve<FlagsSet<Descriptor>>,
+                                       uploader: FlagsUploader<Descriptor>) -> UploadConsistencyKeeper<FlagsSet<Descriptor>> {
         let name = "keeper-notifications-\(String(reflecting: IDType.self))"
         let last = diskCache
             .mapJSONDictionary()
-            .mapBoxedSet(of: IDType.self)
+            .mapFlagsSet(of: Descriptor.self)
             .singleKey(Filename(rawValue: name))
-            .defaulting(to: [])
-        return UploadConsistencyKeeper<Set<IDType>>(latest: flags, internalStorage: last, name: name, reupload: { upload in
+            .defaulting(to: FlagsSet([]))
+        return UploadConsistencyKeeper<FlagsSet<Descriptor>>(latest: flags, internalStorage: last, name: name, reupload: { upload in
             uploader.uploadFavorites(upload)
         })
     }

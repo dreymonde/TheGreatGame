@@ -17,7 +17,7 @@ internal final class FlagsUploader<Descriptor : RegistryDescriptor> {
     let getNotificationsToken: Retrieve<PushToken>
     let getDeviceIdentifier: () -> UUID?
     
-    init(pusher: WriteOnlyStorage<Void, FavoritesUpload<IDType>>,
+    init(pusher: WriteOnlyStorage<Void, FavoritesUpload<Descriptor>>,
          getNotificationsToken: Retrieve<PushToken>,
          getDeviceIdentifier: @escaping () -> UUID?) {
         self.pusher = pusher
@@ -25,24 +25,20 @@ internal final class FlagsUploader<Descriptor : RegistryDescriptor> {
         self.getDeviceIdentifier = getDeviceIdentifier
     }
     
-    internal static func adapt(pusher: WriteOnlyStorage<Void, Data>) -> WriteOnlyStorage<Void, FavoritesUpload<IDType>> {
+    internal static func adapt(pusher: WriteOnlyStorage<Void, Data>) -> WriteOnlyStorage<Void, FavoritesUpload<Descriptor>> {
         return pusher
             .mapJSONDictionary()
             .mapMappable()
     }
     
-    let pusher: WriteOnlyStorage<Void, FavoritesUpload<IDType>>
+    let pusher: WriteOnlyStorage<Void, FavoritesUpload<Descriptor>>
     
-    internal func subscribeTo(didUpdateFavorites: Subscribe<Set<IDType>>) {
-        didUpdateFavorites.subscribe(self, with: FlagsUploader.uploadFavorites)
-    }
-    
-    internal func uploadFavorites(_ update: Set<IDType>) {
+    func uploadFavorites(_ update: FlagsSet<Descriptor>) {
         printWithContext()
         uploadFavorites(update, usingTokenProvider: getNotificationsToken)
     }
     
-    private func uploadFavorites(_ favorites: Set<IDType>, usingTokenProvider provider: Retrieve<PushToken>) {
+    private func uploadFavorites(_ favorites: FlagsSet<Descriptor>, usingTokenProvider provider: Retrieve<PushToken>) {
         guard let deviceIdentifier = getDeviceIdentifier() else {
             fault("No device UUID")
             return
@@ -65,15 +61,15 @@ internal final class FlagsUploader<Descriptor : RegistryDescriptor> {
         }
     }
     
-    let didUploadFavorites = Publisher<FavoritesUpload<IDType>>(label: "FlagsUploader<\(Descriptor.self)>.didUploadFavorites")
+    let didUploadFavorites = Publisher<FavoritesUpload<Descriptor>>(label: "FlagsUploader<\(Descriptor.self)>.didUploadFavorites")
     
 }
 
-internal struct FavoritesUpload<IDType : IDProtocol> {
+internal struct FavoritesUpload<Descriptor : RegistryDescriptor> {
     
     let deviceIdentifier: UUID
     let token: PushToken
-    let favorites: Set<IDType>
+    let favorites: FlagsSet<Descriptor>
     
 }
 
@@ -94,7 +90,7 @@ extension FavoritesUpload : Mappable {
     func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.deviceIdentifier.uuidString, to: .device_identifier)
         try mapper.map(self.token.string, to: .token)
-        try mapper.map(Array(self.favorites), to: .favorites)
+        try mapper.map(Array(self.favorites.set), to: .favorites)
     }
     
 }
