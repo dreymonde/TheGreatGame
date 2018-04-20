@@ -49,7 +49,7 @@ public final class Flags<Descriptor : RegistryDescriptor> {
     
     public func subscribe() {
         self.uploadConsistencyKeeper.subscribeTo(didUpload: uploader.didUploadFavorites.proxy.map({ $0.favorites }))
-        self.uploader.subscribeTo(didUpdateFavorites: registry.unitedDidUpdate.proxy.map({ $0.flags }))
+        self.uploader.subscribeTo(didUpdateFavorites: registry.unitedDidUpdate.proxy.map({ $0.flags.set }))
     }
     
 }
@@ -63,11 +63,11 @@ public final class Flags<Descriptor : RegistryDescriptor> {
                                 shouldCheckUploadConsistency: Subscribe<Void>,
                                 consistencyKeepersStorage: Storage<Filename, Data>,
                                 upload: WriteOnlyStorage<Void, Data>) {
-            let favs = registry.flags.defaulting(to: [])
+            let favs = registry.flags.defaulting(to: FlagsSet<Descriptor>([]))
             let uploader = FlagsUploader<Descriptor>(pusher: FlagsUploader<Descriptor>.adapt(pusher: upload),
                                                      getNotificationsToken: tokens.getNotification,
                                                      getDeviceIdentifier: { UIDevice.current.identifierForVendor })
-            let keeper = Flags.makeKeeper(diskCache: consistencyKeepersStorage, flags: favs, uploader: uploader)
+            let keeper = Flags.makeKeeper(diskCache: consistencyKeepersStorage, flags: favs.mapValues({ $0.set }), uploader: uploader)
             self.init(registry: registry,
                       uploader: uploader,
                       uploadConsistencyKeeper: keeper,

@@ -23,12 +23,13 @@ public final class AppleWatch {
     
     var activeSessions: Sessions?
     
-    let favoriteTeams: Retrieve<Set<Team.ID>>
-    let favoriteMatches: Retrieve<Set<Match.ID>>
+    let favoriteTeams: Retrieve<FavoriteTeams.Set>
+    let favoriteMatches: Retrieve<FavoriteMatches.Set>
     
     internal let sendPackage = Publisher<WatchSessionManager.Package>(label: "AppleWatch.sendPackages")
     
-    public init?(favoriteTeams: Retrieve<Set<Team.ID>>, favoriteMatches: Retrieve<Set<Match.ID>>) {
+    public init?(favoriteTeams: Retrieve<FavoriteTeams.Set>,
+                 favoriteMatches: Retrieve<FavoriteMatches.Set>) {
         guard let session = WatchSessionManager(0) else {
             return nil
         }
@@ -38,7 +39,8 @@ public final class AppleWatch {
         self.pushKitReceiver = PushKitReceiver()
     }
     
-    public func subscribeTo(didUpdateFavoriteTeams: Subscribe<Set<Team.ID>>, didUpdateFavoriteMatches: Subscribe<Set<Match.ID>>) {
+    public func subscribeTo(didUpdateFavoriteTeams: Subscribe<FavoriteTeams.Set>,
+                            didUpdateFavoriteMatches: Subscribe<FavoriteMatches.Set>) {
         sessionManager.activationDidComplete.proxy.subscribe(self, with: AppleWatch.updateSessions)
         let push = pushKitReceiver.didReceiveIncomingPush.proxy
             .adapting(with: ComplicationPusher.adapter)
@@ -49,15 +51,15 @@ public final class AppleWatch {
         didUpdateFavoriteMatches.subscribe(self, with: AppleWatch.favoriteMatchesDidUpdate)
     }
     
-    func favoriteTeamsDidUpdate(_ favoriteTeams: Set<Team.ID>) {
-        activeSessions?.favoriteTeams.transfer(favoriteTeams)
+    func favoriteTeamsDidUpdate(_ favoriteTeams: FavoriteTeams.Set) {
+        activeSessions?.favoriteTeams.transfer(favoriteTeams.set)
     }
     
-    func favoriteMatchesDidUpdate(_ favoriteMatches: Set<Match.ID>) {
-        activeSessions?.favoriteMatches.transfer(favoriteMatches)
+    func favoriteMatchesDidUpdate(_ favoriteMatches: FavoriteMatches.Set) {
+        activeSessions?.favoriteMatches.transfer(favoriteMatches.set)
     }
     
-    func send<IDType : IDProtocol>(_ ids: Set<IDType>) where IDType.RawValue == Int, IDType : AppleWatchPackableElement {
+    func send<Token>(_ ids: Set<ID<Token>>) where Token : AppleWatchPackableElement {
         if let package = try? IDPackage(ids).pack() {
             sendPackage.publish(package)
         }
@@ -72,15 +74,15 @@ public final class AppleWatch {
     }
     
     func makeSessions(with activation: WatchSessionManager.Activation) -> Sessions? {
-        guard let teams = WatchTransferSession<Team.ID>(activation: activation,
-                                                        provider: favoriteTeams,
+        guard let teams = WatchTransferSession<ID<Team>>(activation: activation,
+                                                        provider: favoriteTeams.mapValues({ $0.set }),
                                                         sendage: sessionManager.didSendPackage.proxy.adapting(with: IDPackage.adapter),
                                                         name: "favorite-teams-sendings",
                                                         performTransfer: self.send) else {
                                                             return nil
         }
         guard let matches = WatchTransferSession<Match.ID>(activation: activation,
-                                                           provider: favoriteMatches,
+                                                           provider: favoriteMatches.mapValues({ $0.set }),
                                                            sendage: sessionManager.didSendPackage.proxy.adapting(with: IDPackage.adapter),
                                                            name: "favorite-matches-sendings",
                                                            performTransfer: self.send) else {

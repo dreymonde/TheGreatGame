@@ -24,6 +24,12 @@ public enum FavoriteMatches : RegistryDescriptor {
     }
 }
 
+extension RegistryDescriptor {
+    
+    public typealias Set = FlagsSet<Self>
+    
+}
+
 public enum FavoriteTeams : RegistryDescriptor {
     public typealias IDType = Team.ID
     public static var filename: Filename {
@@ -36,6 +42,16 @@ public enum UnsubscribedMatches : RegistryDescriptor {
     public static var filename: Filename {
         return "unsubs"
     }
+}
+
+public struct FlagsSet<Descriptor : RegistryDescriptor> {
+    
+    public var set: Set<Descriptor.IDType>
+    
+    public init(_ set: Set<Descriptor.IDType>) {
+        self.set = set
+    }
+    
 }
 
 public final class FlagsRegistry<Descriptor : RegistryDescriptor> : SimpleStoring {
@@ -51,11 +67,11 @@ public final class FlagsRegistry<Descriptor : RegistryDescriptor> : SimpleStorin
     
     public typealias IDType = Descriptor.IDType
     
-    fileprivate let full_flags: MemoryCached<Set<IDType>>
+    fileprivate let full_flags: MemoryCached<FlagsSet<Descriptor>>
     
-    public let flags: Retrieve<Set<IDType>>
+    public let flags: Retrieve<FlagsSet<Descriptor>>
     
-    public var all: Set<IDType> {
+    public var all: FlagsSet<Descriptor> {
         return full_flags.read()
     }
     
@@ -64,38 +80,38 @@ public final class FlagsRegistry<Descriptor : RegistryDescriptor> : SimpleStorin
             .renaming(to: "flags-disk")
             .mapJSONDictionary()
             .singleKey(Descriptor.filename)
-            .mapBoxedSet(of: Descriptor.IDType.self)
-        self.full_flags = MemoryCached(io: fileSystemFlags, defaultValue: [])
+            .mapFlagsSet(of: Descriptor.self)
+        self.full_flags = MemoryCached(io: fileSystemFlags, defaultValue: FlagsSet([]))
         self.flags = full_flags.ioRead
     }
     
     public struct Update {
         
         let changes: [Flags<Descriptor>.Change]
-        let flags: Set<IDType>
+        let flags: FlagsSet<Descriptor>
         
-        init(changes: [Flags<Descriptor>.Change], all: Set<IDType>) {
+        init(changes: [Flags<Descriptor>.Change], all: FlagsSet<Descriptor>) {
             self.changes = changes
             self.flags = all
         }
         
     }
     
-    public let unitedDidUpdate = Publisher<Update>(label: "FlagsRegistry.unitedDidUpdate")
+    public let unitedDidUpdate = Publisher<Update>(label: "FlagsRegistry<\(Descriptor.self)>.unitedDidUpdate")
     
     public var didUpdatePresence: Subscribe<Flags<Descriptor>.Change> {
         return self.unitedDidUpdate.proxy.map({ $0.changes }).unfolded()
     }
-    public var didUpdate: Subscribe<Set<IDType>> {
+    public var didUpdate: Subscribe<FlagsSet<Descriptor>> {
         return self.unitedDidUpdate.proxy.map({ $0.flags })
     }
     
     public func updatePresence(id: IDType, isPresent: Bool) {
         full_flags.write { (flags) in
             if isPresent {
-                flags.insert(id)
+                flags.set.insert(id)
             } else {
-                flags.remove(id)
+                flags.set.remove(id)
             }
         }
         let update = Flags<Descriptor>.Change(id: id, isPresent: isPresent)
@@ -103,11 +119,11 @@ public final class FlagsRegistry<Descriptor : RegistryDescriptor> : SimpleStorin
         unitedDidUpdate.publish(united)
     }
     
-    public func replace(with updated: Set<IDType>) {
+    public func replace(with updated: FlagsSet<Descriptor>) {
         let existing = full_flags.read()
-        let diff = existing.symmetricDifference(updated)
+        let diff = existing.set.symmetricDifference(updated.set)
         full_flags.write(updated)
-        let updates = diff.map({ Flags<Descriptor>.Change.init(id: $0, isPresent: updated.contains($0)) })
+        let updates = diff.map({ Flags<Descriptor>.Change.init(id: $0, isPresent: updated.set.contains($0)) })
         let united = Update(changes: updates, all: updated)
         self.unitedDidUpdate.publish(united)
     }
@@ -117,7 +133,7 @@ public final class FlagsRegistry<Descriptor : RegistryDescriptor> : SimpleStorin
     }
     
     public func isPresent(id: IDType) -> Bool {
-        return full_flags.read().contains(id)
+        return full_flags.read().set.contains(id)
     }
     
 }
@@ -129,6 +145,14 @@ extension StorageProtocol where Value == [String : Any] {
             .mapMappable(of: FlagsBox<IDType>.self)
             .mapValues(transformIn: { Set($0.all) },
                        transformOut: { FlagsBox<IDType>(all: Array($0)) })
+    }
+    
+    func mapFlagsSet<Descriptor : RegistryDescriptor>(of type: Descriptor.Type = Descriptor.self) -> Storage<Key, FlagsSet<Descriptor>> {
+        return self
+            .mapBoxedSet(of: Descriptor.IDType.self)
+            .mapValues(to: FlagsSet<Descriptor>.self,
+                       transformIn: FlagsSet.init,
+                       transformOut: { $0.set })
     }
     
 }

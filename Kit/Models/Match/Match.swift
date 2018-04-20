@@ -104,27 +104,7 @@ public enum Match {
     public static let durationAndAftermath = TimeInterval.minutes(130)
     public static let aftermath = TimeInterval.minutes(20)
     
-    public struct ID : RawRepresentable, Hashable, IDProtocol {
-        
-        public var rawID: Int
-        
-        public init?(rawValue: Int) {
-            self.rawID = rawValue
-        }
-        
-        public var rawValue: Int {
-            return rawID
-        }
-        
-        public var hashValue: Int {
-            return rawValue
-        }
-        
-        public func asString() -> String {
-            return String(rawValue)
-        }
-        
-    }
+    public typealias ID = TheGreatKit.ID<Match>
     
     public struct Score {
         public let home: Int

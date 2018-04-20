@@ -76,14 +76,16 @@ extension Phone {
             .flatMap({ try? Match.Full.unpacked(from: $0) })
     }
     
-    var didReceiveUpdatedFavoriteTeams: Subscribe<Set<Team.ID>> {
+    var didReceiveUpdatedFavoriteTeams: Subscribe<FavoriteTeams.Set> {
         return didReceivePackage.proxy
             .adapting(with: IDPackage.adapter)
+            .map(FlagsSet.init)
     }
     
-    var didReceiveUpdatedFavoriteMatches: Subscribe<Set<Match.ID>> {
+    var didReceiveUpdatedFavoriteMatches: Subscribe<FavoriteMatches.Set> {
         return didReceivePackage.proxy
             .adapting(with: IDPackage.adapter)
+            .map(FlagsSet.init)
     }
 
 }

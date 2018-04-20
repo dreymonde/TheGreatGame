@@ -65,7 +65,7 @@ internal final class FlagsUploader<Descriptor : RegistryDescriptor> {
         }
     }
     
-    let didUploadFavorites = Publisher<FavoritesUpload<IDType>>(label: "FavoritesUploader.didUploadFavorites")
+    let didUploadFavorites = Publisher<FavoritesUpload<IDType>>(label: "FlagsUploader<\(Descriptor.self)>.didUploadFavorites")
     
 }
 

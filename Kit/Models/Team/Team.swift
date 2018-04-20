@@ -11,29 +11,31 @@ import Shallows
 
 public protocol IDProtocol : Hashable, RawRepresentable {  }
 
+public struct ID<Token> : RawRepresentable, Hashable, IDProtocol {
+    
+    public var rawID: Int
+    
+    public init?(rawValue: Int) {
+        self.rawID = rawValue
+    }
+    
+    public var rawValue: Int {
+        return rawID
+    }
+    
+    public var hashValue: Int {
+        return rawValue
+    }
+    
+    public func asString() -> String {
+        return String(rawValue)
+    }
+    
+}
+
 public enum Team {
     
-    public struct ID : RawRepresentable, Hashable, IDProtocol {
-        
-        public var rawID: Int
-        
-        public init?(rawValue: Int) {
-            self.rawID = rawValue
-        }
-        
-        public var rawValue: Int {
-            return rawID
-        }
-        
-        public var hashValue: Int {
-            return rawValue
-        }
-        
-        public func asString() -> String {
-            return String(rawValue)
-        }
-        
-    }
+    public typealias ID = TheGreatKit.ID<Team>
     
 }
 
