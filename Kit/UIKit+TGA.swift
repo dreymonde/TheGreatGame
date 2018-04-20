@@ -8,39 +8,6 @@
 
 import UIKit
 
-extension UIImageView {
-    
-    public func setImage(_ newImage: UIImage?, afterDownload: Bool) {
-        let old = self.image
-        self.image = newImage
-        if afterDownload && newImage != nil && old == nil {
-            fadeTransit(duration: 0.2)
-        }
-    }
-    
-}
-
-extension UIView {
-    
-    public func fadeTransit(duration: TimeInterval = 0.2) {
-        let transition = CATransition() <- {
-            $0.duration = duration
-            $0.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-            $0.type = kCATransitionFade
-        }
-        self.layer.add(transition, forKey: nil)
-    }
-    
-}
-
-extension IndexPath {
-    
-    public static func start(ofSection section: Int) -> IndexPath {
-        return IndexPath(row: NSNotFound, section: section)
-    }
-    
-}
-
 extension UIFont {
     
     public func monospacedNumbers() -> UIFont {
