@@ -106,7 +106,7 @@ public struct IDPackage<Flag : FlagDescriptor> : AppleWatchPackable where Flag :
     
     public let favs: Set<Flag.IDType>
     
-    public init(_ favs: FlagsSet<Flag>) {
+    public init(_ favs: FlagSet<Flag>) {
         self.favs = favs.set
     }
     
@@ -114,12 +114,12 @@ public struct IDPackage<Flag : FlagDescriptor> : AppleWatchPackable where Flag :
 
 extension IDPackage {
     
-    public static var packageToIDsSet: AlbaAdapter<Connection.Package, FlagsSet<Flag>> {
+    public static var packageToIDsSet: AlbaAdapter<Connection.Package, FlagSet<Flag>> {
         return { proxy in
             proxy
                 .filter({ $0.kind == Flag.kind })
                 .flatMap({ try? IDPackage.unpacked(from: $0) })
-                .map({ FlagsSet($0.favs) })
+                .map({ FlagSet($0.favs) })
         }
     }
     

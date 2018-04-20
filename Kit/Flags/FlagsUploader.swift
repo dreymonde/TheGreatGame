@@ -33,12 +33,12 @@ internal final class FlagsUploader<Flag : FlagDescriptor> {
     
     let pusher: WriteOnlyStorage<Void, FavoritesUpload<Flag>>
     
-    func uploadFavorites(_ update: FlagsSet<Flag>) {
+    func uploadFavorites(_ update: FlagSet<Flag>) {
         printWithContext()
         uploadFavorites(update, usingTokenProvider: getNotificationsToken)
     }
     
-    private func uploadFavorites(_ favorites: FlagsSet<Flag>, usingTokenProvider provider: Retrieve<PushToken>) {
+    private func uploadFavorites(_ favorites: FlagSet<Flag>, usingTokenProvider provider: Retrieve<PushToken>) {
         guard let deviceIdentifier = getDeviceIdentifier() else {
             fault("No device UUID")
             return
@@ -69,7 +69,7 @@ internal struct FavoritesUpload<Flag : FlagDescriptor> {
     
     let deviceIdentifier: UUID
     let token: PushToken
-    let favorites: FlagsSet<Flag>
+    let favorites: FlagSet<Flag>
     
 }
 

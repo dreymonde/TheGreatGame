@@ -16,7 +16,7 @@ public final class Flags<Flag : FlagDescriptor> {
     
     public let registry: FlagsRegistry<Flag>
     internal let uploader: FlagsUploader<Flag>
-    internal let uploadConsistencyKeeper: UploadConsistencyKeeper<FlagsSet<Flag>>
+    internal let uploadConsistencyKeeper: UploadConsistencyKeeper<FlagSet<Flag>>
     
     public struct Change {
         public var id: IDType
@@ -34,7 +34,7 @@ public final class Flags<Flag : FlagDescriptor> {
     
     internal init(registry: FlagsRegistry<Flag>,
                   uploader: FlagsUploader<Flag>,
-                  uploadConsistencyKeeper: UploadConsistencyKeeper<FlagsSet<Flag>>,
+                  uploadConsistencyKeeper: UploadConsistencyKeeper<FlagSet<Flag>>,
                   shouldCheckUploadConsistency: Subscribe<Void>) {
         self.registry = registry
         self.uploader = uploader
@@ -65,7 +65,7 @@ public final class Flags<Flag : FlagDescriptor> {
                                 shouldCheckUploadConsistency: Subscribe<Void>,
                                 consistencyKeepersStorage: Storage<Filename, Data>,
                                 upload: WriteOnlyStorage<Void, Data>) {
-            let favs = registry.flags.defaulting(to: FlagsSet<Flag>([]))
+            let favs = registry.flags.defaulting(to: FlagSet<Flag>([]))
             let uploader = FlagsUploader<Flag>(pusher: FlagsUploader<Flag>.adapt(pusher: upload),
                                                      getNotificationsToken: tokens.getNotification,
                                                      getDeviceIdentifier: { UIDevice.current.identifierForVendor })
@@ -83,15 +83,15 @@ public final class Flags<Flag : FlagDescriptor> {
 extension Flags {
     
     fileprivate static func makeKeeper(diskCache: Storage<Filename, Data>,
-                                       flags: Retrieve<FlagsSet<Flag>>,
-                                       uploader: FlagsUploader<Flag>) -> UploadConsistencyKeeper<FlagsSet<Flag>> {
+                                       flags: Retrieve<FlagSet<Flag>>,
+                                       uploader: FlagsUploader<Flag>) -> UploadConsistencyKeeper<FlagSet<Flag>> {
         let name = "keeper-notifications-\(String(reflecting: IDType.self))"
         let last = diskCache
             .mapJSONDictionary()
-            .mapFlagsSet(of: Flag.self)
+            .mapFlagSet(of: Flag.self)
             .singleKey(Filename(rawValue: name))
-            .defaulting(to: FlagsSet([]))
-        return UploadConsistencyKeeper<FlagsSet<Flag>>(latest: flags, internalStorage: last, name: name, reupload: { upload in
+            .defaulting(to: FlagSet([]))
+        return UploadConsistencyKeeper<FlagSet<Flag>>(latest: flags, internalStorage: last, name: name, reupload: { upload in
             uploader.uploadFavorites(upload)
         })
     }

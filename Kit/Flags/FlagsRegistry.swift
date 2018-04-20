@@ -26,7 +26,7 @@ public enum FavoriteMatches : FlagDescriptor {
 
 extension FlagDescriptor {
     
-    public typealias Set = FlagsSet<Self>
+    public typealias Set = FlagSet<Self>
     
 }
 
@@ -44,7 +44,7 @@ public enum UnsubscribedMatches : FlagDescriptor {
     }
 }
 
-public struct FlagsSet<Flag : FlagDescriptor> : Equatable {
+public struct FlagSet<Flag : FlagDescriptor> : Equatable {
     
     public var set: Set<Flag.IDType>
     
@@ -67,11 +67,11 @@ public final class FlagsRegistry<Flag : FlagDescriptor> : SimpleStoring {
     
     public typealias IDType = Flag.IDType
     
-    fileprivate let full_flags: MemoryCached<FlagsSet<Flag>>
+    fileprivate let full_flags: MemoryCached<FlagSet<Flag>>
     
-    public let flags: Retrieve<FlagsSet<Flag>>
+    public let flags: Retrieve<FlagSet<Flag>>
     
-    public var all: FlagsSet<Flag> {
+    public var all: FlagSet<Flag> {
         return full_flags.read()
     }
     
@@ -80,17 +80,17 @@ public final class FlagsRegistry<Flag : FlagDescriptor> : SimpleStoring {
             .renaming(to: "flags-disk")
             .mapJSONDictionary()
             .singleKey(Flag.filename)
-            .mapFlagsSet(of: Flag.self)
-        self.full_flags = MemoryCached(io: fileSystemFlags, defaultValue: FlagsSet([]))
+            .mapFlagSet(of: Flag.self)
+        self.full_flags = MemoryCached(io: fileSystemFlags, defaultValue: FlagSet([]))
         self.flags = full_flags.ioRead
     }
     
     public struct Update {
         
         let changes: [Flags<Flag>.Change]
-        let flags: FlagsSet<Flag>
+        let flags: FlagSet<Flag>
         
-        init(changes: [Flags<Flag>.Change], all: FlagsSet<Flag>) {
+        init(changes: [Flags<Flag>.Change], all: FlagSet<Flag>) {
             self.changes = changes
             self.flags = all
         }
@@ -102,7 +102,7 @@ public final class FlagsRegistry<Flag : FlagDescriptor> : SimpleStoring {
     public var didUpdatePresence: Subscribe<Flags<Flag>.Change> {
         return self.unitedDidUpdate.proxy.map({ $0.changes }).unfolded()
     }
-    public var didUpdate: Subscribe<FlagsSet<Flag>> {
+    public var didUpdate: Subscribe<FlagSet<Flag>> {
         return self.unitedDidUpdate.proxy.map({ $0.flags })
     }
     
@@ -119,7 +119,7 @@ public final class FlagsRegistry<Flag : FlagDescriptor> : SimpleStoring {
         unitedDidUpdate.publish(united)
     }
     
-    public func replace(with updated: FlagsSet<Flag>) {
+    public func replace(with updated: FlagSet<Flag>) {
         let existing = full_flags.read()
         let diff = existing.set.symmetricDifference(updated.set)
         full_flags.write(updated)
@@ -147,11 +147,11 @@ extension StorageProtocol where Value == [String : Any] {
                        transformOut: { FlagsBox<IDType>(all: Array($0)) })
     }
     
-    func mapFlagsSet<Flag : FlagDescriptor>(of type: Flag.Type = Flag.self) -> Storage<Key, FlagsSet<Flag>> {
+    func mapFlagSet<Flag : FlagDescriptor>(of type: Flag.Type = Flag.self) -> Storage<Key, FlagSet<Flag>> {
         return self
             .mapBoxedSet(of: Flag.IDType.self)
-            .mapValues(to: FlagsSet<Flag>.self,
-                       transformIn: FlagsSet.init,
+            .mapValues(to: FlagSet<Flag>.self,
+                       transformIn: FlagSet.init,
                        transformOut: { $0.set })
     }
     

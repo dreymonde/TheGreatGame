@@ -179,13 +179,13 @@ extension WatchSessionManager {
 internal final class WatchTransferSession<Flag : FlagDescriptor> where Flag : AppleWatchPackableElement {
     
     let directoryURLCache: DiskFolderStorage
-    private let uploadConsistencyKeeper: UploadConsistencyKeeper<FlagsSet<Flag>>
+    private let uploadConsistencyKeeper: UploadConsistencyKeeper<FlagSet<Flag>>
     
-    internal let transfer: (FlagsSet<Flag>) -> ()
+    internal let transfer: (FlagSet<Flag>) -> ()
     
     init?(activation: WatchSessionManager.Activation,
-          provider: Retrieve<FlagsSet<Flag>>,
-          sendage: Subscribe<FlagsSet<Flag>>,
+          provider: Retrieve<FlagSet<Flag>>,
+          sendage: Subscribe<FlagSet<Flag>>,
           name: String,
           performTransfer: @escaping (WatchSessionManager.Package) -> ()) {
         guard activation.state == .activated else {
@@ -195,15 +195,15 @@ internal final class WatchTransferSession<Flag : FlagDescriptor> where Flag : Ap
         self.directoryURLCache = DiskFolderStorage(folderURL: url, filenameEncoder: .noEncoding)
         let lastTransfer = directoryURLCache
             .mapJSONDictionary()
-            .mapFlagsSet(of: Flag.self)
+            .mapFlagSet(of: Flag.self)
             .singleKey(Filename(rawValue: "\(name).json"))
-            .defaulting(to: FlagsSet([]))
+            .defaulting(to: FlagSet([]))
         
-        let perform: (FlagsSet<Flag>) -> () = { flags in
+        let perform: (FlagSet<Flag>) -> () = { flags in
             performTransfer(package(from: flags))
         }
         self.transfer = perform
-        self.uploadConsistencyKeeper = UploadConsistencyKeeper<FlagsSet<Flag>>(
+        self.uploadConsistencyKeeper = UploadConsistencyKeeper<FlagSet<Flag>>(
             latest: provider,
             internalStorage: lastTransfer,
             name: name,
@@ -219,7 +219,7 @@ internal final class WatchTransferSession<Flag : FlagDescriptor> where Flag : Ap
     
 }
 
-func package<Flag : FlagDescriptor>(from flags: FlagsSet<Flag>) -> WatchSessionManager.Package where Flag : AppleWatchPackableElement {
+func package<Flag : FlagDescriptor>(from flags: FlagSet<Flag>) -> WatchSessionManager.Package where Flag : AppleWatchPackableElement {
     let package = try! IDPackage(flags).pack()
     return package
 }
