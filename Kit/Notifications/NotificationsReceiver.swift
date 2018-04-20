@@ -33,9 +33,8 @@ internal final class NotificationsReceiver : NSObject, UNUserNotificationCenterD
             fault("Unknown action identifier")
             return
         }
-        let nativeResponse = NotificationResponse(action: action, notification: notification)
+        let nativeResponse = NotificationResponse(action: action, notification: notification, completion: completionHandler)
         didReceiveNotificationResponse.publish(nativeResponse)
-        completionHandler()
     }
     
     let didReceiveNotificationResponse = Publisher<NotificationResponse>(label: "NotificationsReceiver.didRecieveNotificationResponse")

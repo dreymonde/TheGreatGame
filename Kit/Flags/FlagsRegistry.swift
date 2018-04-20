@@ -67,12 +67,12 @@ public final class FlagsRegistry<Flag : FlagDescriptor> : SimpleStoring {
     
     public typealias IDType = Flag.IDType
     
-    fileprivate let full_flags: MemoryCached<FlagSet<Flag>>
+    fileprivate let memoryCachedFlags: MemoryCached<FlagSet<Flag>>
     
     public let flags: Retrieve<FlagSet<Flag>>
     
     public var all: FlagSet<Flag> {
-        return full_flags.read()
+        return memoryCachedFlags.read()
     }
     
     public init(diskStorage: Disk) {
@@ -81,8 +81,8 @@ public final class FlagsRegistry<Flag : FlagDescriptor> : SimpleStoring {
             .mapJSONDictionary()
             .singleKey(Flag.filename)
             .mapFlagSet(of: Flag.self)
-        self.full_flags = MemoryCached(io: fileSystemFlags, defaultValue: FlagSet([]))
-        self.flags = full_flags.ioRead
+        self.memoryCachedFlags = MemoryCached(io: fileSystemFlags, defaultValue: FlagSet([]))
+        self.flags = memoryCachedFlags.ioRead
     }
     
     public struct Update {
@@ -107,7 +107,7 @@ public final class FlagsRegistry<Flag : FlagDescriptor> : SimpleStoring {
     }
     
     public func updatePresence(id: IDType, isPresent: Bool) {
-        full_flags.write { (flags) in
+        memoryCachedFlags.write { (flags) in
             if isPresent {
                 flags.set.insert(id)
             } else {
@@ -115,25 +115,25 @@ public final class FlagsRegistry<Flag : FlagDescriptor> : SimpleStoring {
             }
         }
         let update = Flags<Flag>.Change(id: id, isPresent: isPresent)
-        let united = Update(changes: [update], all: full_flags.read())
+        let united = Update(changes: [update], all: memoryCachedFlags.read())
         unitedDidUpdate.publish(united)
     }
     
     public func replace(with updated: FlagSet<Flag>) {
-        let existing = full_flags.read()
+        let existing = memoryCachedFlags.read()
         let diff = existing.set.symmetricDifference(updated.set)
-        full_flags.write(updated)
+        memoryCachedFlags.write(updated)
         let updates = diff.map({ Flags<Flag>.Change.init(id: $0, isPresent: updated.set.contains($0)) })
         let united = Update(changes: updates, all: updated)
         self.unitedDidUpdate.publish(united)
     }
     
     public func forceRefresh() {
-        full_flags.forceRefresh()
+        memoryCachedFlags.forceRefresh()
     }
     
     public func isPresent(id: IDType) -> Bool {
-        return full_flags.read().set.contains(id)
+        return memoryCachedFlags.read().set.contains(id)
     }
     
 }

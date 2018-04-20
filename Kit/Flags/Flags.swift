@@ -47,6 +47,10 @@ public final class Flags<Flag : FlagDescriptor> {
         shouldCheckUploadConsistency.subscribe(uploadConsistencyKeeper, with: UploadConsistencyKeeper.check)
     }
     
+    public var didUploadFlags: Subscribe<FlagSet<Flag>> {
+        return uploader.didUploadFavorites.proxy.map({ $0.favorites })
+    }
+    
     public func subscribe() {
         self.uploadConsistencyKeeper.subscribeTo(didUpload: uploader.didUploadFavorites.proxy.map({ $0.favorites }))
         registry.unitedDidUpdate.proxy.flatSubscribe(uploader) { (uploader, update) in

@@ -165,13 +165,21 @@ final class UserInterface {
         case .open:
             showMatch(match)
         case .unsubscribe:
-            unsubscribe(from: match)
+            unsubscribe(from: match, completion: notificationResponse.completion)
         }
     }
     
-    func unsubscribe(from match: Match.Full) {
+    func unsubscribe(from match: Match.Full, completion: @escaping () -> ()) {
         printWithContext("Unsubscribing")
         logic.unsubscribedMatches.registry.updatePresence(id: match.id, isPresent: true)
+        let expectedFlags = logic.unsubscribedMatches.registry.all
+        logic.unsubscribedMatches.didUploadFlags.listen { (uploadedFlags, stop) in
+            if uploadedFlags == expectedFlags {
+                printWithContext("Uploaded")
+                stop()
+                completion()
+            }
+        }
     }
     
     func showMatch(_ match: Match.Full) {

@@ -13,6 +13,7 @@ public struct NotificationResponse {
     
     public let action: NotificationAction
     public let notification: PushNotification
+    public let completion: () -> ()
     
 }
 

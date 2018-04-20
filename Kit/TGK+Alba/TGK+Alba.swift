@@ -109,3 +109,20 @@ extension Subscribe where Event : Sequence {
     
 }
 
+public typealias StopListening = () -> ()
+
+fileprivate class _Listener { }
+
+extension Subscribe {
+    
+    public func listen(with handler: @escaping (Event, StopListening) -> ()) {
+        let obj = _Listener()
+        let id = objectID(obj)
+        let close: StopListening = { self.manual.unsubscribe(objectWith: id) }
+        self.flatSubscribe(obj) { (_, event) in
+            handler(event, close)
+        }
+    }
+    
+}
+
