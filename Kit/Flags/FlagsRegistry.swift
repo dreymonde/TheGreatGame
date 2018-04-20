@@ -44,7 +44,7 @@ public enum UnsubscribedMatches : RegistryDescriptor {
     }
 }
 
-public struct FlagsSet<Descriptor : RegistryDescriptor> {
+public struct FlagsSet<Descriptor : RegistryDescriptor> : Equatable {
     
     public var set: Set<Descriptor.IDType>
     

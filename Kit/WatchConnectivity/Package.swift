@@ -82,7 +82,7 @@ extension Match.Full : AppleWatchPackable {
     
 }
 
-extension Team : AppleWatchPackableElement {
+extension FavoriteTeams : AppleWatchPackableElement {
     
     public static var kind: Connection.Package.Kind {
         return .favorite_teams
@@ -90,7 +90,7 @@ extension Team : AppleWatchPackableElement {
     
 }
 
-extension Match : AppleWatchPackableElement {
+extension FavoriteMatches : AppleWatchPackableElement {
     
     public static var kind: Connection.Package.Kind {
         return .favorite_matches
@@ -98,28 +98,28 @@ extension Match : AppleWatchPackableElement {
     
 }
 
-public struct IDPackage<Token> : AppleWatchPackable where Token : AppleWatchPackableElement {
+public struct IDPackage<Descriptor : RegistryDescriptor> : AppleWatchPackable where Descriptor : AppleWatchPackableElement {
     
     public static var kind: Connection.Package.Kind {
-        return Token.kind
+        return Descriptor.kind
     }
     
-    public let favs: Set<ID<Token>>
+    public let favs: Set<Descriptor.IDType>
     
-    public init(_ favs: Set<ID<Token>>) {
-        self.favs = favs
+    public init(_ favs: FlagsSet<Descriptor>) {
+        self.favs = favs.set
     }
     
 }
 
 extension IDPackage {
     
-    public static var adapter: AlbaAdapter<Connection.Package, Set<ID<Token>>> {
+    public static var packageToIDsSet: AlbaAdapter<Connection.Package, FlagsSet<Descriptor>> {
         return { proxy in
             proxy
-                .filter({ $0.kind == Token.kind })
+                .filter({ $0.kind == Descriptor.kind })
                 .flatMap({ try? IDPackage.unpacked(from: $0) })
-                .map({ $0.favs })
+                .map({ FlagsSet($0.favs) })
         }
     }
     

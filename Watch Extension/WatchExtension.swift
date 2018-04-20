@@ -78,14 +78,12 @@ extension Phone {
     
     var didReceiveUpdatedFavoriteTeams: Subscribe<FavoriteTeams.Set> {
         return didReceivePackage.proxy
-            .adapting(with: IDPackage.adapter)
-            .map(FlagsSet.init)
+            .adapting(with: IDPackage.packageToIDsSet)
     }
     
     var didReceiveUpdatedFavoriteMatches: Subscribe<FavoriteMatches.Set> {
         return didReceivePackage.proxy
-            .adapting(with: IDPackage.adapter)
-            .map(FlagsSet.init)
+            .adapting(with: IDPackage.packageToIDsSet)
     }
 
 }

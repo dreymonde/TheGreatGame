@@ -21,7 +21,7 @@ internal final class UploadConsistencyKeeper<Upload : Equatable> {
     init(latest: Retrieve<Upload>,
          internalStorage: Storage<Void, Upload>,
          name: String,
-         reupload: @escaping (Upload) -> ()) {
+         reupload: @escaping (Upload) -> () = { _ in }) {
         self.latest = latest
         self.lastUploaded = internalStorage
         self.name = name

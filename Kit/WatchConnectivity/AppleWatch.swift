@@ -17,8 +17,8 @@ public final class AppleWatch {
     public let pushKitReceiver: PushKitReceiver
     
     struct Sessions {
-        let favoriteTeams: WatchTransferSession<Team.ID>
-        let favoriteMatches: WatchTransferSession<Match.ID>
+        let favoriteTeams: WatchTransferSession<FavoriteTeams>
+        let favoriteMatches: WatchTransferSession<FavoriteMatches>
     }
     
     var activeSessions: Sessions?
@@ -30,7 +30,7 @@ public final class AppleWatch {
     
     public init?(favoriteTeams: Retrieve<FavoriteTeams.Set>,
                  favoriteMatches: Retrieve<FavoriteMatches.Set>) {
-        guard let session = WatchSessionManager(0) else {
+        guard let session = WatchSessionManager(()) else {
             return nil
         }
         self.favoriteTeams = favoriteTeams
@@ -42,27 +42,20 @@ public final class AppleWatch {
     public func subscribeTo(didUpdateFavoriteTeams: Subscribe<FavoriteTeams.Set>,
                             didUpdateFavoriteMatches: Subscribe<FavoriteMatches.Set>) {
         sessionManager.activationDidComplete.proxy.subscribe(self, with: AppleWatch.updateSessions)
-        let push = pushKitReceiver.didReceiveIncomingPush.proxy
-            .adapting(with: ComplicationPusher.adapter)
-            .flatMap({ try? $0.pack() })
-        sessionManager.subscribeTo(userInfo: self.sendPackage.proxy,
-                               complicationUserInfo: push)
+        let didReceiveIncomingMatchPushPackage = pushKitReceiver.didReceiveIncomingPush.proxy
+            .adapting(with: pushToMatch)
+            .map({ try! $0.pack() })
         didUpdateFavoriteTeams.subscribe(self, with: AppleWatch.favoriteTeamsDidUpdate)
         didUpdateFavoriteMatches.subscribe(self, with: AppleWatch.favoriteMatchesDidUpdate)
+        didReceiveIncomingMatchPushPackage.subscribe(sessionManager, with: WatchSessionManager.sendComplicationUserInfo)
     }
     
     func favoriteTeamsDidUpdate(_ favoriteTeams: FavoriteTeams.Set) {
-        activeSessions?.favoriteTeams.transfer(favoriteTeams.set)
+        activeSessions?.favoriteTeams.transfer(favoriteTeams)
     }
     
     func favoriteMatchesDidUpdate(_ favoriteMatches: FavoriteMatches.Set) {
-        activeSessions?.favoriteMatches.transfer(favoriteMatches.set)
-    }
-    
-    func send<Token>(_ ids: Set<ID<Token>>) where Token : AppleWatchPackableElement {
-        if let package = try? IDPackage(ids).pack() {
-            sendPackage.publish(package)
-        }
+        activeSessions?.favoriteMatches.transfer(favoriteMatches)
     }
     
     func updateSessions(after activation: WatchSessionManager.Activation) {
@@ -74,19 +67,21 @@ public final class AppleWatch {
     }
     
     func makeSessions(with activation: WatchSessionManager.Activation) -> Sessions? {
-        guard let teams = WatchTransferSession<ID<Team>>(activation: activation,
-                                                        provider: favoriteTeams.mapValues({ $0.set }),
-                                                        sendage: sessionManager.didSendPackage.proxy.adapting(with: IDPackage.adapter),
-                                                        name: "favorite-teams-sendings",
-                                                        performTransfer: self.send) else {
-                                                            return nil
+        guard let teams = WatchTransferSession<FavoriteTeams>(
+            activation: activation,
+            provider: favoriteTeams,
+            sendage: sessionManager.didSendPackage.proxy.adapting(with: IDPackage.packageToIDsSet),
+            name: "favorite-teams-sendings",
+            performTransfer: sessionManager.send) else {
+                return nil
         }
-        guard let matches = WatchTransferSession<Match.ID>(activation: activation,
-                                                           provider: favoriteMatches.mapValues({ $0.set }),
-                                                           sendage: sessionManager.didSendPackage.proxy.adapting(with: IDPackage.adapter),
-                                                           name: "favorite-matches-sendings",
-                                                           performTransfer: self.send) else {
-                                                            return nil
+        guard let matches = WatchTransferSession<FavoriteMatches>(
+            activation: activation,
+            provider: favoriteMatches,
+            sendage: sessionManager.didSendPackage.proxy.adapting(with: IDPackage.packageToIDsSet),
+            name: "favorite-matches-sendings",
+            performTransfer: sessionManager.send) else {
+                return nil
         }
         return Sessions(favoriteTeams: teams, favoriteMatches: matches)
     }
@@ -97,19 +92,13 @@ public final class WatchSessionManager : NSObject, WCSessionDelegate {
     
     let session = WCSession.default
     
-    internal init?(_ flag: UInt8) {
+    internal init?(_ void: Void) {
         guard WCSession.isSupported() else {
             return nil
         }
         super.init()
         session.delegate = self
         session.activate()
-    }
-    
-    func subscribeTo(userInfo: Subscribe<Package>,
-                 complicationUserInfo: Subscribe<Package>) {
-        userInfo.subscribe(self, with: WatchSessionManager.send)
-        complicationUserInfo.subscribe(self, with: WatchSessionManager.sendComplicationUserInfo)
     }
     
     public func send(_ package: Package) {
@@ -187,29 +176,39 @@ extension WatchSessionManager {
     
 }
 
-internal final class WatchTransferSession<IDType : IDProtocol> where IDType.RawValue == Int {
+internal final class WatchTransferSession<Descriptor : RegistryDescriptor> where Descriptor : AppleWatchPackableElement {
     
-    let directoryURL: URL
     let directoryURLCache: DiskFolderStorage
+    private let uploadConsistencyKeeper: UploadConsistencyKeeper<FlagsSet<Descriptor>>
     
-    private let uploadConsistencyKeeper: UploadConsistencyKeeper<Set<IDType>>
+    internal let transfer: (FlagsSet<Descriptor>) -> ()
     
-    private let performTransfer: (Set<IDType>) -> ()
-    
-    init?(activation: WatchSessionManager.Activation, provider: Retrieve<Set<IDType>>, sendage: Subscribe<Set<IDType>>, name: String, performTransfer: @escaping (Set<IDType>) -> ()) {
+    init?(activation: WatchSessionManager.Activation,
+          provider: Retrieve<FlagsSet<Descriptor>>,
+          sendage: Subscribe<FlagsSet<Descriptor>>,
+          name: String,
+          performTransfer: @escaping (WatchSessionManager.Package) -> ()) {
         guard activation.state == .activated else {
-                return nil
+            return nil
         }
         let url = activation.watchDirectoryURL
-        self.directoryURL = url
         self.directoryURLCache = DiskFolderStorage(folderURL: url, filenameEncoder: .noEncoding)
         let lastTransfer = directoryURLCache
             .mapJSONDictionary()
-            .mapBoxedSet(of: IDType.self)
+            .mapFlagsSet(of: Descriptor.self)
             .singleKey(Filename(rawValue: "\(name).json"))
-            .defaulting(to: [])
-        self.uploadConsistencyKeeper = UploadConsistencyKeeper(latest: provider, internalStorage: lastTransfer, name: name, reupload: performTransfer)
-        self.performTransfer = performTransfer
+            .defaulting(to: FlagsSet([]))
+        
+        let perform: (FlagsSet<Descriptor>) -> () = { flags in
+            performTransfer(package(from: flags))
+        }
+        self.transfer = perform
+        self.uploadConsistencyKeeper = UploadConsistencyKeeper<FlagsSet<Descriptor>>(
+            latest: provider,
+            internalStorage: lastTransfer,
+            name: name,
+            reupload: perform
+        )
         uploadConsistencyKeeper.subscribeTo(didUpload: sendage)
     }
     
@@ -218,42 +217,10 @@ internal final class WatchTransferSession<IDType : IDProtocol> where IDType.RawV
         uploadConsistencyKeeper.check()
     }
     
-    func transfer(_ ids: Set<IDType>) {
-        self.performTransfer(ids)
-    }
-    
 }
 
-internal struct AppleWatchInfo {
-    
-    var wasPairedBefore: Bool
-    var sentInitialFavorites: Bool
-    
-    init(wasPairedBefore: Bool, sentInitialFavorites: Bool) {
-        self.wasPairedBefore = wasPairedBefore
-        self.sentInitialFavorites = sentInitialFavorites
-    }
-    
-    static var blank: AppleWatchInfo {
-        return AppleWatchInfo(wasPairedBefore: false, sentInitialFavorites: false)
-    }
-    
+func package<Descriptor : RegistryDescriptor>(from flags: FlagsSet<Descriptor>) -> WatchSessionManager.Package where Descriptor : AppleWatchPackableElement {
+    let package = try! IDPackage(flags).pack()
+    return package
 }
 
-extension AppleWatchInfo : Mappable {
-    
-    enum MappingKeys : String, IndexPathElement {
-        case was_paired_before, sent_initial_favorites
-    }
-    
-    init<Source>(mapper: InMapper<Source, MappingKeys>) throws {
-        self.wasPairedBefore = try mapper.map(from: .was_paired_before)
-        self.sentInitialFavorites = try mapper.map(from: .sent_initial_favorites)
-    }
-    
-    func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
-        try mapper.map(self.wasPairedBefore, to: .was_paired_before)
-        try mapper.map(self.sentInitialFavorites, to: .sent_initial_favorites)
-    }
-    
-}
