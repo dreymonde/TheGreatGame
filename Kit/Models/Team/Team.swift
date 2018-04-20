@@ -41,7 +41,7 @@ public enum Team {
 
 extension Team {
 
-    public struct Compact {
+    public struct Compact : Model {
         
         public let id: ID
         public let name: String
@@ -98,7 +98,7 @@ extension Team.Compact : Mappable {
     
 }
 
-public struct Teams {
+public struct Teams : Model {
     
     public var teams: [Team.Compact]
     

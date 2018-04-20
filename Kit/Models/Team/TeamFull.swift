@@ -10,7 +10,7 @@ import Foundation
 
 extension Team {
 
-    public struct Full {
+    public struct Full : Model {
         
         public let id: ID
         public let name: String
@@ -23,7 +23,7 @@ extension Team {
         
     }
     
-    public struct Badges {
+    public struct Badges : Equatable {
         public let large: URL
         public let flag: URL
     }

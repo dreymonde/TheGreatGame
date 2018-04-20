@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Stage {
+public struct Stage : Model {
     
     public let title: String
     public var matches: [Match.Compact]
@@ -41,7 +41,7 @@ extension Stage : Mappable {
     
 }
 
-public struct Stages {
+public struct Stages : Model {
     
     public let stages: [Stage]
     

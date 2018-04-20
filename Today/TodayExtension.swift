@@ -23,7 +23,7 @@ final class TodayExtension {
     let connections: Connections
     let images: Images
     
-    let relevanceFilter: (Match.Full) -> Bool
+    let isMatchRelevant: (Match.Full) -> Bool
     
     let reactiveRelevantMatches: Reactive<[Match.Full]>
     
@@ -49,14 +49,14 @@ final class TodayExtension {
             .map({ $0.filter(relevanceFilter) })
         self.reactiveRelevantMatches = Reactive<[Match.Full]>(valueDidUpdate: filteredUpdate.mainThread(),
                                                update: connections.fullMatches)
-        self.relevanceFilter = relevanceFilter
+        self.isMatchRelevant = relevanceFilter
         
     }
     
     func relevantMatches() -> [Match.Full] {
-        favoriteTeams.forceRefresh()
-        favoriteMatches.forceRefresh()
-        return (localDB.fullMatches.getPersisted() ?? []).filter(relevanceFilter)
+        favoriteTeams.forceRefreshMemoryCache()
+        favoriteMatches.forceRefreshMemoryCache()
+        return (localDB.fullMatches.getPersisted() ?? []).filter(isMatchRelevant)
     }
     
 }

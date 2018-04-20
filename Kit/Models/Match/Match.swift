@@ -106,7 +106,7 @@ public enum Match {
     
     public typealias ID = TheGreatKit.ID<Match>
     
-    public struct Score {
+    public struct Score : Hashable {
         public let home: Int
         public let away: Int
         
@@ -126,7 +126,7 @@ public enum Match {
         
     }
     
-    public struct Event {
+    public struct Event : Equatable {
         
         public enum Kind : String {
             case start, goal_home, goal_away, end, info, halftime_start, halftime_end
@@ -199,7 +199,7 @@ public enum Match {
         
     }
     
-    public struct Team {
+    public struct Team : Model {
         public let id: TheGreatKit.Team.ID
         public let name: String
         public let shortName: String
@@ -207,7 +207,7 @@ public enum Match {
         public let badges: TheGreatKit.Team.Badges
     }
     
-    public struct Compact : MatchProtocol {
+    public struct Compact : Model, MatchProtocol {
         
         public let id: Match.ID
         public let home: Team
@@ -220,7 +220,7 @@ public enum Match {
         
     }
     
-    public struct Full : MatchProtocol {
+    public struct Full : Model, MatchProtocol {
         
         public let id: Match.ID
         public let home: Team
@@ -229,7 +229,7 @@ public enum Match {
         public let endDate: Date
         public let location: String
         public let stageTitle: String
-        public var score: Score?
+        public var score: Match.Score?
         public var penalties: Match.Score?
         public var events: [Event]
         

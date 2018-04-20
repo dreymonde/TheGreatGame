@@ -8,6 +8,8 @@
 
 import Shallows
 
+public protocol Model : Equatable { }
+
 public struct Editioned<Content : Mappable> : EditionedProtocol {
     
     public var edition: Int

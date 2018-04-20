@@ -10,7 +10,7 @@ import Foundation
 
 public enum Group {
     
-    public struct Team {
+    public struct Team : Model {
         
         public let id: TheGreatKit.Team.ID
         public let name: String
@@ -19,7 +19,7 @@ public enum Group {
         
     }
     
-    public struct Compact {
+    public struct Compact : Model {
     
         public let title: String
         public let teams: [Team]
@@ -28,7 +28,7 @@ public enum Group {
     
 }
 
-public struct Groups {
+public struct Groups : Model {
     
     public let groups: [Group.Compact]
     

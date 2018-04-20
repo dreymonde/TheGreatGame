@@ -10,7 +10,7 @@ import Foundation
 import Shallows
 import Alba
 
-public final class LocalModel<Value> {
+public final class LocalModel<Value : Equatable> {
     
     public var io: Storage<Void, Value>!
     
@@ -39,8 +39,10 @@ public final class LocalModel<Value> {
     private let setQueue = DispatchQueue(label: "LocalModel.setQueue")
     public func set(_ newValue: Value) {
         setQueue.async {
-            self.inMemory.write(newValue)
-            self.didUpdate.publish(newValue)
+            if newValue != self.inMemory.read() {
+                self.inMemory.write(newValue)
+                self.didUpdate.publish(newValue)
+            }
         }
     }
     

@@ -128,7 +128,7 @@ public final class FlagsRegistry<Flag : FlagDescriptor> : SimpleStoring {
         self.unitedDidUpdate.publish(united)
     }
     
-    public func forceRefresh() {
+    public func forceRefreshMemoryCache() {
         memoryCachedFlags.forceRefresh()
     }
     
