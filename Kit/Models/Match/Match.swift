@@ -402,6 +402,14 @@ extension Sequence where Iterator.Element == Match.Event {
     
 }
 
+extension Match.Compact : CustomStringConvertible {
+    
+    public var description: String {
+        return "\(home.shortName) \(score?.string ?? "N/S") \(away.shortName)"
+    }
+    
+}
+
 extension Match.Team : Mappable {
     
     public enum MappingKeys : String, IndexPathElement {

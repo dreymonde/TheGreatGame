@@ -51,6 +51,14 @@ extension Team {
     
 }
 
+extension Team.Compact : CustomStringConvertible {
+    
+    public var description: String {
+        return "(\(shortName) : id \(id.rawValue))"
+    }
+    
+}
+
 extension Team.Compact : Mappable {
     
     public enum MappingKeys : String, IndexPathElement {

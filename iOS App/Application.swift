@@ -27,7 +27,7 @@ final class Application {
     let notifications: Notifications
     
     init() {
-        //Loggers.start()
+        Loggers.start()
         self.api = Application.makeAPI()
         self.localDB = LocalDB.inContainer(.shared)
         self.connections = Connections(api: api, localDB: localDB, activityIndicator: .application)
