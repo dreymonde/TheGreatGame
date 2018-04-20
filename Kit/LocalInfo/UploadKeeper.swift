@@ -44,8 +44,6 @@ internal final class UploadConsistencyKeeper<Upload : Equatable> {
                 fault("(uploads-\(name)) Both caches should be defaulted")
                 return
             }
-//            let favors = value.0
-//            let lasts = value.1
             if uploaded != latest {
                 self.reupload(latest)
             } else {
@@ -55,16 +53,3 @@ internal final class UploadConsistencyKeeper<Upload : Equatable> {
     }
         
 }
-
-//extension UploadConsistencyKeeper where Upload == Set<Team.ID> {
-//    
-//    convenience init(favorites: Retrieve<Set<Team.ID>>, diskCache: Storage<String, Data>) {
-//        let last: Storage<Void, Set<Team.ID>> = diskCache
-//            .mapJSONDictionary()
-//            .mapBoxedSet()
-//            .singleKey("last-uploaded-favorites-teams")
-//            .defaulting(to: [])
-//        self.init(actual: favorites, lastUploaded: last, name: "teams")
-//    }
-//    
-//}
