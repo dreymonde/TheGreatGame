@@ -25,8 +25,10 @@ final class WatchExtension {
     let complicationReloader: ComplicationReloader
     
     init() {
-//        Alba.InformBureau.isEnabled = true
-//        Alba.InformBureau.Logger.enable()
+        #if DEBUG
+        Alba.InformBureau.isEnabled = true
+        Alba.InformBureau.Logger.enable()
+        #endif
         ShallowsLog.isEnabled = true
         self.phone = Phone()
         self.images = Images.inContainer(.appFolder)
