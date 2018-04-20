@@ -50,6 +50,12 @@
 		7C0EFD931EEC43460077C37E /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EFD911EEC43460077C37E /* Notifications.swift */; };
 		7C0EFD951EEC483C0077C37E /* NotificationAuthorizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EFD941EEC483C0077C37E /* NotificationAuthorizer.swift */; };
 		7C0EFD961EEC483C0077C37E /* NotificationAuthorizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0EFD941EEC483C0077C37E /* NotificationAuthorizer.swift */; };
+		7C0FF1E4208A144400B0CF12 /* Delegated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0FF1E3208A144400B0CF12 /* Delegated.swift */; };
+		7C0FF1E5208A144400B0CF12 /* Delegated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0FF1E3208A144400B0CF12 /* Delegated.swift */; };
+		7C0FF1E6208A144400B0CF12 /* Delegated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0FF1E3208A144400B0CF12 /* Delegated.swift */; };
+		7C0FF1E7208A144400B0CF12 /* Delegated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0FF1E3208A144400B0CF12 /* Delegated.swift */; };
+		7C0FF1E8208A144400B0CF12 /* Delegated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0FF1E3208A144400B0CF12 /* Delegated.swift */; };
+		7C0FF1E9208A144400B0CF12 /* Delegated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0FF1E3208A144400B0CF12 /* Delegated.swift */; };
 		7C106A7D1F00111300E9BB5B /* ShallowsDev.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C106A7C1F00111300E9BB5B /* ShallowsDev.swift */; };
 		7C106A7E1F00111300E9BB5B /* ShallowsDev.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C106A7C1F00111300E9BB5B /* ShallowsDev.swift */; };
 		7C109D271EC1D5AB00523376 /* TeamDetailInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C109D251EC1D5AB00523376 /* TeamDetailInfoTableViewCell.swift */; };
@@ -422,6 +428,7 @@
 		7C0EA6651EBA599D00F50EB2 /* Avenues+Shallows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Avenues+Shallows.swift"; sourceTree = "<group>"; };
 		7C0EFD911EEC43460077C37E /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		7C0EFD941EEC483C0077C37E /* NotificationAuthorizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationAuthorizer.swift; sourceTree = "<group>"; };
+		7C0FF1E3208A144400B0CF12 /* Delegated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Delegated.swift; sourceTree = "<group>"; };
 		7C106A7C1F00111300E9BB5B /* ShallowsDev.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShallowsDev.swift; sourceTree = "<group>"; };
 		7C109D251EC1D5AB00523376 /* TeamDetailInfoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamDetailInfoTableViewCell.swift; sourceTree = "<group>"; };
 		7C109D261EC1D5AB00523376 /* TeamDetailInfoTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TeamDetailInfoTableViewCell.xib; sourceTree = "<group>"; };
@@ -790,6 +797,7 @@
 			isa = PBXGroup;
 			children = (
 				7C0EA6261EBA1CB100F50EB2 /* Jubilee.swift */,
+				7C0FF1E3208A144400B0CF12 /* Delegated.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -1735,6 +1743,7 @@
 				7C6AA1701ED86F73003F2388 /* Cell.swift in Sources */,
 				7C30A68B204D3E7100E09EEC /* MatchDetailTableViewCell.swift in Sources */,
 				7C1E663C1EBB42FE003AF505 /* NavigationController.swift in Sources */,
+				7C0FF1E4208A144400B0CF12 /* Delegated.swift in Sources */,
 				7C30A68C204D3E7100E09EEC /* MatchEventTableViewCell.swift in Sources */,
 				7C3AEFAC1EF283FD00CE576A /* MatchDetailTableViewController.swift in Sources */,
 				7C18D68C1EF835FF001E4CB7 /* UIButton+Star.swift in Sources */,
@@ -1815,6 +1824,7 @@
 				7C7916F01EBB37910070E6C5 /* TeamFull.swift in Sources */,
 				7C357ED81ED442D300CFCF3B /* SingleElementMemoryStorage.swift in Sources */,
 				7C0EA6281EBA1CB100F50EB2 /* Jubilee.swift in Sources */,
+				7C0FF1E5208A144400B0CF12 /* Delegated.swift in Sources */,
 				7CEEAA041EC33492005B574B /* Stage.swift in Sources */,
 				7CD8F2261EF2D64A0006F0A1 /* AlbaGraph.swift in Sources */,
 				7C0EA6591EBA1EF200F50EB2 /* Team.swift in Sources */,
@@ -1869,6 +1879,7 @@
 				7CA542131EDB23A900B4D1BD /* TemplateProducer.swift in Sources */,
 				7C13BC261ED8498300588F5F /* MatchesInterfaceController.swift in Sources */,
 				7C7A501D1ED87C2E000BFFB1 /* UserInterface.swift in Sources */,
+				7C0FF1E8208A144400B0CF12 /* Delegated.swift in Sources */,
 				7C13BC711ED84C1400588F5F /* WatchExtension.swift in Sources */,
 				7CA542171EDB27FB00B4D1BD /* CLKTextProvider+CLKTextProviderCombine.m in Sources */,
 			);
@@ -1893,6 +1904,7 @@
 				7CCD25C61EDD7AE300F3C5CB /* SingleElementMemoryStorage.swift in Sources */,
 				7C13BC5E1ED84B3D00588F5F /* InMappable.swift in Sources */,
 				7C13BC771ED8523600588F5F /* Package.swift in Sources */,
+				7C0FF1E6208A144400B0CF12 /* Delegated.swift in Sources */,
 				BE1713C51EEFE79800CFB448 /* FlagsUploader.swift in Sources */,
 				7CA5420E1EDB14C600B4D1BD /* ComplicationDataSource.swift in Sources */,
 				7CCD25D11EDEBE5700F3C5CB /* PushNotification.swift in Sources */,
@@ -1951,6 +1963,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7C0FF1E9208A144400B0CF12 /* Delegated.swift in Sources */,
 				7C489C851F164C8C001875E5 /* Jubilee.swift in Sources */,
 				7C489C771F164C68001875E5 /* NotificationViewController.swift in Sources */,
 			);
@@ -1969,6 +1982,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7CA213901ECF40DA00F088DD /* TodayExtension.swift in Sources */,
+				7C0FF1E7208A144400B0CF12 /* Delegated.swift in Sources */,
 				7CA2138A1ECF3FAB00F088DD /* Jubilee.swift in Sources */,
 				7CA2137E1ECF3F9A00F088DD /* TodayViewController.swift in Sources */,
 			);

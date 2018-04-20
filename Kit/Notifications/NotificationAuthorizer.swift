@@ -13,14 +13,17 @@ import Alba
 internal final class NotificationAuthorizer {
     
     let center = UNUserNotificationCenter.current()
-    let registerForRemote: () -> ()
+    var registerForRemote = Delegated<Void, Void>()
     
-    internal init(registerForRemote: @escaping () -> ()) {
-        self.registerForRemote = registerForRemote
+    internal init() {
+        
     }
     
     internal convenience init<Application : CanAuthorizeForRemoteNotifications>(application: Application) {
-        self.init(registerForRemote: application.registerForRemoteNotifications)
+        self.init()
+        registerForRemote.delegate(to: application) { (application) in
+            application.registerForRemoteNotifications()
+        }
     }
     
     internal func start() {
@@ -47,7 +50,7 @@ internal final class NotificationAuthorizer {
             }
             if authorized {
                 DispatchQueue.main.async {
-                    self.registerForRemote()
+                    self.registerForRemote.call()
                     self.didAuthorize.publish()
                 }
             }
@@ -59,7 +62,7 @@ internal final class NotificationAuthorizer {
     
 }
 
-public protocol CanAuthorizeForRemoteNotifications {
+public protocol CanAuthorizeForRemoteNotifications : class {
     
     func registerForRemoteNotifications()
     
