@@ -29,9 +29,11 @@ public final class Images : SimpleStoring {
         return .base64
     }
     
-    internal enum SideSize { }
+    internal struct SideSize : Hashable {
+        let size: Int
+    }
     
-    internal var caches: [IntType<SideSize> : Avenues.MemoryCache<URL, UIImage>] = [:]
+    internal var caches: [SideSize : Avenues.MemoryCache<URL, UIImage>] = [:]
     
     fileprivate let imageFetchingSession: URLSession
     fileprivate let diskCache: Shallows.Storage<URL, UIImage>
@@ -56,7 +58,7 @@ public final class Images : SimpleStoring {
     }
         
     public func imageCache(forSize side: CGFloat) -> Avenues.MemoryCache<URL, UIImage> {
-        let intside = IntType<SideSize>(Int(side))
+        let intside = SideSize(size: Int(side))
         if let existing = caches[intside] {
             return existing
         } else {

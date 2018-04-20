@@ -749,11 +749,11 @@
 		7C0EA6081EBA1C9000F50EB2 /* Kit */ = {
 			isa = PBXGroup;
 			children = (
+				7C0FF1DF2089F2E800B0CF12 /* Flags */,
 				7CDD79661FE4055D00782D58 /* LocalDB */,
 				7C0EFD901EEC432B0077C37E /* Notifications */,
 				7CA5420B1EDB14B300B4D1BD /* Complication */,
 				7C13BC721ED84C2700588F5F /* WatchConnectivity */,
-				7CA2136C1ECEF9EC00F088DD /* LocalInfo */,
 				7C1D898C1EC068D5006F7841 /* Images */,
 				7C0EA6541EBA1EBF00F50EB2 /* API */,
 				7C7916DB1EBB101A0070E6C5 /* Utilities */,
@@ -913,6 +913,17 @@
 				BE1713C81EEFF7A100CFB448 /* DeviceTokens.swift */,
 			);
 			path = Notifications;
+			sourceTree = "<group>";
+		};
+		7C0FF1DF2089F2E800B0CF12 /* Flags */ = {
+			isa = PBXGroup;
+			children = (
+				7CA2136D1ECEFA0A00F088DD /* Flags.swift */,
+				BE461AD01EF027330035AE11 /* FlagsRegistry.swift */,
+				BE1713C31EEFE79800CFB448 /* FlagsUploader.swift */,
+				BE461ACD1EF026D40035AE11 /* UploadKeeper.swift */,
+			);
+			path = Flags;
 			sourceTree = "<group>";
 		};
 		7C109D241EC1D58000523376 /* Views */ = {
@@ -1117,6 +1128,10 @@
 			children = (
 				7CE2B7351ECC7CF100C7EC20 /* TCK+UserDefaults.swift */,
 				7C7916DC1EBB10370070E6C5 /* NetworkActivity.swift */,
+				7CA213731ECF382200F088DD /* DiskStorage.swift */,
+				7CD0B7CE1F00098A0039EAF8 /* URLSessionPusher.swift */,
+				7CCF50CC1FF2DA4B00D0A394 /* AppFolder.swift */,
+				7CB28091201242DB00CCF2CC /* Folders.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -1154,21 +1169,6 @@
 				7C795D59201DF549009B704A /* Info.plist */,
 			);
 			path = "UI Tests";
-			sourceTree = "<group>";
-		};
-		7CA2136C1ECEF9EC00F088DD /* LocalInfo */ = {
-			isa = PBXGroup;
-			children = (
-				7CA2136D1ECEFA0A00F088DD /* Flags.swift */,
-				7CA213731ECF382200F088DD /* DiskStorage.swift */,
-				BE1713C31EEFE79800CFB448 /* FlagsUploader.swift */,
-				BE461ACD1EF026D40035AE11 /* UploadKeeper.swift */,
-				BE461AD01EF027330035AE11 /* FlagsRegistry.swift */,
-				7CD0B7CE1F00098A0039EAF8 /* URLSessionPusher.swift */,
-				7CCF50CC1FF2DA4B00D0A394 /* AppFolder.swift */,
-				7CB28091201242DB00CCF2CC /* Folders.swift */,
-			);
-			path = LocalInfo;
 			sourceTree = "<group>";
 		};
 		7CA2137C1ECF3F9A00F088DD /* Today */ = {
