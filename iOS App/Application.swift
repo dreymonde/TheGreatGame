@@ -48,11 +48,15 @@ final class Application {
                            complication: watch?.pushKitReceiver.didRegisterWithToken.proxy ?? .empty())
         watch?.subscribeTo(didUpdateFavoriteTeams: favoriteTeams.registry.didUpdate,
                            didUpdateFavoriteMatches: favoriteMatches.registry.didUpdate)
-        favoriteTeams.subscribe()
-        favoriteMatches.subscribe()
-        unsubscribedMatches.subscribe()
+        subscribe(onBehalfOf: favoriteTeams)
+        subscribe(onBehalfOf: favoriteMatches)
+        subscribe(onBehalfOf: unsubscribedMatches)
         let pushKitTokenConsistency = tokens.didUpdateComplicationToken.proxy.void()
         pushKitTokenUploader.subscribeTo(shouldCheckUploadConsistency: pushKitTokenConsistency)
+    }
+    
+    private func subscribe<Flag>(onBehalfOf flags: Flags<Flag>) {
+        flags.subscribeTo(shouldCheckUploadConsistency: Application.fourSecondsAfterAppDidBecomeActive)
     }
     
     static func makeAPI() -> API {
@@ -76,56 +80,40 @@ final class Application {
         }
     }
     
-    static let fourSecondAfterAppDidBecomeActive = AppDelegate.applicationDidBecomeActive.proxy
+    static let fourSecondsAfterAppDidBecomeActive = AppDelegate.applicationDidBecomeActive.proxy
         .void()
         .wait(seconds: 4.0)
     
     static let uploadCache: WriteOnlyStorage<APIPath, Data> = makeUploader(forURL: Server.digitalOceanAPIBaseURL)
         .connectingNetworkActivityIndicator(indicator: .application)
     
-    static func makeFavs<Flag : FlagDescriptor>(tokens: DeviceTokens,
-                                                keeperFolderName: String,
-                                                apiPath: APIPath) -> Flags<Flag> {
-        let keepersCache = DiskStorage.main.folder(keeperFolderName, in: .cachesDirectory)
+    static func makeFlags<Flag : FlagDescriptor>(tokens: DeviceTokens, apiPath: APIPath) -> Flags<Flag> {
         return Flags<Flag>(registry: FlagsRegistry.inContainer(.shared),
                            tokens: tokens,
-                           shouldCheckUploadConsistency: fourSecondAfterAppDidBecomeActive,
-                           consistencyKeepersStorage: keepersCache.asStorage(),
+                           shouldCheckUploadConsistency: fourSecondsAfterAppDidBecomeActive,
                            upload: uploadCache.singleKey(apiPath))
     }
     
     static func makeFavorites(tokens: DeviceTokens) -> Flags<FavoriteTeams> {
-        return makeFavs(tokens: tokens,
-                        keeperFolderName: "teams-upload-keepers",
+        return makeFlags(tokens: tokens,
                         apiPath: "favorite-teams")
     }
     
     static func makeFavorites(tokens: DeviceTokens) -> Flags<FavoriteMatches> {
-        return makeFavs(tokens: tokens,
-                        keeperFolderName: "matches-upload-keepers",
+        return makeFlags(tokens: tokens,
                         apiPath: "favorite-matches")
     }
     
     static func makeUnsubscribes(tokens: DeviceTokens) -> Flags<UnsubscribedMatches> {
-        return makeFavs(tokens: tokens,
-                        keeperFolderName: "matches-unsub-upload-keepers",
+        return makeFlags(tokens: tokens,
                         apiPath: "unsubscribe")
     }
     
     static func makeTokenUploader(getToken: Retrieve<PushToken>) -> TokenUploader {
-        let fakeToken = PushToken(Data(repeating: 0, count: 1))
-        
-        let keepersCache = DiskStorage.main.folder("pushkit-token-upload-keeper", in: .cachesDirectory)
-            .mapValues(transformIn: PushToken.init,
-                       transformOut: { $0.rawToken })
-            .singleKey("uploaded-token")
-            .defaulting(to: fakeToken)
-        
         let pusher = uploadCache.singleKey("pushkit-token")
-        
         return TokenUploader(pusher: TokenUploader.adapt(pusher: pusher),
                              getDeviceIdentifier: { UIDevice.current.identifierForVendor },
-                             consistencyKeepersStorage: keepersCache,
+                             serverMirror: TokenUploader.serverMirror(filename: "pushkit-token"),
                              getToken: getToken)
     }
     

@@ -25,9 +25,7 @@ public final class AppleWatch {
     
     let favoriteTeams: Retrieve<FavoriteTeams.Set>
     let favoriteMatches: Retrieve<FavoriteMatches.Set>
-    
-    internal let sendPackage = Publisher<WatchSessionManager.Package>(label: "AppleWatch.sendPackages")
-    
+        
     public init?(favoriteTeams: Retrieve<FavoriteTeams.Set>,
                  favoriteMatches: Retrieve<FavoriteMatches.Set>) {
         guard let session = WatchSessionManager(()) else {
@@ -51,18 +49,16 @@ public final class AppleWatch {
     }
     
     func favoriteTeamsDidUpdate(_ favoriteTeams: FavoriteTeams.Set) {
-        activeSessions?.favoriteTeams.transfer(favoriteTeams)
+        activeSessions?.favoriteTeams.send(favoriteTeams)
     }
     
     func favoriteMatchesDidUpdate(_ favoriteMatches: FavoriteMatches.Set) {
-        activeSessions?.favoriteMatches.transfer(favoriteMatches)
+        activeSessions?.favoriteMatches.send(favoriteMatches)
     }
     
     func updateSessions(after activation: WatchSessionManager.Activation) {
         if let activeSessions = makeSessions(with: activation) {
             self.activeSessions = activeSessions
-            activeSessions.favoriteMatches.start()
-            activeSessions.favoriteTeams.start()
         }
     }
     
@@ -71,17 +67,21 @@ public final class AppleWatch {
             activation: activation,
             provider: favoriteTeams,
             sendage: sessionManager.didSendPackage.proxy.adapting(with: IDPackage.packageToIDsSet),
-            name: "favorite-teams-sendings",
-            performTransfer: sessionManager.send) else {
+            name: "favorite-teams-sendings") else {
                 return nil
         }
         guard let matches = WatchTransferSession<FavoriteMatches>(
             activation: activation,
             provider: favoriteMatches,
             sendage: sessionManager.didSendPackage.proxy.adapting(with: IDPackage.packageToIDsSet),
-            name: "favorite-matches-sendings",
-            performTransfer: sessionManager.send) else {
+            name: "favorite-matches-sendings") else {
                 return nil
+        }
+        teams.transfer.delegate(to: self) { (self, package) in
+            self.sessionManager.send(package)
+        }
+        matches.transfer.delegate(to: self) { (self, package) in
+            self.sessionManager.send(package)
         }
         return Sessions(favoriteTeams: teams, favoriteMatches: matches)
     }
@@ -179,15 +179,18 @@ extension WatchSessionManager {
 internal final class WatchTransferSession<Flag : FlagDescriptor> where Flag : AppleWatchPackableElement {
     
     let directoryURLCache: DiskFolderStorage
-    private let uploadConsistencyKeeper: UploadConsistencyKeeper<FlagSet<Flag>>
+    private let consistencyChecker: ConsistencyChecker<FlagSet<Flag>>
     
-    internal let transfer: (FlagSet<Flag>) -> ()
+    internal var transfer = Delegated<WatchSessionManager.Package, Void>()
+    
+    func send(_ flags: Flag.Set) {
+        transfer.call(package(from: flags))
+    }
     
     init?(activation: WatchSessionManager.Activation,
           provider: Retrieve<FlagSet<Flag>>,
           sendage: Subscribe<FlagSet<Flag>>,
-          name: String,
-          performTransfer: @escaping (WatchSessionManager.Package) -> ()) {
+          name: String) {
         guard activation.state == .activated else {
             return nil
         }
@@ -198,23 +201,16 @@ internal final class WatchTransferSession<Flag : FlagDescriptor> where Flag : Ap
             .mapFlagSet(of: Flag.self)
             .singleKey(Filename(rawValue: "\(name).json"))
             .defaulting(to: FlagSet([]))
-        
-        let perform: (FlagSet<Flag>) -> () = { flags in
-            performTransfer(package(from: flags))
-        }
-        self.transfer = perform
-        self.uploadConsistencyKeeper = UploadConsistencyKeeper<FlagSet<Flag>>(
-            latest: provider,
-            internalStorage: lastTransfer,
-            name: name,
-            reupload: perform
+        self.consistencyChecker = ConsistencyChecker<Flag.Set>(
+            truth: provider,
+            destinationMirror: lastTransfer,
+            name: name
         )
-        uploadConsistencyKeeper.subscribeTo(didUpload: sendage)
-    }
-    
-    func start() {
-        printWithContext("Starting new active session \(self)")
-        uploadConsistencyKeeper.check()
+        consistencyChecker.upload.delegate(to: self) { (self, flags) in
+            self.send(flags)
+        }
+        consistencyChecker.subcribeTo(didUpload: sendage)
+        consistencyChecker.check()
     }
     
 }

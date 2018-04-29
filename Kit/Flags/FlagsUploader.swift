@@ -17,7 +17,7 @@ internal final class FlagsUploader<Flag : FlagDescriptor> {
     let getNotificationsToken: Retrieve<PushToken>
     let getDeviceIdentifier: () -> UUID?
     
-    init(pusher: WriteOnlyStorage<Void, FavoritesUpload<Flag>>,
+    init(pusher: WriteOnlyStorage<Void, FlagsUpload<Flag>>,
          getNotificationsToken: Retrieve<PushToken>,
          getDeviceIdentifier: @escaping () -> UUID?) {
         self.pusher = pusher
@@ -25,55 +25,63 @@ internal final class FlagsUploader<Flag : FlagDescriptor> {
         self.getDeviceIdentifier = getDeviceIdentifier
     }
     
-    internal static func adapt(pusher: WriteOnlyStorage<Void, Data>) -> WriteOnlyStorage<Void, FavoritesUpload<Flag>> {
+    internal static func adapt(pusher: WriteOnlyStorage<Void, Data>) -> WriteOnlyStorage<Void, FlagsUpload<Flag>> {
         return pusher
             .mapJSONDictionary()
             .mapMappable()
     }
     
-    let pusher: WriteOnlyStorage<Void, FavoritesUpload<Flag>>
+    let pusher: WriteOnlyStorage<Void, FlagsUpload<Flag>>
     
     func uploadFavorites(_ update: FlagSet<Flag>) {
         printWithContext()
-        uploadFavorites(update, usingTokenProvider: getNotificationsToken)
+        uploadFlags(update, usingTokenProvider: getNotificationsToken)
     }
     
-    private func uploadFavorites(_ favorites: FlagSet<Flag>, usingTokenProvider provider: Retrieve<PushToken>) {
+    private func uploadFlags(_ flags: FlagSet<Flag>, usingTokenProvider provider: Retrieve<PushToken>) {
         guard let deviceIdentifier = getDeviceIdentifier() else {
             fault("No device UUID")
             return
         }
         provider.retrieve { (result) in
             if let token = result.value {
-                let upload = FavoritesUpload(deviceIdentifier: deviceIdentifier,
-                                             token: token,
-                                             favorites: favorites)
-                self.pusher.set(upload, completion: { (result) in
-                    if let error = result.error {
-                        printWithContext("Failed to write favorites \(favorites). Error: \(error)")
-                    } else {
-                        self.didUploadFavorites.publish(upload)
-                    }
-                })
+                let upload = FlagsUpload(deviceIdentifier: deviceIdentifier,
+                                         token: token,
+                                         flags: flags)
+                self.upload(upload: upload)
             } else {
                 printWithContext("No token for notifications")
             }
         }
     }
     
-    let didUploadFavorites = Publisher<FavoritesUpload<Flag>>(label: "FlagsUploader<\(Flag.self)>.didUploadFavorites")
+    private func upload(upload: FlagsUpload<Flag>) {
+        self.pusher.set(upload) { (result) in
+            if let error = result.error {
+                printWithContext("Failed to upload \(upload). Error: \(error)")
+            } else {
+                self.didUpload.publish(upload)
+            }
+        }
+    }
+    
+    let didUpload = Publisher<FlagsUpload<Flag>>(label: "FlagsUploader<\(Flag.self)>.didUploadFavorites")
+    
+    internal var didUploadFlags: Subscribe<FlagSet<Flag>> {
+        return didUpload.proxy.map({ $0.flags })
+    }
     
 }
 
-internal struct FavoritesUpload<Flag : FlagDescriptor> {
+internal struct FlagsUpload<Flag : FlagDescriptor> {
     
     let deviceIdentifier: UUID
     let token: PushToken
-    let favorites: FlagSet<Flag>
+    let flags: FlagSet<Flag>
     
 }
 
-extension FavoritesUpload : Mappable {
+extension FlagsUpload : Mappable {
     
     enum MapError : Error {
         case outOnly
@@ -90,7 +98,7 @@ extension FavoritesUpload : Mappable {
     func outMap<Destination>(mapper: inout OutMapper<Destination, MappingKeys>) throws {
         try mapper.map(self.deviceIdentifier.uuidString, to: .device_identifier)
         try mapper.map(self.token.string, to: .token)
-        try mapper.map(Array(self.favorites.set), to: .favorites)
+        try mapper.map(Array(self.flags.set), to: .favorites)
     }
     
 }

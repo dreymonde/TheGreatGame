@@ -50,55 +50,11 @@ internal final class ConsistencyChecker<T : Equatable> {
     
 }
 
-func destinationMirror<T : Mappable>(identifier: String) -> Storage<Void, T> {
+func destinationMirror<Flag : FlagDescriptor>(descriptor: Flag.Type) -> Storage<Void, FlagSet<Flag>> {
     let mirrorsURL = AppFolder.Library.Application_Support.Mirrors.url
     let storage = DiskFolderStorage(folderURL: mirrorsURL, filenameEncoder: .noEncoding)
-        .singleKey(Filename(rawValue: identifier))
+        .singleKey(Flag.filename)
         .mapJSONDictionary()
-        .mapMappable(of: T.self)
+        .mapFlagSet(of: Flag.self)
     return storage
-}
-
-internal final class UploadConsistencyKeeper<Upload : Equatable> {
-    
-    let latest: Retrieve<Upload>
-    let lastUploaded: Storage<Void, Upload>
-    let name: String
-    
-    var reupload: (Upload) -> ()
-    
-    init(latest: Retrieve<Upload>,
-         internalStorage: Storage<Void, Upload>,
-         name: String,
-         reupload: @escaping (Upload) -> () = { _ in }) {
-        self.latest = latest
-        self.lastUploaded = internalStorage
-        self.name = name
-        self.reupload = reupload
-    }
-    
-    func subscribeTo(didUpload: Subscribe<Upload>) {
-        didUpload.subscribe(self, with: UploadConsistencyKeeper.uploadDidHappen)
-    }
-    
-    private func uploadDidHappen(_ upload: Upload) {
-        lastUploaded.set(upload)
-    }
-    
-    func check() {
-        let name = self.name
-        printWithContext("(uploads-\(name)) Checking if last update was properly uploaded")
-        zip(latest, lastUploaded.asReadOnlyStorage()).retrieve { (result) in
-            guard let (latest, uploaded) = result.value else {
-                fault("(uploads-\(name)) Both caches should be defaulted")
-                return
-            }
-            if uploaded != latest {
-                self.reupload(latest)
-            } else {
-                printWithContext("(uploads-\(name)) It was")
-            }
-        }
-    }
-        
 }

@@ -199,7 +199,7 @@ public final class MemoryCached<Value> {
     private var inMemory: Value
     
     init(io: Storage<Void, Value>, defaultValue: Value) {
-        self.underlying = io
+        self.underlying = io.defaulting(to: defaultValue)
         do {
             self.inMemory = try io.makeSyncStorage().retrieve()
         } catch {

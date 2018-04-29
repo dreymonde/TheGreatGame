@@ -16,7 +16,7 @@ public final class Flags<Flag : FlagDescriptor> {
     
     public let registry: FlagsRegistry<Flag>
     internal let uploader: FlagsUploader<Flag>
-    internal let uploadConsistencyKeeper: UploadConsistencyKeeper<FlagSet<Flag>>
+    internal let serverConsistencyChecker: ConsistencyChecker<FlagSet<Flag>>
     
     public struct Change {
         public var id: IDType
@@ -34,25 +34,28 @@ public final class Flags<Flag : FlagDescriptor> {
     
     internal init(registry: FlagsRegistry<Flag>,
                   uploader: FlagsUploader<Flag>,
-                  uploadConsistencyKeeper: UploadConsistencyKeeper<FlagSet<Flag>>,
+                  serverMirror: Storage<Void, Flag.Set>,
                   shouldCheckUploadConsistency: Subscribe<Void>) {
         self.registry = registry
         self.uploader = uploader
-        self.uploadConsistencyKeeper = uploadConsistencyKeeper
-        
-        start(shouldCheckUploadConsistency: shouldCheckUploadConsistency)
-    }
-        
-    internal func start(shouldCheckUploadConsistency: Subscribe<Void>) {
-        shouldCheckUploadConsistency.subscribe(uploadConsistencyKeeper, with: UploadConsistencyKeeper.check)
+        let checker = ConsistencyChecker<Flag.Set>(truth: registry.flags,
+                                                   destinationMirror: serverMirror,
+                                                   name: Flag.filename.rawValue)
+        self.serverConsistencyChecker = checker
     }
     
     public var didUploadFlags: Subscribe<FlagSet<Flag>> {
-        return uploader.didUploadFavorites.proxy.map({ $0.favorites })
+        return uploader.didUploadFlags
     }
     
-    public func subscribe() {
-        self.uploadConsistencyKeeper.subscribeTo(didUpload: uploader.didUploadFavorites.proxy.map({ $0.favorites }))
+    public func subscribeTo(shouldCheckUploadConsistency: Subscribe<Void>) {
+        
+        serverConsistencyChecker.upload.delegate(to: uploader) { (uploader, flags) in
+            uploader.uploadFavorites(flags)
+        }
+        
+        shouldCheckUploadConsistency.subscribe(serverConsistencyChecker, with: ConsistencyChecker.check)
+        self.serverConsistencyChecker.subcribeTo(didUpload: didUploadFlags)
         registry.unitedDidUpdate.proxy.flatSubscribe(uploader) { (uploader, update) in
             uploader.uploadFavorites(update.flags)
         }
@@ -83,37 +86,14 @@ public func unsubscribe(fromMatchWith matchID: Match.ID, registry: FlagsRegistry
         public convenience init(registry: FlagsRegistry<Flag>,
                                 tokens: DeviceTokens,
                                 shouldCheckUploadConsistency: Subscribe<Void>,
-                                consistencyKeepersStorage: Storage<Filename, Data>,
                                 upload: WriteOnlyStorage<Void, Data>) {
-            let favs = registry.flags.defaulting(to: FlagSet<Flag>([]))
             let uploader = FlagsUploader<Flag>(pusher: FlagsUploader<Flag>.adapt(pusher: upload),
-                                                     getNotificationsToken: tokens.getNotification,
-                                                     getDeviceIdentifier: { UIDevice.current.identifierForVendor })
-            let keeper = Flags.makeKeeper(diskCache: consistencyKeepersStorage, flags: favs, uploader: uploader)
-            self.init(registry: registry,
-                      uploader: uploader,
-                      uploadConsistencyKeeper: keeper,
-                      shouldCheckUploadConsistency: shouldCheckUploadConsistency)
+                                               getNotificationsToken: tokens.getNotification,
+                                               getDeviceIdentifier: { UIDevice.current.identifierForVendor })
+            let mirror = destinationMirror(descriptor: Flag.self)
+            self.init(registry: registry, uploader: uploader, serverMirror: mirror, shouldCheckUploadConsistency: shouldCheckUploadConsistency)
         }
         
     }
     
 #endif
-
-extension Flags {
-    
-    fileprivate static func makeKeeper(diskCache: Storage<Filename, Data>,
-                                       flags: Retrieve<FlagSet<Flag>>,
-                                       uploader: FlagsUploader<Flag>) -> UploadConsistencyKeeper<FlagSet<Flag>> {
-        let name = "keeper-notifications-\(String(reflecting: IDType.self))"
-        let last = diskCache
-            .mapJSONDictionary()
-            .mapFlagSet(of: Flag.self)
-            .singleKey(Filename(rawValue: name))
-            .defaulting(to: FlagSet([]))
-        return UploadConsistencyKeeper<FlagSet<Flag>>(latest: flags, internalStorage: last, name: name, reupload: { upload in
-            uploader.uploadFavorites(upload)
-        })
-    }
-    
-}

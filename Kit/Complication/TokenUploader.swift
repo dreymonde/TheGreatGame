@@ -14,17 +14,31 @@ public final class TokenUploader {
     
     let getDeviceIdentifier: () -> UUID?
     let pusher: WriteOnlyStorage<Void, TokenUpload>
-    let consistencyKeeper: UploadConsistencyKeeper<PushToken>
+    let consistencyChecker: ConsistencyChecker<PushToken>
     
     public init(pusher: WriteOnlyStorage<Void, TokenUpload>,
                 getDeviceIdentifier: @escaping () -> UUID?,
-                consistencyKeepersStorage: Storage<Void, PushToken>,
+                serverMirror: Storage<Void, PushToken>,
                 getToken: Retrieve<PushToken>) {
         self.pusher = pusher
         self.getDeviceIdentifier = getDeviceIdentifier
-        self.consistencyKeeper = UploadConsistencyKeeper<PushToken>(latest: getToken, internalStorage: consistencyKeepersStorage, name: "token-uploader-consistency-keeper", reupload: { _ in })
-        consistencyKeeper.reupload = self.upload(token:)
-        consistencyKeeper.subscribeTo(didUpload: self.didUploadToken.proxy.map({ $0.token }))
+        self.consistencyChecker = ConsistencyChecker<PushToken>(truth: getToken,
+                                                                destinationMirror: serverMirror,
+                                                                name: "token-uploader")
+        consistencyChecker.upload.delegate(to: self) { (self, token) in
+            self.upload(token: token)
+        }
+    }
+    
+    public static func serverMirror(filename: Filename) -> Storage<Void, PushToken> {
+        let defaultFakeToken = PushToken(Data(repeating: 0, count: 1))
+        return Disk(directory: AppFolder.Library.Application_Support.Mirrors,
+                    filenameEncoder: .noEncoding)
+            .mapValues(transformIn: PushToken.init,
+                       transformOut: { $0.rawToken })
+            .singleKey(filename)
+            .defaulting(to: defaultFakeToken)
+            .asStorage()
     }
     
     public static func adapt(pusher: WriteOnlyStorage<Void, Data>) -> WriteOnlyStorage<Void, TokenUpload> {
@@ -34,7 +48,7 @@ public final class TokenUploader {
     }
     
     public func subscribeTo(shouldCheckUploadConsistency: Subscribe<Void>) {
-        shouldCheckUploadConsistency.subscribe(consistencyKeeper, with: UploadConsistencyKeeper.check)
+        shouldCheckUploadConsistency.subscribe(consistencyChecker, with: ConsistencyChecker.check)
     }
     
     let didUploadToken = Publisher<TokenUpload>(label: "TokenUploader.didUploadToken")
