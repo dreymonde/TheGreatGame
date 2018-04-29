@@ -29,12 +29,6 @@ let shortDateDateFormatter = DateFormatter() <- {
     $0.setLocalizedDateFormatFromTemplate("MMMd")
 }
 
-extension String {
-    fileprivate func twoLine() -> String {
-        return self.components(separatedBy: ":").joined(separator: "\n")
-    }
-}
-
 extension MatchProtocol {
     
     public func isFavorite(isFavoriteMatch: (Match.ID) -> Bool, isFavoriteTeam: (Team.ID) -> Bool) -> Bool {
