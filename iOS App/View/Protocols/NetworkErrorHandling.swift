@@ -15,13 +15,6 @@ protocol NetworkErrorDisplaying { }
 
 fileprivate var alreadyShowingError = false
 
-func enter(on condition: Bool, modifying value: inout Bool, action: @escaping () -> ()) {
-    if value == condition {
-        action()
-        value = !value
-    }
-}
-
 extension NetworkErrorDisplaying where Self : UIViewController {
     
     func displayError() {
