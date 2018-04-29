@@ -38,6 +38,7 @@ extension APIProvider {
         return Self(dataProvider: subcache)
     }
     
+    @available(*, deprecated, message: "DigitalOcean server is discontinued")
     public static func digitalOcean(networkCache: ReadOnlyStorage<URL, Data> = Self.makeUrlSessionCache()) -> Self {
         let baseURL = Server.digitalOceanStorageBaseURL
         let subcache: ReadOnlyStorage<APIPath, Data> = WebAPI(networkProvider: networkCache, baseURL: baseURL).asReadOnlyStorage()

@@ -60,6 +60,22 @@ public final class Flags<Flag : FlagDescriptor> {
     
 }
 
+public func unsubscribe(fromMatchWith matchID: Match.ID, registry: FlagsRegistry<UnsubscribedMatches>, flagsDidUpload: Subscribe<FlagSet<UnsubscribedMatches>>, completion: @escaping () -> ()) {
+    printWithContext("Unsubscribing from \(matchID)")
+    
+    let expectedFlags = registry.flagsAfter(updatingPresenceOf: matchID, isPresent: true)
+    flagsDidUpload.listen { (uploadedFlags, stop) in
+        print("UPLD", uploadedFlags)
+        if uploadedFlags == expectedFlags {
+            printWithContext("Uploaded \(matchID)")
+            stop()
+            completion()
+        }
+    }
+    
+    registry.updatePresence(id: matchID, isPresent: true)
+}
+
 #if os(iOS)
     
     extension Flags {

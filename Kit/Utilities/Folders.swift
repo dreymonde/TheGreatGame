@@ -16,6 +16,12 @@ extension Library.Application_Support {
         return appending()
     }
     
+    public final class Mirrors : Directory { }
+    
+    public var Mirrors: Mirrors {
+        return appending()
+    }
+    
 }
 
 extension Library.Caches {

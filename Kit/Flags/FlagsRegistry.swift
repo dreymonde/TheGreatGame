@@ -119,6 +119,16 @@ public final class FlagsRegistry<Flag : FlagDescriptor> : SimpleStoring {
         unitedDidUpdate.publish(united)
     }
     
+    public func flagsAfter(updatingPresenceOf id: IDType, isPresent: Bool) -> FlagSet<Flag> {
+        var copy = memoryCachedFlags.read()
+        if isPresent {
+            copy.set.insert(id)
+        } else {
+            copy.set.remove(id)
+        }
+        return copy
+    }
+    
     public func replace(with updated: FlagSet<Flag>) {
         let existing = memoryCachedFlags.read()
         let diff = existing.set.symmetricDifference(updated.set)

@@ -65,7 +65,7 @@ class FavoritesTests: XCTestCase {
         waiter.wait()
         let sync = favs.flags.makeSyncStorage()
         let withID1 = try sync.retrieve()
-        XCTAssertEqual(withID1, [Team.ID.init(rawValue: 1)!])
+        XCTAssertEqual(withID1, FlagSet([Team.ID.init(rawValue: 1)!]))
         do { try FileManager.default.removeItem(at: fs.folderURL) } catch {  }
     }
     
@@ -76,10 +76,33 @@ class FavoritesTests: XCTestCase {
         favs.updatePresence(id: Team.ID(rawValue: 1)!, isPresent: true)
         waiter.wait()
         let favsIDs = try favs.flags.makeSyncStorage().retrieve()
-        let api = API.digitalOcean().matches.all.mapValues({ $0.content.matches }).makeSyncStorage()
-        let matches = try api.retrieve().filter({ favsIDs.contains($0.home.id) || favsIDs.contains($0.away.id) })
+        let api = API.gitHubRaw().matches.all.mapValues({ $0.content.matches }).makeSyncStorage()
+        let matches = try api.retrieve().filter({ favsIDs.set.contains($0.home.id) || favsIDs.set.contains($0.away.id) })
         dump(matches.mostRelevant()!)
         do { try FileManager.default.removeItem(at: fs.folderURL) } catch {  }
+    }
+    
+    func testUnsubscribe() {
+        let registry = FlagsRegistry<UnsubscribedMatches>(diskStorage: .inMemory())
+        let didUpload = registry.didUpdate
+        
+        let expectation = self.expectation(description: "Upload favs")
+        
+        registry.updatePresence(id: Match.ID(rawValue: 1)!, isPresent: true)
+        let matchID = Match.ID(rawValue: 5)!
+        TheGreatKit.unsubscribe(fromMatchWith: matchID, registry: registry, flagsDidUpload: didUpload) {
+            print("Done!")
+            expectation.fulfill()
+        }
+        
+        waitForExpectations(timeout: 5.0)
+    }
+    
+    func testUnsubscribeIntegrated() {
+        
+        
+        
+        let flags = Flags<UnsubscribedMatches>(registry: <#T##FlagsRegistry<UnsubscribedMatches>#>, uploader: <#T##FlagsUploader<UnsubscribedMatches>#>, uploadConsistencyKeeper: <#T##UploadConsistencyKeeper<FlagSet<UnsubscribedMatches>>#>, shouldCheckUploadConsistency: <#T##Subscribe<Void>#>)
     }
     
 }

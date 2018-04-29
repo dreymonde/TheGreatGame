@@ -72,7 +72,7 @@ final class Application {
             return API.heroku()
         case .digitalOcean:
             printWithContext("Using Digital Ocean droplet as a content server")
-            return API.digitalOcean()
+            fatalError("DigitalOcean server is discontinued")
         }
     }
     
@@ -84,14 +84,14 @@ final class Application {
         .connectingNetworkActivityIndicator(indicator: .application)
     
     static func makeFavs<Flag : FlagDescriptor>(tokens: DeviceTokens,
-                                                          keeperFolderName: String,
-                                                          apiPath: APIPath) -> Flags<Flag> {
+                                                keeperFolderName: String,
+                                                apiPath: APIPath) -> Flags<Flag> {
         let keepersCache = DiskStorage.main.folder(keeperFolderName, in: .cachesDirectory)
         return Flags<Flag>(registry: FlagsRegistry.inContainer(.shared),
-                                 tokens: tokens,
-                                 shouldCheckUploadConsistency: fourSecondAfterAppDidBecomeActive,
-                                 consistencyKeepersStorage: keepersCache.asStorage(),
-                                 upload: uploadCache.singleKey(apiPath))
+                           tokens: tokens,
+                           shouldCheckUploadConsistency: fourSecondAfterAppDidBecomeActive,
+                           consistencyKeepersStorage: keepersCache.asStorage(),
+                           upload: uploadCache.singleKey(apiPath))
     }
     
     static func makeFavorites(tokens: DeviceTokens) -> Flags<FavoriteTeams> {
@@ -131,9 +131,9 @@ final class Application {
     
     static func makeUploader(forURL url: URL) -> WriteOnlyStorage<APIPath, Data> {
         return .empty()
-//        return URLSessionPusher(urlSession: URLSession.init(configuration: .default))
-//            .asWriteOnlyStorage()
-//            .mapKeys({ url.appendingPath($0) })
+        //        return URLSessionPusher(urlSession: URLSession.init(configuration: .default))
+        //            .asWriteOnlyStorage()
+        //            .mapKeys({ url.appendingPath($0) })
     }
     
 }

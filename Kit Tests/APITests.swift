@@ -12,7 +12,7 @@ import Shallows
 
 class APITests: XCTestCase {
     
-    static let testingNetworkCache: ReadOnlyStorage<URL, Data> = URLSession(configuration: .ephemeral)
+    static let testingNetworkStorage: ReadOnlyStorage<URL, Data> = URLSession(configuration: .ephemeral)
         .asReadOnlyStorage()
         .droppingResponse()
         .usingURLKeys()
@@ -28,13 +28,13 @@ class APITests: XCTestCase {
     }
     
     func testAllTeams() throws {
-        let api = TeamsAPI.digitalOcean(networkCache: APITests.testingNetworkCache)
+        let api = TeamsAPI.gitHubRaw(networkCache: APITests.testingNetworkStorage)
         let teams = try api.all.mapValues({ $0.content.teams }).makeSyncStorage().retrieve()
         XCTAssertEqual(teams.count, 16)
     }
     
     func testTeamID1() throws {
-        let api = TeamsAPI.digitalOcean(networkCache: APITests.testingNetworkCache)
+        let api = TeamsAPI.gitHubRaw(networkCache: APITests.testingNetworkStorage)
         let team1 = try api.fullTeam.mapValues({ $0.content }).makeSyncStorage().retrieve(forKey: Team.ID(rawValue: 1)!)
         print(team1)
         XCTAssertEqual(team1.name, "Sweden")
@@ -45,10 +45,10 @@ class APITests: XCTestCase {
     }
     
     func testAllMatchesFull() throws {
-        let api = MatchesAPI.gitHub()
+        let api = MatchesAPI.gitHubRaw()
         let matches = try api.allFull.mapValues({ $0.content.matches }).makeSyncStorage().retrieve()
         let ned_nor = try matches.first.unwrap()
-        let cut = ned_nor.snapshot(beforeRealMinute: 14)
+        let cut = ned_nor.snapshot(beforeRealMinute: 100)
         dump(cut)
         XCTAssertEqual(try cut.score.unwrap().home, 1)
     }

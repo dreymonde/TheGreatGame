@@ -24,13 +24,13 @@ class EventTests: XCTestCase {
     }
     
     func testAdditionalEventFE() {
-        let event = Match.Event(kind: .halftime_start, text: "FEtest", realMinute: 115, matchMinute: 90)
+        let event = Match.Event(kind: .halftime_start, text: "FE test", realMinute: 115, matchMinute: 90)
         XCTAssertEqual(event.kind, .end_and_extra)
         XCTAssertEqual(event.text, "test")
     }
     
     func testAdditionalEventET() {
-        let event = Match.Event(kind: .halftime_end, text: "ETtest", realMinute: 115, matchMinute: 90)
+        let event = Match.Event(kind: .halftime_end, text: "ET test", realMinute: 115, matchMinute: 90)
         XCTAssertEqual(event.kind, .extra_start)
         XCTAssertEqual(event.text, "test")
     }

@@ -66,11 +66,7 @@ public struct TokenUpload : Equatable {
         self.deviceIdentifier = deviceIdentifier
         self.token = token
     }
-    
-    public static func == (lhs: TokenUpload, rhs: TokenUpload) -> Bool {
-        return lhs.deviceIdentifier == rhs.deviceIdentifier && lhs.token.rawToken == rhs.token.rawToken
-    }
-    
+        
 }
 
 extension TokenUpload : Mappable {

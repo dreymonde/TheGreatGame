@@ -119,7 +119,7 @@ extension Subscribe {
         let obj = _Listener()
         let id = objectID(obj)
         let close: StopListening = { self.manual.unsubscribe(objectWith: id) }
-        self.flatSubscribe(obj) { (_, event) in
+        self.manual.subscribe(obj) { (event) in
             handler(event, close)
         }
     }

@@ -18,11 +18,7 @@ public struct PushToken : Equatable {
     public init(_ token: Data) {
         self.rawToken = token
     }
-    
-    public static func == (lhs: PushToken, rhs: PushToken) -> Bool {
-        return lhs.rawToken == rhs.rawToken
-    }
-    
+        
 }
 
 extension PushToken : CustomStringConvertible {

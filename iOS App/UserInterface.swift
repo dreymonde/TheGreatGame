@@ -170,16 +170,10 @@ final class UserInterface {
     }
     
     func unsubscribe(from match: Match.Full, completion: @escaping () -> ()) {
-        printWithContext("Unsubscribing")
-        logic.unsubscribedMatches.registry.updatePresence(id: match.id, isPresent: true)
-        let expectedFlags = logic.unsubscribedMatches.registry.all
-        logic.unsubscribedMatches.didUploadFlags.listen { (uploadedFlags, stop) in
-            if uploadedFlags == expectedFlags {
-                printWithContext("Uploaded")
-                stop()
-                completion()
-            }
-        }
+        TheGreatKit.unsubscribe(fromMatchWith: match.id,
+                                registry: logic.unsubscribedMatches.registry,
+                                flagsDidUpload: logic.unsubscribedMatches.didUploadFlags,
+                                completion: completion)
     }
     
     func showMatch(_ match: Match.Full) {
